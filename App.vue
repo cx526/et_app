@@ -14,5 +14,7 @@
 
 <style>
 /*每个页面公共css */
-
+.white-space {
+	height: 30upx;
+}
 </style>
