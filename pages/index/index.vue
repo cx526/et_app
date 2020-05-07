@@ -13,7 +13,7 @@
 		<view style="position: relative;">
 			<swiper class="carousel" circular autoplay @change="swiperChange">
 				<swiper-item v-for="(item, i) in carouselList" :key="i" class="carousel-item">
-					<image :src="item.src" />
+					<image :src="item.img" />
 				</swiper-item>
 			</swiper>
 			<!-- 自定义swiper指示器 -->
@@ -28,7 +28,7 @@
 		
 		<!-- 按钮组合栏 -->
 		<view class="btn-group">
-			<et-button v-for="(item,i) in carouselList" :key="i" :title="item.title" :img="item.src" @clickHandle="btnGroupClick"></et-button>
+			<et-button v-for="(item,i) in carouselList" :key="i" :title="item.name" :img="item.img" @clickHandle="btnGroupClick"></et-button>
 		</view>
 		
 		<!-- banner -->
@@ -47,23 +47,17 @@ export default {
 		return {
 			swiperCurrent: 0,
 			swiperLength: 0,
-			carouselList: [
-				{ title: "111", src: "http://t9.baidu.com/it/u=3363001160,1163944807&fm=79&app=86&f=JPEG?w=1280&h=830"},
-				{ title: "222", src: "http://t8.baidu.com/it/u=1484500186,1503043093&fm=79&app=86&f=JPEG?w=1280&h=853"},
-				{ title: "333", src: "http://t8.baidu.com/it/u=2247852322,986532796&fm=79&app=86&f=JPEG?w=1280&h=853"},
-				{ title: "444", src: "http://img3.imgtn.bdimg.com/it/u=1258249301,613690822&fm=26&gp=0.jpg"},
-				{ title: "555", src: "http://i-7.vcimg.com/crop/9538c790b6cae4ffd33fb5383b3ca4d897723%28600x%29/thumb.jpg"},
-			]
+			carouselList: []
 		}
 	},
 	onLoad() {
-		this.swiperLength = this.carouselList.length;
 		this.getSwiperData()
 	},
 	methods: {
 		getSwiperData() {
 			this.$api.getSwiperData().then(res => {
-			   console.log(res) 
+			   this.carouselList = res.data
+			   this.swiperLength = this.carouselList.length;
 			})
 		},
 		btnGroupClick(item) {
