@@ -58,8 +58,14 @@ export default {
 	},
 	onLoad() {
 		this.swiperLength = this.carouselList.length;
+		this.getSwiperData()
 	},
 	methods: {
+		getSwiperData() {
+			this.$api.getSwiperData().then(res => {
+			   console.log(res) 
+			})
+		},
 		btnGroupClick(item) {
 			console.log(item)
 		},
