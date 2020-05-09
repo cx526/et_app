@@ -24,17 +24,17 @@ export default {
          * 微信授权 uni.getUserInfo
          */
         getuserinfo() {
-			wx.login({ success: res => {
-				if (res.code) {
-					this.allInfo.code = res.code
-					wx.getUserInfo({
-						success: res => {
-							this.allInfo.userInfo = res.userInfo
-							console.log(this.allInfo)
-						}
+			uni.showLoading()			
+			wx.getUserInfo({
+				success: res => {
+					this.allInfo.userInfo = res.userInfo
+					console.log(this.allInfo)
+					uni.hideLoading()
+					uni.showToast({
+						title: '微信授权成功!'
 					})
 				}
-			}})
+			})
 		},
     
 		/**
@@ -43,7 +43,14 @@ export default {
 		 */
 		getPhoneNumber(e) {
 			this.allInfo.detail = e.detail
-			console.log(this.allInfo)
+			wx.login({ success: res => {
+				if (res.code) {
+					this.allInfo.code = res.code
+					this.$api.getAuthData(this.allInfo).then(res => {
+					   console.log(res.data)
+					})
+				}
+			}})
 		}
 	}
 }
