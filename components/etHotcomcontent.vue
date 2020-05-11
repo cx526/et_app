@@ -1,6 +1,6 @@
 <template>
 	<view class="btn-content" @tap="btnClick">
-		<image :src="img" class="img"></image>
+		<!-- <image :src="img" class="img"></image> -->
 		<text class="book-count">{{bookCount}}本</text>
 		<text class="title">{{title}}</text>
 	</view>

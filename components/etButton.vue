@@ -25,15 +25,15 @@ export default {
 	flex-direction: column;
 	align-items: center;
 	justify-content: center;
-	padding: 12upx 24upx;
+	padding: 12upx 12upx;
 }
 .img {
-	height: 60upx;
-	width: 60upx;
+	height: 120upx;
+	width: 120upx;
 }
 .title {
 	padding-top: 8upx;
-	font-size: 24upx;
-	color: #333;
+	font-size: 30upx;
+	color: rgba(128,128,128,1)
 }
 </style>

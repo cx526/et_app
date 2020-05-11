@@ -4,9 +4,8 @@
 		<view class="top-content">
 			<!-- 顶栏搜索框 -->
 			<view class="search-box" @tap="toSearch">
-				<!-- icon 需要用设计图片-->
-				<!-- <icon class="search-icon" type="search"/> -->
-				<input class="search-input" type="text" value="书名/作者/关键字" disabled />
+				<icon class="search-icon" type="search"/>
+				<input class="search-input" type="text" placeholder="请输入书籍名..." disabled />
 			</view>
 			
 			<view class="white-space"></view>
@@ -31,27 +30,29 @@
 		
 		<!-- 按钮组合栏 -->
 		<view class="btn-group">
-			<et-button v-for="(item,i) in carouselList" :key="i" :title="item.name" :img="item.img" @clickHandle="btnGroupClick"></et-button>
+			<et-button v-for="(item,i) in groupList" :key="i" :title="item.name" :img="item.img" @clickHandle="btnGroupClick"></et-button>
 		</view>
 		
 		<!-- banner -->
-		<view class="banner"></view>
+		<view class="banner">
+			<image src="../../static/index/giftbanner@2x.png" class="banner-img" mode=""></image>
+		</view>
 		
 		<!-- 热门推荐 -->
 		<view class="hot-recom">
 			<!-- 导航条 -->
-			<et-titlenavigation  title="热门推荐" img="123" toUrl="baidu.com" @clickHandle="btnGroupClick"></et-titlenavigation>
+			<et-titlenavigation  title="热门推荐" img="../../static/index/start@2x.png" toUrl="baidu.com" @clickHandle="btnGroupClick"></et-titlenavigation>
 			
-			<et-hotcomcontent v-for="(item,i) in carouselList" :key="i" :title="item.name" :img="item.img" :bookCount="item.bookCount" @clickHandle="btnGroupClick"></et-hotcomcontent>
+			<!-- <et-hotcomcontent v-for="(item,i) in carouselList" :key="i" :title="item.name" :img="item.img" :bookCount="item.bookCount" @clickHandle="btnGroupClick"></et-hotcomcontent> -->
 		</view>
 		
 		<!-- 新书推荐 -->
 		<view class="new-recom">
 			<!-- 导航条 -->
-			<et-titlenavigation  title="新书推荐" img="123" toUrl="baidu.com" @clickHandle="btnGroupClick"></et-titlenavigation>
+			<!-- <et-titlenavigation  title="新书推荐" img="123" toUrl="baidu.com" @clickHandle="btnGroupClick"></et-titlenavigation> -->
 			
 			<!-- 内容 -->
-			<et-button v-for="(item,i) in carouselList" :key="i" :title="item.name" :img="item.img" @clickHandle="btnGroupClick"></et-button>
+			<!-- <et-button v-for="(item,i) in carouselList" :key="i" :title="item.name" :img="item.img" @clickHandle="btnGroupClick"></et-button> -->
 		</view>
 		
 		<!-- banner -->
@@ -60,10 +61,10 @@
 		<!-- 猜你喜欢 -->
 		<view class="guess-like">
 			<!-- 导航条 -->
-			<et-titlenavigation  title="新书推荐" img="123" toUrl="baidu.com" @clickHandle="btnGroupClick"></et-titlenavigation>
+			<!-- <et-titlenavigation  title="新书推荐" img="123" toUrl="baidu.com" @clickHandle="btnGroupClick"></et-titlenavigation> -->
 			
 			<!-- 内容 -->
-			<et-button v-for="(item,i) in carouselList" :key="i" :title="item.name" :img="item.img" @clickHandle="btnGroupClick"></et-button>
+			<!-- <et-button v-for="(item,i) in carouselList" :key="i" :title="item.name" :img="item.img" @clickHandle="btnGroupClick"></et-button> -->
 		</view>
 				
 	</view>
@@ -84,7 +85,30 @@ export default {
 		return {
 			swiperCurrent: 0,
 			swiperLength: 0,
-			carouselList: []
+			carouselList: [],
+			groupList: [
+				{
+					'name' : '绘本',
+					'img'  : '../../static/index/groupicon@2x.png'
+				},
+				{
+					'name' : '获币',
+					'img'  : '../../static/index/groupicon@2x.png'
+				},
+				{
+					'name' : '打卡',
+					'img'  : '../../static/index/groupicon@2x.png'
+				},
+				{
+					'name' : '会员',
+					'img'  : '../../static/index/groupicon@2x.png'
+				},
+				{
+					'name' : '分类',
+					'img'  : '../../static/index/groupicon@2x.png'
+				}
+			]
+			
 		}
 	},
 	onLoad() {
@@ -92,7 +116,7 @@ export default {
 	},
 	methods: {
 		getSwiperData() {
-			this.$api.getSwiperData().then(res => {
+			this.$api.getSwiperData({link_usage: 'app_swiper'}).then(res => {
 			   this.carouselList = res.data
 			   this.swiperLength = this.carouselList.length;
 			})
@@ -118,28 +142,27 @@ export default {
 .top-content {
 	display: flex;
 	flex-direction: column;
+	background-image:url(../../static/index/topBackground@2x.png);
+	background-size:cover;
 }
 .search-box {
-	position: relative;
-	padding: 0 30upx;
+	padding: 8upx 30upx;
+	width:85%;
+	display: flex;
+	flex-direction: row;
+	margin: 0 auto;
+	margin-top: 20px;
+	background-color: #FFFFFF;
+	border-radius: 50upx;
 }
 
 .search-icon {
-	position: absolute;
-	top: 12upx;
-	left: 50upx;
-	font-size: 30upx;
+
 }
 
 .search-input {
-	height: 56upx;
-	line-height: 56upx;
-	text-align: center;
-	font-size: 28upx;
-	border-radius: 40upx;
-	background: #FFFFFF;
-	border: 2upx solid #ccc;
-	color: #ccc;
+	margin-left: 10upx;
+	font-size: 34upx;
 }
 .carousel {
 	width: 100%;
@@ -189,11 +212,15 @@ export default {
 }
 .btn-group {
 	display: flex;
+	flex-direction: row;
 	align-items: center;
-	justify-content: space-around;
+	justify-content: center;
 }
 .banner {
-	height: 160upx;
-	background-color: #ccc;
+	width: 100%;
+}
+.banner-img {
+	width: 100%;
+	height: 200upx;
 }
 </style>

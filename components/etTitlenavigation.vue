@@ -1,8 +1,10 @@
 <template>
 	<view class="btn-content">
-		<image src="" mode=""></image>
-		<text>{{title}}</text>
-		<text @tap="btnClick('toUrl')">更多></text>
+		<view class="btn-content-top">
+			<image class="btn-start" :src="img" mode=""></image>
+			<text class="btn-title">{{title}}</text>
+		</view>
+		<text class="btn-url" @tap="btnClick('toUrl')">更多></text>
 	</view>
 </template>
 
@@ -24,18 +26,27 @@ export default {
 <style>
 .btn-content {
 	display: flex;
-	flex-direction: column;
+	flex-direction: row;
 	align-items: center;
-	justify-content: center;
-	padding: 12upx 24upx;
+	justify-content: space-between;
+	padding: 12upx 40upx;
 }
-.img {
-	height: 60upx;
-	width: 60upx;
+.btn-content-top {
+	display: flex;
+	align-items:center;
 }
-.title {
-	padding-top: 8upx;
-	font-size: 24upx;
-	color: #333;
+.btn-start {
+	height: 40upx;
+	width: 40upx;
+}
+.btn-title,.btn-url {
+	font-size: 32upx;
+}
+.btn-title {
+	font-weight: bold;
+	margin-left: 20upx;
+}
+.btn-url {
+	color: rgba(42,174,196,1);
 }
 </style>
