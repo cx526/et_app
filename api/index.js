@@ -9,7 +9,7 @@ const api = {}
 // api.register = params => request.globalRequest(`${PORT1}/mobile/signUp${formatGetUri(params)}`, 'GET //必须大写，为了兼容其他应用',{}, 1)
 //==============================================================================//
 
-//获取轮播图
+//获取登录信息
 api.getAuthData = params => request.globalRequest('/api/auth/getAuthData', 'POST', params)
 
 //获取轮播图
