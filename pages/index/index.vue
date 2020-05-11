@@ -1,26 +1,29 @@
 <template>
 	<view>
-		<!-- 顶栏搜索框 -->
-		<view class="search-box" @tap="toSearch">
-			<!-- icon 需要用设计图片-->
-			<!-- <icon class="search-icon" type="search"/> -->
-			<input class="search-input" type="text" value="书名/作者/关键字" disabled />
-		</view>
-		
-		<view class="white-space"></view>
-
-		<!-- 轮播图 -->
-		<view style="position: relative;">
-			<swiper class="carousel" circular autoplay @change="swiperChange">
-				<swiper-item v-for="(item, i) in carouselList" :key="i" class="carousel-item">
-					<image :src="item.img" />
-				</swiper-item>
-			</swiper>
-			<!-- 自定义swiper指示器 -->
-			<view class="swiper-dots">
-				<text class="num">{{swiperCurrent+1}}</text>
-				<text class="sign">/</text>
-				<text class="num">{{swiperLength}}</text>
+		<!-- 头部内容 -->
+		<view class="top-content">
+			<!-- 顶栏搜索框 -->
+			<view class="search-box" @tap="toSearch">
+				<!-- icon 需要用设计图片-->
+				<!-- <icon class="search-icon" type="search"/> -->
+				<input class="search-input" type="text" value="书名/作者/关键字" disabled />
+			</view>
+			
+			<view class="white-space"></view>
+			
+			<!-- 轮播图 -->
+			<view style="position: relative;">
+				<swiper class="carousel" circular autoplay @change="swiperChange">
+					<swiper-item v-for="(item, i) in carouselList" :key="i" class="carousel-item">
+						<image :src="item.img" />
+					</swiper-item>
+				</swiper>
+				<!-- 自定义swiper指示器 -->
+				<view class="swiper-dots">
+					<text class="num">{{swiperCurrent+1}}</text>
+					<text class="sign">/</text>
+					<text class="num">{{swiperLength}}</text>
+				</view>
 			</view>
 		</view>
 		
@@ -33,15 +36,49 @@
 		
 		<!-- banner -->
 		<view class="banner"></view>
+		
+		<!-- 热门推荐 -->
+		<view class="hot-recom">
+			<!-- 导航条 -->
+			<et-titlenavigation  title="热门推荐" img="123" toUrl="baidu.com" @clickHandle="btnGroupClick"></et-titlenavigation>
+			
+			<et-hotcomcontent v-for="(item,i) in carouselList" :key="i" :title="item.name" :img="item.img" :bookCount="item.bookCount" @clickHandle="btnGroupClick"></et-hotcomcontent>
+		</view>
+		
+		<!-- 新书推荐 -->
+		<view class="new-recom">
+			<!-- 导航条 -->
+			<et-titlenavigation  title="新书推荐" img="123" toUrl="baidu.com" @clickHandle="btnGroupClick"></et-titlenavigation>
+			
+			<!-- 内容 -->
+			<et-button v-for="(item,i) in carouselList" :key="i" :title="item.name" :img="item.img" @clickHandle="btnGroupClick"></et-button>
+		</view>
+		
+		<!-- banner -->
+		<view class="banner"></view>
+		
+		<!-- 猜你喜欢 -->
+		<view class="guess-like">
+			<!-- 导航条 -->
+			<et-titlenavigation  title="新书推荐" img="123" toUrl="baidu.com" @clickHandle="btnGroupClick"></et-titlenavigation>
+			
+			<!-- 内容 -->
+			<et-button v-for="(item,i) in carouselList" :key="i" :title="item.name" :img="item.img" @clickHandle="btnGroupClick"></et-button>
+		</view>
+				
 	</view>
 </template>
 
 <script>
 import etButton from '../../components/etButton.vue'
+import etHotcomcontent from '../../components/etHotcomcontent.vue'
+import etTitlenavigation from '../../components/etTitlenavigation.vue'
 
 export default {
 	components: {
-		etButton
+		etButton,
+		etHotcomcontent,
+		etTitlenavigation
 	},
 	data() {
 		return {
@@ -77,6 +114,11 @@ export default {
 </script>
 
 <style scoped>
+/* 头部内容	 */
+.top-content {
+	display: flex;
+	flex-direction: column;
+}
 .search-box {
 	position: relative;
 	padding: 0 30upx;
