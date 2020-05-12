@@ -230,9 +230,15 @@ export default {
 		}
 	},
 	onLoad() {
+		this.checkAuth()
 		this.getSwiperData()
 	},
 	methods: {
+		checkAuth() {
+			uni.getStorage({
+				key: 'userInfo'
+			})
+		},
 		getSwiperData() {
 			this.$api.getSwiperData({link_usage: 'app_swiper'}).then(res => {
 			   this.carouselList = res.data

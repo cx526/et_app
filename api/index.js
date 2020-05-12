@@ -15,4 +15,7 @@ api.getAuthData = params => request.globalRequest('/api/auth/getAuthData', 'POST
 //获取轮播图
 api.getSwiperData = params => request.globalRequest('/api/swiper/getSwiper', 'POST', params)
 
+//获取所有分类
+api.getKinds = params => request.globalRequest('/api/kinds/getKinds', 'POST', params)
+
 export default api

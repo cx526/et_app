@@ -1,9 +1,15 @@
 <template>
 	<view class="content">
+		<view class="img-content">
+			<image class="image-content" src="../../static/auth/LOGO@2x.png" mode=""></image>
+		</view>
+		
+		<view class="white-space"></view>
+		
 		<view class="sub-content">
-			<button class="auth-button" open-type="getUserInfo" @getuserinfo="getuserinfo" withCredentials="true">微信授权</button>
-			<view style="height: 40upx;"></view>
 			<button class="auth-button" open-type="getPhoneNumber" @getphonenumber="getPhoneNumber">手机授权</button> 
+			<view style="height: 40upx;"></view>
+			<button class="auth-button" open-type="getUserInfo" @getuserinfo="getuserinfo" withCredentials="true">微信授权</button>
 		</view>
 	</view>
 </template>
@@ -58,18 +64,30 @@ export default {
 
 <style scoped>
 .content {
-	height: 100vh;
+	/* height: 100vh; */
 	display: flex;
+	flex-direction: column;
 	align-items: center;
 	justify-content: center;
+}
+.img-content {
+	padding-top: 100upx;
+}
+.image-content {
+	width: 312upx;
+	height: 151upx;
+}
+.white-space {
+	height: 400upx;
 }
 .sub-content {
 	width: 100%;
 }
 .auth-button {
 	width: 50%;
-	background: #4CD964;
+	background: rgba(0,183,204,1);
 	color: #fff;
 	font-size: 32upx;
+	border-radius: 50upx;
 }
 </style>
