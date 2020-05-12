@@ -1,7 +1,6 @@
 <template>
 	<view class="content">
-		<image class="image-content" src="../../static/guide/guide.png"></image>
-		<button class="buttom-content" @tap="buttomClick"></button>
+		
 	</view>
 </template>
 
