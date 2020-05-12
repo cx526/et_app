@@ -26,22 +26,22 @@ export default {
 
 <style>
 .btn-content {
-	width: 250upx;
+	width: 150upx;
 	display: flex;
 	flex-direction: column;
 	align-items: center;
 	justify-content: center;
 	padding: 12upx 24upx;
-	border-radius: 8px;
-	box-shadow: 1px 1px 1px 1px rgba(179,179,179,0.4);
+	border-radius: 8upx;
+	box-shadow: 1upx 1upx 1upx 1upx rgba(179,179,179,0.4);
 	margin-top: 30upx;
 }
 .img-content {
 	position: relative;
 }
 .img {
-	height: 200upx;
-	width: 200upx;
+	height: 150upx;
+	width: 150upx;
 	border: 1upx solid rgba(179,179,179,0.1);
 }
 .book-count {
@@ -54,7 +54,7 @@ export default {
 	bottom: 0;
 }
 .title {
-	width:200upx;
+	width:150upx;
 	padding-top: 8upx;
 	font-size: 25upx;
 	color: rgb(94,94,94);

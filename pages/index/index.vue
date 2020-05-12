@@ -37,7 +37,7 @@
 		
 		<!-- banner -->
 		<view class="banner">
-			<image src="../../static/index/giftbanner@2x.png" class="banner-img" mode=""></image>
+			<image :src="oneBanner" class="banner-img" mode=""></image>
 		</view>
 		
 		<view class="white-space"></view>
@@ -71,7 +71,7 @@
 		
 		<!-- banner -->
 		<view class="banner">
-			<image src="../../static/index/readbanner@3x.png" class="read-img" mode=""></image>
+			<image :src="secondBanner" class="read-img" mode="aspectFit"></image>
 		</view>
 		
 		<view class="white-space"></view>
@@ -82,8 +82,12 @@
 			<et-titlenavigation  title="猜你喜欢" img="../static/index/start@2x.png" toUrl="baidu.com" @clickHandle="btnGroupClick"></et-titlenavigation>
 			
 			<!-- 内容 -->
-			<!-- <et-button v-for="(item,i) in carouselList" :key="i" :title="item.name" :img="item.img" @clickHandle="btnGroupClick"></et-button> -->
+			<view class="guess-content">
+				<et-imgbox  v-for="(item,i) in guessBookList" :key="i" :title="item.name" :img="item.img" :bookCount="item.bookCount" :tag="item.tag" @clickHandle="btnGroupClick"></et-imgbox>
+			</view>
 		</view>
+		
+		<view class="white-space"></view>
 				
 	</view>
 </template>
@@ -93,39 +97,43 @@ import etButton from '../../components/etButton.vue'
 import etHotcomcontent from '../../components/etHotcomcontent.vue'
 import etTitlenavigation from '../../components/etTitlenavigation.vue'
 import etBookcat from '../../components/etBookcat.vue'
+import etImgbox from '../../components/etImgbox.vue'
 
 export default {
 	components: {
 		etButton,
 		etHotcomcontent,
 		etTitlenavigation,
-		etBookcat
+		etBookcat,
+		etImgbox
 	},
 	data() {
 		return {
 			swiperCurrent: 0,
 			swiperLength: 0,
 			carouselList: [],
+			oneBanner: "../../static/index/giftbanner@2x.png",
+			secondBanner: "../../static/index/readbanner@3x.png",
 			groupList: [
 				{
 					'name' : '绘本',
-					'img'  : '../static/index/groupicon@2x.png'
+					'img'  : '../static/index/绘本icon@2x.png'
 				},
 				{
 					'name' : '获币',
-					'img'  : '../static/index/groupicon@2x.png'
+					'img'  : '../static/index/获币icon@2x.png'
 				},
 				{
 					'name' : '打卡',
-					'img'  : '../static/index/groupicon@2x.png'
+					'img'  : '../static/index/打卡icon@2x.png'
 				},
 				{
 					'name' : '会员',
-					'img'  : '../static/index/groupicon@2x.png'
+					'img'  : '../static/index/会员icon@2x.png'
 				},
 				{
 					'name' : '分类',
-					'img'  : '../static/index/groupicon@2x.png'
+					'img'  : '../static/index/分类icon@2x.png'
 				}
 			],
 			hotBookList: [
@@ -163,33 +171,61 @@ export default {
 			bookCat: [
 				{
 					'name' : '科普百科',
-					'img'  : '../static/index/bookCat@3x.png'
+					'img'  : '../static/index/科普百科icon@2x.png'
 				},
 				{
-					'name' : '幼儿教育',
-					'img'  : '../static/index/bookCat@3x.png'
-				},
-				{
-					'name' : '能力培训',
-					'img'  : '../static/index/bookCat@3x.png'
+					'name' : '能力培养',
+					'img'  : '../static/index/能力培养icon@2x.png'
 				},
 				{
 					'name' : '自我认知',
-					'img'  : '../static/index/bookCat@3x.png'
+					'img'  : '../static/index/自我认知icon@2x.png'
 				},
 				{
-					'name' : '有教无类',
-					'img'  : '../static/index/bookCat@3x.png'
+					'name' : '科普百科',
+					'img'  : '../static/index/科普百科icon@2x.png'
 				},
 				{
-					'name' : '古籍古典',
-					'img'  : '../static/index/bookCat@3x.png'
+					'name' : '能力培养',
+					'img'  : '../static/index/能力培养icon@2x.png'
 				},
 				{
-					'name' : '流行音乐',
-					'img'  : '../static/index/bookCat@3x.png'
-				},
+					'name' : '自我认知',
+					'img'  : '../static/index/自我认知icon@2x.png'
+				}
 			],
+			guessBookList: [
+				{
+					'name' : '巴巴故事看看卡卡卡卡阿卡卡卡卡',
+					'img'  : '../static/index/hotbook.jpg',
+					'tag' : ['3-6岁','古典文艺']
+				},
+				{
+					'name' : '巴巴旅行',
+					'img'  : '../static/index/hotbook.jpg',
+					'tag' : ['3-6岁','科普百科']
+				},
+				{
+					'name' : '巴巴朋友',
+					'img'  : '../static/index/hotbook.jpg',
+					'tag' : ['3-6岁','科普百科']
+				},
+				{
+					'name' : '巴巴国王',
+					'img'  : '../static/index/hotbook.jpg',
+					'tag' : ['3-6岁','科普百科']
+				},
+				{
+					'name' : '巴巴孩子们',
+					'img'  : '../static/index/hotbook.jpg',
+					'tag' : ['3-6岁','科普百科']
+				},
+				{
+					'name' : '巴巴公主',
+					'img'  : '../static/index/hotbook.jpg',
+					'tag' : ['3-6岁','科普百科']
+				}
+			]
 			
 		}
 	},
@@ -236,7 +272,7 @@ export default {
 	display: flex;
 	flex-direction: row;
 	margin: 0 auto;
-	margin-top: 20px;
+	margin-top: 20upx;
 	background-color: #FFFFFF;
 	border-radius: 50upx;
 }
@@ -334,5 +370,10 @@ export default {
 }
 
 /* 猜你喜欢 */
-
+.guess-content{
+	display: flex;
+	flex-direction: row;
+	flex-wrap: wrap;
+	justify-content:space-around;
+}
 </style>
