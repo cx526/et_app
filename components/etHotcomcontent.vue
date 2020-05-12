@@ -1,7 +1,10 @@
 <template>
 	<view class="btn-content" @tap="btnClick">
-		<!-- <image :src="img" class="img"></image> -->
-		<text class="book-count">{{bookCount}}本</text>
+		<view class="img-content">
+			<image :src=img class="img"></image>
+			<text class="book-count">{{bookCount}}本</text>
+		</view>
+		
 		<text class="title">{{title}}</text>
 	</view>
 </template>
@@ -23,22 +26,43 @@ export default {
 
 <style>
 .btn-content {
+	width: 250upx;
 	display: flex;
 	flex-direction: column;
 	align-items: center;
 	justify-content: center;
 	padding: 12upx 24upx;
+	border-radius: 8px;
+	box-shadow: 1px 1px 1px 1px rgba(179,179,179,0.4);
+	margin-top: 30upx;
+}
+.img-content {
+	position: relative;
 }
 .img {
-	height: 60upx;
-	width: 60upx;
+	height: 200upx;
+	width: 200upx;
+	border: 1upx solid rgba(179,179,179,0.1);
 }
-.book-count{
-
+.book-count {
+	color: #FFFFFF;
+	background-color: rgba(154,152,153,0.5);
+	border-top-right-radius:10upx;
+	font-size: 28upx;
+	position: absolute;
+	left: 0;
+	bottom: 0;
 }
 .title {
+	width:200upx;
 	padding-top: 8upx;
-	font-size: 24upx;
-	color: #333;
+	font-size: 25upx;
+	color: rgb(94,94,94);
+	
+	/* 显示一行，省略号 */
+	white-space: nowrap;
+	text-overflow: ellipsis;
+	overflow: hidden;
+	word-break: break-all;
 }
 </style>

@@ -1,5 +1,5 @@
 <template>
-	<view>
+	<view class="index">
 		<!-- 头部内容 -->
 		<view class="top-content">
 			<!-- 顶栏搜索框 -->
@@ -33,35 +33,53 @@
 			<et-button v-for="(item,i) in groupList" :key="i" :title="item.name" :img="item.img" @clickHandle="btnGroupClick"></et-button>
 		</view>
 		
+		<view class="white-space"></view>
+		
 		<!-- banner -->
 		<view class="banner">
 			<image src="../../static/index/giftbanner@2x.png" class="banner-img" mode=""></image>
 		</view>
 		
+		<view class="white-space"></view>
+		
 		<!-- 热门推荐 -->
 		<view class="hot-recom">
 			<!-- 导航条 -->
-			<et-titlenavigation  title="热门推荐" img="../../static/index/start@2x.png" toUrl="baidu.com" @clickHandle="btnGroupClick"></et-titlenavigation>
+			<et-titlenavigation  title="热门推荐" img="../static/index/start@2x.png" toUrl="baidu.com" @clickHandle="btnGroupClick"></et-titlenavigation>
 			
-			<!-- <et-hotcomcontent v-for="(item,i) in carouselList" :key="i" :title="item.name" :img="item.img" :bookCount="item.bookCount" @clickHandle="btnGroupClick"></et-hotcomcontent> -->
+			<view class="hotcomcontent">
+				<et-hotcomcontent  v-for="(item,i) in hotBookList" :key="i" :title="item.name" :img="item.img" :bookCount="item.bookCount" @clickHandle="btnGroupClick"></et-hotcomcontent>
+			</view>
 		</view>
+		
+		<view class="white-space"></view>
 		
 		<!-- 新书推荐 -->
 		<view class="new-recom">
 			<!-- 导航条 -->
-			<!-- <et-titlenavigation  title="新书推荐" img="123" toUrl="baidu.com" @clickHandle="btnGroupClick"></et-titlenavigation> -->
-			
-			<!-- 内容 -->
-			<!-- <et-button v-for="(item,i) in carouselList" :key="i" :title="item.name" :img="item.img" @clickHandle="btnGroupClick"></et-button> -->
+			<et-titlenavigation  title="新书推荐" img="../static/index/start@2x.png" toUrl="baidu.com" @clickHandle="btnGroupClick"></et-titlenavigation>
 		</view>
 		
+		<view class="white-space"></view>
+		
+		<!-- 书籍分类 -->
+		<view class="book-cat">
+			<et-bookcat v-for="(item,i) in bookCat" :key="i" :title="item.name" :img="item.img" @clickHandle="btnGroupClick"></et-bookcat>
+		</view>
+		
+		<view class="white-space"></view>
+		
 		<!-- banner -->
-		<view class="banner"></view>
+		<view class="banner">
+			<image src="../../static/index/readbanner@3x.png" class="read-img" mode=""></image>
+		</view>
+		
+		<view class="white-space"></view>
 		
 		<!-- 猜你喜欢 -->
 		<view class="guess-like">
 			<!-- 导航条 -->
-			<!-- <et-titlenavigation  title="新书推荐" img="123" toUrl="baidu.com" @clickHandle="btnGroupClick"></et-titlenavigation> -->
+			<et-titlenavigation  title="猜你喜欢" img="../static/index/start@2x.png" toUrl="baidu.com" @clickHandle="btnGroupClick"></et-titlenavigation>
 			
 			<!-- 内容 -->
 			<!-- <et-button v-for="(item,i) in carouselList" :key="i" :title="item.name" :img="item.img" @clickHandle="btnGroupClick"></et-button> -->
@@ -74,12 +92,14 @@
 import etButton from '../../components/etButton.vue'
 import etHotcomcontent from '../../components/etHotcomcontent.vue'
 import etTitlenavigation from '../../components/etTitlenavigation.vue'
+import etBookcat from '../../components/etBookcat.vue'
 
 export default {
 	components: {
 		etButton,
 		etHotcomcontent,
-		etTitlenavigation
+		etTitlenavigation,
+		etBookcat
 	},
 	data() {
 		return {
@@ -89,25 +109,87 @@ export default {
 			groupList: [
 				{
 					'name' : '绘本',
-					'img'  : '../../static/index/groupicon@2x.png'
+					'img'  : '../static/index/groupicon@2x.png'
 				},
 				{
 					'name' : '获币',
-					'img'  : '../../static/index/groupicon@2x.png'
+					'img'  : '../static/index/groupicon@2x.png'
 				},
 				{
 					'name' : '打卡',
-					'img'  : '../../static/index/groupicon@2x.png'
+					'img'  : '../static/index/groupicon@2x.png'
 				},
 				{
 					'name' : '会员',
-					'img'  : '../../static/index/groupicon@2x.png'
+					'img'  : '../static/index/groupicon@2x.png'
 				},
 				{
 					'name' : '分类',
-					'img'  : '../../static/index/groupicon@2x.png'
+					'img'  : '../static/index/groupicon@2x.png'
 				}
-			]
+			],
+			hotBookList: [
+				{
+					'name' : '巴巴故事看看卡卡卡卡阿卡卡卡卡',
+					'img'  : '../static/index/hotbook.jpg',
+					'bookCount' : 10
+				},
+				{
+					'name' : '巴巴旅行',
+					'img'  : '../static/index/hotbook.jpg',
+					'bookCount' : 100
+				},
+				{
+					'name' : '巴巴朋友',
+					'img'  : '../static/index/hotbook.jpg',
+					'bookCount' : 3
+				},
+				{
+					'name' : '巴巴国王',
+					'img'  : '../static/index/hotbook.jpg',
+					'bookCount' : 80
+				},
+				{
+					'name' : '巴巴孩子们',
+					'img'  : '../static/index/hotbook.jpg',
+					'bookCount' : 30
+				},
+				{
+					'name' : '巴巴公主',
+					'img'  : '../static/index/hotbook.jpg',
+					'bookCount' : 44
+				}
+			],
+			bookCat: [
+				{
+					'name' : '科普百科',
+					'img'  : '../static/index/bookCat@3x.png'
+				},
+				{
+					'name' : '幼儿教育',
+					'img'  : '../static/index/bookCat@3x.png'
+				},
+				{
+					'name' : '能力培训',
+					'img'  : '../static/index/bookCat@3x.png'
+				},
+				{
+					'name' : '自我认知',
+					'img'  : '../static/index/bookCat@3x.png'
+				},
+				{
+					'name' : '有教无类',
+					'img'  : '../static/index/bookCat@3x.png'
+				},
+				{
+					'name' : '古籍古典',
+					'img'  : '../static/index/bookCat@3x.png'
+				},
+				{
+					'name' : '流行音乐',
+					'img'  : '../static/index/bookCat@3x.png'
+				},
+			],
 			
 		}
 	},
@@ -138,6 +220,9 @@ export default {
 </script>
 
 <style scoped>
+.index {
+	background-color: rgba(249,249,249,0.5);
+}
 /* 头部内容	 */
 .top-content {
 	display: flex;
@@ -223,4 +308,31 @@ export default {
 	width: 100%;
 	height: 200upx;
 }
+
+/* 热门推荐 */
+.hot-recom {
+	width: 100%;
+}
+.hotcomcontent {
+	display: flex;
+	flex-direction: row;
+	flex-wrap: wrap;
+	justify-content:space-around;
+}
+
+/* 书籍分类 */
+.book-cat {
+	display: flex;
+	flex-direction: row;
+	flex-wrap: nowrap;
+	overflow: scroll;
+}
+
+/* 阅读圈 */
+.read-img {
+	width: 100%;
+}
+
+/* 猜你喜欢 */
+
 </style>
