@@ -1,21 +1,28 @@
 <template>
 	<view class="content">
+		<!-- 左边栏 -->
 		<scroll-view scroll-y class="left-aside">
-			<view v-for="item in secondKind" :key="item.id" class="f-item b-b" :class="{active: item.id === currentId}" @click="tabtap(item)">
+			<view v-for="(item, index) in secondKind" :key="index" class="f-item" :class="{active: index === currentId}" @click="tabtap(item,index)">
 				{{item.name}}
 			</view>
 		</scroll-view>
-		<scroll-view scroll-with-animation scroll-y class="right-aside" @scroll="asideScroll" :scroll-top="tabScrollTop">
+		<!-- 右边栏 -->
+		<scroll-view scroll-with-animation scroll-y class="right-aside" >
 			<view v-for="item in thirdKind" :key="item.id" class="s-list" :id="'main-'+item.id">
-				<text class="s-item">{{item.name}}</text>
-				<!-- <view class="t-list">
-					<view @click="navToList(item.id, titem.id)" v-if="titem.pid === item.id" class="t-item" v-for="titem in tlist" :key="titem.id">
-						<image :src="titem.picture"></image>
-						<text>{{titem.name}}</text>
+				<view class="item-img">
+					<image class="item-img-img" src="../../static/kind/titleImg.png"></image>
+				</view>
+				
+				<view class="item-content-father">
+					<view class="item-content">
+						<image class="item-content-img" src="../../static/kind/icon.png" mode=""></image>
+						<text class="s-item">{{item.name}}</text>
 					</view>
-				</view> -->
+				</view>
+				
 			</view>
 		</scroll-view>
+		
 	</view>
 </template>
 
@@ -28,7 +35,10 @@
 				// 二级分类
 				secondKind: [],
 				// 三级分类
-				thirdKind: [] 
+				thirdKind: [],
+				sizeCalcState: false,
+				tabScrollTop: 0,
+				currentId: 0,
 			}
 		},
 		onLoad() {
@@ -44,6 +54,12 @@
 				})
 				// console.log(res.data);
 			})
+		},
+		methods: {
+			tabtap(item,index){
+				this.thirdKind = item.children;
+				this.currentId = index;
+			}
 		}
 	}
 </script>
@@ -58,11 +74,6 @@
 		height: 100%;
 		background-color: #fff;
 	}
-	.right-aside{
-		flex: 1;
-		overflow: hidden;
-		padding-left: 20upx;
-	}
 	.f-item {
 		display: flex;
 		align-items: center;
@@ -73,4 +84,62 @@
 		color: $font-color-base;
 		position: relative;
 	}
+	/* 选择菜单后的样式 */
+	.active {
+		color: rgba(0,128,0,1);		
+	}
+	.active::before {
+		content: '';
+		position: absolute;
+		left: 0;
+		top: 50%;
+		transform: translateY(-50%);
+		height: 36upx;
+		width: 8upx;
+		background-color: rgba(0,128,0,1);
+		border-radius: 0 4px 4px 0;
+		opacity: .8;
+	}
+	.right-aside{
+		flex: 1;
+		overflow: hidden;
+		padding-left: 20upx;
+		display: flex;
+		flex-direction: column;
+		background-color: rgba(230,230,230,1);
+		height: 100vh;
+	}
+	.s-list{
+		width: 94%;
+		display: flex;
+		flex-direction: column;
+		justify-content: center;
+		align-items: center;
+		background-color: #FFFFFF;
+		border-radius: 25upx;
+		padding: 10upx;
+		box-shadow: 2upx 2upx 2upx 2upx rgba(179,179,179,0.4);
+		margin-top: 20upx;
+	}
+	.item-img-img {
+		width: 480upx;
+		height: 120upx;
+	}
+	.item-content-father {
+		width: 100%;
+		display: flex;
+		flex-direction: row;
+		justify-content: flex-start;
+	}
+	.item-content {
+		display: flex;
+		flex-direction: row;
+		justify-content: flex-start;
+		/* margin-left: -350upx; */
+	}
+	.item-content-img {
+		width: 50upx;
+		height: 50upx;
+	}
+	
 </style>

@@ -1,6 +1,24 @@
 {
 	"pages": [ //pages数组中第一项表示应用启动页，参考：https://uniapp.dcloud.io/collocation/pages
 		{
+			"path": "pages/kindlist/kindlist",
+			"style": {
+				"navigationBarTitleText": "成长绘本",
+				"app-plus": {
+					"titleNView": false
+				}
+			}
+		},
+		{
+			"path": "pages/kind/kind",
+			"style": {
+				"navigationBarTitleText": "书籍目录",
+				"app-plus": {
+					"titleNView": false
+				}
+			}
+		},
+		{
 			"path": "pages/index/index",
 			"style": {
 				"navigationBarTitleText": "五车书",
@@ -36,15 +54,15 @@
 				}
 			}
 		},
-		{
-			"path": "pages/kind/kind",
-			"style": {
-				"navigationBarTitleText": "书籍目录",
-				"app-plus": {
-					"titleNView": false
-				}
-			}
-		},
+		// {
+		// 	"path": "pages/kind/kind",
+		// 	"style": {
+		// 		"navigationBarTitleText": "书籍目录",
+		// 		"app-plus": {
+		// 			"titleNView": false
+		// 		}
+		// 	}
+		// },
 		{
 			"path": "pages/cart/cart",
 			"style": {
