@@ -1,9 +1,27 @@
 {
 	"pages": [ //pages数组中第一项表示应用启动页，参考：https://uniapp.dcloud.io/collocation/pages
 		{
+			"path": "pages/index/index",
+			"style": {
+				"navigationBarTitleText": "五车书",
+				"app-plus": {
+					"titleNView": false
+				}
+			}
+		},
+		{
+			"path": "pages/register/register",
+			"style": {
+				"navigationBarTitleText": "幼儿信息",
+				"app-plus": {
+					"titleNView": false
+				}
+			}
+		},
+		{
 			"path": "pages/guide/guide",
 			"style": {
-				"navigationBarTitleText": "guide",
+				"navigationBarTitleText": "我要体验",
 				"app-plus": {
 					"titleNView": false
 				}
@@ -12,16 +30,7 @@
 		{
 			"path": "pages/auth/auth",
 			"style": {
-				"navigationBarTitleText": "auth",
-				"app-plus": {
-					"titleNView": false
-				}
-			}
-		},
-		{
-			"path": "pages/index/index",
-			"style": {
-				"navigationBarTitleText": "index",
+				"navigationBarTitleText": "校园智慧童书馆",
 				"app-plus": {
 					"titleNView": false
 				}
@@ -30,7 +39,7 @@
 		{
 			"path": "pages/kind/kind",
 			"style": {
-				"navigationBarTitleText": "kind",
+				"navigationBarTitleText": "书籍目录",
 				"app-plus": {
 					"titleNView": false
 				}
@@ -48,7 +57,7 @@
 		{
 			"path": "pages/my/my",
 			"style": {
-				"navigationBarTitleText": "my",
+				"navigationBarTitleText": "我的信息",
 				"app-plus": {
 					"titleNView": false
 				}
@@ -56,6 +65,7 @@
 		}
 	],
 	"globalStyle": {
+		"navigationBarTextStyle": "black",
 		"navigationBarBackgroundColor":"#FFFFFF",
 		"backgroundColor": "#F8F8F8"
 	},
@@ -77,13 +87,13 @@
 				"text": "分类"
 			},
 			{
-				"pagePath": "pages/cart/cart",
+				"pagePath": "pages/guide/guide",
 				"iconPath": "static/tab-cart.png",
 				"selectedIconPath": "static/tab-cart-current.png",
 				"text": "书篮"
 			},
 			{
-				"pagePath": "pages/my/my",
+				"pagePath": "pages/register/register",
 				"iconPath": "static/tab-my.png",
 				"selectedIconPath": "static/tab-my-current.png",
 				"text": "我的"

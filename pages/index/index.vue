@@ -45,7 +45,7 @@
 		<!-- 热门推荐 -->
 		<view class="hot-recom">
 			<!-- 导航条 -->
-			<et-titlenavigation  title="热门推荐" img="../static/index/start@2x.png" toUrl="baidu.com" @clickHandle="btnGroupClick"></et-titlenavigation>
+			<et-titlenavigation  title="热门推荐" img="../static/index/start.png" toUrl="baidu.com" @clickHandle="btnGroupClick"></et-titlenavigation>
 			
 			<view class="hotcomcontent">
 				<et-hotcomcontent  v-for="(item,i) in hotBookList" :key="i" :title="item.name" :img="item.img" :bookCount="item.bookCount" @clickHandle="btnGroupClick"></et-hotcomcontent>
@@ -57,7 +57,7 @@
 		<!-- 新书推荐 -->
 		<view class="new-recom">
 			<!-- 导航条 -->
-			<et-titlenavigation  title="新书推荐" img="../static/index/start@2x.png" toUrl="baidu.com" @clickHandle="btnGroupClick"></et-titlenavigation>
+			<et-titlenavigation  title="新书推荐" img="../static/index/start.png" toUrl="baidu.com" @clickHandle="btnGroupClick"></et-titlenavigation>
 		</view>
 		
 		<view class="white-space"></view>
@@ -79,7 +79,7 @@
 		<!-- 猜你喜欢 -->
 		<view class="guess-like">
 			<!-- 导航条 -->
-			<et-titlenavigation  title="猜你喜欢" img="../static/index/start@2x.png" toUrl="baidu.com" @clickHandle="btnGroupClick"></et-titlenavigation>
+			<et-titlenavigation  title="猜你喜欢" img="../static/index/start.png" toUrl="baidu.com" @clickHandle="btnGroupClick"></et-titlenavigation>
 			
 			<!-- 内容 -->
 			<view class="guess-content">
@@ -112,28 +112,28 @@ export default {
 			swiperCurrent: 0,
 			swiperLength: 0,
 			carouselList: [],
-			oneBanner: "../../static/index/giftbanner@2x.png",
-			secondBanner: "../../static/index/readbanner@3x.png",
+			oneBanner: "../../static/index/giftbanner.png",
+			secondBanner: "../../static/index/readbanner.png",
 			groupList: [
 				{
 					'name' : '绘本',
-					'img'  : '../static/index/绘本icon@2x.png'
+					'img'  : '../static/index/picture.png'
 				},
 				{
 					'name' : '获币',
-					'img'  : '../static/index/获币icon@2x.png'
+					'img'  : '../static/index/currny.png'
 				},
 				{
 					'name' : '打卡',
-					'img'  : '../static/index/打卡icon@2x.png'
+					'img'  : '../static/index/punch.png'
 				},
 				{
 					'name' : '会员',
-					'img'  : '../static/index/会员icon@2x.png'
+					'img'  : '../static/index/member.png'
 				},
 				{
 					'name' : '分类',
-					'img'  : '../static/index/分类icon@2x.png'
+					'img'  : '../static/index/sort.png'
 				}
 			],
 			hotBookList: [
@@ -171,27 +171,27 @@ export default {
 			bookCat: [
 				{
 					'name' : '科普百科',
-					'img'  : '../static/index/科普百科icon@2x.png'
+					'img'  : '../static/index/encyclopedia.png'
 				},
 				{
 					'name' : '能力培养',
-					'img'  : '../static/index/能力培养icon@2x.png'
+					'img'  : '../static/index/ability.png'
 				},
 				{
 					'name' : '自我认知',
-					'img'  : '../static/index/自我认知icon@2x.png'
+					'img'  : '../static/index/me.png'
 				},
 				{
 					'name' : '科普百科',
-					'img'  : '../static/index/科普百科icon@2x.png'
+					'img'  : '../static/index/encyclopedia.png'
 				},
 				{
 					'name' : '能力培养',
-					'img'  : '../static/index/能力培养icon@2x.png'
+					'img'  : '../static/index/ability.png'
 				},
 				{
 					'name' : '自我认知',
-					'img'  : '../static/index/自我认知icon@2x.png'
+					'img'  : '../static/index/me.png'
 				}
 			],
 			guessBookList: [
@@ -269,7 +269,7 @@ export default {
 .top-content {
 	display: flex;
 	flex-direction: column;
-	background-image:url(../../static/index/topBackground@2x.png);
+	background-image:url(../../static/index/topBackground.png);
 	background-size:cover;
 }
 .search-box {

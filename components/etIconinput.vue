@@ -1,39 +1,43 @@
 <template>
 	<view class="content">
 		<image :src="img" class="img"></image>
-		<text class="title">{{title}}</text>
+		<input class="input-content" type="text" :value="inputData" :placeholder="remark" placeholder-class="input-content-pla"/>
 	</view>
 </template>
 
 <script>
 export default {
 	props: {
-		title: String,
-		img: String
+		img: String,
+		inputData: String,
+		remark: String
 	},
 	methods: {
-		btnClick() {
-			this.$emit('clickHandle')
-		}
+	
 	}
 }
 </script>
 
 <style>
-.btn-content {
+.content {
 	display: flex;
-	flex-direction: column;
+	flex-direction: row;
 	align-items: center;
-	justify-content: center;
-	padding: 12upx 12upx;
+	justify-content:flex-start;
+	padding: 12upx 24upx;
+	border: 1upx solid rgba(233,233,233,1);
+	border-radius: 40upx;
+	box-shadow: 1upx 1upx 1upx 1upx rgba(179,179,179,0.4);
 }
 .img {
-	height: 120upx;
-	width: 120upx;
+	height: 50upx;
+	width: 50upx;
 }
-.title {
-	padding-top: 8upx;
-	font-size: 30upx;
-	color: rgba(128,128,128,1)
+.input-content,.input-content-pla {
+	font-size: 28upx;
+	color: rgba(185,185,185,0.8)
+}
+.input-content {
+	margin-left: 20upx;
 }
 </style>

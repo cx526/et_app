@@ -1,7 +1,7 @@
 <template>
 	<view class="content">
 		<view class="img-content">
-			<image class="image-content" src="../../static/auth/LOGO@2x.png" mode=""></image>
+			<image class="image-content" src="../../static/auth/logo.png" mode=""></image>
 		</view>
 		
 		<view class="white-space"></view>
