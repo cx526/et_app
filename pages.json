@@ -1,6 +1,15 @@
 {
 	"pages": [ //pages数组中第一项表示应用启动页，参考：https://uniapp.dcloud.io/collocation/pages
 		{
+			"path": "pages/cart/cart",
+			"style": {
+				"navigationBarTitleText": "书架",
+				"app-plus": {
+					"titleNView": false
+				}
+			}
+		},
+		{
 			"path": "pages/bookdetail/bookdetail",
 			"style": {
 				"navigationBarTitleText": "商品详情",
@@ -72,15 +81,6 @@
 		// 		}
 		// 	}
 		// },
-		{
-			"path": "pages/cart/cart",
-			"style": {
-				"navigationBarTitleText": "cart",
-				"app-plus": {
-					"titleNView": false
-				}
-			}
-		},
 		{
 			"path": "pages/my/my",
 			"style": {
