@@ -1,6 +1,15 @@
 {
 	"pages": [ //pages数组中第一项表示应用启动页，参考：https://uniapp.dcloud.io/collocation/pages
 		{
+			"path": "pages/cart/paysuccess",
+			"style": {
+				"navigationBarTitleText": "支付成功",
+				"app-plus": {
+					"titleNView": false
+				}
+			}
+		},
+		{
 			"path": "pages/cart/cartpay",
 			"style": {
 				"navigationBarTitleText": "订单详细",
