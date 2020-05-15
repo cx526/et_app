@@ -55,7 +55,7 @@
 			}
 		},
 		{
-			"path": "pages/bookdetail/bookdetail",
+			"path": "pages/index/bookdetail",
 			"style": {
 				"navigationBarTitleText": "商品详情",
 				"app-plus": {
@@ -64,7 +64,7 @@
 			}
 		},
 		{
-			"path": "pages/kindlist/kindlist",
+			"path": "pages/index/kindlist",
 			"style": {
 				"navigationBarTitleText": "成长绘本",
 				"app-plus": {
@@ -73,7 +73,7 @@
 			}
 		},
 		{
-			"path": "pages/kind/kind",
+			"path": "pages/index/kind",
 			"style": {
 				"navigationBarTitleText": "书籍目录",
 				"app-plus": {
@@ -90,16 +90,6 @@
 				}
 			}
 		},
-		
-		// {
-		// 	"path": "pages/kind/kind",
-		// 	"style": {
-		// 		"navigationBarTitleText": "书籍目录",
-		// 		"app-plus": {
-		// 			"titleNView": false
-		// 		}
-		// 	}
-		// },
 		{
 			"path": "pages/my/my",
 			"style": {
@@ -127,7 +117,7 @@
 				"text": "首页"
 			},
 			{
-				"pagePath": "pages/kind/kind",
+				"pagePath": "pages/index/kind",
 				"iconPath": "static/tab-cate.png",
 				"selectedIconPath": "static/tab-cate-current.png",
 				"text": "分类"
