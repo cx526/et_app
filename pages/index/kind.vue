@@ -8,7 +8,7 @@
 		</scroll-view>
 		<!-- 右边栏 -->
 		<scroll-view scroll-with-animation scroll-y class="right-aside" >
-			<view v-for="item in thirdKind" :key="item.id" class="s-list" :id="'main-'+item.id">
+			<view v-for="item in thirdKind" :key="item.id" class="s-list" :id="'main-'+item.id" @tap="toKindList">
 				<view class="item-img">
 					<image class="item-img-img" src="../../static/kind/titleImg.png"></image>
 				</view>
@@ -59,6 +59,9 @@
 			tabtap(item,index){
 				this.thirdKind = item.children;
 				this.currentId = index;
+			},
+			toKindList() {
+				uni.navigateTo({url: 'kindlist'})
 			}
 		}
 	}

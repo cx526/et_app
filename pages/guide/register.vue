@@ -36,7 +36,7 @@
 		<view class="buttom-father">
 			<view class="button-content">
 				<view class="button-content-img">
-					<image class="button-content-img-bi" src="../../static/register/领借阅币@3x.png"></image>
+					<image class="button-content-img-bi" src="../../static/register/currency.png"></image>
 				</view>
 				<view class="button-content-son button-content-son-one">
 					<text>填写幼儿园信息</text>

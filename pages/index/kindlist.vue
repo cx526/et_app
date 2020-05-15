@@ -6,7 +6,7 @@
 			</cl-tabs>
 			
 			<view class="list-content-position">
-				<et-kindlist v-for="(item,index) in listData" :key="index" class="list-content" :imgSrc="item.imgSrc" :bookName="item.bookName" :tagData="item.tagData" :remark="item.remark" :people="item.people" :bookCount="item.bookCount"></et-kindlist>
+				<et-kindlist @tap="toDetail" v-for="(item,index) in listData" :key="index" class="list-content" :imgSrc="item.imgSrc" :bookName="item.bookName" :tagData="item.tagData" :remark="item.remark" :people="item.people" :bookCount="item.bookCount"></et-kindlist>
 			</view>
 
 		</view>
@@ -136,6 +136,9 @@ export default {
 			this.tabCurrentIndex = e
 			
 		},
+		toDetail(){
+			uni.navigateTo({url: 'bookdetail'})
+		}
 	}
 }
 </script>
