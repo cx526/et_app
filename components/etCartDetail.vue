@@ -65,6 +65,10 @@ export default {
 	border-radius: 50upx;
 	border: 1upx solid rgba(179,179,179,0.3);
 	box-shadow: 1upx 1upx 1upx 1upx rgba(179,179,179,0.5);
+	background-color: #FFFFFF;
+}
+.check-position {
+	background-color: #FFFFFF;
 }
 .img-content {
 	width: 250upx;
@@ -77,6 +81,7 @@ export default {
 	align-items: flex-start;
 	height: 250upx;
 	padding-top: 50upx;
+	background-color: #FFFFFF;
 }
 .title-position {
 	font-size: 30upx;
@@ -110,5 +115,6 @@ export default {
 	padding-top: 30upx;
 	padding-left: 30upx;
 	padding-bottom: 30upx;
+	background-color: #FFFFFF;
 }
 </style>

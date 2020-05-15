@@ -25,16 +25,16 @@
 					</view>
 				</view>
 				
+				<!-- 订单信息 -->
+				<view class="pay-position">
+					<et-cart-pay-info :dataTime="dataTime" :outTime="outTime"></et-cart-pay-info>
+				</view>
+				
 				<view class="white-space" style="height: 120upx;"></view>
 				
 				<!-- 底部栏目 -->
 				<view class="bottom-position">
 					<view class="bottom-content">
-						<view class="bottom-check">
-							<checkbox value="cb" checked="true" />
-							<text>全选</text>
-						</view>
-						
 						<view class="bottom-text">
 							<text>合计：</text>
 							<text style="color: #DB3E49;">{{moneyCount}}</text>
@@ -42,8 +42,7 @@
 						</view>
 						
 						<view class="bottom-tag">
-							<et-tag backgroundColor="#808080" title="删除" fontColor="#FFFFFF" class="tag-style"></et-tag>
-							<et-tag backgroundColor="#2AA145" title="借阅" fontColor="#FFFFFF" class="tag-style"></et-tag>
+							<et-tag backgroundColor="#2AAEC4" title="借阅" fontColor="#FFFFFF" class="tag-style"></et-tag>
 						</view>
 					</view>
 				</view>
@@ -55,24 +54,21 @@
 <script>
 import etCartDetail from '../../components/etCartDetail.vue'
 import etTag from '../../components/etTag.vue'
+import etCartPayInfo from '../../components/etCartPayInfo.vue'
 
 export default {
 	components: {
 		etCartDetail,
-		etTag
+		etTag,
+		etCartPayInfo
 	},
 	data() {
 		return {
 			money:"30",
 			moneyCount:"199",
+			dataTime:"2020.04.05 至 2020.04.09",
+			outTime:"5",
 			listData: [
-				{
-					imgSrc: "../static/cart/oldMan.png",
-					title: "巴巴和圣诞老人",
-					status: "可借阅",
-					corn: "30",
-					count: "9",
-				},
 				{
 					imgSrc: "../static/cart/oldMan.png",
 					title: "巴巴和圣诞老人",
@@ -169,6 +165,9 @@ export default {
 .cat-detail {
 
 }
+.pay-position {
+	width: 90%;
+}
 .bottom-position {
 	z-index: 3;
 	width: 100%;
@@ -184,17 +183,13 @@ export default {
 	justify-content: space-around;
 	background-color: #FFFFFF;
 }
-.bottom-check,.bottom-text {
-	font-size: 25upx;
-	font-weight: bold;
-}
 .bottom-tag {
 	display: flex;
 	flex-direction: row;
 	justify-content: space-around;
 }
 .tag-style {
-	width: 80upx;
+	width: 150upx;
 	height: 45upx;
 	margin-right: 20upx;
 }

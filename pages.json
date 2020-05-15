@@ -1,6 +1,15 @@
 {
 	"pages": [ //pages数组中第一项表示应用启动页，参考：https://uniapp.dcloud.io/collocation/pages
 		{
+			"path": "pages/cart/cartpay",
+			"style": {
+				"navigationBarTitleText": "订单详细",
+				"app-plus": {
+					"titleNView": false
+				}
+			}
+		},
+		{
 			"path": "pages/cart/cart",
 			"style": {
 				"navigationBarTitleText": "书架",
@@ -114,7 +123,7 @@
 				"text": "分类"
 			},
 			{
-				"pagePath": "pages/guide/guide",
+				"pagePath": "pages/cart/cart",
 				"iconPath": "static/tab-cart.png",
 				"selectedIconPath": "static/tab-cart-current.png",
 				"text": "书篮"
