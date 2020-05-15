@@ -4,12 +4,12 @@
 			<image class="image-content" src="../../static/auth/logo.png" mode=""></image>
 		</view>
 		
-		<view class="white-space"></view>
-		
 		<view class="sub-content">
+			<button class="auth-button" open-type="getUserInfo" @getuserinfo="getuserinfo" withCredentials="true">微信授权</button>
+			<view style="height: 40upx;"></view>
 			<button class="auth-button" open-type="getPhoneNumber" @getphonenumber="getPhoneNumber">手机授权</button> 
 			<view style="height: 40upx;"></view>
-			<button class="auth-button" open-type="getUserInfo" @getuserinfo="getuserinfo" withCredentials="true">微信授权</button>
+			<button class="auth-button" @tap="goIndex">暂不登录</button>
 		</view>
 	</view>
 </template>
@@ -57,6 +57,11 @@ export default {
 					})
 				}
 			}})
+		},
+		goIndex() {
+			uni.switchTab({
+				"url": "pages/index/index"
+			}) 
 		}
 	}
 }
@@ -68,7 +73,7 @@ export default {
 	display: flex;
 	flex-direction: column;
 	align-items: center;
-	justify-content: center;
+	justify-content: flex-start;
 }
 .img-content {
 	padding-top: 100upx;
@@ -77,11 +82,9 @@ export default {
 	width: 312upx;
 	height: 151upx;
 }
-.white-space {
-	height: 400upx;
-}
 .sub-content {
 	width: 100%;
+	padding-top: 260upx;
 }
 .auth-button {
 	width: 50%;

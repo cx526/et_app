@@ -14,7 +14,17 @@ export default {
         }
     },
     onLoad() {
-        
+        uni.getStorage({
+        	key: 'guideShow',
+        	success: (res) => {
+        		console.log(res.data)
+				uni.reLaunch({url: '../guide/guide'})
+        	},
+        	fail: (err) => {
+        		// uni.redirectTo({url: '../guide/guide'})
+        		console.log(err)
+        	}
+        })
     },
     methods: {
 		buttonClick() {

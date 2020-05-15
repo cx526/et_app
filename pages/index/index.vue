@@ -236,7 +236,14 @@ export default {
 	methods: {
 		checkAuth() {
 			uni.getStorage({
-				key: 'userInfo'
+				key: 'userInfo',
+				success: (res) => {
+					console.log(res.data)
+				},
+				fail: (err) => {
+					uni.redirectTo({url: '../guide/guide'})
+					console.log(err)
+				}
 			})
 		},
 		getSwiperData() {
