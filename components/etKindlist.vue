@@ -39,11 +39,12 @@
 </template>
 
 <script>
+// 安卓在组件里面加载其他组件会有问题
 import etTag from './etTag.vue'
 
 export default {
 	components: {
-		etTag
+		// etTag
 	},
 	props: {
 		imgSrc: String,
