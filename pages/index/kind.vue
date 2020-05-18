@@ -10,12 +10,12 @@
 		<scroll-view scroll-with-animation scroll-y class="right-aside" >
 			<view v-for="item in thirdKind" :key="item.id" class="s-list" :id="'main-'+item.id" @tap="toKindList(thirdKind)">
 				<view class="item-img">
-					<image class="item-img-img" src="../../static/kind/titleImg.png"></image>
+					<image class="item-img-img" :src="item.kind_img"></image>
 				</view>
 				
 				<view class="item-content-father">
 					<view class="item-content">
-						<image class="item-content-img" src="../../static/kind/icon.png" mode=""></image>
+						<image class="item-content-img" :src="item.kind_icon" mode=""></image>
 						<text class="s-item">{{item.name}}</text>
 					</view>
 				</view>

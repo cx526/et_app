@@ -4,16 +4,15 @@
 			<cl-tabs class="tabs" :tab-bars="tabBars" :tab-index="tabCurrentIndex" @tabChange="tabChange" :sliderMargin="15"
 					:scale="1.3" sliderColor="#faff72" type="float" ref="tabs0" aniType="extend">
 			</cl-tabs>
-			
-			<view>
-				<view class="list-content-position" v-if="listData.length > 0">
-					<et-kindlist style="width: 45%;" @click="toDetail" v-for="(item,index) in listData" :key="index" class="list-content" :imgSrc="item.imgSrc" :bookName="item.bookName" :tagData="item.tagData" :remark="item.remark" :people="item.people" :bookCount="item.bookCount"></et-kindlist>
-				</view>
-				<view class="empty-style" v-else>
-					<text>列表空空如也</text>
-				</view>
+		</view>
+		
+		<view class="list-content-father-position">
+			<view class="list-content-position" v-if="listData.length > 0">
+				<et-kindlist style="width: 45%;" @click="toDetail" v-for="(item,index) in listData" :key="index" class="list-content" :imgSrc="item.imgSrc" :bookName="item.bookName" :tagData="item.tagData" :remark="item.remark" :people="item.people" :bookCount="item.bookCount"></et-kindlist>
 			</view>
-
+			<view class="empty-style" v-else>
+				<text>列表空空如也</text>
+			</view>
 		</view>
 		
 	</view>
@@ -111,6 +110,16 @@ export default {
 <style>
 .content {
 	display: flex;
+}
+.tabs {
+	background-color: #FFFFFF;
+	position: fixed;
+	top: 0;
+}
+.list-content-father-position {
+	padding-top: 120upx;
+	width: 100%;
+	
 }
 .list-content-position{
 	width: 94%;
