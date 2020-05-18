@@ -10,7 +10,7 @@
 		
 		<view class="tag-position">
 			<view class="tag-content" v-for="(item,index) in tagData" v-if="item" :key="index">
-				<et-tag :title="item.title" :backgroundColor="item.backgroundColor" fontColor="#FFFFFF" ></et-tag>
+				<et-tag :title="item.title" :backgroundColor="item.backgroundColor" :fontColor="item.fontColor" ></et-tag>
 			</view>
 		</view>
 		

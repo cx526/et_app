@@ -18,4 +18,7 @@ api.getSwiperData = params => request.globalRequest('/api/swiper/getSwiper', 'PO
 //获取所有分类
 api.getKinds = params => request.globalRequest('/api/kinds/getKinds', 'POST', params)
 
+//获取商品列表
+api.getGoodsList = params => request.globalRequest('/api/goodslist/getGoodsListForApp', 'POST', params)
+
 export default api

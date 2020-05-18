@@ -5,8 +5,13 @@
 					:scale="1.3" sliderColor="#faff72" type="float" ref="tabs0" aniType="extend">
 			</cl-tabs>
 			
-			<view class="list-content-position">
-				<et-kindlist @click="toDetail" v-for="(item,index) in listData" :key="index" class="list-content" :imgSrc="item.imgSrc" :bookName="item.bookName" :tagData="item.tagData" :remark="item.remark" :people="item.people" :bookCount="item.bookCount"></et-kindlist>
+			<view>
+				<view class="list-content-position" v-if="listData.length > 0">
+					<et-kindlist style="width: 45%;" @click="toDetail" v-for="(item,index) in listData" :key="index" class="list-content" :imgSrc="item.imgSrc" :bookName="item.bookName" :tagData="item.tagData" :remark="item.remark" :people="item.people" :bookCount="item.bookCount"></et-kindlist>
+				</view>
+				<view class="empty-style" v-else>
+					<text>列表空空如也</text>
+				</view>
 			</view>
 
 		</view>
@@ -25,116 +30,75 @@ export default {
 	},
 	data() {
 		return {
-			tabBars:['最新','新闻','图片','视频','推荐','收藏','关注'],
-			tabCurrentIndex:0,
+			tabBarsObj:[],	//分类页面传来的分类对象
+			tabBars:[],  //标签显示
+			tabBarID:0,  //初始化标签数据库ID
+			tabCurrentIndex:1,
 			sysWidth:0,
 			source:'touch',
 			fristTouch:false,
-			listData:[
-				{
-					'imgSrc': '../static/kindlist/book.png',
-					'bookName': '平民窟的世界乐团（精）',
-					'tagData': [
-						{
-							'title':'3-6岁',
-							'backgroundColor':'#F76630'
-						},
-						{
-							'title':'百科全书',
-							'backgroundColor':'#1AA034'
-						},
-						,
-						{
-							'title':'儿童纪实',
-							'backgroundColor':'#28AFEA'
-						},
-						{
-							'title':'百科全书',
-							'backgroundColor':'#1AA034'
-						},
-						,
-						{
-							'title':'儿童纪实',
-							'backgroundColor':'#28AFEA'
-						}
-					],
-					'remark': '中新经纬客户端5月14日电(张猛)日前，国家信息中心发布2020年“万亿俱乐部城市”房地产市场走势研判，2019年17个GDP万亿城市房地产投资依存度随之出炉，郑州最高，北京最低.',
-					'people' : '311',
-					'bookCount': '20'
-				},
-				{
-					'imgSrc': '../static/kindlist/book.png',
-					'bookName': '平民窟的世界乐团（精）',
-					'tagData': [
-						{
-							'title':'3-6岁',
-							'backgroundColor':'#F76630'
-						},
-						{
-							'title':'百科全书',
-							'backgroundColor':'#1AA034'
-						},
-						,
-						{
-							'title':'儿童纪实',
-							'backgroundColor':'#28AFEA'
-						},
-						{
-							'title':'百科全书',
-							'backgroundColor':'#1AA034'
-						},
-						,
-						{
-							'title':'儿童纪实',
-							'backgroundColor':'#28AFEA'
-						}
-					],
-					'remark': '中新经纬客户端5月14日电(张猛)日前，国家信息中心发布2020年“万亿俱乐部城市”房地产市场走势研判，2019年17个GDP万亿城市房地产投资依存度随之出炉，郑州最高，北京最低.',
-					'people' : '311',
-					'bookCount': '20'
-				},
-				{
-					'imgSrc': '../static/kindlist/book.png',
-					'bookName': '平民窟的世界乐团（精）',
-					'tagData': [
-						{
-							'title':'3-6岁',
-							'backgroundColor':'#F76630'
-						},
-						{
-							'title':'百科全书',
-							'backgroundColor':'#1AA034'
-						},
-						,
-						{
-							'title':'儿童纪实',
-							'backgroundColor':'#28AFEA'
-						},
-						{
-							'title':'百科全书',
-							'backgroundColor':'#1AA034'
-						},
-						,
-						{
-							'title':'儿童纪实',
-							'backgroundColor':'#28AFEA'
-						}
-					],
-					'remark': '中新经纬客户端5月14日电(张猛)日前，国家信息中心发布2020年“万亿俱乐部城市”房地产市场走势研判，2019年17个GDP万亿城市房地产投资依存度随之出炉，郑州最高，北京最低.',
-					'people' : '311',
-					'bookCount': '20'
-				}				
-			]
+			listData:[]
 		}
 	},
-	onLoad() {
+	onLoad(option) {
+		// 初始化tabBars
+		this.tabBarsObj = JSON.parse(decodeURIComponent(option.tabBars));
+		this.tabBars = [];
+		this.tabBarsObj.forEach((obj) => {
+			this.tabBars.push(obj.name);
+		});
+		this.tabBarID = this.tabBarsObj[0].id;	//初始化标签数据库ID
+		this.tabCurrentIndex = 0; //初始化标签序号
+		// 初始化tabBars
 		
+		// 初始化商品列表
+		uni.showLoading();
+		let param = {};
+		param.id = this.tabBarID;
+		this.$api.getGoodsList(param).then(res => {
+		   this.listData = this.transformListData(res.data);
+		   uni.showToast();
+		})
+		// 初始化商品列表
 	},
 	methods: {
 		tabChange(e){
+			this.tabBarID = this.tabBarsObj[e].id;	// 更新id用于获取列表数据
+			this.tabCurrentIndex = e;		// 更新标签序号
 			
-			this.tabCurrentIndex = e
-			
+			// 变更商品列表
+			uni.showLoading();
+			let param = {};
+			param.id = this.tabBarID;
+			this.$api.getGoodsList(param).then(res => {
+			   this.listData = this.transformListData(res.data);
+			   uni.showToast();
+			})
+		},
+		// 转换接口数据为视图数据
+		transformListData(data){
+			let resultArr = [];
+			data.forEach((item) => {
+				console.log(item);
+				let resultObj = {};
+				resultObj.imgSrc = item.goodsResult.cover;
+				resultObj.bookName = item.goodsResult.title;
+				resultObj.people = '311';
+				resultObj.bookCount = '30';
+				if(item.listTagInfo && item.listTagInfo.length > 0) {
+					let tagArr = [];
+					item.listTagInfo.forEach((obj) => {
+						let tagObj = {};
+						tagObj.title = obj.tag_name;
+						tagObj.backgroundColor = obj.bg_color;
+						tagObj.fontColor = obj.text_color;
+						tagArr.push(tagObj);
+					});
+					resultObj.tagData = tagArr;
+				}
+				resultArr.push(resultObj);
+			});
+			return resultArr;
 		},
 		toDetail(){
 			console.log('123');

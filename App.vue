@@ -17,4 +17,14 @@
 .white-space {
 	height: 30upx;
 }
+.empty-style {
+	width: 100%;
+	display: flex;
+	flex-direction: row;
+	justify-content:center;
+	margin: 0 auto;
+	color:rgb(106,106,106,.3);
+	font-size: 60upx;
+	padding-top: 60%;
+}
 </style>

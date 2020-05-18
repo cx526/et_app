@@ -8,7 +8,7 @@
 		</scroll-view>
 		<!-- 右边栏 -->
 		<scroll-view scroll-with-animation scroll-y class="right-aside" >
-			<view v-for="item in thirdKind" :key="item.id" class="s-list" :id="'main-'+item.id" @tap="toKindList">
+			<view v-for="item in thirdKind" :key="item.id" class="s-list" :id="'main-'+item.id" @tap="toKindList(thirdKind)">
 				<view class="item-img">
 					<image class="item-img-img" src="../../static/kind/titleImg.png"></image>
 				</view>
@@ -43,6 +43,7 @@
 		},
 		onLoad() {
 			// 获取分类数据
+			uni.showLoading();
 			this.$api.getKinds().then(res =>{
 				res.data.forEach(item=>{
 					console.log(item.name);
@@ -52,7 +53,7 @@
 						
 					}
 				})
-				// console.log(res.data);
+				uni.showToast();
 			})
 		},
 		methods: {
@@ -60,8 +61,9 @@
 				this.thirdKind = item.children;
 				this.currentId = index;
 			},
-			toKindList() {
-				uni.navigateTo({url: 'kindlist'})
+			toKindList(tabBars) {
+				//传递三级分类去商品列表
+				uni.navigateTo({url: 'kindlist?tabBars='+ JSON.stringify(tabBars)})
 			}
 		}
 	}
