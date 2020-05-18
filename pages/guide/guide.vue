@@ -17,8 +17,16 @@ export default {
         uni.getStorage({
         	key: 'guideShow',
         	success: (res) => {
-        		console.log(res.data)
-				uni.reLaunch({url: '../guide/guide'})
+				uni.getStorage({
+					key: 'userInfo',
+					success: res => {
+						uni.reLaunch({url: '../index/index'})
+					},
+					fail: (err) => {
+						uni.reLaunch({url: '../guide/auth'})
+					}
+				})
+				
         	},
         	fail: (err) => {
         		// uni.redirectTo({url: '../guide/guide'})
@@ -28,6 +36,7 @@ export default {
     },
     methods: {
 		buttonClick() {
+			uni.setStorageSync('guideShow', 'showed');
 			uni.navigateTo({url: 'auth'})
 		},
 	}

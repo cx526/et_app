@@ -6,7 +6,7 @@ function checkSession() {
         wx.checkSession({
             success(res) {
                 //session_key 未过期，并且在本生命周期一直有效
-                let code = uni.getStorageSync('code') || '';
+                let code = uni.getStorageSync('session_code') || '';
                 // TODO:code==‘’
                 resolve(code);
             },
@@ -28,7 +28,7 @@ function onLogin() {
             provider: 'weixin',
             success: function(res) {
                 if (res.errMsg == "login:ok") {
-                    uni.setStorageSync('code', res.code);
+                    uni.setStorageSync('session_code', res.code);
                     resolve(res.code);
                 } else {
                     reject(res);

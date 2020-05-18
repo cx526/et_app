@@ -5,37 +5,44 @@
 		</view>
 		
 		<view class="sub-content">
-			<button class="auth-button" open-type="getUserInfo" @getuserinfo="getuserinfo" withCredentials="true">微信授权</button>
+			<button :disabled="weChatCheck" class="auth-button" open-type="getUserInfo" @getuserinfo="getuserinfo" withCredentials="true">1、微信授权</button>
 			<view style="height: 40upx;"></view>
-			<button class="auth-button" open-type="getPhoneNumber" @getphonenumber="getPhoneNumber">手机授权</button> 
+			<button :disabled="phoneCheck" class="auth-button" open-type="getPhoneNumber" @getphonenumber="getPhoneNumber">2、手机授权</button> 
 			<view style="height: 40upx;"></view>
-			<button class="auth-button" @tap="goIndex">暂不登录</button>
+			<div class="auth-button" style="margin: 0 auto; text-align: center; line-height: 2.4; background: #fff; color: rgba(0,183,204,1); border: 1px solid #ccc;
+" @tap="goIndex">暂不登录</div>
 		</view>
 	</view>
 </template>
 
 <script>
+const WxAuth = require('@/common/WxAuth');
 
 export default {
     data() {
         return {
-			allInfo: {}
+			allInfo: {},
+			weChatCheck: false,
+			phoneCheck: false
         }
     },
     onLoad() {
-        
+        // #ifdef MP-WEIXIN
+		WxAuth.onLogin();
+		// #endif
     },
     methods: {
         /**
          * 微信授权 uni.getUserInfo
          */
         getuserinfo() {
-			uni.showLoading()			
+			uni.showLoading()		
 			wx.getUserInfo({
 				success: res => {
 					this.allInfo.userInfo = res.userInfo
 					console.log(this.allInfo)
 					uni.hideLoading()
+					this.weChatCheck = true
 					uni.showToast({
 						title: '微信授权成功!'
 					})
@@ -48,20 +55,39 @@ export default {
 		 * @param {*} e 
 		 */
 		getPhoneNumber(e) {
-			this.allInfo.detail = e.detail
-			wx.login({ success: res => {
-				if (res.code) {
-					this.allInfo.code = res.code
+			if (this.allInfo.userInfo && Object.keys(this.allInfo.userInfo).length > 0) {
+				this.allInfo.detail = e.detail
+				WxAuth.checkSession().then(code => {
+					this.allInfo.code = code
 					this.$api.getAuthData(this.allInfo).then(res => {
-					   console.log(res.data)
+						console.log(res.data)
+						if (res.data.status === 'ok') {
+							uni.setStorageSync('userInfo', res.data)
+							uni.reLaunch({url: '../index/index'})
+							this.phoneCheck = true
+						} else {
+							uni.showToast({
+								icon : 'none',
+								title: '授权失败!'
+							})
+						}
 					})
-				}
-			}})
+				})
+			} else {
+				uni.showToast({
+					icon : 'none',
+					title: '请先进行微信授权!'
+				})
+			}
 		},
 		goIndex() {
-			uni.switchTab({
-				"url": "pages/index/index"
-			}) 
+			uni.setStorageSync('userInfo', { 
+				name: 'guess',
+				avator: '',
+				gender: '',
+				phone: ''
+			});
+			uni.reLaunch({url: '../index/index'})
 		}
 	}
 }
