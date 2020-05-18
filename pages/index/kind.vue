@@ -8,7 +8,7 @@
 		</scroll-view>
 		<!-- 右边栏 -->
 		<scroll-view scroll-with-animation scroll-y class="right-aside" >
-			<view v-for="item in thirdKind" :key="item.id" class="s-list" :id="'main-'+item.id" @tap="toKindList(thirdKind)">
+			<view v-for="(item,index) in thirdKind" :key="item.id" class="s-list" :id="'main-'+item.id" @tap="toKindList(index,thirdKind)">
 				<view class="item-img">
 					<image class="item-img-img" :src="item.kind_img"></image>
 				</view>
@@ -61,9 +61,9 @@
 				this.thirdKind = item.children;
 				this.currentId = index;
 			},
-			toKindList(tabBars) {
+			toKindList(selectID,tabBars) {
 				//传递三级分类去商品列表
-				uni.navigateTo({url: 'kindlist?tabBars='+ JSON.stringify(tabBars)})
+				uni.navigateTo({url: 'kindlist?selectID='+ JSON.stringify(selectID) +'&tabBars='+ JSON.stringify(tabBars)});
 			}
 		}
 	}

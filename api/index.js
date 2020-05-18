@@ -21,4 +21,7 @@ api.getKinds = params => request.globalRequest('/api/kinds/getKinds', 'POST', pa
 //获取商品列表
 api.getGoodsList = params => request.globalRequest('/api/goodslist/getGoodsListForApp', 'POST', params)
 
+//获取商品详情
+api.getGoodsInfo = params => request.globalRequest('/api/goods/getGoodsInfo', 'POST', params)
+
 export default api

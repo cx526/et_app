@@ -4,7 +4,7 @@
 		<view class="swiper-position" style="position: relative;">
 			<swiper class="carousel" indicator-dots="ture" indicator-color="rgba(230,230,230,.3)"  indicator-active-color="rgba(230,230,230,1)" circular autoplay @change="swiperChange">
 				<swiper-item v-for="(item, i) in carouselList" :key="i" class="carousel-item">
-					<image src="../../static/bookdetail/book.png" />
+					<image :src="item.url" />
 				</swiper-item>
 			</swiper>
 			<view class="white-space"></view>
@@ -19,7 +19,7 @@
 				</view>
 				
 				<view class="detail-tag-position">
-					<et-tag v-for="(item,index) in tagData" :key="index" :backgroundColor="item.backgroundColor" fontColor="#FFFFFF" :title="item.text" class="detail-tag-content"></et-tag>
+					<et-tag v-for="(item,index) in tagData" :key="index" :backgroundColor="item.backgroundColor" :fontColor="item.fontColor" :title="item.text" class="detail-tag-content"></et-tag>
 				</view>
 				
 				<view class="detail-writer-position">
@@ -72,7 +72,7 @@
 		<view class="white-space"></view>
 		
 		<view class="process-position">
-			<image src="../../static/bookdetail/detail.png"></image>
+			<image :src="detailImg" mode="widthFix"></image>
 		</view>
 		
 		<view class="white-space"></view>
@@ -90,27 +90,16 @@ export default {
 	},
 	data() {
 		return {
+			bookID:	0,
 			swiperCurrent: 0,
 			swiperLength: 0,
 			carouselList: [],
-			detailTitle: '做个机器人是我',
-			writer: '（日）吉竹伸介',
-			publisher: '甘肃少年儿童出版社',
-			remark: 'flex隶属于广州键鸿体育用品有限公司，法定代表人：王灿城，注册资金：50万元，地址：广州市白云区鹤龙街尖彭路华联工业区13、15号B203，经营范围：商品零售贸易（许可审批类商品除外）;体育器材装备安装服务;室内体育场、娱乐设施工程',
-			tagData: [
-				{
-					'text': "3-6岁",
-					'backgroundColor': "#FDD240"
-				},
-				{
-					'text': "3-6岁",
-					'backgroundColor': "#FDD240"
-				},
-				{
-					'text': "3-6岁",
-					'backgroundColor': "#FDD240"
-				}
-			],
+			detailTitle: '',
+			writer: '',
+			publisher: '',
+			remark: '',
+			tagData: [],
+			detailImg: '',
 			imgInfo: [
 				{
 					'imgUrl' : "../static/bookdetail/people.png"
@@ -133,17 +122,41 @@ export default {
 			]
 		}
 	},
-	onLoad() {
-		this.getSwiperData();
+	onLoad(option) {
+		this.bookID = JSON.parse(decodeURIComponent(option.bookID));
+		this.getBookData();
+		
 	},
 	methods: {
-		getSwiperData() {
-			this.$api.getSwiperData({link_usage: 'app_swiper'}).then(res => {
-			   this.carouselList = res.data
+		getBookData() {
+			uni.showLoading();
+			this.$api.getGoodsInfo({ 'NoPageing': '1', 'filterItems': {'id': this.bookID} }).then(res => {
+			   this.transformBookData(res.data.rows[0]);
+			   uni.showToast();
 			})
 		},
 		swiperChange(e) {
 			const index = e.detail.current;
+		},
+		// 转换接口数据为视图数据
+		transformBookData(data){
+			carouselList: [],
+			this.detailTitle = data.title;
+			this.writer = data.author;
+			this.publisher = data.publisher;
+			this.remark = data.summary;
+			let tagArr = [];
+			if (data.tagInfo && data.tagInfo.length >0) {
+				data.tagInfo.forEach((item) => {
+					let tagObj = {};
+					tagObj.text = item.tag_name;
+					tagObj.backgroundColor = item.bg_color;
+					tagObj.fontColor = item.text_color;
+					this.tagData.push(tagObj);
+				});
+			}
+			this.carouselList = data.forGoodsPic;
+			this.detailImg = data.detail;
 		},
 	}
 }
@@ -171,7 +184,7 @@ export default {
 .carousel .carousel-item {
 	width: 100%;
 	height: 100%;
-	padding: 0 28upx;
+	/* padding: 0 28upx; */
 	overflow: hidden;
 }
 .carousel-item image {
@@ -230,6 +243,7 @@ export default {
 }
 .process-position {
 	width: 100%;
+	height: auto;
 	display: flex;
 	align-items: center;
 	justify-content: center;

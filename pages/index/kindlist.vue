@@ -8,7 +8,7 @@
 		
 		<view class="list-content-father-position">
 			<view class="list-content-position" v-if="listData.length > 0">
-				<et-kindlist style="width: 45%;" @click="toDetail" v-for="(item,index) in listData" :key="index" class="list-content" :imgSrc="item.imgSrc" :bookName="item.bookName" :tagData="item.tagData" :remark="item.remark" :people="item.people" :bookCount="item.bookCount"></et-kindlist>
+				<et-kindlist style="width: 45%;" v-for="(item,index) in listData" :key="index" class="list-content" :imgSrc="item.imgSrc" :bookName="item.bookName" :tagData="item.tagData" :remark="item.remark" :people="item.people" :bookCount="item.bookCount" @click="toDetail(item.bookID)"></et-kindlist>
 			</view>
 			<view class="empty-style" v-else>
 				<text>列表空空如也</text>
@@ -32,7 +32,7 @@ export default {
 			tabBarsObj:[],	//分类页面传来的分类对象
 			tabBars:[],  //标签显示
 			tabBarID:0,  //初始化标签数据库ID
-			tabCurrentIndex:1,
+			tabCurrentIndex:-1,
 			sysWidth:0,
 			source:'touch',
 			fristTouch:false,
@@ -46,8 +46,8 @@ export default {
 		this.tabBarsObj.forEach((obj) => {
 			this.tabBars.push(obj.name);
 		});
-		this.tabBarID = this.tabBarsObj[0].id;	//初始化标签数据库ID
-		this.tabCurrentIndex = 0; //初始化标签序号
+		this.tabCurrentIndex = option.selectID; //初始化标签序号
+		this.tabBarID = this.tabBarsObj[option.selectID].id;	//初始化标签数据库ID
 		// 初始化tabBars
 		
 		// 初始化商品列表
@@ -78,8 +78,8 @@ export default {
 		transformListData(data){
 			let resultArr = [];
 			data.forEach((item) => {
-				console.log(item);
 				let resultObj = {};
+				resultObj.bookID = item.goodsResult.id;
 				resultObj.imgSrc = item.goodsResult.cover;
 				resultObj.bookName = item.goodsResult.title;
 				resultObj.people = '311';
@@ -99,9 +99,8 @@ export default {
 			});
 			return resultArr;
 		},
-		toDetail(){
-			console.log('123');
-			uni.navigateTo({url: 'bookdetail'})
+		toDetail(id){
+			uni.navigateTo({url: 'bookdetail?bookID=' + JSON.stringify(id)})
 		}
 	}
 }
