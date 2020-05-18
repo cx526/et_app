@@ -1,5 +1,5 @@
 <template>
-	<view class="content">
+	<view class="content" @click="btnClick()">
 		<view class="img-position">
 			<image class="img-content" :src="imgSrc"></image>
 		</view>
@@ -9,7 +9,7 @@
 		</view>
 		
 		<view class="tag-position">
-			<view class="tag-content" v-for="(item,index) in tagData" :key="index">
+			<view class="tag-content" v-for="(item,index) in tagData" v-if="item" :key="index">
 				<et-tag :title="item.title" :backgroundColor="item.backgroundColor" fontColor="#FFFFFF" ></et-tag>
 			</view>
 		</view>
@@ -44,7 +44,7 @@ import etTag from './etTag.vue'
 
 export default {
 	components: {
-		// etTag
+		etTag
 	},
 	props: {
 		imgSrc: String,
@@ -56,7 +56,7 @@ export default {
 	},
 	methods: {
 		btnClick() {
-			this.$emit('clickHandle')
+			this.$emit('click')
 		}
 	}
 }

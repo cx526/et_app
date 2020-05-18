@@ -6,7 +6,7 @@
 			</cl-tabs>
 			
 			<view class="list-content-position">
-				<et-kindlist @tap="toDetail" v-for="(item,index) in listData" :key="index" class="list-content" :imgSrc="item.imgSrc" :bookName="item.bookName" :tagData="item.tagData" :remark="item.remark" :people="item.people" :bookCount="item.bookCount"></et-kindlist>
+				<et-kindlist @click="toDetail" v-for="(item,index) in listData" :key="index" class="list-content" :imgSrc="item.imgSrc" :bookName="item.bookName" :tagData="item.tagData" :remark="item.remark" :people="item.people" :bookCount="item.bookCount"></et-kindlist>
 			</view>
 
 		</view>
@@ -137,6 +137,7 @@ export default {
 			
 		},
 		toDetail(){
+			console.log('123');
 			uni.navigateTo({url: 'bookdetail'})
 		}
 	}
