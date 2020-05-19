@@ -301,7 +301,7 @@ export default {
 		},
 		getGuessBook(type){
 			if (this.guessBookList.length >= 30) {
-				this.status = 'noMore';  //没有数据时显示‘没有更多’
+				this.loadStatus = 'noMore';  //没有数据时显示‘没有更多’
 				return;
 			}
 			this.$api.getGuess().then(res => {

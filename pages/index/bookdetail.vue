@@ -76,6 +76,24 @@
 		</view>
 		
 		<view class="white-space"></view>
+		
+		<view class="bottom-position">
+			<view class="bottom-button">
+				<image src="../../static/bookdetail/zan.png" class="bottom-image"></image>
+				<text>推荐</text>
+			</view>
+			<view class="bottom-button">
+				<image src="../../static/bookdetail/xin.png" class="bottom-image"></image>
+				<text>收藏</text>
+			</view>
+			<view class="bottom-button">
+				<image src="../../static/bookdetail/packge.png" class="bottom-image"></image>
+				<text>书篮</text>
+			</view>
+			<view class="bottom-button-input" @tap="insertToCart">
+				<text>加入书篮</text>
+			</view>
+		</view>
 	</view>
 </template>
 
@@ -91,6 +109,8 @@ export default {
 	data() {
 		return {
 			bookID:	0,
+			coin:0,
+			cover:"",
 			swiperCurrent: 0,
 			swiperLength: 0,
 			carouselList: [],
@@ -145,6 +165,8 @@ export default {
 			this.writer = data.author;
 			this.publisher = data.publisher;
 			this.remark = data.summary;
+			this.cover = data.cover;
+			this.coin = data.coin;
 			let tagArr = [];
 			if (data.tagInfo && data.tagInfo.length >0) {
 				data.tagInfo.forEach((item) => {
@@ -158,11 +180,43 @@ export default {
 			this.carouselList = data.forGoodsPic;
 			this.detailImg = data.detail;
 		},
+		insertToCart() { 
+			// 获取书蓝列表
+			let carListArr = [];
+			uni.getStorage({
+				key: 'carListInfo',
+				success: (res) => {
+					console.log(res);
+					carListArr = res.data;
+				},
+				fail: (err) => {
+					console.log(err);
+				}
+			});
+			console.log(carListArr);
+			
+			// 处理数据
+			let cartList = {
+				'bookID': this.bookID,
+				'title': this.detailTitle,
+				'coin': this.coin,
+				'cover': this.cover,
+				'select': true,
+				'count':1
+			};
+			carListArr.push(cartList);
+			console.log(carListArr);
+			
+			// 数据插入
+			uni.setStorageSync('carListInfo', carListArr);
+			console.log(carListArr);
+			
+		}
 	}
 }
 </script>
 
-<style>
+<style scoped>
 .grey-space {
 	background-color: #E6E6E6;
 	height: 20upx;
@@ -254,5 +308,32 @@ export default {
 .remark-position {
 	width: 90%;
 	color: #6A6A6A;
+}
+.bottom-position {
+	width:100%;
+	display: flex;
+	justify-content: space-between;
+	position: fixed;
+	bottom: 0;
+	background-color: #FFFFFF;
+}
+.bottom-button {
+	padding: 20upx;
+	border: 1upx solid #999999;
+}
+.bottom-button-input {
+	padding-left: 75upx;
+	padding-right: 75upx;
+	border: 1upx solid #999999;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	background-color: #008000;
+	color: #FFFFFF;
+	font-weight: bold;
+}
+.bottom-image {
+	width: 50upx;
+	height: 50upx;
 }
 </style>
