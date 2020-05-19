@@ -98,9 +98,11 @@ import etHotcomcontent from '../../components/etHotcomcontent.vue'
 import etTitlenavigation from '../../components/etTitlenavigation.vue'
 import etBookcat from '../../components/etBookcat.vue'
 import etImgbox from '../../components/etImgbox.vue'
+import uniLoadMore from "@/components/uni-load-more/uni-load-more.vue"
 
 export default {
 	components: {
+		uniLoadMore,
 		etButton,
 		etHotcomcontent,
 		etTitlenavigation,
