@@ -1,12 +1,12 @@
 <template>
-	<view class="content" style="background:url('../../static/guide/complat.png'); background-size: 100% 100vh;">
-		<view class="content-position" style="background-image: url(../../static/guide/paper.png);background-size: 100% 100%;">
+	<view class="content">
+		<view class="content-position" style="background-image: url(../../static/guide/paper.png);">
 			<!-- 姓名 -->
 			<!-- 
 			<view class="in-position">
 				<text class="title-content">姓名</text>
 				<input class="input-size input-style" type="text" value="" />
-				<text class="last-style"> > </text>
+				
 			</view>
 			
 			<view class="in-position">
@@ -16,7 +16,7 @@
 						<view class="input-style">{{sex[sexIndex]}}</view>
 					</picker>
 				</view>
-				<text class="last-style"> > </text>
+				
 			</view>
 			
 			<view class="in-position">
@@ -26,49 +26,50 @@
 						<view class="input-style">{{date}}</view>
 					</picker>
 				</view>
-				<text class="last-style"> > </text>
+				
 			</view> 
 			-->
-			
-			<view class="in-position">
-				<text class="title-content">所在地</text>
-				<picker class="input-size" @change="bindDistrictChange" :value="districtIndex" :range="district">
-					<view class="input-style">{{district[districtIndex]}}</view>
-				</picker>
-				<text class="last-style"> > </text>
-			</view>
-			
-			<view class="in-position">
-				<text class="title-content">幼儿园</text>
-				<picker class="input-size" @change="bindKindergartenChange" :value="kindergartenIndex" :range="kindergarten">
-					<view class="input-style">{{kindergarten[kindergartenIndex]}}</view>
-				</picker>
-				<text class="last-style"> > </text>
-			</view>
-			
-			<view class="in-position">
-				<text class="title-content">所在年级</text>
-				<picker class="input-size" @change="bindGradeChange" :value="gradeIndex" :range="grade">
-					<view class="input-style">{{grade[gradeIndex]}}</view>
-				</picker>
-				<text class="last-style"> > </text>
-			</view>
-			
-			<view class="in-position">
-				<text class="title-content">所在班级</text>
-				<picker class="input-size" @change="bindTeamChange" :value="teamIndex" :range="team">
-					<view class="input-style">{{team[teamIndex]}}</view>
-				</picker>
-				<text class="last-style"> > </text>
-			</view>
-			
-			<view class="title-position">
-				<text>平台保证会对您和宝宝的信息绝对保密，请您放心！</text>
+			<view class="sub-content">
+				<view class="in-position">
+					<text class="title-content">所在地</text>
+					<picker class="input-size" @change="bindDistrictChange" :value="districtIndex" :range="district">
+						<view class="input-style">{{district[districtIndex]}}</view>
+					</picker>
+					<image src="../../static/guide/arrow.png" class="arrow"></image>
+				</view>
+				
+				<view class="in-position">
+					<text class="title-content">幼儿园</text>
+					<picker class="input-size" @change="bindKindergartenChange" :value="kindergartenIndex" :range="kindergarten">
+						<view class="input-style">{{kindergarten[kindergartenIndex]}}</view>
+					</picker>
+					<image src="../../static/guide/arrow.png" class="arrow"></image>
+				</view>
+				
+				<view class="in-position">
+					<text class="title-content">所在年级</text>
+					<picker class="input-size" @change="bindGradeChange" :value="gradeIndex" :range="grade">
+						<view class="input-style">{{grade[gradeIndex]}}</view>
+					</picker>
+					<image src="../../static/guide/arrow.png" class="arrow"></image>
+				</view>
+				
+				<view class="in-position">
+					<text class="title-content">所在班级</text>
+					<picker class="input-size" @change="bindTeamChange" :value="teamIndex" :range="team">
+						<view class="input-style">{{team[teamIndex]}}</view>
+					</picker>
+					<image src="../../static/guide/arrow.png" class="arrow"></image>
+				</view>
+				
+				<view class="title-position">
+					<text>平台保证会对您和宝宝的信息绝对保密，请您放心！</text>
+				</view>
 			</view>
 			
 			<view class="button-position">
-				<image class="image-style" src="../../static/guide/test.png" @tap="goIndex"></image>
-				<image class="image-style" src="../../static/guide/save.png"></image>
+				<view class="act-button">保存并领取借阅币</view>
+				<view class="act-button sub-act-button">先行体验</view>
 			</view>
 		</view>
 	</view>
@@ -151,21 +152,25 @@ export default {
 }
 </script>
 
-<style>
+<style scoped>
 .content {
 	width: 100%;
+	background: rgb(235,248,255);
+	height: 100vh;
+}
+.sub-content {
 	display: flex;
-	justify-content: center;
+	flex-direction: column;
 	align-items: center;
 }
 .content-position {
-	width: 94%;
-	height: 1100upx;
-	padding-top: 500upx;
-	padding-left: 30upx;
-	padding-right: 30upx;
+	background-size: 90%;
+	background-position: top;
+	background-repeat: no-repeat;
+	padding-top: 260upx;
 }
 .in-position {
+	width: 80%;
 	display: flex;
 	flex-direction: row;
 	justify-content: space-between;
@@ -175,29 +180,42 @@ export default {
 	border-bottom: 1upx solid #E8E8E8;
 }
 .title-content {
-	font-size: 35upx;
+	font-size: 30upx;
 	font-weight: bold;
 }
 .input-style {
-	font-size: 35upx;
+	font-size: 30upx;
 	color: #6A6A6A;
-}
-.last-style {
-	color: #6A6A6A;
-	font-size: 35upx;
-	font-weight: bold;
 }
 .title-position {
-	font-size: 28upx;
+	font-size: 24upx;
 	color: #6A6A6A;
 	text-align: center;
 	padding: 20upx 0;
 }
 .button-position {
-	text-align: center;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	padding-top: 65upx;
+	padding-bottom: 200upx;
 }
-.image-style {
-	height: 100upx;
-	width: 300upx;
+.arrow {
+	width: 20upx;
+	height: 20upx;
+}
+.act-button {
+	width: 80%;
+	background: rgba(0,183,204,1);
+	color: #fff;
+	padding: 20upx 0;
+	text-align: center;
+	border-radius: 40upx;
+}
+.sub-act-button {
+	color: rgba(0,183,204,1);
+	background: #fff;
+	margin-top: 30upx;
+	border: 1px solid #f1f1f1;
 }
 </style>

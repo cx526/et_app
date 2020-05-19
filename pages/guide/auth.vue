@@ -86,7 +86,7 @@ export default {
 				name: 'guess',
 				avator: '',
 				gender: '',
-				phone: ''
+				mobile: ''
 			});
 			uni.reLaunch({ url: '../index/index' })
 		}

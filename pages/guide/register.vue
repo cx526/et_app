@@ -89,6 +89,7 @@ export default {
 	align-items: center;
 	background-color: rgb(235,248,255);
 	position: relative;
+	padding-top: 20upx;
 }
 .content {
 	display: flex;
