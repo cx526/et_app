@@ -151,7 +151,7 @@
 				"text": "书篮"
 			},
 			{
-				"pagePath": "pages/guide/register",
+				"pagePath": "pages/my/my",
 				"iconPath": "static/tab-my.png",
 				"selectedIconPath": "static/tab-my-current.png",
 				"text": "我的"

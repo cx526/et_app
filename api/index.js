@@ -24,4 +24,10 @@ api.getGoodsList = params => request.globalRequest('/api/goodslist/getGoodsListF
 //获取商品详情
 api.getGoodsInfo = params => request.globalRequest('/api/goods/getGoodsInfo', 'POST', params)
 
+// 获取推荐书
+api.getRecommend = params => request.globalRequest('/api/frontend/getRecommend', 'POST', params)
+
+// 猜你喜欢
+api.getGuess= params => request.globalRequest('/api/frontend/getGuess', 'POST', params)
+
 export default api
