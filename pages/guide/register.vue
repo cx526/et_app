@@ -14,19 +14,22 @@
 			<view class="white-space"></view>
 			
 			<view class="input-class">
-				<et-iconinput img="../static/register/born.png" remark="出生年月"></et-iconinput>
+				<picker class="birthday-picker" mode="date" :value="birth_day" :start="startDate" :end="endDate" @change="bindDateChange">
+					<view>{{birth_day}}</view>
+				</picker>
+				<et-iconinput img="../static/register/born.png" remark=" " @inputFocusAction="birthInputFocus"></et-iconinput>
 			</view>
 			
 			<view class="white-space" style="padding-top: 30upx;"></view>
 			
 			<view class="img-class">
-				<view class="sex-class">
+				<view class="sex-class" @tap="selectGender(1)">
 					<image src="../../static/register/boy.png" mode=""></image>
-					<text>男孩</text>
+					<text :class="gender === 1 ? 'selected-gender' : ''">男孩</text>
 				</view>
-				<view class="sex-class">
+				<view class="sex-class" @tap="selectGender(2)">
 					<image src="../../static/register/gril.png" mode=""></image>
-					<text>女孩</text>
+					<text :class="gender === 2 ? 'selected-gender' : ''">女孩</text>
 				</view>
 			</view>
 			
@@ -58,9 +61,18 @@ export default {
 	components: {
 		etIconinput
 	},
+	computed: {
+		startDate() {
+			return this.getDate('start');
+		},
+		endDate() {
+			return this.getDate('end');
+		}
+	},
     data() {
         return {
-			
+			birth_day: this.getDate(),
+			gender: 0
         }
     },
     onLoad() {
@@ -75,6 +87,31 @@ export default {
 		},
 		goIndex() {
 			uni.reLaunch({ url: '../index/index' })
+		},
+		getDate(type) {
+			const date = new Date();
+			let year = date.getFullYear();
+			let month = date.getMonth() + 1;
+			let day = date.getDate();
+		
+			if (type === 'start') {
+				year = year - 60;
+			} else if (type === 'end') {
+				year = year + 2;
+			}
+			month = month > 9 ? month : '0' + month;;
+			day = day > 9 ? day : '0' + day;
+			return `${year}-${month}-${day}`;
+		},
+		bindDateChange: function(e) {
+			this.birth_day = e.target.value
+			console.log(this.birth_day)
+		},
+		birthInputFocus() {
+			console.log('birthInputFocus')
+		},
+		selectGender(gender) {
+			this.gender = gender
 		}
 	}
 }
@@ -108,6 +145,7 @@ export default {
 	color: rgba(185,185,185,0.8);
 }
 .input-class {
+	position: relative;
 	width: 60%;
 }
 .img-class {
@@ -166,5 +204,19 @@ export default {
 .button-content-son-two {
 	color: rgba(0,183,204,1);
 	background-color: rgba(255,255,254,1);
+}
+.birthday-picker {
+	position: absolute;
+	z-index: 999;
+	left: 22%;
+	top: 25%;
+	color: rgba(185,185,185,0.8);
+	font-size: 30upx;
+}
+.selected-gender {
+	background: rgba(0,183,204,1);
+	color: #fff;
+	padding: 0 12upx;
+	border-radius: 32upx;
 }
 </style>
