@@ -38,11 +38,11 @@
 				<view class="button-content-img">
 					<image class="button-content-img-bi" src="../../static/register/currency.png"></image>
 				</view>
-				<view class="button-content-son button-content-son-one">
+				<view class="button-content-son button-content-son-one" @tap="goClassInfo">
 					<text>填写幼儿园信息</text>
 				</view>
 				<view class="white-space"></view>
-				<view class="button-content-son button-content-son-two">
+				<view class="button-content-son button-content-son-two" @tap="goIndex">
 					<text>体验一下</text>
 				</view>
 			</view>
@@ -70,6 +70,12 @@ export default {
 		buttomClick() {
 			console.log('123');
 		},
+		goClassInfo() {
+			uni.navigateTo({ url: './complateInfo' })
+		},
+		goIndex() {
+			uni.reLaunch({ url: '../index/index' })
+		}
 	}
 }
 </script>

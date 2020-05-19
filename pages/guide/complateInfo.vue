@@ -2,6 +2,7 @@
 	<view class="content" style="background:url('../../static/guide/complat.png'); background-size: 100% 100vh;">
 		<view class="content-position" style="background-image: url(../../static/guide/paper.png);background-size: 100% 100%;">
 			<!-- 姓名 -->
+			<!-- 
 			<view class="in-position">
 				<text class="title-content">姓名</text>
 				<input class="input-size input-style" type="text" value="" />
@@ -26,7 +27,8 @@
 					</picker>
 				</view>
 				<text class="last-style"> > </text>
-			</view>
+			</view> 
+			-->
 			
 			<view class="in-position">
 				<text class="title-content">所在地</text>
@@ -61,12 +63,12 @@
 			</view>
 			
 			<view class="title-position">
-				<text>平台保证会对您和宝宝的信息绝对保密，请您放心</text>
+				<text>平台保证会对您和宝宝的信息绝对保密，请您放心！</text>
 			</view>
 			
 			<view class="button-position">
+				<image class="image-style" src="../../static/guide/test.png" @tap="goIndex"></image>
 				<image class="image-style" src="../../static/guide/save.png"></image>
-				<image class="image-style" src="../../static/guide/test.png"></image>
 			</view>
 		</view>
 	</view>
@@ -142,6 +144,9 @@ export default {
 		bindDateChange: function(e) {
 			this.date = e.target.value
 		},
+		goIndex() {
+			uni.reLaunch({ url: '../index/index' })
+		}
 	}
 }
 </script>
