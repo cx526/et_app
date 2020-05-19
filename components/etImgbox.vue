@@ -1,5 +1,5 @@
 <template>
-	<view class="btn-content" @tap="btnClick">
+	<view class="btn-content" @tap="toBookDetail">
 		<view class="img-content">
 			<image :src=img class="img"></image>
 		</view>
@@ -9,7 +9,8 @@
 				<text>{{title}}</text>
 			</view>			
 			<view class="tag-style">
-				<text class="tag-content"  v-for="(item,i) in tag" :key="i">{{item}}</text>
+				<!-- 只显示两个标签 -->
+				<text class="tag-content"  v-for="(item,i) in tag" v-if="i < 2" :key="i">{{item}}</text>
 			</view>
 		</view>
 	</view>
@@ -24,8 +25,8 @@ export default {
 		tag: Array
 	},
 	methods: {
-		btnClick() {
-			this.$emit('clickHandle')
+		toBookDetail() {
+			this.$emit('toBookDetail')
 		}
 	}
 }

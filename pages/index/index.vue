@@ -48,7 +48,7 @@
 			<et-titlenavigation  title="热门推荐" img="../static/index/start.png" toUrl="baidu.com" @clickHandle="btnGroupClick"></et-titlenavigation>
 			
 			<view class="hotcomcontent">
-				<et-hotcomcontent  v-for="(item,i) in hotBookList" :key="i" :title="item.name" :img="item.img" :bookCount="item.bookCount" @clickHandle="btnGroupClick"></et-hotcomcontent>
+				<et-hotcomcontent  v-for="(item,i) in hotBookList" :key="i" :title="item.name" :img="item.img" :bookCount="item.bookCount" @tap="toBookDetail(item.bookID)"></et-hotcomcontent>
 			</view>
 		</view>
 		
@@ -83,10 +83,10 @@
 			
 			<!-- 内容 -->
 			<view class="guess-content">
-				<et-imgbox  v-for="(item,i) in guessBookList" :key="i" :title="item.name" :img="item.img" :bookCount="item.bookCount" :tag="item.tag" @clickHandle="btnGroupClick"></et-imgbox>
+				<et-imgbox  v-for="(item,i) in guessBookList" :key="i" :title="item.name" :img="item.img" :bookCount="item.bookCount" :tag="item.tag" @tap="toBookDetail(item.bookID)"></et-imgbox>
 			</view>
 		</view>
-		
+		<uni-load-more :status="loadStatus" :content-text="loadText" />
 		<view class="white-space"></view>
 				
 	</view>
@@ -114,6 +114,12 @@ export default {
 			carouselList: [],
 			oneBanner: "../../static/index/giftbanner.png",
 			secondBanner: "../../static/index/readbanner.png",
+			loadStatus : 'loading',
+			loadText: {
+				contentdown: '上拉加载更多',
+				contentrefresh: '加载中',
+				contentnomore: '没有更多'
+			},
 			groupList: [
 				{
 					'name' : '绘本',
@@ -232,6 +238,13 @@ export default {
 	onLoad() {
 		this.checkAuth()
 		this.getSwiperData()
+		this.getHotBook('init')
+		this.getGuessBook('init')
+	},
+	// 上拉加载更多,onReachBottom上拉触底函数
+	onReachBottom : function(){
+		this.status = 'more';
+		this.getGuessBook('push')
 	},
 	methods: {
 		checkAuth() {
@@ -252,8 +265,8 @@ export default {
 			   this.swiperLength = this.carouselList.length;
 			})
 		},
-		btnGroupClick(item) {
-			console.log(item)
+		toBookDetail(bookID) {
+			uni.navigateTo({url: 'bookdetail?bookID=' + JSON.stringify(bookID)})
 		},
 		toSearch() {
 			uni.showToast({
@@ -264,6 +277,55 @@ export default {
 			const index = e.detail.current;
 			this.swiperCurrent = index;
 		},
+		getHotBook(type){
+			this.$api.getRecommend().then(res => {
+			   let dataArr = [];
+			   res.data.forEach(obj=>{
+				   let dataObj = {};
+				   dataObj.name = obj.goods_info.title;
+				   dataObj.img = obj.goods_info.cover;
+				   dataObj.bookCount = '100';
+				   dataObj.bookID = obj.goods_info.id;
+				   if (type === 'push'){
+						this.hotBookList.push(dataObj);
+				   } else if (type === 'init') {
+						dataArr.push(dataObj);  
+				   }
+			   });
+			   if (dataArr.length > 0) {
+				   this.hotBookList = dataArr;
+			   }
+			})
+		},
+		getGuessBook(type){
+			if (this.guessBookList.length >= 30) {
+				this.status = 'noMore';  //没有数据时显示‘没有更多’
+				return;
+			}
+			this.$api.getGuess().then(res => {
+			   let dataArr = [];
+			   res.data.forEach(obj=>{
+				   let dataObj = {};
+				   dataObj.name = obj.title;
+				   dataObj.img = obj.cover;
+				   dataObj.bookID = obj.id;
+				   dataObj.tag = [];
+				   if (obj.tagInfo && obj.tagInfo.length>0) {
+					   obj.tagInfo.forEach(tagObj=>{
+						   dataObj.tag.push(tagObj.tag_name);
+					   });
+				   }
+				   if (type === 'push'){
+						this.guessBookList.push(dataObj);
+				   } else if (type === 'init') {
+						dataArr.push(dataObj);  
+				   }
+			   });
+			   if (dataArr.length > 0) {
+				   this.guessBookList = dataArr;
+			   }
+			})
+		}
 	}	
 }
 </script>

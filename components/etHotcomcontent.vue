@@ -18,7 +18,7 @@ export default {
 	},
 	methods: {
 		btnClick() {
-			this.$emit('clickHandle')
+			this.$emit('toBookDetail')
 		}
 	}
 }
