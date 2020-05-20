@@ -47,7 +47,7 @@
 			</view>
 			
 			<view class="button-position">
-				<view class="act-button">保存并领取借阅币</view>
+				<view class="act-button" @tap="postSchoolInfo">保存并领取借阅币</view>
 				<view class="act-button sub-act-button" @tap="goIndex">先行体验</view>
 			</view>
 		</view>
@@ -84,12 +84,16 @@ export default {
 			selectedProvinceValue: '',
 			selectedCityValue: '',
 			selectedAreaValue: '',
+			schoolInfo: [],
+			gradeInfo: [],
 			kindergartenIndex: 0,
-			kindergarten: ['裴蕾幼儿园', '育英幼儿园', '财贸幼儿园', '机关幼儿园'],
+			kindergarten: [],
 			gradeIndex: 0,
-			grade: ['一年级', '二年级', '三年级', '四年级', '五年级', '六年级'],
+			grade: [],
 			teamIndex: 0,
-			team: ['一班', '二班', '三班', '四班', '五班', '六班'],
+			team: ['1班', '2班', '3班', '4班', '5班', '6班', '7班', '8班', '9班', '10班', '11班', '12班'],
+			selectSchoolId: null,
+			selectGradeId: null,
         }
     },
 	computed: {
@@ -137,31 +141,96 @@ export default {
 			// this.$forceUpdate()
 		},
 		regionChange(e) {
-			// this.selectedProvinceValue = e.target.value[0] ? this.provinceArray[e.target.value[0]] : this.provinceArray[0]
-			// this.selectedCityValue = e.target.value[1] ? this.cityArray[e.target.value[1]] : this.cityArray[0]
-			// this.selectedAreaValue = e.target.value[2] ? this.areaArray[e.target.value[2]] : this.areaArray[0]
 			
 			this.selectedProvinceCode = this.pKeysArray[e.target.value[0]]
 			this.selectedCityCode = this.cKeysArray[e.target.value[1]]
 			this.selectedAreaCode = this.aKeysArray[e.target.value[2]]
 			
-			console.log(e.target.value)
+			// console.log(e.target.value)
 			console.log(this.selectedProvinceCode, this.selectedCityCode, this.selectedAreaCode)
+			
+			let param = {
+				filterItems: {
+					province: this.selectedProvinceCode,
+					city: this.selectedCityCode,
+					area: this.selectedAreaCode
+				}
+			}
+			this.$api.getSchoolInfo(param).then(res => {
+				this.schoolInfo = res.data
+				if (res.data.length > 0) {
+					res.data.map(item => {
+						this.kindergarten.push(item.name)
+					})
+				}
+				this.selectSchoolId = this.schoolInfo[0].id
+			})
 		},
-		bindKindergartenChange: function(e) {
-			console.log('picker发送选择改变，携带值为', e.target.value)
+		bindKindergartenChange(e) {			
+			this.selectSchoolId = this.schoolInfo[e.target.value].id
 			this.kindergartenIndex = e.target.value
+			this.schoolInfo.map(item => {
+				if (item.name === this.kindergarten[e.target.value]) {
+					this.gradeInfo = item.classInfo
+					item.classInfo.map(subItem => {
+						this.grade.push(subItem.name)
+					})
+				}
+			})
+			this.selectGradeId = this.gradeInfo[0].id
 		},
-		bindGradeChange: function(e) {
-			console.log('picker发送选择改变，携带值为', e.target.value)
+		bindGradeChange(e) {
+			this.selectGradeId = this.gradeInfo[e.target.value].id
 			this.gradeIndex = e.target.value
 		},
-		bindTeamChange: function(e) {
-			console.log('picker发送选择改变，携带值为', e.target.value)
+		bindTeamChange(e) {
 			this.teamIndex = e.target.value
 		},
 		goIndex() {
 			uni.reLaunch({ url: '../index/index' })
+		},
+		postSchoolInfo() {
+			if (!this.selectedProvinceCode && this.selectedProvinceCode === '') {
+				uni.showToast({ icon: 'none', title: '请完善相关信息' })
+				return
+			}
+			if (!this.selectedCityCode && this.selectedCityCode === '') {
+				uni.showToast({ icon: 'none', title: '请完善相关信息' })
+				return
+			}
+			if (!this.selectedAreaCode && this.selectedAreaCode === '') {
+				uni.showToast({ icon: 'none', title: '请完善相关信息' })
+				return
+			}
+			if (!this.selectSchoolId && this.selectSchoolId === '') {
+				uni.showToast({ icon: 'none', title: '请完善相关信息' })
+				return
+			}
+			if (!this.selectGradeId && this.selectGradeId === '') {
+				uni.showToast({ icon: 'none', title: '请完善相关信息' })
+				return
+			}
+			let tmpClass = this.team[this.teamIndex].substr(0, 1)
+			const userInfo = uni.getStorageSync('userInfo')
+			let param = {
+				userInfo: userInfo,
+				province: this.selectedProvinceCode,
+				city: this.selectedCityCode,
+				area: this.selectedAreaCode,
+				school: this.selectSchoolId,
+				grade: this.selectGradeId,
+				class: tmpClass
+			}
+			this.$api.postSchoolInfo(param).then(res => {
+				if (res.data.status === 'ok') {
+					uni.reLaunch({ url: '../index/index' })
+				} else {
+					uni.showToast({
+						icon: 'none',
+						title: res.data.msg
+					})
+				}
+			})
 		}
 	}
 }
