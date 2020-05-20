@@ -13,7 +13,13 @@ const api = {}
 api.getAuthData = params => request.globalRequest('/api/auth/getAuthData', 'POST', params)
 
 // 新增幼儿信息
-api.postChildInfo= params => request.globalRequest('/api/auth/postChildInfo', 'POST', params)
+api.postChildInfo = params => request.globalRequest('/api/auth/postChildInfo', 'POST', params)
+
+// 获取班级学校信息
+api.getSchoolInfo = params => request.globalRequest('/api/school/getSchool', 'POST', params)
+
+// 提交班级学校信息
+api.postSchoolInfo = params => request.globalRequest('/api/auth/postSchoolInfo', 'POST', params)
 
 //获取轮播图
 api.getSwiperData = params => request.globalRequest('/api/swiper/getSwiper', 'POST', params)
