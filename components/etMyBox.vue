@@ -6,22 +6,27 @@
 				<view class="top-content">
 					<text style="font-weight: bold;">{{myMenuInfo.menuTitle}}</text>
 				</view>
-				<view class="top-content">
+				<view class="top-content" v-if="myMenuInfo.moreMenu">
 					<text>{{myMenuInfo.moreMenu}}</text>
 				</view>
 			</view>
 		</view>
 		
+		<view class="white-space"></view>
+		
+		<view class="menu-position">
+			<et-button v-for="(item,index) in myMenuInfo.allMenu" :key='index' :title="item.title" :img="item.imgSrc" :count="item.count" :buttomContent="item.buttomContent" class="menu-botton"></et-button>
+		</view>
 	</view>
 </template>
 
 <script>
 // 安卓在组件里面加载其他组件会有问题
-import etTag from './etTag.vue'
+import etButton from './etButton.vue'
 
 export default {
 	components: {
-		etTag
+		etButton
 	},
 	props: {
 		myMenuInfo:Object
@@ -59,5 +64,15 @@ export default {
 .top-content {
 	font-size: 28upx;
 	color: #008000;
+}
+.menu-position {
+	width: 100%;
+	display: flex;
+	flex-direction: row;
+	justify-content: space-between;
+	flex-wrap: wrap;
+}
+.menu-botton {
+	width: 25%;
 }
 </style>

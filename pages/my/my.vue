@@ -31,9 +31,17 @@
 		
 		<view class="white-space"></view>
 		
-		<view class="my-order-position">
-			<etMyBox :myMenuInfo="myMenuInfo"></etMyBox>
+		<view class="my-box-position">
+			<etMyBox :myMenuInfo="myOrderInfo"></etMyBox>
 		</view>
+		
+		<view class="white-space"></view>
+		
+		<view class="my-box-position">
+			<etMyBox :myMenuInfo="myAppInfo"></etMyBox>
+		</view>
+		
+		<view class="white-space"></view>
 	</view>
 </template>
 
@@ -54,52 +62,96 @@ export default {
 				'school':'林头幼儿园',
 				'class':'一年一班'
 			},
-			myMenuInfo: {
+			myOrderInfo: {
 				'menuTitle' : '我的订单',
 				'moreMenu' : '所有订单',
 				'allMenu': [
 					{
-						'imgSrc' : '../../static/cart/right.png',
+						'imgSrc' : '../static/cart/right.png',
+						'title'	: '待支付',
+						'toUrl'	: 'bookdetail?bookID=900',
+						'count'	: '99+'
+					},
+					{
+						'imgSrc' : '../static/cart/right.png',
 						'title'	: '待支付',
 						'toUrl'	: 'bookdetail?bookID=900'
 					},
 					{
-						'imgSrc' : '../../static/cart/right.png',
+						'imgSrc' : '../static/cart/right.png',
 						'title'	: '待支付',
 						'toUrl'	: 'bookdetail?bookID=900'
 					},
 					{
-						'imgSrc' : '../../static/cart/right.png',
+						'imgSrc' : '../static/cart/right.png',
+						'title'	: '待支付',
+						'count'	: '2'
+					},
+					{
+						'imgSrc' : '../static/cart/right.png',
 						'title'	: '待支付',
 						'toUrl'	: 'bookdetail?bookID=900'
 					},
 					{
-						'imgSrc' : '../../static/cart/right.png',
+						'imgSrc' : '../static/cart/right.png',
 						'title'	: '待支付',
 						'toUrl'	: 'bookdetail?bookID=900'
 					},
 					{
-						'imgSrc' : '../../static/cart/right.png',
+						'imgSrc' : '../static/cart/right.png',
 						'title'	: '待支付',
 						'toUrl'	: 'bookdetail?bookID=900'
 					},
 					{
-						'imgSrc' : '../../static/cart/right.png',
+						'imgSrc' : '../static/cart/right.png',
+						'title'	: '待支付',
+						'toUrl'	: 'bookdetail?bookID=900'
+					}
+				]
+			},
+			myAppInfo: {
+				'menuTitle' : '我的应用',
+				'allMenu': [
+					{
+						'imgSrc' : '../static/cart/right.png',
+						'title'	: '待支付',
+						'toUrl'	: 'bookdetail?bookID=900',
+						'buttomContent' : '$ 200'
+					},
+					{
+						'imgSrc' : '../static/cart/right.png',
+						'title'	: '待支付',
+						'toUrl'	: 'bookdetail?bookID=900',
+						'buttomContent' : '2000'
+					},
+					{
+						'imgSrc' : '../static/cart/right.png',
+						'title'	: '待支付',
+						'toUrl'	: 'bookdetail?bookID=900',
+						'buttomContent' : '0/1'
+					},
+					{
+						'imgSrc' : '../static/cart/right.png',
+						'title'	: '待支付',
+						'count'	: '2'
+					},
+					{
+						'imgSrc' : '../static/cart/right.png',
 						'title'	: '待支付',
 						'toUrl'	: 'bookdetail?bookID=900'
 					},
 					{
-						'imgSrc' : '../../static/cart/right.png',
+						'imgSrc' : '../static/cart/right.png',
 						'title'	: '待支付',
 						'toUrl'	: 'bookdetail?bookID=900'
 					},
 					{
-						'imgSrc' : '../../static/cart/right.png',
+						'imgSrc' : '../static/cart/right.png',
 						'title'	: '待支付',
 						'toUrl'	: 'bookdetail?bookID=900'
 					},
 					{
-						'imgSrc' : '../../static/cart/right.png',
+						'imgSrc' : '../static/cart/right.png',
 						'title'	: '待支付',
 						'toUrl'	: 'bookdetail?bookID=900'
 					}
@@ -116,6 +168,7 @@ export default {
 	flex-direction: column;
 	justify-content: center;
 	align-items: center;
+	background-color: #999999;
 }
 .userInfo-position {
 	width: 100%;
@@ -143,7 +196,7 @@ export default {
 	flex-direction: row;
 	justify-content: center;
 }
-.my-order-position {
-	width: 100%;
+.my-box-position {
+	width: 96%;
 }
 </style>
