@@ -1,5 +1,24 @@
 {
 	"pages": [ //pages数组中第一项表示应用启动页，参考：https://uniapp.dcloud.io/collocation/pages
+		
+		{
+			"path": "pages/cart/addressEdit",
+			"style": {
+				"navigationBarTitleText": "新建收货地址",
+				"app-plus": {
+					"titleNView": false
+				}
+			}
+		},
+		{
+			"path": "pages/guide/complateInfo",
+			"style": {
+				"navigationBarTitleText": "完善幼儿园信息",
+				"app-plus": {
+					"titleNView": false
+				}
+			}
+		},
 		{
 			"path": "pages/cart/addressList",
 			"style": {
@@ -29,15 +48,15 @@
 		},
 		
 		// 上面是测试地址
-		{
-			"path": "pages/guide/complateInfo",
-			"style": {
-				"navigationBarTitleText": "完善幼儿园信息",
-				"app-plus": {
-					"titleNView": false
-				}
-			}
-		},
+		// {
+		// 	"path": "pages/guide/complateInfo",
+		// 	"style": {
+		// 		"navigationBarTitleText": "完善幼儿园信息",
+		// 		"app-plus": {
+		// 			"titleNView": false
+		// 		}
+		// 	}
+		// },
 		{
 			"path": "pages/guide/register",
 			"style": {
