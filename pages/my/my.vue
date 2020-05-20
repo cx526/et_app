@@ -69,13 +69,13 @@ export default {
 					{
 						'imgSrc' : '../static/cart/right.png',
 						'title'	: '待支付',
-						'toUrl'	: 'bookdetail?bookID=900',
+						'toUrl'	: '/pages/index/bookdetail?bookID=900',
 						'count'	: '99+'
 					},
 					{
 						'imgSrc' : '../static/cart/right.png',
 						'title'	: '待支付',
-						'toUrl'	: 'bookdetail?bookID=900'
+						'toUrl'	: 'bookdetail?bookID=901'
 					},
 					{
 						'imgSrc' : '../static/cart/right.png',

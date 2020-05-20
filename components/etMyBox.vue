@@ -1,5 +1,5 @@
 <template>
-	<view class="content" @click="btnClick()">
+	<view class="content">
 		
 		<view class="top-position">
 			<view class="top-content-position">
@@ -15,7 +15,7 @@
 		<view class="white-space"></view>
 		
 		<view class="menu-position">
-			<et-button v-for="(item,index) in myMenuInfo.allMenu" :key='index' :title="item.title" :img="item.imgSrc" :count="item.count" :buttomContent="item.buttomContent" class="menu-botton"></et-button>
+			<et-button v-for="(item,index) in myMenuInfo.allMenu" :key='index' :title="item.title" :img="item.imgSrc" :count="item.count" :buttomContent="item.buttomContent" class="menu-botton" @btnClick="btnClick(item.toUrl)"></et-button>
 		</view>
 	</view>
 </template>
@@ -35,8 +35,9 @@ export default {
 		console.log(this.myMenuInfo);
 	},
 	methods: {
-		btnClick() {
-			this.$emit('click')
+		btnClick(toUrl) {
+			console.log(toUrl);
+			uni.navigateTo({url: toUrl});
 		}
 	}
 }
