@@ -105,9 +105,15 @@ export default {
 				}
 			}
 			this.$api.postChildInfo(param).then(res => {
-				console.log(res.data)
+				if (res.data.status === 'ok') {
+					uni.navigateTo({ url: './complateInfo' })	
+				} else {
+					uni.showToast({
+						icon: 'none',
+						title: res.data.msg
+					})
+				}
 			})
-			// uni.navigateTo({ url: './complateInfo' })
 		},
 		goIndex() {
 			uni.reLaunch({ url: '../index/index' })
