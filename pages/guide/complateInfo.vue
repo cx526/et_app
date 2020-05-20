@@ -47,7 +47,7 @@
 			</view>
 			
 			<view class="button-position">
-				<view class="act-button">保存并领取借阅币</view>
+				<view class="act-button" @tap="postSchoolInfo">保存并领取借阅币</view>
 				<view class="act-button sub-act-button" @tap="goIndex">先行体验</view>
 			</view>
 		</view>
@@ -92,6 +92,8 @@ export default {
 			grade: [],
 			teamIndex: 0,
 			team: ['1班', '2班', '3班', '4班', '5班', '6班', '7班', '8班', '9班', '10班', '11班', '12班'],
+			selectSchoolId: null,
+			selectGradeId: null,
         }
     },
 	computed: {
@@ -161,9 +163,11 @@ export default {
 						this.kindergarten.push(item.name)
 					})
 				}
+				this.selectSchoolId = this.schoolInfo[0].id
 			})
 		},
 		bindKindergartenChange(e) {			
+			this.selectSchoolId = this.schoolInfo[e.target.value].id
 			this.kindergartenIndex = e.target.value
 			this.schoolInfo.map(item => {
 				if (item.name === this.kindergarten[e.target.value]) {
@@ -173,8 +177,10 @@ export default {
 					})
 				}
 			})
+			this.selectGradeId = this.gradeInfo[0].id
 		},
 		bindGradeChange(e) {
+			this.selectGradeId = this.gradeInfo[e.target.value].id
 			this.gradeIndex = e.target.value
 		},
 		bindTeamChange(e) {
@@ -182,6 +188,49 @@ export default {
 		},
 		goIndex() {
 			uni.reLaunch({ url: '../index/index' })
+		},
+		postSchoolInfo() {
+			if (!this.selectedProvinceCode && this.selectedProvinceCode === '') {
+				uni.showToast({ icon: 'none', title: '请完善相关信息' })
+				return
+			}
+			if (!this.selectedCityCode && this.selectedCityCode === '') {
+				uni.showToast({ icon: 'none', title: '请完善相关信息' })
+				return
+			}
+			if (!this.selectedAreaCode && this.selectedAreaCode === '') {
+				uni.showToast({ icon: 'none', title: '请完善相关信息' })
+				return
+			}
+			if (!this.selectSchoolId && this.selectSchoolId === '') {
+				uni.showToast({ icon: 'none', title: '请完善相关信息' })
+				return
+			}
+			if (!this.selectGradeId && this.selectGradeId === '') {
+				uni.showToast({ icon: 'none', title: '请完善相关信息' })
+				return
+			}
+			let tmpClass = this.team[this.teamIndex].substr(0, 1)
+			const userInfo = uni.getStorageSync('userInfo')
+			let param = {
+				userInfo: userInfo,
+				province: this.selectedProvinceCode,
+				city: this.selectedCityCode,
+				area: this.selectedAreaCode,
+				school: this.selectSchoolId,
+				grade: this.selectGradeId,
+				class: tmpClass
+			}
+			this.$api.postSchoolInfo(param).then(res => {
+				if (res.data.status === 'ok') {
+					uni.reLaunch({ url: '../index/index' })
+				} else {
+					uni.showToast({
+						icon: 'none',
+						title: res.data.msg
+					})
+				}
+			})
 		}
 	}
 }
