@@ -1,7 +1,7 @@
 <template>
 	<view class="content">
 		<image :src="img" class="img"></image>
-		<input class="input-content" type="text" :value="inputData" :placeholder="remark" placeholder-class="input-content-pla" @focus="inputFocus"/>
+		<input class="input-content" type="text" :value="inputData" :placeholder="remark" placeholder-class="input-content-pla" @focus="inputFocus" @input="inputChange"/>
 	</view>
 </template>
 
@@ -15,6 +15,9 @@ export default {
 	methods: {
 		inputFocus() {
 			this.$emit('inputFocusAction')
+		},
+		inputChange(e) {
+			this.$emit('inputChangeAction', e)
 		}
 	}
 }

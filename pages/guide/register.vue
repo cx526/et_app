@@ -8,7 +8,7 @@
 			<view class="white-space"></view>
 			
 			<view class="input-class">
-				<et-iconinput img="../static/register/nickName.png" remark="幼儿昵称"></et-iconinput>
+				<et-iconinput img="../static/register/nickName.png" remark="幼儿昵称" @inputChangeAction="inputChangeAction"></et-iconinput>
 			</view>
 			
 			<view class="white-space"></view>
@@ -71,19 +71,49 @@ export default {
 	},
     data() {
         return {
+			name: '',
 			birth_day: this.getDate(),
-			gender: 0
+			gender: 0,
         }
     },
     onLoad() {
         
     },
     methods: {
-		buttomClick() {
-			console.log('123');
-		},
 		goClassInfo() {
-			uni.navigateTo({ url: './complateInfo' })
+			if (this.name === '') {
+				uni.showToast({
+					icon: 'none',
+					title: '请输入幼儿昵称'
+				})
+				return
+			}
+			if (this.gender === 0) {
+				uni.showToast({
+					icon: 'none',
+					title: '请选择幼儿性别'
+				})
+				return
+			}
+			const userInfo = uni.getStorageSync('userInfo')
+			let param = {
+				userInfo: userInfo,
+				childInfo: {
+					name: this.name,
+					gender: this.gender,
+					birth_day: this.birth_day,
+				}
+			}
+			this.$api.postChildInfo(param).then(res => {
+				if (res.data.status === 'ok') {
+					uni.navigateTo({ url: './complateInfo' })	
+				} else {
+					uni.showToast({
+						icon: 'none',
+						title: res.data.msg
+					})
+				}
+			})
 		},
 		goIndex() {
 			uni.reLaunch({ url: '../index/index' })
@@ -112,6 +142,9 @@ export default {
 		},
 		selectGender(gender) {
 			this.gender = gender
+		},
+		inputChangeAction(e) {
+			this.name = e.target.value
 		}
 	}
 }
@@ -212,6 +245,7 @@ export default {
 	top: 25%;
 	color: rgba(185,185,185,0.8);
 	font-size: 30upx;
+	width: 80%;
 }
 .selected-gender {
 	background: rgba(0,183,204,1);

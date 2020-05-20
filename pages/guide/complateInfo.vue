@@ -69,7 +69,7 @@
 			
 			<view class="button-position">
 				<view class="act-button">保存并领取借阅币</view>
-				<view class="act-button sub-act-button">先行体验</view>
+				<view class="act-button sub-act-button" @tap="goIndex">先行体验</view>
 			</view>
 		</view>
 	</view>
