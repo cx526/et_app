@@ -83,7 +83,7 @@ export default {
 		},
 		goIndex() {
 			uni.setStorageSync('userInfo', { 
-				name: 'guess',
+				name: 'guest',
 				avator: '',
 				gender: '',
 				mobile: ''

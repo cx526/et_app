@@ -12,6 +12,9 @@ const api = {}
 //获取登录信息
 api.getAuthData = params => request.globalRequest('/api/auth/getAuthData', 'POST', params)
 
+// 新增幼儿信息
+api.postChildInfo= params => request.globalRequest('/api/auth/postChildInfo', 'POST', params)
+
 //获取轮播图
 api.getSwiperData = params => request.globalRequest('/api/swiper/getSwiper', 'POST', params)
 
