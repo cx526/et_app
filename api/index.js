@@ -39,4 +39,7 @@ api.getRecommend = params => request.globalRequest('/api/frontend/getRecommend',
 // 猜你喜欢
 api.getGuess= params => request.globalRequest('/api/frontend/getGuess', 'POST', params)
 
+// 获取签到信息
+api.getSign = params => request.globalRequest('/api/frontend/sign', 'POST', params)
+
 export default api
