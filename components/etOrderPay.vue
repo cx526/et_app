@@ -16,19 +16,31 @@
 			</view>
 		</view>
 		
-		<view class="time-position pay-style-position">
+		<view class="time-position pay-style-position" style="border: 0;">
 			<text class="font-one-style">支付方式</text>
 			<view class="radio-content">
-				<label class="font-one-style"><radio color="#2AAEC4"  value="r1" :checked="payStyleString==='memberCheck'"  @tap="payStyle('memberCheck')"/>会员支付</label>
+				<label class="font-one-style"><radio style="transform: scale(0.7)" color="#2AAEC4"  value="r1" :checked="payStyleString==='memberCheck'"  @tap="payStyle('memberCheck')"/>会员支付</label>
 				<view class="white-space-width"></view>
-				<label class="font-one-style"><radio color="#2AAEC4" value="r2" :checked="payStyleString==='wechatCheck'"  @tap="payStyle('wechatCheck')"/>微信支付</label>
+				<label class="font-one-style"><radio style="transform: scale(0.7)" color="#2AAEC4" value="r2" :checked="payStyleString==='wechatCheck'"  @tap="payStyle('wechatCheck')"/>微信支付</label>
 			</view>
+		</view>
+		
+		<view class='pay-info-position'>
+			<et-order-menberpay :order='menberOrder' v-if="payStyleString==='memberCheck'"></et-order-menberpay>
+			<et-order-wechatpay :order='wechatOrder' v-else-if="payStyleString==='wechatCheck'"></et-order-wechatpay>
 		</view>
 	</view>
 </template>
 
 <script>
+import etOrderMenberpay from './etOrderMenberpay.vue'
+import etOrderWechatpay from './etOrderWechatpay.vue'
+
 export default {
+	components: {
+		etOrderMenberpay,
+		etOrderWechatpay
+	},
 	props: {
 		title: String,
 		backgroundColor: String,
@@ -37,7 +49,19 @@ export default {
 	data() {
 		return {
 			// 支付方式
-			payStyleString : 'memberCheck'  
+			payStyleString : 'memberCheck',
+			menberOrder : {
+				count: '2',
+				countAfter: '1',
+			},
+			wechatOrder : {
+				price: '30',
+				preferentialType: '首次优惠',
+				discountPrice: '18',
+				deposit: '100',
+				payIntegral: '1000',
+				integral: '5000'
+			}
 		}
 	},
 	methods: {
@@ -87,5 +111,11 @@ export default {
 	justify-content: flex-end;
 	align-items: flex-end;
 	font-size: 25upx;
+}
+.pay-info-position {
+	width: 90%;
+	flex-direction: row;
+	justify-content: flex-end;
+	align-items: flex-end;
 }
 </style>
