@@ -17,6 +17,9 @@
 .white-space {
 	height: 30upx;
 }
+.white-space-width {
+	width: 20upx;
+}
 .empty-style {
 	width: 100%;
 	display: flex;
@@ -31,7 +34,7 @@
 	border-radius: 20upx;
 	box-shadow: 2upx 2upx 2upx 2upx rgba(179,179,179,0.4);
 	border: 1upx solid rgba(179,179,179,0.4);
-	padding: 40upx 0;
+	padding: 30upx 0;
 	background-color: #FFFFFF;
 }
 </style>
