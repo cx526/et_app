@@ -1,5 +1,8 @@
 <template>
 	<view class="index">
+		<view class="sign-button" @tap="toSign">
+			<text>签到</text>
+		</view>
 		<!-- 头部内容 -->
 		<view class="top-content">
 			<!-- 顶栏搜索框 -->
@@ -268,7 +271,7 @@ export default {
 			})
 		},
 		toBookDetail(bookID) {
-			uni.navigateTo({url: 'bookdetail?bookID=' + JSON.stringify(bookID)})
+			uni.navigateTo({ url: 'bookdetail?bookID=' + JSON.stringify(bookID) })
 		},
 		toSearch() {
 			uni.showToast({
@@ -327,6 +330,9 @@ export default {
 				   this.guessBookList = dataArr;
 			   }
 			})
+		},
+		toSign() {
+			uni.navigateTo({ url: './sign' })
 		}
 	}	
 }
@@ -334,7 +340,8 @@ export default {
 
 <style scoped>
 .index {
-	background-color: rgba(249,249,249,0.5);
+	position: relative;
+	background-color: rgba(249, 249, 249, 0.5);
 }
 /* 头部内容	 */
 .top-content {
@@ -452,5 +459,18 @@ export default {
 	flex-direction: row;
 	flex-wrap: wrap;
 	justify-content:space-around;
+}
+.sign-button {
+	position: fixed;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	top: 60%;
+	right: 0upx;
+	z-index: 999;
+	width: 120upx;
+	height: 120upx;
+	border-radius: 60upx;
+	background: #ccc;
 }
 </style>
