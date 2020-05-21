@@ -1,13 +1,23 @@
 <template>
 	<view class="content">
 		<view class="year">
-			<text>{{calendarInfo.curYear + '年' + calendarInfo.curMonth + '月'}}</text>	
+			<text style="font-weight: bold;">{{calendarInfo.curYear + '年' + calendarInfo.curMonth + '月'}}</text>	
 		</view>
 		
-		<view class="calendar">
-			<view class="day none" v-for="(none, i) in calendarInfo.firstDay" :key="i"></view>
-			<view class="day normal-day" v-for="(day, j) in calendarInfo.days" :key="j">{{day+1}}</view>
+		<view class="week">
+			<view style="font-weight: bold;" class="day" v-for="(week, k) in weekly" :key="k">{{week}}</view>
 		</view>
+		<view class="calendar">
+			<view class="day" v-for="(none, i) in calendarInfo.firstDay" :key="i"></view>
+			<view class="day" v-for="(day, j) in calendarInfo.days" :key="j">{{day+1}}</view>
+		</view>
+		
+		<view class="sign-button">
+			<image class="sign-btn" src="https://et-pic-server.oss-cn-shenzhen.aliyuncs.com/app_img/sign_button_enable.png"></image>
+		</view>
+		<!-- 
+		<image class="sign-btn" src="https://et-pic-server.oss-cn-shenzhen.aliyuncs.com/app_img/sign_button_disable.png"></image> 
+		-->
 	</view>
 </template>
 
@@ -25,6 +35,7 @@ export default {
 	},
 	data() {
 		return {
+			weekly: ['一', '二', '三', '四', '五', '六', '日'],
 			calendarInfo: {}
 		}
 	},
@@ -47,9 +58,14 @@ export default {
 	text-align: center;
 	font-size: 28upx;
 }
+.week {
+	display: flex;
+	padding-left: 50upx;
+	padding-top: 20upx;
+}
 .calendar {
 	display: flex;
-	padding-top: 40upx;
+	padding-top: 20upx;
 	flex-wrap: wrap;
 	padding-left: 50upx;
 }
@@ -58,14 +74,15 @@ export default {
 	height: 65upx;
 	margin-left: 28upx;
 	font-size: 28upx;
-}
-.none {
-	/* 
-	color: #fff;
-	background: #ccc; 
-	*/
-}
-.normal-day {
 	text-align: center;
+}
+.sign-btn {
+	width: 240upx;
+	height: 240upx;
+}
+.sign-button {
+	display: flex;
+	align-items: center;
+	justify-content: center;
 }
 </style>
