@@ -2,6 +2,15 @@
 	"pages": [ //pages数组中第一项表示应用启动页，参考：https://uniapp.dcloud.io/collocation/pages
 		
 		{
+			"path": "pages/index/search",
+			"style": {
+				"navigationBarTitleText": "商品搜索",
+				"app-plus": {
+					"titleNView": false
+				}
+			}
+		},
+		{
 			"path": "pages/cart/addressEdit",
 			"style": {
 				"navigationBarTitleText": "新建收货地址",
