@@ -27,4 +27,11 @@
 	font-size: 60upx;
 	padding-top: 60%;
 }
+.white-border{
+	border-radius: 20upx;
+	box-shadow: 2upx 2upx 2upx 2upx rgba(179,179,179,0.4);
+	border: 1upx solid rgba(179,179,179,0.4);
+	padding: 40upx 0;
+	background-color: #FFFFFF;
+}
 </style>
