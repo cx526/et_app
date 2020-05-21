@@ -24,6 +24,12 @@
 			<view class="order-list-position white-border">
 				<et-order-list :orderList="orderList"></et-order-list>
 			</view>
+			
+			<view class="white-space"></view>
+			
+			<view class="pay-position white-border">
+				<et-order-pay :paydata="orderList"></et-order-pay>
+			</view>
 		</view>
 		
 	</view>
@@ -33,12 +39,14 @@
 import etMember from '../../components/etMember.vue'
 import etAddress from '../../components/etAddress.vue'
 import etOrderList from '../../components/etOrderList.vue'
+import etOrderPay from '../../components/etOrderPay.vue'
 
 export default {
 	components: {
 		etMember,
 		etAddress,
-		etOrderList
+		etOrderList,
+		etOrderPay
 	},
 	data() {
 		return {
@@ -136,6 +144,9 @@ export default {
 	align-items: center;
 }
 .order-list-position {
+	width: 90%;
+}
+.pay-position {
 	width: 90%;
 }
 </style>
