@@ -42,4 +42,7 @@ api.getGuess= params => request.globalRequest('/api/frontend/getGuess', 'POST', 
 // 获取签到信息
 api.getSign = params => request.globalRequest('/api/frontend/sign', 'POST', params)
 
+// 发送签到信息
+api.postSign = params => request.globalRequest('/api/frontend/postSign', 'POST', params)
+
 export default api

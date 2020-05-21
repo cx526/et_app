@@ -12,7 +12,7 @@
 			<view class="day" v-for="(day, j) in calendarInfo.days" :key="j">{{day+1}}</view>
 		</view>
 		
-		<view class="sign-button">
+		<view class="sign-button" @tap="postSign">
 			<image class="sign-btn" src="https://et-pic-server.oss-cn-shenzhen.aliyuncs.com/app_img/sign_button_enable.png"></image>
 		</view>
 		<!-- 
@@ -40,7 +40,19 @@ export default {
 		}
 	},
 	methods: {
-		
+		postSign() {
+			const userInfo = uni.getStorageSync('userInfo')
+			if (userInfo.name !== 'guest') {				
+				let param = {
+					userInfo
+				}
+				this.$api.postSign(param).then(res => {
+					console.log(res.data)
+				})
+			} else {
+				uni.reLaunch({ url: '../guide/auth' })
+			}
+		}
 	},
 }
 </script>
