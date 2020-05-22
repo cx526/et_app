@@ -5,7 +5,7 @@ if(process.env.NODE_ENV === 'development'){
     url_config = 'http://localhost:7001'
 }else{
     // 生产环境
-    url_config = 'http://www.52diyike.com/api'
+    url_config = 'https://www.52diyike.com/api'
 }
 
 export default url_config
