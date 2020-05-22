@@ -56,8 +56,8 @@ export default {
 	z-index: 99;
 }
 .img {
-	height: 120upx;
-	width: 120upx;
+	height: 100upx;
+	width: 100upx;
 }
 .title {
 	padding-top: 8upx;

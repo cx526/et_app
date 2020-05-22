@@ -75,10 +75,12 @@ export default {
 			let param = { userInfo }
 			this.$api.getSign(param).then(res => {
 				this.calendarInfo = res.data.calendar
-				this.signedData = res.data.signData.monthSign
 				this.daysArray = res.data.daysArray
-				this.signed = res.data.signed
-				this.signedTotal = res.data.signData.monthTotal
+				if (userInfo.name !== 'guest') {
+					this.signedData = res.data.signData.monthSign
+					this.signed = res.data.signed
+					this.signedTotal = res.data.signData.monthTotal
+				}
 			})
 		},
 		close() {

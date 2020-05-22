@@ -128,23 +128,23 @@ export default {
 			groupList: [
 				{
 					'name' : '绘本',
-					'img'  : '../static/index/picture.png'
+					'img'  : 'https://et-pic-server.oss-cn-shenzhen.aliyuncs.com/app_img/01.png'
 				},
 				{
-					'name' : '获币',
-					'img'  : '../static/index/currny.png'
+					'name' : '积分',
+					'img'  : 'https://et-pic-server.oss-cn-shenzhen.aliyuncs.com/app_img/02.png'
 				},
 				{
 					'name' : '打卡',
-					'img'  : '../static/index/punch.png'
+					'img'  : 'https://et-pic-server.oss-cn-shenzhen.aliyuncs.com/app_img/03.png'
 				},
 				{
 					'name' : '会员',
-					'img'  : '../static/index/member.png'
+					'img'  : 'https://et-pic-server.oss-cn-shenzhen.aliyuncs.com/app_img/04.png'
 				},
 				{
 					'name' : '分类',
-					'img'  : '../static/index/sort.png'
+					'img'  : 'https://et-pic-server.oss-cn-shenzhen.aliyuncs.com/app_img/05.png'
 				}
 			],
 			hotBookList: [
@@ -428,7 +428,7 @@ export default {
 	display: flex;
 	flex-direction: row;
 	align-items: center;
-	justify-content: center;
+	justify-content: space-around;
 }
 .banner {
 	width: 100%;

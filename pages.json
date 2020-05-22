@@ -1,6 +1,16 @@
 {
 	"pages": [ //pages数组中第一项表示应用启动页，参考：https://uniapp.dcloud.io/collocation/pages
 		{
+			"path": "pages/index/index",
+			"style": {
+				"navigationBarTitleText": "五车书",
+				"app-plus": {
+					"titleNView": false
+				}
+			}
+		},
+		
+		{
 			"path": "pages/cart/orderList",
 			"style": {
 				"navigationBarTitleText": "订单列表",
@@ -28,15 +38,7 @@
 			}
 		},
 		
-		{
-			"path": "pages/index/index",
-			"style": {
-				"navigationBarTitleText": "五车书",
-				"app-plus": {
-					"titleNView": false
-				}
-			}
-		},		
+				
 		
 		// {
 		// 	"path": "pages/cart/orderDetail",
@@ -211,7 +213,7 @@
 	},
 	"tabBar": {
 		"color": "#C0C4CC",
-		"selectedColor": "#fa436a",
+		"selectedColor": "#00B7CC",
 		"borderStyle": "black",
 		"backgroundColor": "#ffffff",
 		"list": [{
