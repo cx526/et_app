@@ -150,7 +150,7 @@ export default {
 }
 </script>
 
-<style>
+<style scoped>
 .page-class {
 	display: flex;
 	height: 100vh;

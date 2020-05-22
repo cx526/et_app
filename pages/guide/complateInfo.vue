@@ -1,6 +1,6 @@
 <template>
 	<view class="content">
-		<view class="content-position" style="background-image: url(../../static/guide/paper.png);">
+		<view class="content-position" style="background-image: url(https://et-pic-server.oss-cn-shenzhen.aliyuncs.com/app_img/paper.png);">
 			<view class="sub-content">
 				<view class="in-position">
 					<text class="title-content">所在地</text>
