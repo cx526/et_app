@@ -2,7 +2,7 @@
 	<view class="content">
 		<view class="top-position">
 			<view class="top-img-one-position">
-				<image class="top-img-one" src="../../static/cart/people.png"></image>
+				<image class="top-img-one" src="https://et-pic-server.oss-cn-shenzhen.aliyuncs.com/app_img/cart_people.png"></image>
 			</view>
 			
 			<view class="top-img-tow-position">

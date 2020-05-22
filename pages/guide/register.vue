@@ -24,11 +24,11 @@
 			
 			<view class="img-class">
 				<view class="sex-class" @tap="selectGender(1)">
-					<image src="../../static/register/boy.png" mode=""></image>
+					<image src="https://et-pic-server.oss-cn-shenzhen.aliyuncs.com/app_img/boy.png" mode=""></image>
 					<text :class="gender === 1 ? 'selected-gender' : ''">男孩</text>
 				</view>
 				<view class="sex-class" @tap="selectGender(2)">
-					<image src="../../static/register/gril.png" mode=""></image>
+					<image src="https://et-pic-server.oss-cn-shenzhen.aliyuncs.com/app_img/gril.png" mode=""></image>
 					<text :class="gender === 2 ? 'selected-gender' : ''">女孩</text>
 				</view>
 			</view>

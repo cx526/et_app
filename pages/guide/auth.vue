@@ -1,7 +1,7 @@
 <template>
 	<view class="content">
 		<view class="img-content">
-			<image class="image-content" src="../../static/auth/logo.png" mode=""></image>
+			<image class="image-content" src="https://et-pic-server.oss-cn-shenzhen.aliyuncs.com/app_img/auth_logo.png" mode=""></image>
 		</view>
 		
 		<view class="sub-content">
