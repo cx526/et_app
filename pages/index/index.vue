@@ -117,8 +117,8 @@ export default {
 			swiperCurrent: 0,
 			swiperLength: 0,
 			carouselList: [],
-			oneBanner: "../../static/index/giftbanner.png",
-			secondBanner: "../../static/index/readbanner.png",
+			oneBanner: "https://et-pic-server.oss-cn-shenzhen.aliyuncs.com/app_img/index_giftbanner.png",
+			secondBanner: "https://et-pic-server.oss-cn-shenzhen.aliyuncs.com/app_img/index_readbanner.png",
 			loadStatus : 'loading',
 			loadText: {
 				contentdown: '上拉加载更多',

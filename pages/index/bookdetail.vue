@@ -53,7 +53,7 @@
 		</view>
 		
 		<view class="process-position">
-			<image class="out-img" src="../../static/bookdetail/process.png"></image>
+			<image class="out-img" src="https://et-pic-server.oss-cn-shenzhen.aliyuncs.com/app_img/bookdetail_process.png"></image>
 		</view>
 	
 		
@@ -79,15 +79,15 @@
 		
 		<view class="bottom-position">
 			<view class="bottom-button">
-				<image src="../../static/bookdetail/zan.png" class="bottom-image"></image>
+				<image src="https://et-pic-server.oss-cn-shenzhen.aliyuncs.com/app_img/bookdetail_zan.png" class="bottom-image"></image>
 				<text>推荐</text>
 			</view>
 			<view class="bottom-button">
-				<image src="../../static/bookdetail/xin.png" class="bottom-image"></image>
+				<image src="https://et-pic-server.oss-cn-shenzhen.aliyuncs.com/app_img/bookdetail_xin.png" class="bottom-image"></image>
 				<text>收藏</text>
 			</view>
 			<view class="bottom-button">
-				<image src="../../static/bookdetail/packge.png" class="bottom-image"></image>
+				<image src="https://et-pic-server.oss-cn-shenzhen.aliyuncs.com/app_img/bookdetail_packge.png" class="bottom-image"></image>
 				<text>书篮</text>
 			</view>
 			<view class="bottom-button-input" @tap="insertToCart">
