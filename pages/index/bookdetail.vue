@@ -78,20 +78,20 @@
 		<view class="white-space"></view>
 		
 		<view class="bottom-position">
-			<view class="bottom-button">
-				<image src="https://et-pic-server.oss-cn-shenzhen.aliyuncs.com/app_img/bookdetail_zan.png" class="bottom-image"></image>
-				<text>推荐</text>
+			<view class="bottom-button-position">
+				<view class="bottom-button">
+					<image src="https://et-pic-server.oss-cn-shenzhen.aliyuncs.com/app_img/bookdetail_add.png" class="bottom-image"></image>
+					<text style="font-size: 20upx;color: #2AAEC4;">收藏</text>
+				</view>
 			</view>
-			<view class="bottom-button">
-				<image src="https://et-pic-server.oss-cn-shenzhen.aliyuncs.com/app_img/bookdetail_xin.png" class="bottom-image"></image>
-				<text>收藏</text>
-			</view>
-			<view class="bottom-button">
-				<image src="https://et-pic-server.oss-cn-shenzhen.aliyuncs.com/app_img/bookdetail_packge.png" class="bottom-image"></image>
-				<text>书篮</text>
+			<view class="bottom-button-position">
+				<view class="bottom-button">
+					<image src="https://et-pic-server.oss-cn-shenzhen.aliyuncs.com/app_img/bookdetail_cart.png" class="bottom-image"></image>
+					<text style="font-size: 20upx;color: #2AAEC4;">书篮</text>
+				</view>
 			</view>
 			<view class="bottom-button-input" @tap="insertToCart">
-				<text>加入书篮</text>
+				<text style="font-size: 30upx">加入书篮</text>
 			</view>
 		</view>
 	</view>
@@ -265,10 +265,12 @@ export default {
 .detail-tag-position {
 	display: flex;
 	flex-direction: row;
+	flex-wrap: wrap;
 	padding-bottom: 10upx;
 }
 .detail-tag-content {
 	width: 150upx;
+	margin-top: 5upx;
 	margin-left: 5upx;
 }
 .detail-writer-position,.detail-publisher-position {
@@ -316,10 +318,20 @@ export default {
 	position: fixed;
 	bottom: 0;
 	background-color: #FFFFFF;
+	border-top: 1upx solid #E6E6E6;
+}
+.bottom-button-position {
+	padding: 20upx 80upx;
+	display: flex;
+	justify-content: center;
+	align-items: center;
 }
 .bottom-button {
-	padding: 20upx;
-	border: 1upx solid #999999;
+	/* padding: 20upx; */
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
 }
 .bottom-button-input {
 	padding-left: 75upx;
@@ -328,7 +340,7 @@ export default {
 	display: flex;
 	justify-content: center;
 	align-items: center;
-	background-color: #008000;
+	background-color: #2AAEC4;
 	color: #FFFFFF;
 	font-weight: bold;
 }

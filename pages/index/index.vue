@@ -289,6 +289,10 @@ export default {
 				   let dataObj = {};
 				   dataObj.name = obj.goods_info.title;
 				   dataObj.img = obj.goods_info.cover;
+				   // dataObj.img = obj.goods_info.forGoodsPic[0].url;
+				   if (obj.goods_info.forGoodsPic && obj.goods_info.forGoodsPic.length > 0) {
+						dataObj.img = obj.goods_info.forGoodsPic[0].url;
+				   }
 				   dataObj.bookCount = '100';
 				   dataObj.bookID = obj.goods_info.id;
 				   if (type === 'push'){
@@ -310,9 +314,14 @@ export default {
 			this.$api.getGuess().then(res => {
 			   let dataArr = [];
 			   res.data.forEach(obj=>{
+				   // console.log(obj);
 				   let dataObj = {};
 				   dataObj.name = obj.title;
-				   dataObj.img = obj.cover;
+				   if (obj.forGoodsPic && obj.forGoodsPic.length > 0) {
+						dataObj.img = obj.forGoodsPic[0].url;
+				   }else{
+						dataObj.img = obj.pic; 
+				   }
 				   dataObj.bookID = obj.id;
 				   dataObj.tag = [];
 				   if (obj.tagInfo && obj.tagInfo.length>0) {
