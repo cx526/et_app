@@ -33,7 +33,7 @@
 		
 		<!-- 按钮组合栏 -->
 		<view class="btn-group">
-			<et-button v-for="(item,i) in groupList" :key="i" :title="item.name" :img="item.img" @clickHandle="btnGroupClick"></et-button>
+			<et-button v-for="(item,i) in groupList" :key="i" :title="item.name" :img="item.img" @tap="toButtonUrl(item.toUrl)"></et-button>
 		</view>
 		
 		<view class="white-space"></view>
@@ -128,7 +128,9 @@ export default {
 			groupList: [
 				{
 					'name' : '绘本',
-					'img'  : 'https://et-pic-server.oss-cn-shenzhen.aliyuncs.com/app_img/01.png'
+					'img'  : 'https://et-pic-server.oss-cn-shenzhen.aliyuncs.com/app_img/01.png',
+					'toUrl' : './kind',
+					// 'toUrl' : '/pages/index/bookdetail?bookID=900'
 				},
 				{
 					'name' : '积分',
@@ -136,7 +138,8 @@ export default {
 				},
 				{
 					'name' : '打卡',
-					'img'  : 'https://et-pic-server.oss-cn-shenzhen.aliyuncs.com/app_img/03.png'
+					'img'  : 'https://et-pic-server.oss-cn-shenzhen.aliyuncs.com/app_img/03.png',
+					'toUrl' : './sign',
 				},
 				{
 					'name' : '会员',
@@ -144,41 +147,11 @@ export default {
 				},
 				{
 					'name' : '分类',
-					'img'  : 'https://et-pic-server.oss-cn-shenzhen.aliyuncs.com/app_img/05.png'
+					'img'  : 'https://et-pic-server.oss-cn-shenzhen.aliyuncs.com/app_img/05.png',
+					'toUrl' : './kind',
 				}
 			],
-			hotBookList: [
-				{
-					'name' : '巴巴故事看看卡卡卡卡阿卡卡卡卡',
-					'img'  : '../static/index/hotbook.jpg',
-					'bookCount' : 10
-				},
-				{
-					'name' : '巴巴旅行',
-					'img'  : '../static/index/hotbook.jpg',
-					'bookCount' : 100
-				},
-				{
-					'name' : '巴巴朋友',
-					'img'  : '../static/index/hotbook.jpg',
-					'bookCount' : 3
-				},
-				{
-					'name' : '巴巴国王',
-					'img'  : '../static/index/hotbook.jpg',
-					'bookCount' : 80
-				},
-				{
-					'name' : '巴巴孩子们',
-					'img'  : '../static/index/hotbook.jpg',
-					'bookCount' : 30
-				},
-				{
-					'name' : '巴巴公主',
-					'img'  : '../static/index/hotbook.jpg',
-					'bookCount' : 44
-				}
-			],
+			hotBookList: [],
 			bookCat: [
 				{
 					'name' : '科普百科',
@@ -205,38 +178,7 @@ export default {
 					'img'  : '../static/index/me.png'
 				}
 			],
-			guessBookList: [
-				{
-					'name' : '巴巴故事看看卡卡卡卡阿卡卡卡卡',
-					'img'  : '../static/index/hotbook.jpg',
-					'tag' : ['3-6岁','古典文艺']
-				},
-				{
-					'name' : '巴巴旅行',
-					'img'  : '../static/index/hotbook.jpg',
-					'tag' : ['3-6岁','科普百科']
-				},
-				{
-					'name' : '巴巴朋友',
-					'img'  : '../static/index/hotbook.jpg',
-					'tag' : ['3-6岁','科普百科']
-				},
-				{
-					'name' : '巴巴国王',
-					'img'  : '../static/index/hotbook.jpg',
-					'tag' : ['3-6岁','科普百科']
-				},
-				{
-					'name' : '巴巴孩子们',
-					'img'  : '../static/index/hotbook.jpg',
-					'tag' : ['3-6岁','科普百科']
-				},
-				{
-					'name' : '巴巴公主',
-					'img'  : '../static/index/hotbook.jpg',
-					'tag' : ['3-6岁','科普百科']
-				}
-			]
+			guessBookList: []
 			
 		}
 	},
@@ -277,6 +219,15 @@ export default {
 			uni.showToast({
 				title: 'toSearch'
 			})
+		},
+		toButtonUrl(toUrl){
+			console.log(toUrl);
+			uni.navigateTo({url: toUrl});
+			if (toUrl === './kind'){
+				uni.switchTab({
+					url:toUrl
+				})
+			}
 		},
 		swiperChange(e) {
 			const index = e.detail.current;
