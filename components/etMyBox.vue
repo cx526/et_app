@@ -6,8 +6,8 @@
 				<view class="top-content">
 					<text style="font-weight: bold;">{{myMenuInfo.menuTitle}}</text>
 				</view>
-				<view class="top-content" v-if="myMenuInfo.moreMenu">
-					<text>{{myMenuInfo.moreMenu}}</text>
+				<view class="8B8380" v-if="myMenuInfo.moreMenu">
+					<text style="color: #2BAEC4; font-size: 25upx;">{{myMenuInfo.moreMenu}}</text>
 				</view>
 			</view>
 		</view>
@@ -52,11 +52,10 @@ export default {
 	border: 1upx solid rgba(179,179,179,0.4);
 }
 .top-position {
-	border-bottom: 1upx dotted #008000;
+	border-bottom: 1upx dotted #8B8380;
 	padding: 20upx;
 }
 .top-content-position {
-	border-left: 10upx solid #008000;
 	display: flex;
 	flex-direction: row;
 	justify-content: space-between;
@@ -64,7 +63,6 @@ export default {
 }
 .top-content {
 	font-size: 28upx;
-	color: #008000;
 }
 .menu-position {
 	width: 100%;
