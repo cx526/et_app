@@ -1,47 +1,54 @@
 <template>
 	<view class="content">
-		<view class="userInfo-position">
-			<view class="userInfo-img-position userInfo-img">
-				<image src="../../static/cart/right.png" style="width: 160upx; height: 160upx;" mode=""></image>
+		<view class="top-position"></view>
+		
+		<view class="content-position">
+			<view class="userInfo-position">
+				<view class="user-left-position">
+					<view class="userInfo-content">
+						<text style="color: #FFFFFF;font-size: 30upx;">{{userInfo.babyName}}</text>
+						<view class="white-space-width"></view>
+						<image src="../../static/my/diamond.png" style="width: 40upx; height: 40upx;"></image>
+					</view>
+					
+					<view style="height: 10upx;"></view>
+					
+					<view class="userInfo-member">
+						<view class="userInfo-member-border">
+							<text>会员截止日期：{{userInfo.overTime}}</text>
+						</view>
+					</view>
+				</view>
+				
+				<view class="user-right-position">
+					<image src="../../static/cart/test.png" style="border-radius: 50%; width: 120upx; height: 120upx;"></image>
+				</view>
 			</view>
 			
-			<view class="userInfo-content-position">
-				<view class="userInfo-content userInfo-name">
-					<text>用户：</text>
-					<text>{{userInfo.name}}</text>
-				</view>
-				<view class="userInfo-content userInfo-card">
-					<image src="../../static/my/month.png" style="width: 80upx; height: 50upx;"></image>
-					<text>截止：{{userInfo.overTime}}</text>
-				</view>
-				<view class="userInfo-content userInfo-baby">
-					<text>宝贝：</text>
-					<text>{{userInfo.babyName}}</text>
-				</view>
-				<view class="userInfo-content userInfo-school">
-					<text>学校：</text>
-					<text>{{userInfo.school}}</text>
-				</view>
-				<view class="userInfo-content userInfo-class">
-					<text>班级：</text>
-					<text>{{userInfo.class}}</text>
-				</view>
-			</view>	
+			<view class="vip-button-position">
+				<image style="width: 640upx; height: 145upx;" src="https://et-pic-server.oss-cn-shenzhen.aliyuncs.com/app_img/vip_button.png"></image>
+			</view>
+			
+			<view class="white-space"></view>
+			
+			<view class="vip-button-position">
+				<image style="width: 660upx; height: 200upx;" src="https://et-pic-server.oss-cn-shenzhen.aliyuncs.com/app_img/vip_banner.png"></image>
+			</view>
+			
+			<view class="white-space"></view>
+			
+			<view class="my-box-position">
+				<etMyBox :myMenuInfo="myOrderInfo"></etMyBox>
+			</view>
+			
+			<view class="white-space"></view>
+			
+			<view class="my-box-position">
+				<etMyBox :myMenuInfo="myAppInfo"></etMyBox>
+			</view>
+			
+			<view class="white-space"></view>
 		</view>
-		
-		<view class="white-space"></view>
-		
-		<view class="my-box-position">
-			<etMyBox :myMenuInfo="myOrderInfo"></etMyBox>
-		</view>
-		
-		<view class="white-space"></view>
-		
-		<view class="my-box-position">
-			<etMyBox :myMenuInfo="myAppInfo"></etMyBox>
-		</view>
-		
-		<view class="white-space"></view>
 	</view>
 </template>
 
@@ -64,7 +71,7 @@ export default {
 			},
 			myOrderInfo: {
 				'menuTitle' : '我的订单',
-				'moreMenu' : '所有订单',
+				'moreMenu' : '更多 >',
 				'allMenu': [
 					{
 						'imgSrc' : '../static/cart/right.png',
@@ -168,35 +175,59 @@ export default {
 	flex-direction: column;
 	justify-content: center;
 	align-items: center;
-	background-color: #999999;
+	background-color: #FFFFFF;
+	position: relative;
 }
-.userInfo-position {
+.top-position {
+	background-image: linear-gradient(to bottom, #7ED1E7 , #8CD9D8);
+	border-bottom-right-radius: 30upx;
+	border-bottom-left-radius: 30upx;
+	height: 350upx;
 	width: 100%;
+}
+.content-position {
+	position: absolute;
+	top: 0;
+	z-index: 99;
 	display: flex;
 	flex-direction: column;
 	justify-content: center;
 	align-items: center;
-	background-color: #008000;
-	color: #FFFFFF;
-	font-weight: bold;
-	font-size: 25upx;
-	padding-top: 20upx;
-	padding-bottom: 20upx;
 }
-.userInfo-content-position {
+.userInfo-position {
+	width: 80%;
+	display: flex;
+	flex-direction: row;
+	justify-content: space-between;
+	align-items: center;
+	padding: 40upx 0;
+}
+.user-left-position {
 	display: flex;
 	flex-direction: column;
 	justify-content: flex-start;
+	align-items: flex-start;
 }
 .userInfo-content {
-	padding-top: 10upx;
-}
-.userInfo-card {
 	display: flex;
 	flex-direction: row;
 	justify-content: center;
+	align-items: center;
+}
+.userInfo-member-border {
+	background-color: #2AAEC4;
+	border-radius: 30upx;
+	color: #FFFFFF;
+	font-size: 20UPX;
+	padding: 10upx 20upx;
+}
+.vip-button-position {
+	width: 90%;
+	display: flex;
+	justify-content: center;
+	align-items: center;
 }
 .my-box-position {
-	width: 96%;
+	width: 90%;
 }
 </style>
