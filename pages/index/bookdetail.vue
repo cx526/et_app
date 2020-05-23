@@ -101,7 +101,7 @@
 import etPeoplelist from '../../components/etPeoplelist.vue'
 import etTag from '../../components/etTag.vue'
 
-const insertBook = require('@/common/insertToCart');
+const insertBook = require('@/common/carDataOption');
 
 export default {
 	components: {

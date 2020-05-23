@@ -20,7 +20,7 @@
 				<!-- 列表数据 -->
 				<view class="cat-detail-position">
 					<view class="cat-detail" v-for="(item,index) in listData">
-						<et-cart-detail :key="index" :imgSrc="item.cover" :title="item.title" :status="item.status" :coin="item.coin" :count="item.count"></et-cart-detail>
+						<et-cart-detail :key="index" :bookID="item.bookID"  :select="item.select" :imgSrc="item.cover" :title="item.title" :status="item.status" :coin="item.coin" :count="item.count" @changSelectType="changAllSelectType" @deleteData="deleteData"></et-cart-detail>
 						<view class="white-space"></view>
 					</view>
 				</view>
@@ -31,7 +31,7 @@
 				<view class="bottom-position">
 					<view class="bottom-content">
 						<view class="bottom-check">
-							<checkbox value="cb" checked="true" />
+							<checkbox value="cb" :checked="allSelect" @tap="allSelectOrNot" />
 							<text>全选</text>
 						</view>
 						
@@ -56,6 +56,8 @@
 import etCartDetail from '../../components/etCartDetail.vue'
 import etTag from '../../components/etTag.vue'
 
+const bookListData = require('@/common/carDataOption');
+
 export default {
 	components: {
 		etCartDetail,
@@ -65,6 +67,7 @@ export default {
 		return {
 			money:"30",
 			moneyCount:"199",
+			allSelect:"true",
 			listData: [
 				{
 					imgSrc: "../static/cart/oldMan.png",
@@ -105,15 +108,41 @@ export default {
 		}
 	},
 	onLoad() {
-		// 获取书篮列表数据
-		try {
-		    this.listData = uni.getStorageSync('carListInfo');
-		} catch (e) {
-		    console.log(e);
-		}
+		this.statusUpdate();
+	},
+	onShow() {
+		this.statusUpdate();
 	},
 	methods: {
-		
+		// 数据更新
+		statusUpdate(){
+			// 获取书篮列表数据
+			this.listData = bookListData.getBookListData();
+			
+			// 获取合计金额
+			this.moneyCount = bookListData.countCoin();
+			
+			// 获取全选状态
+			this.allSelect = bookListData.countAllSelect();
+		},
+		changAllSelectType(){
+			this.statusUpdate();
+		},
+		// 全选与不全选
+		allSelectOrNot() {
+			if(this.allSelect === true) {
+				this.allSelect = false;
+				bookListData.allSelectOption(false);
+			}else if(this.allSelect === false) {
+				this.allSelect = true;
+				bookListData.allSelectOption(true);
+			}
+			this.statusUpdate();
+			
+		},
+		deleteData() {
+			this.statusUpdate();
+		}
 	}
 }
 </script>

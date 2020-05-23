@@ -1,7 +1,7 @@
 <template>
 	<view class="content" >
 		<view class="check-position">
-			<checkbox value="cb" checked="true" />
+			<checkbox value="cb" :checked="select" @click="changeSelect"/>
 		</view>
 		
 		<view class="img-position">
@@ -27,7 +27,7 @@
 		</view>
 		
 		<view class="last-position">
-			<view class="rubbish-position">
+			<view class="rubbish-position" @click="deleteData">
 				<image class="rubbish-img" src="../static/cart/rubbish.png"></image>
 			</view>
 			
@@ -39,17 +39,28 @@
 </template>
 
 <script>
+const bookListData = require('@/common/carDataOption');
+
 export default {
 	props: {
 		imgSrc: String,
 		title: String,
 		status: String,
 		coin: String,
-		count: String
-		
+		count: String,
+		select: Boolean,
+		bookID: String
 	},
 	methods: {
-	
+		changeSelect(){
+			// 变更状态
+			bookListData.changSelectType(this.bookID);
+			this.$emit('changSelectType');
+		},
+		deleteData(){
+			bookListData.deleteToCart(this.bookID);
+			this.$emit('deleteData');
+		}
 	}
 }
 </script>
