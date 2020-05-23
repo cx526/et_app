@@ -20,7 +20,7 @@
 				<!-- 列表数据 -->
 				<view class="cat-detail-position">
 					<view class="cat-detail" v-for="(item,index) in listData">
-						<et-cart-detail :key="index" :imgSrc="item.imgSrc" :title="item.title" :status="item.status" :corn="item.corn" :count="item.count"></et-cart-detail>
+						<et-cart-detail :key="index" :imgSrc="item.cover" :title="item.title" :status="item.status" :coin="item.coin" :count="item.count"></et-cart-detail>
 						<view class="white-space"></view>
 					</view>
 				</view>
@@ -105,7 +105,12 @@ export default {
 		}
 	},
 	onLoad() {
-		
+		// 获取书篮列表数据
+		try {
+		    this.listData = uni.getStorageSync('carListInfo');
+		} catch (e) {
+		    console.log(e);
+		}
 	},
 	methods: {
 		

@@ -21,8 +21,8 @@
 			
 			<view class="white-space" style="height: 90upx"></view>
 			
-			<view class="corn-position">
-				<text>借阅币：{{corn}}</text>
+			<view class="coin-position title-position">
+				<text>借阅币：{{coin}}</text>
 			</view>
 		</view>
 		
@@ -44,7 +44,7 @@ export default {
 		imgSrc: String,
 		title: String,
 		status: String,
-		corn: String,
+		coin: String,
 		count: String
 		
 	},
@@ -84,6 +84,7 @@ export default {
 	background-color: #FFFFFF;
 }
 .title-position {
+	width: 250upx;
 	font-size: 30upx;
 	font-weight: bold;
 }
@@ -91,7 +92,7 @@ export default {
 	font-size: 20upx;
 	color: #6A6A6A;
 }
-.corn-position {
+.coin-position {
 	font-size: 24upx;
 	color: #549EAB;
 	font-weight: bold;
