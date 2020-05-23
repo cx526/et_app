@@ -101,6 +101,8 @@
 import etPeoplelist from '../../components/etPeoplelist.vue'
 import etTag from '../../components/etTag.vue'
 
+const insertBook = require('@/common/insertToCart');
+
 export default {
 	components: {
 		etPeoplelist,
@@ -180,21 +182,7 @@ export default {
 			this.carouselList = data.forGoodsPic;
 			this.detailImg = data.detail;
 		},
-		insertToCart() { 
-			// 获取书蓝列表
-			let carListArr = [];
-			uni.getStorage({
-				key: 'carListInfo',
-				success: (res) => {
-					console.log(res);
-					carListArr = res.data;
-				},
-				fail: (err) => {
-					console.log(err);
-				}
-			});
-			console.log(carListArr);
-			
+		insertToCart() { 			
 			// 处理数据
 			let cartList = {
 				'bookID': this.bookID,
@@ -204,13 +192,13 @@ export default {
 				'select': true,
 				'count':1
 			};
-			carListArr.push(cartList);
-			console.log(carListArr);
-			
-			// 数据插入
-			uni.setStorageSync('carListInfo', carListArr);
-			console.log(carListArr);
-			
+			insertBook.insertToCart(cartList);
+			try {
+			    let carListArr = uni.getStorageSync('carListInfo');
+			    console.log(carListArr);
+			} catch (e) {
+			    console.log(carListArr);
+			}
 		}
 	}
 }
