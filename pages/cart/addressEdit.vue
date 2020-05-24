@@ -3,25 +3,28 @@
 		<view class="defalut-position">
 			<view class="address-list-position">
 				<text class="address-list-content">收货人</text>
-				<input type="text" placeholder="请填写收货人姓名" />
+				<input class="address-middle-content" type="text" placeholder="请填写收货人姓名" />
 				<image src="../../static/cart/addpeople.png" style="width: 50upx;height: 50upx;"></image>
 			</view>
 			
 			<view class="address-list-position">
 				<text class="address-list-content">手机号码</text>
-				<input type="text" placeholder="请填写收货人手机号码" />
+				<input class="address-middle-content" type="text" placeholder="请填写收货人手机号码" />
 				<view style="width: 50upx;height: 50upx;"></view>
 			</view>
 			
 			<view class="address-list-position">
 				<text class="address-list-content">所在地区</text>
-				<input type="text" placeholder="省市县/乡镇等" />
+				<!-- <input type="text" placeholder="省市县/乡镇等" /> -->
+				<view class="address-middle-content">
+					<et-region style="color:#81888F" title='省市县/乡镇等'></et-region>
+				</view>
 				<image src="../../static/cart/position.png" style="width: 40upx;height: 50upx;"></image>
 			</view>
 			
 			<view class="address-list-position">
 				<text class="address-list-content">详细地址</text>
-				<input type="text" placeholder="街道/楼牌号等" />
+				<input class="address-middle-content" type="text" placeholder="街道/楼牌号等" />
 				<view style="width: 50upx;height: 50upx;"></view>
 			</view>
 			
@@ -47,12 +50,14 @@
 
 <script>
 import etAddress from '../../components/etAddress.vue'
+import etRegion from '../../components/etRegion.vue'
 
 const handlePhone = require('@/common/handlePhone');
 
 export default {
 	components: {
-		etAddress
+		etAddress,
+		etRegion
 	},
     data() {
         return {
@@ -126,6 +131,9 @@ export default {
 	width: 30%;
 	font-weight: bold;
 	font-size: 28upx;
+}
+.address-middle-content {
+	width: 40%;
 }
 .botton-position {
 	background-color: #00B7CC;
