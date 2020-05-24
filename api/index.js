@@ -25,6 +25,7 @@ api.postSchoolInfo = params => request.globalRequest('/api/auth/postSchoolInfo',
 // 注意：仅限正式环境才能发起支付
 // 请求参数 userInfo {}
 // 请求参数 money 0.01
+// 请求参数 usage 用途
 api.getPayment = params => request.globalRequest('/api/wxPay/payment', 'POST', params)
 
 //获取轮播图

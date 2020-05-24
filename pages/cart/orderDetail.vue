@@ -67,6 +67,7 @@ import etAddress from '../../components/etAddress.vue'
 import etOrderList from '../../components/etOrderList.vue'
 import etOrderPay from '../../components/etOrderPay.vue'
 import etTag from '../../components/etTag.vue'
+const wxPay = require('@/common/wxPay')
 
 export default {
 	components: {
@@ -122,6 +123,50 @@ export default {
 	methods: {
 		btnClick() {
 			console.log(this.defalutAddress);
+		},
+		buySelect() {
+			// 发起微信支付请求
+			// 注意：仅限正式环境才能发起支付
+			// 请求参数 userInfo {}
+			// 请求参数 money 0.01
+			// 请求参数 usage 用途
+			if (process.env.NODE_ENV === 'production') {
+				const userInfo = uni.getStorageSync('userInfo')
+				if (userInfo.name !== 'guest') {
+					let param = {
+						userInfo: userInfo,
+						money: '0.01',
+						usage: '微信支付测试，商品详细描述'
+					}
+					this.$api.getPayment(param).then(res => {
+						let resData = res.data.xml 
+						console.log(res)
+						let { paySign, time, APPID, nonceStr } = wxPay.wxReSign(resData.prepay_id[0])
+						if (resData.return_code[0] === 'SUCCESS') {
+							uni.requestPayment({
+							    provider: 'wxpay',
+							    timeStamp: time,
+							    nonceStr: nonceStr,
+							    package: 'prepay_id=' + resData.prepay_id[0],
+							    signType: 'MD5',
+							    paySign: paySign,
+							    success: res => {
+							    	console.log('pay success' + JSON.stringify(res) )
+							    },
+							    fail: err => { 
+									console.log('pay fail' + JSON.stringify(err) )
+								}
+							})
+						} else {
+							uni.showToast({ icon: 'none', title: resData.return_msg[0] })
+						}
+					})
+				} else {
+					uni.reLaunch({ url: '../guide/auth' })
+				}
+			} else {
+				uni.showToast({ icon: 'none', title: '测试环境暂不能够支付' })
+			}
 		}
 	}
 }

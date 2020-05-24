@@ -10,8 +10,9 @@
  *
  * wxPay(nonceStr, packages, paySign,res=>{},fail=>{})
  */
+ const MD5 = require('md5');
  
-const wxPay = (nonceStr, packages, paySign, success, fail) => (
+function wxPay(nonceStr, packages, paySign, success, fail) { 
     uni.requestPayment({
         provider: 'wxpay',
         timeStamp: new Date().getTime(),
@@ -22,6 +23,36 @@ const wxPay = (nonceStr, packages, paySign, success, fail) => (
         success(res) { success(res) }, 
         fail(err) { fail(err) }
     })
-)
- 
-export default wxPay;
+}
+
+//产生一个n位随机字符串
+function randomStr(n) {
+	let str = '';
+	let arr = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'];
+
+	for(let i=1; i<=n; i++){
+	  let random = Math.floor(Math.random() * arr.length);
+	  str += arr[random];
+	}
+	return str;
+}
+
+function wxReSign(packages) {
+	const APPID = 'wx4d51a694ef6697ff'
+	const MCHAPISECRET = '5FBH0YP95JULMV68T1SVTOXHAOQHEGB2'
+	const nonceStr = randomStr(32)
+	const time = new Date().getTime()+''
+	let signString = `appId=${APPID}&nonceStr=${nonceStr}&package=prepay_id=${packages}&signType=MD5&timeStamp=${time}&key=${MCHAPISECRET}`
+	let paySign = MD5(signString).toString().toUpperCase()
+	return { 
+		paySign,
+		time,
+		APPID,
+		nonceStr
+	}
+}
+
+module.exports = {
+    wxPay,
+	wxReSign
+};
