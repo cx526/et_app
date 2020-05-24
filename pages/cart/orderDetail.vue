@@ -30,6 +30,32 @@
 			<view class="pay-position white-border">
 				<et-order-pay :paydata="orderList"></et-order-pay>
 			</view>
+			
+			<view class="white-space" style="height: 150upx;"></view>
+			
+			
+			<!-- 底部栏目 -->
+			<view class="bottom-position">
+				<view class="bottom-content">
+					<view class="bottom-text">
+						<text>共计：</text>
+						<text style="color: #DB3E49;">{{bookCount}}</text>
+						<text>本</text>
+					</view>
+					
+					<view class="bottom-text">
+						<text>支付金额：</text>
+						<text style="color: #DB3E49;">{{moneyCount}}</text>
+						<text>元</text>
+					</view>
+					
+					<view class="bottom-tag">
+						<et-tag backgroundColor="#2AAEC4" title="确认借书" fontColor="#FFFFFF" class="tag-style" @tap="buySelect"></et-tag>
+					</view>
+				</view>
+			</view>
+			
+			<view class="white-space"></view>
 		</view>
 		
 	</view>
@@ -40,17 +66,20 @@ import etMember from '../../components/etMember.vue'
 import etAddress from '../../components/etAddress.vue'
 import etOrderList from '../../components/etOrderList.vue'
 import etOrderPay from '../../components/etOrderPay.vue'
+import etTag from '../../components/etTag.vue'
 
 export default {
 	components: {
 		etMember,
 		etAddress,
 		etOrderList,
-		etOrderPay
+		etOrderPay,
+		etTag
 	},
 	data() {
 		return {
-			money:"30",
+			bookCount:"10",
+			moneyCount:"30",
 			defalutAddress : {
 				// 'name':'麦家杰',
 				'phone':'13690394900',
@@ -63,30 +92,32 @@ export default {
 				bookList: [
 					{
 						title : '爸爸到底有什么用?',
-						image : '../static/cart/test.png',
+						imgSrc : '../static/cart/test.png',
 						count : '99'
 					},
 					{
 						title : '爸爸到底有什么用?',
-						image : '../static/cart/test.png',
+						imgSrc : '../static/cart/test.png',
 						count : '1'
 					},
 					{
 						title : '爸爸到底有什么用?',
-						image : '../static/cart/test.png',
+						imgSrc : '../static/cart/test.png',
 						count : '1'
 					},
 					{
 						title : '爸爸到底有什么用?',
-						image : '../static/cart/test.png',
+						imgSrc : '../static/cart/test.png',
 						count : '1'
 					}
 				]
 			}
 		}
 	},
-	onLoad() {
-
+	onLoad(option) {
+		this.bookCount = JSON.parse(decodeURIComponent(option.bookCount));
+		this.moneyCount = JSON.parse(decodeURIComponent(option.moneyCount));
+		this.orderList.bookList = JSON.parse(decodeURIComponent(option.orderList));
 	},
 	methods: {
 		btnClick() {
@@ -148,5 +179,32 @@ export default {
 }
 .pay-position {
 	width: 90%;
+}
+.bottom-position {
+	z-index: 3;
+	width: 100%;
+	background-color: #FFFFFF;
+	padding: 30upx;
+	position: fixed;
+	bottom: 0;
+	font-size: 25upx;
+	color: #9A9A9A;
+}
+.bottom-content {
+	width: 100%;
+	display: flex;
+	flex-direction: row;
+	justify-content: space-around;
+	background-color: #FFFFFF;
+}
+.bottom-tag {
+	display: flex;
+	flex-direction: row;
+	justify-content: space-around;
+}
+.tag-style {
+	width: 150upx;
+	height: 45upx;
+	margin-right: 20upx;
 }
 </style>

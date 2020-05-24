@@ -55,6 +55,21 @@ function deleteToCart(bookID) {
 	// 数据插入
 	uni.setStorageSync('carListInfo', carListArr);
 }
+// 删除所有选中记录
+function deleteSelect() {
+	// 获取书蓝列表
+	let carListArr = getBookListData();
+	// 处理数据
+	if (carListArr.length > 0){
+		  carListArr.forEach((obj,index)=>{
+			  if(obj.select === true) {
+				carListArr.splice(index,1);
+			  }
+		  });
+	}
+	// 数据插入
+	uni.setStorageSync('carListInfo', carListArr);
+}
 
 // 修改购物车中状态
 function changSelectType(bookID) {	
@@ -110,6 +125,7 @@ module.exports = {
 	getBookListData,
 	insertToCart,
 	deleteToCart,
+	deleteSelect,
 	changSelectType,
 	countCoin,
 	countAllSelect,

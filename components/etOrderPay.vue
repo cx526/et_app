@@ -49,7 +49,7 @@ export default {
 	data() {
 		return {
 			// 支付方式
-			payStyleString : 'memberCheck',
+			payStyleString : 'wechatCheck',
 			menberOrder : {
 				count: '2',
 				countAfter: '1',

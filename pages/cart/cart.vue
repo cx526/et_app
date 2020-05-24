@@ -42,8 +42,8 @@
 						</view>
 						
 						<view class="bottom-tag">
-							<et-tag backgroundColor="#808080" title="删除" fontColor="#FFFFFF" class="tag-style"></et-tag>
-							<et-tag backgroundColor="#2AA145" title="借阅" fontColor="#FFFFFF" class="tag-style"></et-tag>
+							<et-tag backgroundColor="#808080" title="删除" fontColor="#FFFFFF" class="tag-style" @tap="delectSelect"></et-tag>
+							<et-tag backgroundColor="#2AA145" title="借阅" fontColor="#FFFFFF" class="tag-style" @tap="buySelect"></et-tag>
 						</view>
 					</view>
 				</view>
@@ -142,6 +142,23 @@ export default {
 		},
 		deleteData() {
 			this.statusUpdate();
+		},
+		// 删除所有选中的记录
+		delectSelect(){
+			bookListData.deleteSelect();
+			this.statusUpdate();
+		},
+		// 下订单
+		buySelect() {
+			let select = [];
+			let bookCount = 0;
+			this.listData.forEach(item=>{
+				if(item.select) {
+					select.push(item);
+					bookCount = bookCount + item.count;					
+				}
+			});
+			uni.navigateTo({url: "orderDetail?orderList=" + encodeURIComponent(JSON.stringify(select)) + "&bookCount=" + encodeURIComponent(JSON.stringify(bookCount)) + "&moneyCount=" + encodeURIComponent(JSON.stringify(this.moneyCount))});
 		}
 	}
 }

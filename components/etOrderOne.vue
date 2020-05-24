@@ -1,7 +1,7 @@
 <template>
 	<view class="content-position" >
 		<view class="left-position">
-			<image :src="order.image" style="width: 120upx; height: 140upx;"></image>
+			<image :src="order.cover" style="width: 120upx; height: 140upx;"></image>
 			<text>{{order.title}}</text>
 		</view>
 		<view class="count-position">
