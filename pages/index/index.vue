@@ -217,9 +217,7 @@ export default {
 			uni.navigateTo({ url: 'bookdetail?bookID=' + JSON.stringify(bookID) })
 		},
 		toSearch() {
-			uni.showToast({
-				title: 'toSearch'
-			})
+			uni.navigateTo({ url: 'search'})
 		},
 		toButtonUrl(toUrl){
 			console.log(toUrl);

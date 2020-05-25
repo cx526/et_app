@@ -6,6 +6,7 @@
 			</cl-tabs>
 		</view>
 		
+		
 		<view class="list-content-father-position">
 			<view class="list-content-father-position" v-if="listData.length > 0">
 				<view class="list-content-position">
@@ -73,6 +74,7 @@ export default {
 		// 初始化商品列表
 		if(option.bookList){
 			this.listData = JSON.parse(decodeURIComponent(option.bookList));
+			this.loadStatus = 'noMore';
 		}else{
 			uni.showLoading();
 			let param = {
@@ -196,6 +198,7 @@ export default {
 	display: flex;
 	flex-direction: column;
 	justify-content:center;
+	padding-top: 50upx;
 }
 .list-content-father-position {
 	width: 100%;

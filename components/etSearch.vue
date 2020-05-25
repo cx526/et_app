@@ -2,9 +2,9 @@
 	<view class="content">
 		<view class="left-position">
 			<icon class="search-icon" type="search"/>
-			<input class="search-input" type="text"  :value="content" :placeholder="placeholderString" />
+			<input class="search-input" type="text"  :value="content" @input="inputChange":placeholder="placeholderString" />
 		</view>
-		<view class="search-button">
+		<view class="search-button" @tap="searchData">
 			<text>搜 索</text>
 		</view>
 	</view>
@@ -17,7 +17,13 @@ export default {
 		placeholderString: String,
 	},
 	methods: {
-	
+		searchData() {
+			console.log('123');
+			this.$emit('searchData',this.$props.content);
+		},
+		inputChange(e) {
+			this.$emit('inputChangeAction', e)
+		}
 	}
 }
 </script>

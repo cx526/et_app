@@ -2,14 +2,14 @@
 	<view class="content">
 		<view class="top-position">
 			<text>{{search.title}}</text>
-			<view class="top-img" v-if='search.img'>
+			<view class="top-img" v-if='search.img' @tap="deleteData">
 				<image :src="search.img"  style="height: 40upx; width: 40upx;"></image>
 			</view>
 		</view>
 		
 		<view class="content-position">
 			<view class="content-father"  v-for="(item,index) in search.contentList">
-				<view class="content-style">
+				<view class="content-style" @tap="selectContent(item)">
 					<text>{{item}}</text>
 				</view>
 			</view>
@@ -23,7 +23,12 @@ export default {
 		search:Object
 	},
 	methods: {
-	
+		deleteData() {
+			this.$emit('deleteData');
+		},
+		selectContent(e) {
+			this.$emit('selectContent',e);
+		}
 	}
 }
 </script>
