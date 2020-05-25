@@ -300,7 +300,7 @@ export default {
 			})
 		},
 		toSign() {
-			
+			uni.navigateTo({url: "./sign"});
 		},
 		toHotListData() {
 			console.log(this.toHotBookList);
