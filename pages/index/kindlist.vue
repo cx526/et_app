@@ -45,6 +45,7 @@ export default {
 			source:'touch',
 			fristTouch:false,
 			listData:[],
+			noPull:'',		//如果为1不允许上拉更新数据
 			loadStatus : 'loading',
 			loadText: {
 				contentdown: '上拉加载更多',
@@ -54,6 +55,11 @@ export default {
 		}
 	},
 	onLoad(option) {
+		//初始化是否允许上拉更新数据,有些页面复用不能更新数据
+		if(option.noPull){
+			this.noPull = parseInt(option.noPull);
+		}
+		
 		// 初始化tabBars
 		this.tabBarsObj = JSON.parse(decodeURIComponent(option.tabBars));
 		this.tabBars = [];
@@ -87,6 +93,11 @@ export default {
 	},
 	// 上拉加载更多,onReachBottom上拉触底函数
 	onReachBottom : function(){
+		// 如果nopull为不允许上拉更新
+		if(this.noPull === 1){
+			this.loadStatus = 'noMore';  //没有数据时显示‘没有更多’
+			return;
+		}
 		let param = {
 	        pageSize:this.pageSize,
 			currentPage: this.currentPage,

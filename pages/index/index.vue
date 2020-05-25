@@ -327,7 +327,7 @@ export default {
 				bookList .push(book);
 			});
 			console.log(bookList);
-			uni.navigateTo({ url: './kindlist?selectID=0&tabBars=' + encodeURIComponent(JSON.stringify(tabBars)) + '&bookList=' + encodeURIComponent(JSON.stringify(bookList))});
+			uni.navigateTo({ url: './kindlist?noPull=1&selectID=0&tabBars=' + encodeURIComponent(JSON.stringify(tabBars)) + '&bookList=' + encodeURIComponent(JSON.stringify(bookList))});
 		}
 	}	
 }
