@@ -140,11 +140,14 @@ export default {
 					}
 					this.$api.getPayment(param).then(res => {
 						let resData = res.data.xml 
+						console.log(resData)
 						let { paySign, time, APPID, nonceStr } = wxPay.wxReSign(resData.prepay_id[0])
 						if (resData.return_code[0] === 'SUCCESS') {
 							wxPay.wxPay(time, nonceStr, resData.prepay_id[0], paySign, 
 								res => {
-									console.log('pay success' + JSON.stringify(res) )
+									// res = {"errMsg":"requestPayment:ok"}
+									// res.errMsg = "requestPayment:ok"
+									console.log(res)
 								},
 								err => {
 									console.log('pay fail' + JSON.stringify(err) )
