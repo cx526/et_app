@@ -44,14 +44,8 @@ export default {
 		bookInfo: Object
 	},
 	methods: {
-		// toBookDetail() {
-		// 	this.$emit('toBookDetail')
-		// },
 		toBookDetail() {
 			uni.navigateTo({ url: 'bookdetail?bookID=' + encodeURIComponent(JSON.stringify(this.$props.bookInfo.bookID)) })
-		},
-		insertToCart() {
-			console.log('123');
 		}
 	}
 }
