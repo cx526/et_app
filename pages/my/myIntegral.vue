@@ -7,7 +7,7 @@
 				<view class="top-content">
 					<view class="top-left-position">
 						<image style="height: 120upx;width: 120upx;border-radius: 50%;" src="../../static/cart/test.png" class="marginStyle"></image>
-						<image style="width: 40upx;height: 40upx;" src="../../static/my/my_coin.png" class="marginStyle"></image>
+						<image style="width: 40upx;height: 40upx;" src="https://et-pic-server.oss-cn-shenzhen.aliyuncs.com/app_img/my_coin.png" class="marginStyle"></image>
 						<text class="marginStyle">当前积分</text>
 					</view> 
 					 
@@ -20,7 +20,7 @@
 			</view>
 			
 			<view class="bottom-position">
-				<image src="../../static/my/my_integralExplain.png" mode="widthFix"></image>
+				<image src="https://et-pic-server.oss-cn-shenzhen.aliyuncs.com/app_img/my_integralExplain.png" mode="widthFix"></image>
 			</view>
 		</view>
 	</view>

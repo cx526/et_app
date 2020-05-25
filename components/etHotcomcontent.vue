@@ -2,7 +2,7 @@
 	<view class="btn-content" @tap="btnClick">
 		<view class="img-content">
 			<image :src=img class="img"></image>
-			<text class="book-count">{{bookCount}}本</text>
+			<!-- <text class="book-count">{{bookCount}}本</text> -->
 		</view>
 		
 		<text class="title">{{title}}</text>

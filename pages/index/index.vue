@@ -48,10 +48,10 @@
 		<!-- 热门推荐 -->
 		<view class="hot-recom">
 			<!-- 导航条 -->
-			<et-titlenavigation  title="热门推荐" img="../static/index/start.png" toUrl="baidu.com" @clickHandle="btnGroupClick"></et-titlenavigation>
+			<et-titlenavigation  title="热门推荐" img="../static/index/start.png" toUrl="baidu.com" @toMoreData="toHotListData"></et-titlenavigation>
 			
 			<view class="hotcomcontent">
-				<et-hotcomcontent  v-for="(item,i) in hotBookList" :key="i" :title="item.name" :img="item.img" :bookCount="item.bookCount" @tap="toBookDetail(item.bookID)"></et-hotcomcontent>
+				<et-hotcomcontent  v-for="(item,i) in hotBookList" v-if="i <= 5" :key="i" :title="item.name" :img="item.img" :bookCount="item.bookCount" @tap="toBookDetail(item.bookID)"></et-hotcomcontent>
 			</view>
 		</view>
 		
@@ -82,11 +82,11 @@
 		<!-- 猜你喜欢 -->
 		<view class="guess-like">
 			<!-- 导航条 -->
-			<et-titlenavigation  title="猜你喜欢" img="../static/index/start.png" toUrl="baidu.com" @clickHandle="btnGroupClick"></et-titlenavigation>
+			<et-titlenavigation  title="猜你喜欢" img="../static/index/start.png"  @clickHandle="btnGroupClick"></et-titlenavigation>
 			
 			<!-- 内容 -->
 			<view class="guess-content">
-				<et-imgbox  v-for="(item,i) in guessBookList" :key="i" :title="item.name" :img="item.img" :bookCount="item.bookCount" :tag="item.tag" @tap="toBookDetail(item.bookID)"></et-imgbox>
+				<et-imgbox  v-for="(item,i) in guessBookList" :key="i" :title="item.name" :img="item.img" :bookCount="item.bookCount" :tag="item.tag" :peopleCount="item.peopleCount" :bookInfo="item"></et-imgbox>
 			</view>
 		</view>
 		<uni-load-more :status="loadStatus" :content-text="loadText" />
@@ -125,6 +125,7 @@ export default {
 				contentrefresh: '加载中',
 				contentnomore: '没有更多'
 			},
+			toHotBookList: [],
 			groupList: [
 				{
 					'name' : '绘本',
@@ -235,6 +236,7 @@ export default {
 		},
 		getHotBook(type){
 			this.$api.getRecommend().then(res => {
+			   this.toHotBookList = res.data;
 			   let dataArr = [];
 			   res.data.forEach(obj=>{
 				   let dataObj = {};
@@ -268,6 +270,8 @@ export default {
 				   // console.log(obj);
 				   let dataObj = {};
 				   dataObj.name = obj.title;
+				   dataObj.coin = obj.coin;
+				   dataObj.peopleCount = "99";
 				   if (obj.forGoodsPic && obj.forGoodsPic.length > 0) {
 						dataObj.img = obj.forGoodsPic[0].url;
 				   }else{
@@ -277,7 +281,11 @@ export default {
 				   dataObj.tag = [];
 				   if (obj.tagInfo && obj.tagInfo.length>0) {
 					   obj.tagInfo.forEach(tagObj=>{
-						   dataObj.tag.push(tagObj.tag_name);
+						   let tagObjPush = {};
+						   tagObjPush.title = tagObj.tag_name;
+						   tagObjPush.backgroundColor = tagObj.bg_color;
+						   tagObjPush.fontColor = tagObj.text_color;
+						    dataObj.tag.push(tagObjPush);
 					   });
 				   }
 				   if (type === 'push'){
@@ -292,7 +300,34 @@ export default {
 			})
 		},
 		toSign() {
-			uni.navigateTo({ url: './sign' })
+			
+		},
+		toHotListData() {
+			console.log(this.toHotBookList);
+			let tabBars = [{'name':'热门推荐'}];
+			let bookList = [];
+			this.toHotBookList.forEach(obj=>{
+				let book = {};
+				book.bookID = obj.goods_info.id;
+				book.bookName = obj.goods_info.title;
+				book.imgSrc = obj.goods_info.forGoodsPic[0].url;
+				book.tagData = [];
+				if(obj.goods_info.tagInfo && obj.goods_info.tagInfo.length > 0) {
+					let tagArr = [];
+					obj.goods_info.tagInfo.forEach((obj) => {
+						let tagObj = {};
+						tagObj.title = obj.tag_name;
+						tagObj.backgroundColor = obj.bg_color;
+						tagObj.fontColor = obj.text_color;
+						tagArr.push(tagObj);
+					});
+					book.tagData  = tagArr;
+				}
+				book.remark = obj.goods_info.summary;
+				bookList .push(book);
+			});
+			console.log(bookList);
+			uni.navigateTo({ url: './kindlist?selectID=0&tabBars=' + encodeURIComponent(JSON.stringify(tabBars)) + '&bookList=' + encodeURIComponent(JSON.stringify(bookList))});
 		}
 	}	
 }

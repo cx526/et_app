@@ -51,13 +51,17 @@ export default {
 		// 初始化tabBars
 		
 		// 初始化商品列表
-		uni.showLoading();
-		let param = {};
-		param.id = this.tabBarID;
-		this.$api.getGoodsList(param).then(res => {
-		   this.listData = this.transformListData(res.data);
-		   uni.showToast();
-		})
+		if(option.bookList){
+			this.listData = JSON.parse(decodeURIComponent(option.bookList));
+		}else{
+			uni.showLoading();
+			let param = {};
+			param.id = this.tabBarID;
+			this.$api.getGoodsList(param).then(res => {
+			   this.listData = this.transformListData(res.data);
+			   uni.showToast();
+			})
+		}
 		// 初始化商品列表
 	},
 	methods: {

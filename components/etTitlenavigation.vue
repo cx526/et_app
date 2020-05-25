@@ -4,7 +4,7 @@
 			<image class="btn-start" :src="img" mode=""></image>
 			<text class="btn-title">{{title}}</text>
 		</view>
-		<text class="btn-url" @tap="btnClick('toUrl')">更多></text>
+		<text v-if="toUrl" class="btn-url" @tap="btnClick()">更多></text>
 	</view>
 </template>
 
@@ -16,8 +16,8 @@ export default {
 		toUrl: String
 	},
 	methods: {
-		btnClick(toUrlSting) {
-			this.$router.push(toUrlSting)
+		btnClick() {
+			this.$emit('toMoreData');
 		}
 	}
 }
