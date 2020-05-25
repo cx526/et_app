@@ -12,10 +12,10 @@
  */
  const MD5 = require('md5');
  
-function wxPay(nonceStr, packages, paySign, success, fail) { 
+function wxPay(time, nonceStr, packages, paySign, success, fail) { 
     uni.requestPayment({
         provider: 'wxpay',
-        timeStamp: new Date().getTime(),
+        timeStamp: time,
         nonceStr: nonceStr,
         package: 'prepay_id=' + packages,
         signType: 'MD5',

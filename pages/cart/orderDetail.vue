@@ -136,27 +136,20 @@ export default {
 					let param = {
 						userInfo: userInfo,
 						money: '0.01',
-						usage: '微信支付测试，商品详细描述'
+						usage: '书本借取费用'
 					}
 					this.$api.getPayment(param).then(res => {
 						let resData = res.data.xml 
-						console.log(res)
 						let { paySign, time, APPID, nonceStr } = wxPay.wxReSign(resData.prepay_id[0])
 						if (resData.return_code[0] === 'SUCCESS') {
-							uni.requestPayment({
-							    provider: 'wxpay',
-							    timeStamp: time,
-							    nonceStr: nonceStr,
-							    package: 'prepay_id=' + resData.prepay_id[0],
-							    signType: 'MD5',
-							    paySign: paySign,
-							    success: res => {
-							    	console.log('pay success' + JSON.stringify(res) )
-							    },
-							    fail: err => { 
+							wxPay.wxPay(time, nonceStr, resData.prepay_id[0], paySign, 
+								res => {
+									console.log('pay success' + JSON.stringify(res) )
+								},
+								err => {
 									console.log('pay fail' + JSON.stringify(err) )
 								}
-							})
+							)
 						} else {
 							uni.showToast({ icon: 'none', title: resData.return_msg[0] })
 						}
