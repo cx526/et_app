@@ -106,8 +106,7 @@ export default {
 			// 请求参数 userInfo {}
 			// 请求参数 money 0.01
 			// 请求参数 usage 用途
-			// if (process.env.NODE_ENV === 'production') {
-			if (true) {
+			if (process.env.NODE_ENV === 'production') {
 				const userInfo = uni.getStorageSync('userInfo')
 				if (userInfo.name !== 'guest') {
 					let param = {
@@ -119,10 +118,12 @@ export default {
 							price: '0.01',
 							deposit: '0.01',
 							final_price: '0.02',
+							address_id: '2',
 						}
 					}
 					this.$api.getPayment(param).then(res => {
-						let resData = res.data.xml 
+						let resData = res.data.finalRes.xml 
+						let order_no = res.data.order_no
 						console.log(resData)
 						let { paySign, time, APPID, nonceStr } = wxPay.wxReSign(resData.prepay_id[0])
 						if (resData.return_code[0] === 'SUCCESS') {
@@ -130,7 +131,11 @@ export default {
 								res => {
 									// res.errMsg = "requestPayment:ok"
 									if (res.errMsg === "requestPayment:ok") {
-										
+										this.$api.updatePayment({order_no: order_no}).then(res => {
+											//跳出支付成功界面
+											//res.data.xml.return_code[0] === 'SUCCESS'
+											console.log(res)
+										})
 									}
 								},
 								err => {
