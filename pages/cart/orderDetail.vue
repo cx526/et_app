@@ -79,39 +79,15 @@ export default {
 	},
 	data() {
 		return {
-			bookCount:"10",
-			moneyCount:"30",
+			bookCount: "0",
+			moneyCount: "0",
 			defalutAddress : {
 				// 'name':'麦家杰',
 				'phone':'13690394900',
 				'address' : '广东省佛山市顺德区大良街道凤翔路创意产业园C栋301'
 			},
 			orderList : {
-				// orderNo:'DD202005170000001',
-				// status:'待支付',
-				// price:'30',
-				bookList: [
-					{
-						title : '爸爸到底有什么用?',
-						imgSrc : '../static/cart/test.png',
-						count : '99'
-					},
-					{
-						title : '爸爸到底有什么用?',
-						imgSrc : '../static/cart/test.png',
-						count : '1'
-					},
-					{
-						title : '爸爸到底有什么用?',
-						imgSrc : '../static/cart/test.png',
-						count : '1'
-					},
-					{
-						title : '爸爸到底有什么用?',
-						imgSrc : '../static/cart/test.png',
-						count : '1'
-					}
-				]
+				bookList: []
 			}
 		}
 	},
@@ -130,13 +106,20 @@ export default {
 			// 请求参数 userInfo {}
 			// 请求参数 money 0.01
 			// 请求参数 usage 用途
-			if (process.env.NODE_ENV === 'production') {
+			// if (process.env.NODE_ENV === 'production') {
+			if (true) {
 				const userInfo = uni.getStorageSync('userInfo')
 				if (userInfo.name !== 'guest') {
 					let param = {
 						userInfo: userInfo,
-						money: '0.01',
-						usage: '书本借取费用'
+						orderInfo: {
+							goods: '999,1001,1100',
+							count: 3,
+							order_type: 'online',
+							price: '0.01',
+							deposit: '0.01',
+							final_price: '0.02',
+						}
 					}
 					this.$api.getPayment(param).then(res => {
 						let resData = res.data.xml 
@@ -145,12 +128,13 @@ export default {
 						if (resData.return_code[0] === 'SUCCESS') {
 							wxPay.wxPay(time, nonceStr, resData.prepay_id[0], paySign, 
 								res => {
-									// res = {"errMsg":"requestPayment:ok"}
 									// res.errMsg = "requestPayment:ok"
-									console.log(res)
+									if (res.errMsg === "requestPayment:ok") {
+										
+									}
 								},
 								err => {
-									console.log('pay fail' + JSON.stringify(err) )
+									uni.showToast({ icon: 'none', title: 'pay fail' + JSON.stringify(err) })
 								}
 							)
 						} else {

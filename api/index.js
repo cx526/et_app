@@ -28,6 +28,9 @@ api.postSchoolInfo = params => request.globalRequest('/api/auth/postSchoolInfo',
 // 请求参数 usage 用途
 api.getPayment = params => request.globalRequest('/api/wxPay/payment', 'POST', params)
 
+// 支付成功后，添加订单数据
+api.getPayment = params => request.globalRequest('/api/wxPay/updatePayment', 'POST', params)
+
 //获取轮播图
 api.getSwiperData = params => request.globalRequest('/api/swiper/getSwiper', 'POST', params)
 
