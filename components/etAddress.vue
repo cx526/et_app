@@ -1,6 +1,6 @@
 <template>
 	<view class="content">
-		<view class="left-position" v-if="address.defalut">
+		<view class="left-position" v-if="address.is_default === '1'">
 			<image src="../static/cart/blueRight.png" style="width: 40upx;height: 40upx;"></image>
 		</view>
 		
@@ -8,8 +8,8 @@
 			<view class="middle-top-position">
 				<text>{{address.name}}</text>
 				<view class="phone-content">
-					<text class="phone-style">{{address.phone}}</text>
-					<view class="default-content" v-if="address.defalut">
+					<text class="phone-style">{{address.mobile}}</text>
+					<view class="default-content" v-if="address.is_default === '1'">
 						<text>默认</text>
 					</view>
 				</view>
@@ -18,12 +18,13 @@
 			<view class="white-space"></view>
 			
 			<view class="middle-address-position">
-				<text>{{address.address}}</text>
+				<text>{{address.showing_address}}</text>
 			</view>
 		</view>
 		
 		<view class="right-position">
-			<image src="../static/cart/edit.png" style="width: 45upx;height: 45upx;"></image>
+			<image src="../static/cart/edit.png" style="width: 45upx;height: 45upx;" @tap='modAddressInfo(address.id)'></image>
+			<image src="https://et-pic-server.oss-cn-shenzhen.aliyuncs.com/app_img/cart_rubbish.png" style="width: 45upx;height: 45upx;" @tap='delAddressInfo(address.id)'></image>
 		</view>
 	</view>
 </template>
@@ -36,6 +37,24 @@ export default {
 	methods: {
 		btnClick() {
 			this.$emit('clickHandle')
+		},
+		modAddressInfo(id){
+			uni.navigateTo({
+				url:'addressEdit?id='+id
+			});
+		},
+		delAddressInfo(id){
+			this.$api.delAddress({ id: id }).then(res=>{
+				uni.showToast({
+	　　　　　　　　　　title: '删除成功',
+	　　　　　　　　　　icon: 'success',
+					  duration: 2000
+	　　　　　　　});
+				uni.navigateTo({
+					url:'addressList'
+				});
+			});
+			this.$emit('delAddressInfo');
 		}
 	}
 }
