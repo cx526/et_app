@@ -8,7 +8,7 @@
 			:value="regionResult" 
 			:range="region"
 		>
-		<view class="input-style">{{ finalRegionString.length === 0 ? title : finalRegionString }}</view>
+		<view class="input-style" :class="[finalRegionString.length === 0 ? 'color-one' : 'color-two']">{{ finalRegionString.length === 0 ? title : finalRegionString }}</view>
 		</picker>
 	</view>
 </template>
@@ -18,17 +18,25 @@ import regionData from '../common/regionData.js'
 
 export default {
 	props: {
-		title: String
+		title: String,
+		showing_address: String
 	},
 	computed: {
 		finalRegionString() {
-			return this.selectedProvinceValue + this.selectedCityValue + this.selectedAreaValue
+			if (this.selectedProvinceValue + this.selectedCityValue + this.selectedAreaValue){
+				return this.selectedProvinceValue + this.selectedCityValue + this.selectedAreaValue
+			}else if(this.$props.showing_address != ''){
+				return this.$props.showing_address;
+			}else {
+				return '';
+			}
 		}
 	},
 	created(){
 		this.provinceArray = Object.values(regionData['86'])
 		this.pKeysArray = Object.keys(regionData['86'])
 		this.region[0] = this.provinceArray
+		this.selectedProvinceValue = this.$props.showing_address;
 	},
 	data() {
 		return {
@@ -98,16 +106,17 @@ export default {
 			this.selectedCityCode = this.cKeysArray[e.target.value[1]]
 			this.selectedAreaCode = this.aKeysArray[e.target.value[2]]
 			
-			// console.log(e.target.value)
-			console.log(this.selectedProvinceCode, this.selectedCityCode, this.selectedAreaCode)
 			
 			let param = {
 				filterItems: {
 					province: this.selectedProvinceCode,
 					city: this.selectedCityCode,
-					area: this.selectedAreaCode
+					area: this.selectedAreaCode,
+					showAddress: this.finalRegionString
 				}
 			}
+			
+			this.$emit('regionChange',param);
 		},
 	}
 }
@@ -116,6 +125,12 @@ export default {
 <style scoped>
 .content {
 	width: 100%;
+}
+.color-one{
+	color:#81888F;
+}
+.color-two{
+	color:#000000;
 }
 
 </style>
