@@ -308,7 +308,11 @@ export default {
 				let book = {};
 				book.bookID = obj.goods_info.id;
 				book.bookName = obj.goods_info.title;
-				book.imgSrc = obj.goods_info.forGoodsPic[0].url;
+				if (obj.goods_info.forGoodsPic && obj.goods_info.forGoodsPic.length > 0) {
+					book.imgSrc = obj.goods_info.forGoodsPic[0].url;
+				}else{
+					book.imgSrc = obj.pic; 
+				}
 				book.tagData = [];
 				if(obj.goods_info.tagInfo && obj.goods_info.tagInfo.length > 0) {
 					let tagArr = [];

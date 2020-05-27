@@ -135,13 +135,13 @@ export default {
 					{
 						'imgSrc' : this.$aliImage + 'my2_2.png',
 						'title'	: '积分',
-						'toUrl'	: 'bookdetail?bookID=900',
+						'toUrl'	: '/pages/my/myIntegral',
 						'buttomContent' : '2000'
 					},
 					{
 						'imgSrc' : this.$aliImage + 'my2_3.png',
 						'title'	: '签到',
-						'toUrl'	: 'bookdetail?bookID=900',
+						'toUrl'	: '/pages/index/sign',
 						'buttomContent' : '0/1'
 					},
 					{
@@ -152,7 +152,7 @@ export default {
 					{
 						'imgSrc' : this.$aliImage + 'my2_5.png',
 						'title'	: '完善信息',
-						'toUrl'	: 'bookdetail?bookID=900'
+						'toUrl'	: '/pages/my/myInfoList'
 					},
 					{
 						'imgSrc' : this.$aliImage + 'my2_6.png',
