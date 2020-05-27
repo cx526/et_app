@@ -112,7 +112,7 @@ export default {
 					let param = {
 						userInfo: userInfo,
 						orderInfo: {
-							goods: '999,1001,1100',
+							goods: '669,184,229',
 							count: 3,
 							order_type: 'online',
 							price: '0.01',
@@ -125,8 +125,8 @@ export default {
 						let resData = res.data.finalRes.xml 
 						let order_no = res.data.order_no
 						console.log(resData)
-						let { paySign, time, APPID, nonceStr } = wxPay.wxReSign(resData.prepay_id[0])
 						if (resData.return_code[0] === 'SUCCESS') {
+							let { paySign, time, APPID, nonceStr } = wxPay.wxReSign(resData.prepay_id[0])
 							wxPay.wxPay(time, nonceStr, resData.prepay_id[0], paySign, 
 								res => {
 									// res.errMsg = "requestPayment:ok"
