@@ -38,6 +38,13 @@ export default {
 		btnClick(toUrl) {
 			console.log(toUrl);
 			uni.navigateTo({url: toUrl});
+			
+			// uni.navigateTo({url: toUrl});
+			// if (toUrl === './kind'){
+			// 	uni.switchTab({
+			// 		url:toUrl
+			// 	})
+			// }
 		}
 	}
 }
