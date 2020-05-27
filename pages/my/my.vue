@@ -166,8 +166,8 @@ export default {
 					},
 					{
 						'imgSrc' : this.$aliImage + 'my2_8.png',
-						'title'	: '收获地址',
-						'toUrl'	: 'bookdetail?bookID=900'
+						'title'	: '收货地址',
+						'toUrl'	: '/pages/cart/addressList'
 					}
 				]
 			}

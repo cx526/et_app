@@ -10,6 +10,15 @@
 			}
 		},
 		{
+			"path": "pages/my/myInfoList",
+			"style": {
+				"navigationBarTitleText": "我的信息",
+				"app-plus": {
+					"titleNView": false
+				}
+			}
+		},
+		{
 			"path": "pages/my/myIntegral",
 			"style": {
 				"navigationBarTitleText": "我的积分",
