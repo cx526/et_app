@@ -154,7 +154,7 @@ export default {
 			uni.showLoading();
 			this.$api.getGoodsInfo({ 'NoPageing': '1', 'filterItems': {'id': this.bookID} }).then(res => {
 			   this.transformBookData(res.data.rows[0]);
-			   uni.showToast();
+			   uni.hideLoading();
 			})
 		},
 		swiperChange(e) {

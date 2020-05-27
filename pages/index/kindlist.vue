@@ -88,7 +88,7 @@ export default {
 			this.$api.getGoodsInfo(param).then(res => {
 			   this.listData = this.transformListData(res.data.rows);
 			   this.currentPage++;
-			   uni.showToast();
+			   uni.hideLoading();
 			})
 		}
 		// 初始化商品列表
@@ -140,7 +140,7 @@ export default {
 			this.$api.getGoodsInfo(param).then(res => {
 			   this.listData = this.transformListData(res.data.rows);
 			   this.currentPage++;
-			   uni.showToast();
+			   uni.hideLoading();
 			})
 		},
 		// 转换接口数据为视图数据

@@ -53,7 +53,7 @@
 						
 					}
 				})
-				uni.showToast();
+				uni.hideLoading();
 			})
 		},
 		methods: {
