@@ -94,17 +94,82 @@ export default {
 			team: ['1班', '2班', '3班', '4班', '5班', '6班', '7班', '8班', '9班', '10班', '11班', '12班'],
 			selectSchoolId: null,
 			selectGradeId: null,
+			showing_address: ''
         }
     },
 	computed: {
 		finalRegionString() {
-			return this.selectedProvinceValue + this.selectedCityValue + this.selectedAreaValue
+			// return this.selectedProvinceValue + this.selectedCityValue + this.selectedAreaValue
+			
+			if (this.selectedProvinceValue + this.selectedCityValue + this.selectedAreaValue){
+				return this.selectedProvinceValue + this.selectedCityValue + this.selectedAreaValue
+			}else if(this.showing_address != ''){
+				return this.showing_address;
+			}else {
+				return '';
+			}
 		}
 	},
-    onLoad() {
+    onLoad(option) {
         this.provinceArray = Object.values(regionData['86'])
 		this.pKeysArray = Object.keys(regionData['86'])
 		this.region[0] = this.provinceArray
+		
+		if(option.complateInfoData) { 
+			const objectArr = JSON.parse(decodeURIComponent(option.complateInfoData));
+			console.log(objectArr);
+			this.teamIndex = parseInt(objectArr.class) - 1;
+			this.selectedProvinceCode = objectArr.schoolInfo.province;
+			this.selectedCityCode = objectArr.schoolInfo.city;
+			this.selectedAreaCode = objectArr.schoolInfo.area;
+			this.selectSchoolId = objectArr.schoolInfo.id;
+			this.selectGradeId = objectArr.grade_id;	
+			
+			// 控制地区展示
+			this.showing_address = objectArr.showing_address;
+			
+			//控制学校展示
+			let param = {
+				filterItems: {
+					province: objectArr.schoolInfo.province,
+					city: objectArr.schoolInfo.city,
+					area:  objectArr.schoolInfo.area
+				}
+			}
+			this.$api.getSchoolInfo(param).then(res => {
+				this.schoolInfo = res.data
+				console.log(this.schoolInfo);
+				if (res.data.length > 0) {
+					res.data.map(item => {
+						this.kindergarten.push(item.name)
+					})
+				}
+				let arrIndex = 0;
+				this.schoolInfo.forEach((item,index)=>{
+					if(item.name === objectArr.school) {
+						arrIndex = index;
+					}
+				});
+				this.selectSchoolId = arrIndex;
+				
+				//控制班级展示
+				console.log(res.data);
+				let gradeArrIndex = 0;
+				this.gradeInfo = res.data[0].classInfo
+				res.data[0].classInfo.map((subItem,index) => {
+					this.grade.push(subItem.name);
+					if(parseInt(subItem.id) === parseInt(objectArr.grade_id)) {
+						gradeArrIndex = index;
+					}
+				});
+				this.gradeIndex = gradeArrIndex;
+				this.selectGradeId = objectArr.grade_id;
+				
+			})
+			//控制学校展示
+			
+			//
+		}
     },
     methods: {
 		regionColChange(e) {

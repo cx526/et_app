@@ -1,43 +1,75 @@
 <template>
 	<view class="content">
-		<view class="top-position"></view>
-		
-		<view class="content-position">
-			<view class="top-content-position">
-				<view class="top-content">
-					<view class="top-left-position">
-						<image style="height: 120upx;width: 120upx;border-radius: 50%;" src="../../static/cart/test.png" class="marginStyle"></image>
-						<image style="width: 40upx;height: 40upx;" src="https://et-pic-server.oss-cn-shenzhen.aliyuncs.com/app_img/my_coin.png" class="marginStyle"></image>
-						<text class="marginStyle">当前积分</text>
-					</view> 
-					 
-					<view class="top-right-position">
-						<view class="top-right-content">
-							<text>1223</text>
-						</view>
-					</view>
-				</view>
+		<view class="top-position white-border">
+			<view class="top-content">
+				<text>头像</text>
+				<image :src="userInfo.avatar" style="height: 100upx; width: 100upx; border-radius: 50%;"></image>
 			</view>
-			
-			<view class="bottom-position">
-				<image src="https://et-pic-server.oss-cn-shenzhen.aliyuncs.com/app_img/my_integralExplain.png" mode="widthFix"></image>
+			<view class="top-content">
+				<text>昵称</text>
+				<text style="color: #8E8E8E; font-weight: 400;">{{userInfo.name}}</text>
+			</view>
+			<view class="top-content" style="border: 0upx;">
+				<text>性别</text>
+				<text style="color: #8E8E8E; font-weight: 400;">{{userInfo.genderShow}}</text>
+			</view>
+		</view>
+		
+		<view class="baby-position white-border">
+			<view class="baby-content">
+				<et-baby-info :babyInfo="babyInfo"></et-baby-info>
 			</view>
 		</view>
 	</view>
 </template>
 
 <script>
-import etMyBox from '../../components/etMyBox.vue'
+import etBabyInfo from '../../components/etBabyInfo.vue'
+import regionData from '../../common/regionData.js'
 
 export default {
 	components: {
-		etMyBox
+		etBabyInfo
+	},
+	onLoad() {
+		// 获取用户信息
+		this.getCustomerInfo();
 	},
 	data() {
 		return {
-			test: '123456',
+			userInfo:{},
+			babyInfo:{},
 		}
 	},
+	methods: {
+		genderChange() {
+			if(this.userInfo.gender === 0){
+				this.userInfo.genderShow = '未知';
+			}else if(this.userInfo.gender === 1){
+				this.userInfo.genderShow = '男';
+			}else if(this.userInfo.gender === 2){
+				this.userInfo.genderShow = '女';
+			}
+		},
+		transformAddress(object){
+			let address = Object.values(regionData['86'][object.province]) + Object.values(regionData[object.province][object.city]) + Object.values(regionData[object.city][object.area]);
+			address = address.replace(/,/g,'');
+			return address;
+		},
+		async getCustomerInfo(){
+			this.userInfo = uni.getStorageSync('userInfo');
+			this.genderChange();
+			const userInfoArr = await this.$api.getCustom({ filterItems: { mobile: this.userInfo.mobile } }).then(res=>{
+				return res.data[0];
+			});
+			this.babyInfo = userInfoArr.childInfo;
+			if(JSON.stringify(userInfoArr.schoolInfo) !== '{}'){
+				this.babyInfo.showing_address =  this.transformAddress(userInfoArr.schoolInfo);
+				this.babyInfo.school = userInfoArr.schoolInfo.name;				
+				this.babyInfo.schoolInfo = userInfoArr.schoolInfo;
+			}
+		}
+	}
 }
 </script>
 
@@ -48,62 +80,33 @@ export default {
 	justify-content: center;
 	align-items: center;
 	background-color: #FFFFFF;
-	position: relative;
 }
 .top-position {
-	background-image: linear-gradient(to bottom, #7ED1E7 , #8CD9D8);
-	border-bottom-right-radius: 30upx;
-	border-bottom-left-radius: 30upx;
-	height: 280upx;
-	width: 100%;
-}
-.content-position {
-	position: absolute;
-	top: 0;
-	z-index: 99;
+	width: 95%;
 	display: flex;
 	flex-direction: column;
 	justify-content: center;
 	align-items: center;
-	padding-top: 90upx;
 }
 .top-content {
-	width:650upx;
-	height:180upx;
-	background:linear-gradient(160deg,#FFFBE6 0%,#FEBF4A 70%);
-	box-shadow:0px -3px 6px rgba(0,0,0,0.16);
-	border: 8upx solid #FDB841;
-	border-bottom: 0;
-	border-top-left-radius: 20upx;
-	border-top-right-radius: 20upx;
-	opacity:1;
+	width: 85%;
 	display: flex;
 	flex-direction: row;
-	justify-content: space-around;
+	justify-content: space-between;
 	align-items: center;
-}
-.top-left-position {
-	display: flex;
-	flex-direction: row;
-	justify-content: center;
-	align-items: center;
-}
-.top-right-content {
-	background-color: #C89E60;
-	border-radius: 40upx;
-	padding: 10upx 30upx;
-	color: #FFFFFF;
-	font-size: 30upx;
+	padding: 20upx 0;
+	border-bottom: 1UPX solid #F3F3F3;
 	font-weight: bold;
 }
-.marginStyle {
-	margin-left: 8upx;
-}
-.bottom-position {
-	width: 670upx;
+.baby-position {
+	width: 95%;
 	display: flex;
-	padding-top: 30upx;
+	flex-direction: column;
 	justify-content: center;
 	align-items: center;
+	margin-top: 30upx;
+}
+.baby-content {
+	width: 85%;
 }
 </style>

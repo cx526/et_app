@@ -8,7 +8,7 @@
 			<view class="white-space"></view>
 			
 			<view class="input-class">
-				<et-iconinput img="../static/register/nickName.png" remark="幼儿昵称" @inputChangeAction="inputChangeAction"></et-iconinput>
+				<et-iconinput img="../static/register/nickName.png" remark="幼儿昵称" :inputData="name" @inputChangeAction="inputChangeAction"></et-iconinput>
 			</view>
 			
 			<view class="white-space"></view>
@@ -71,13 +71,23 @@ export default {
 	},
     data() {
         return {
+			child_id: '',
 			name: '',
 			birth_day: this.getDate(),
 			gender: 0,
+			complateInfo: {}    //传递变量给幼儿园编辑
         }
     },
-    onLoad() {
-        
+    onLoad(option) {
+		// 如果传递了信息过来，就是编辑不是新增
+        if(option.childInfo){
+			const childInfo = JSON.parse(decodeURIComponent(option.childInfo));
+			this.name = childInfo.name;
+			this.birth_day = childInfo.birth_day;
+			this.gender = parseInt(childInfo.gender);
+			this.child_id = childInfo.id;
+			this.complateInfo = option.childInfo;
+		}
     },
     methods: {
 		goClassInfo() {
@@ -102,11 +112,16 @@ export default {
 					name: this.name,
 					gender: this.gender,
 					birth_day: this.birth_day,
+					child_id: this.child_id
 				}
 			}
 			this.$api.postChildInfo(param).then(res => {
 				if (res.data.status === 'ok') {
-					uni.navigateTo({ url: './complateInfo' })	
+					let toUrl = './complateInfo';
+					if(this.child_id){     //存在child_id 就是编辑信息，否则就是新增信息
+						toUrl = toUrl + '?complateInfoData=' +  this.complateInfo ;
+					}
+					uni.navigateTo({ url: toUrl })	
 				} else {
 					uni.showToast({
 						icon: 'none',
