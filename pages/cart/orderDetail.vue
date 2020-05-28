@@ -72,6 +72,7 @@ import etOrderList from '../../components/etOrderList.vue'
 import etOrderPay from '../../components/etOrderPay.vue'
 import etTag from '../../components/etTag.vue'
 const wxPay = require('@/common/wxPay')
+const formatDate = require('@/common/formatDate')
 
 export default {
 	components: {
@@ -143,6 +144,8 @@ export default {
 					
 					//最终支付订单信息
 					this.finalPayOrderInfo = this.orderHandle();
+					this.finalPayOrderInfo.createTime = formatDate.formatDate(new Date());
+					this.finalPayOrderInfo.returnTime = formatDate.getDateDuration(new Date(), 15);
 					this.moneyCount = this.finalPayOrderInfo.payMoney;
 				});
 			});

@@ -4,15 +4,15 @@
 		<view class="time-position">
 			<text class="font-one-style">借阅时间</text>
 			<view class="time-content">
-				<text class="font-two-style">2020.04.05 16:05</text>
-				<text class="font-two-style" style="color: #FE695A;">可借30天，请按时归还哦</text>
+				<text class="font-two-style">{{orderPayInfo.createTime}}</text>
+				<text class="font-two-style" style="color: #FE695A;">可借15天，请按时归还哦</text>
 			</view>
 		</view>
 		
 		<view class="time-position time-return-position">
 			<text class="font-one-style">预计归还时间</text>
 			<view class="time-content">
-				<text class="font-two-style">2020.04.05 16:05</text>
+				<text class="font-two-style">{{orderPayInfo.returnTime}}</text>
 			</view>
 		</view>
 		
