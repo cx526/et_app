@@ -6,7 +6,7 @@
 			<view class="userInfo-position">
 				<view class="user-left-position">
 					<view class="userInfo-content">
-						<text style="color: #FFFFFF;font-size: 30upx;">{{userInfo.name === 'guest' ? '五车书游客, 您好！' : userInfo.name}}</text>
+						<text style="color: #FFFFFF;font-size: 40upx;">{{userInfo.name === 'guest' ? '五车书游客, 您好！' : userInfo.name}}</text>
 						<view class="white-space-width"></view>
 						<!-- <image src="../../static/my/diamond.png" style="width: 40upx; height: 40upx;"></image> -->
 					</view>
