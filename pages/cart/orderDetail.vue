@@ -93,8 +93,8 @@ export default {
 			bookCount: "0",
 			moneyCount: "0",
 			defalutAddress : {},	//客户选择的发货地址
-			orderList : {
-				bookList: []		// 订单里面的书列表
+			orderList :{
+				goodsInfo:[]
 			},
 			addressIndex: 0,		//被选择地址的索引
 			addressList: [],		//选择框的地址列表
@@ -139,14 +139,19 @@ export default {
 					this.hestoryOrderInfo = res.data;
 					
 					let orderObject = uni.getStorageSync('orderInfo');
+					if(orderObject.defalutAddress){
+						this.defalutAddress = orderObject.defalutAddress;
+					}
 					this.bookCount = orderObject.bookCount;
-					this.orderList.bookList = orderObject.bookList;
+					this.orderList.goodsInfo = orderObject.goodsInfo;
 					
 					//最终支付订单信息
 					this.finalPayOrderInfo = this.orderHandle();
 					this.finalPayOrderInfo.createTime = formatDate.formatDate(new Date());
 					this.finalPayOrderInfo.returnTime = formatDate.getDateDuration(new Date(), 15);
 					this.moneyCount = this.finalPayOrderInfo.payMoney;
+					
+					console.log(this.orderList.goodsInfo);
 				});
 			});
 			
@@ -181,7 +186,7 @@ export default {
 			
 			//组合商品id
 			let bookidString = '';
-			this.orderList.bookList.map(item=>{
+			this.orderList.goodsInfo.map(item=>{
 				bookidString = bookidString + ',' + item.bookID;
 			});
 			bookidString = bookidString.substr(1);

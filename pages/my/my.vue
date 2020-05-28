@@ -88,43 +88,44 @@ export default {
 					{
 						'imgSrc' : this.$aliImage + 'my1_1.png',
 						'title'	: '待支付',
-						'toUrl'	: '/pages/index/bookdetail?bookID=900',
+						'toUrl'	: '/pages/cart/orderList?status_text=待支付',
 						'count'	: '99+'
 					},
 					{
 						'imgSrc' : this.$aliImage + 'my1_2.png',
 						'title'	: '待发货',
-						'toUrl'	: 'bookdetail?bookID=901'
+						'toUrl'	: '/pages/cart/orderList?status_text=待发货'
 					},
 					{
 						'imgSrc' : this.$aliImage + 'my1_3.png',
 						'title'	: '待收货',
-						'toUrl'	: 'bookdetail?bookID=900'
+						'toUrl'	: '/pages/cart/orderList?status_text=待收货'
 					},
 					{
 						'imgSrc' : this.$aliImage + 'my1_4.png',
 						'title'	: '阅读中',
+						'toUrl'	: '/pages/cart/orderList?status_text=阅读中',
 						'count'	: '2'
 					},
 					{
 						'imgSrc' : this.$aliImage + 'my1_5.png',
 						'title'	: '待还书',
-						'toUrl'	: 'bookdetail?bookID=900'
+						'toUrl'	: '/pages/cart/orderList?status_text=待还书'
 					},
 					{
 						'imgSrc' : this.$aliImage + 'my1_6.png',
 						'title'	: '待评价',
-						'toUrl'	: 'bookdetail?bookID=900'
+						'toUrl'	: '/pages/cart/orderList?status_text=待评价'
 					},
 					{
 						'imgSrc' : this.$aliImage + 'my1_7.png',
 						'title'	: '退款',
-						'toUrl'	: 'bookdetail?bookID=900'
+						'toUrl'	: '/pages/cart/orderList?status_text=退款'
 					},
 					{
 						'imgSrc' : this.$aliImage + 'my1_8.png',
 						'title'	: '逾期',
-						'toUrl'	: 'bookdetail?bookID=900'
+						'toUrl'	: '/pages/cart/orderList?status_text=逾期'
 					}
 				]
 			},

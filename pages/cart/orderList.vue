@@ -30,7 +30,7 @@ export default {
 	},
 	data() {
 		return {
-			tabBars:['全部','待支付','待发货','待收货','阅读中','待归还'],	//订单tab
+			tabBars:['全部','待支付','待发货','待收货','阅读中','待归还','待评价','逾期','退款'],	//订单tab
 			tabBarID:0,  //初始化标签数据库ID
 			tabCurrentIndex:-1,
 			money:"30",
@@ -98,8 +98,14 @@ export default {
 			
 		}
 	},
-	onLoad() {
+	onLoad(option) {
 		this.tabCurrentIndex = 0; //初始化标签序号
+		
+		this.dataInit();
+		
+		if(option.status_text){
+			this.statusTextInit(option.status_text);
+		}
 	},
 	methods: {
 		btnClick() {
@@ -108,8 +114,27 @@ export default {
 		tabChange(e){
 			this.tabCurrentIndex = e;		// 更新标签序号
 			
+			const status_text = this.tabBars[this.tabCurrentIndex];
+			this.$api.getOrder({ filterItems:{'status_text':status_text} }).then(res=>{
+				this.orderList = res.data;
+			}) 
 			// 变更商品列表
 			
+		},
+		dataInit(){
+			this.$api.getOrder().then(res=>{
+				this.orderList = res.data;
+			}) 
+		},
+		statusTextInit(type){
+			this.tabBars.map((item,index)=>{
+				if(item === type){
+					this.tabCurrentIndex = index;
+				}
+			});
+			this.$api.getOrder({ filterItems:{'status_text':type} }).then(res=>{
+				this.orderList = res.data;
+			}) 
 		}
 	}
 }

@@ -1,14 +1,14 @@
 <template>
 	<view class="content" >
-		<view class="top-position border-bottom-style" v-if="orderList.orderNo">
-			<text style="font-weight: 550;">订单号： {{orderList.orderNo}}</text>
-			<text style="color: #2BAEC4;">{{orderList.status}}</text>
+		<view class="top-position border-bottom-style" v-if="orderList.order_no">
+			<text style="font-weight: 550;">订单号： {{orderList.order_no}}</text>
+			<text style="color: #2BAEC4;">{{orderList.status_text}}</text>
 		</view>
 		
 		<view class="white-space"></view>
 		
 		<view class="book-position">
-			<view class="book-content" v-for="(item,index) in orderList.bookList" v-if="index <= unfoldCount-1" :key="index">
+			<view class="book-content" v-for="(item,index) in orderList.goodsInfo" v-if="index <= unfoldCount-1" :key="index">
 				<et-order-one :order="item"></et-order-one>
 			</view>
 		</view>
@@ -17,34 +17,46 @@
 		
 		<view class="book-unfold-position" @click="changeDataList">
 			<view class="book-unfold">
-				<text v-if="unfoldStatus === 0">共{{orderList.bookList.length}}本 ▼</text>
+				<text v-if="unfoldStatus === 0">共{{orderList.goodsInfo.length}}本 ▼</text>
 				<text v-else-if="unfoldStatus === 1">收起 ▲</text>
 			</view>
 		</view>
 		
 		<view class="white-space"></view>
 		
-		<view class="price-position border-bottom-style" v-if="orderList.price">
-			<text>总价 {{orderList.price}} 元</text>
+		<view class="price-position border-bottom-style" v-if="orderList.final_price">
+			<text>总价 {{orderList.final_price}} 元</text>
 		</view>
 		
 		<view class="white-space"></view>
 		
-		<view class="bottom-button-position" v-if="orderList.orderNo">
-			<view class="botton-position botton-cancle-position">
+		<view class="bottom-button-position" v-if="orderList.order_no">
+			<view class="botton-position botton-cancle-position" v-if="orderList.status_text === '待支付'">
 				<text>取消订单</text>
 			</view>
 			
 			<view class="white-space-width"></view>
 			
-			<view class="botton-position" v-if="orderList.status === '待支付'">
+			<view class="botton-position" v-if="orderList.status_text === '待支付'" @tap="toOrderDetail">
 				<text>支付</text>
+			</view>
+			
+			<!-- <view class="white-space-width"></view>
+			
+			<view class="botton-position" v-if="orderList.status === '待发货'">
+				<text>提醒发货</text>
+			</view> -->
+			
+			<view class="white-space-width"></view>
+			
+			<view class="botton-position" v-if="orderList.status === '待收货'">
+				<text>确认收货</text>
 			</view>
 			
 			<view class="white-space-width"></view>
 			
-			<view class="botton-position" v-if="orderList.status === '待发货'">
-				<text>提醒发货</text>
+			<view class="botton-position" v-if="orderList.status === '阅读中'">
+				<text>还书</text>
 			</view>
 		</view>
 	</view>
@@ -78,6 +90,22 @@ export default {
 				this.unfoldStatus = 0;
 				this.unfoldCount = 2;
 			}
+		},
+		toOrderDetail(){
+			//插入订单缓存
+			let orderObject = {
+				bookCount: this.$props.orderList.goodsInfo.length,
+				moneyCount: this.$props.orderList.final_price,
+				goodsInfo: this.$props.orderList.goodsInfo
+			};
+			console.log(orderObject);
+			if (this.$props.orderList.address_id) {
+				//加上默认地址即可
+			}
+			uni.setStorageSync('orderInfo', orderObject);
+			uni.navigateTo({
+				url:'/pages/cart/orderDetail'
+			})
 		}
 	}
 }

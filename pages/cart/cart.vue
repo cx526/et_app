@@ -175,7 +175,7 @@ export default {
 			let orderObject = {
 				bookCount: bookCount,
 				moneyCount: this.moneyCount,
-				bookList: select
+				goodsInfo: select
 			};
 			uni.setStorageSync('orderInfo', orderObject);
 			
