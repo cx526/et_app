@@ -35,16 +35,13 @@ export default {
 		console.log(this.myMenuInfo);
 	},
 	methods: {
-		btnClick(toUrl) {
-			console.log(toUrl);
+		btnClick(toUrl) {			
 			uni.navigateTo({url: toUrl});
-			
-			// uni.navigateTo({url: toUrl});
-			// if (toUrl === './kind'){
-			// 	uni.switchTab({
-			// 		url:toUrl
-			// 	})
-			// }
+			if (toUrl === '/pages/promote/pictureMonth'){
+				uni.switchTab({
+					url:toUrl
+				})
+			}
 		}
 	}
 }

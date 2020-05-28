@@ -10,6 +10,51 @@
 			}
 		},
 		{
+			"path": "pages/promote/pictureMonth",
+			"style": {
+				"navigationBarTitleText": "欢动6.1童乐月",
+				"app-plus": {
+					"titleNView": false
+				}
+			}
+		},
+		{
+			"path": "pages/promote/pictureWork",
+			"style": {
+				"navigationBarTitleText": "童创手工坊",
+				"app-plus": {
+					"titleNView": false
+				}
+			}
+		},
+		{
+			"path": "pages/promote/picturePainting",
+			"style": {
+				"navigationBarTitleText": "童彩小画社",
+				"app-plus": {
+					"titleNView": false
+				}
+			}
+		},
+		{
+			"path": "pages/promote/pictureToHomeDetail",
+			"style": {
+				"navigationBarTitleText": "绘本到家",
+				"app-plus": {
+					"titleNView": false
+				}
+			}
+		},
+		{
+			"path": "pages/promote/pictureToHome",
+			"style": {
+				"navigationBarTitleText": "绘本到家礼",
+				"app-plus": {
+					"titleNView": false
+				}
+			}
+		},
+		{
 			"path": "pages/my/myInfoList",
 			"style": {
 				"navigationBarTitleText": "我的信息",
@@ -17,7 +62,7 @@
 					"titleNView": false
 				}
 			}
-		},
+		},		
 		{
 			"path": "pages/my/myIntegral",
 			"style": {
@@ -242,10 +287,10 @@
 				"text": "首页"
 			},
 			{
-				"pagePath": "pages/index/kind",
+				"pagePath": "pages/promote/pictureMonth",
 				"iconPath": "static/tab-cate.png",
 				"selectedIconPath": "static/tab-cate-current.png",
-				"text": "分类"
+				"text": "六一活动"
 			},
 			{
 				"pagePath": "pages/cart/cart",
