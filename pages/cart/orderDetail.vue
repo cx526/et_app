@@ -134,7 +134,7 @@ export default {
 				}
 				
 				//获取客户历史订单
-				this.$api.getOrder({ filterItems: { custom_id: this.customerInfo.id } }).then(res=>{
+				this.$api.checkExistOrder({ custom_id: this.customerInfo.id }).then(res=>{
 					this.hestoryOrderInfo = res.data;
 					
 					let orderObject = uni.getStorageSync('orderInfo');
