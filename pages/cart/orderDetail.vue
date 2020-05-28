@@ -32,7 +32,7 @@
 			<view class="white-space"></view>
 			
 			<view class="pay-position white-border">
-				<et-order-pay :paydata="orderList"></et-order-pay>
+				<et-order-pay :orderPayInfo="finalPayOrderInfo"></et-order-pay>
 			</view>
 			
 			<view class="white-space" style="height: 150upx;"></view>
@@ -88,15 +88,17 @@ export default {
 	},
 	data() {
 		return {
-			customerInfo:{},
+			customerInfo:{},		//客户信息
 			bookCount: "0",
 			moneyCount: "0",
-			defalutAddress : {},
+			defalutAddress : {},	//客户选择的发货地址
 			orderList : {
-				bookList: []
+				bookList: []		// 订单里面的书列表
 			},
-			addressIndex: 0,
-			addressList: []
+			addressIndex: 0,		//被选择地址的索引
+			addressList: [],		//选择框的地址列表
+			hestoryOrderInfo: [],   //客户历史订单信息，用于第几次订单
+			finalPayOrderInfo:{}	//最终的订单支付信息
 		}
 	},
 	onShow(){
@@ -116,7 +118,6 @@ export default {
 			// 获取customerID
 			this.$api.getCustom({ filterItems: { mobile: this.userInfo.mobile } }).then(res=>{
 				this.customerInfo = res.data[0];
-				console.log(this.customerInfo);
 				
 				if(this.customerInfo.addressInfo.length > 0){
 					this.customerInfo.addressInfo.map(item=>{
@@ -131,12 +132,22 @@ export default {
 						this.addressList.push(addressString);
 					});
 				}
+				
+				//获取客户历史订单
+				this.$api.getOrder({ filterItems: { custom_id: this.customerInfo.id } }).then(res=>{
+					this.hestoryOrderInfo = res.data;
+					
+					let orderObject = uni.getStorageSync('orderInfo');
+					this.bookCount = orderObject.bookCount;
+					this.orderList.bookList = orderObject.bookList;
+					
+					//最终支付订单信息
+					this.finalPayOrderInfo = this.orderHandle();
+					this.moneyCount = this.finalPayOrderInfo.payMoney;
+				});
 			});
 			
-			let orderObject = uni.getStorageSync('orderInfo');
-			this.bookCount = orderObject.bookCount;
-			this.moneyCount = orderObject.moneyCount;
-			this.orderList.bookList = orderObject.bookList;
+			
 		},
 		addAddress(){
 			uni.navigateTo({
@@ -165,6 +176,13 @@ export default {
 				return;
 			}
 			
+			//组合商品id
+			let bookidString = '';
+			this.orderList.bookList.map(item=>{
+				bookidString = bookidString + ',' + item.bookID;
+			});
+			bookidString = bookidString.substr(1);
+			
 			// 发起微信支付请求
 			// 注意：仅限正式环境才能发起支付
 			// 请求参数 userInfo {}
@@ -176,13 +194,13 @@ export default {
 					let param = {
 						userInfo: this.userInfo,
 						orderInfo: {
-							goods: '669,184,229',
-							count: 3,
+							goods: bookidString,
+							count: this.bookCount,
 							order_type: 'online',
-							price: '0.01',
-							deposit: '0.01',
-							final_price: '0.02',
-							address_id: '2',
+							price: this.finalPayOrderInfo.afterDiscountMoney,
+							deposit: this.finalPayOrderInfo.deposit,
+							final_price: this.finalPayOrderInfo.payMoney,
+							address_id: this.defalutAddress.id
 						}
 					}
 					this.$api.getPayment(param).then(res => {
@@ -215,6 +233,133 @@ export default {
 				}
 			} else {
 				uni.showToast({ icon: 'none', title: '测试环境暂不能够支付' })
+			}
+		},
+		//订单规则处理
+		orderHandle(){
+			//判断学校用户，还是非学校用户
+			let userType = 'commonUser';
+			if(this.customerInfo.schoolInfo.id){
+				userType = 'schoolUser';
+			}
+			
+			//判断第一单还是第二单，还是其他单
+			let buyCount = 0;
+			buyCount = this.hestoryOrderInfo.length + 1;
+			
+			//判断商品数量
+			let bookCount = this.bookCount;
+			
+			//判断是否有押金
+			let deposit = this.customerInfo.deposit;
+						
+			// 判断规则号
+			let payRuleType = 0;
+			if(buyCount === 1){   //首单
+				if(userType === 'schoolUser'){	//学校用户
+					if(0 < bookCount <=3){
+						payRuleType = 1
+					}else if(3 < bookCount <=10){
+						payRuleType = 2
+					}					
+				}else if(userType === 'commonUser'){	//游客用户
+					if(0 < bookCount <=10){
+						payRuleType = 3
+					}
+				}
+			}else if(buyCount > 1){  //非首单
+				if(userType === 'schoolUser'){	//学校用户
+					if(0 < bookCount <=10){
+						payRuleType = 4
+					}				
+				}else if(userType === 'commonUser'){	//游客用户
+					if(0 < bookCount <=10){
+						payRuleType = 5
+					}
+				}
+			}
+			
+			//获取支付信息
+			let orderPayInfo = this.payRule(payRuleType);
+			console.log(orderPayInfo);
+			
+			// 非首次购买查看是否有押金，没有的话要补上
+			if(parseInt(deposit) === 0 && buyCount > 1) {
+				if(userType === 'schoolUser'){	//学校用户
+					orderPayInfo.deposit = 100;
+					orderPayInfo.payMoney = orderPayInfo.payMoney + 100;
+				}else if(userType === 'commonUser'){	//游客用户
+					orderPayInfo.deposit = 200;
+					orderPayInfo.payMoney = orderPayInfo.payMoney + 200;
+				}
+			}
+			
+			//更新微信支付信息
+			
+			
+			return orderPayInfo;
+			
+		},
+		// 支付规则
+		payRule(type){
+			switch (type){
+				case 1:
+					return {
+						userType:'学校用户',
+						discountType:'绘本到家',
+						deposit:100,
+						orderMoney:30,
+						discountMoney:30,
+						afterDiscountMoney:0,
+						payMoney:100
+					}
+					break;
+				case 2:
+					return {
+						userType:'学校用户',
+						discountType:'首次体验优惠',
+						deposit:100,
+						orderMoney:30,
+						discountMoney:12,
+						afterDiscountMoney:18,
+						payMoney:118
+					}
+					break;
+				case 3:
+					return {
+						userType:'游客用户',
+						discountType:'首次体验优惠',
+						deposit:200,
+						orderMoney:45,
+						discountMoney:17,
+						afterDiscountMoney:28,
+						payMoney:228
+					}
+					break;
+				case 4:
+					return {
+						userType:'学校用户',
+						discountType:'无优惠',
+						deposit:0,
+						orderMoney:30,
+						discountMoney:0,
+						afterDiscountMoney:30,
+						payMoney:30
+					}
+					break;
+				case 5:
+					return {
+						userType:'游客用户',
+						discountType:'无优惠',
+						deposit:0,
+						orderMoney:45,
+						discountMoney:0,
+						afterDiscountMoney:45,
+						payMoney:45
+					}
+					break;
+				default :
+					return false;
 			}
 		}
 	}

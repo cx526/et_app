@@ -19,15 +19,17 @@
 		<view class="time-position pay-style-position" style="border: 0;">
 			<text class="font-one-style">支付方式</text>
 			<view class="radio-content">
-				<label class="font-one-style"><radio style="transform: scale(0.7)" color="#2AAEC4"  value="r1" :checked="payStyleString==='memberCheck'"  @tap="payStyle('memberCheck')"/>会员支付</label>
-				<view class="white-space-width"></view>
+				<!-- 先把会员支付屏蔽，后续再开放 -->
+				<!-- <label class="font-one-style"><radio style="transform: scale(0.7)" color="#2AAEC4"  value="r1" :checked="payStyleString==='memberCheck'"  @tap="payStyle('memberCheck')"/>会员支付</label> -->
+				<!-- <view class="white-space-width"></view> -->
+				<!-- 先把会员支付屏蔽，后续再开放 -->
 				<label class="font-one-style"><radio style="transform: scale(0.7)" color="#2AAEC4" value="r2" :checked="payStyleString==='wechatCheck'"  @tap="payStyle('wechatCheck')"/>微信支付</label>
 			</view>
 		</view>
 		
 		<view class='pay-info-position'>
 			<et-order-menberpay :order='menberOrder' v-if="payStyleString==='memberCheck'"></et-order-menberpay>
-			<et-order-wechatpay :order='wechatOrder' v-else-if="payStyleString==='wechatCheck'"></et-order-wechatpay>
+			<et-order-wechatpay :order='orderPayInfo' v-else-if="payStyleString==='wechatCheck'"></et-order-wechatpay>
 		</view>
 	</view>
 </template>
@@ -44,7 +46,8 @@ export default {
 	props: {
 		title: String,
 		backgroundColor: String,
-		fontColor: String
+		fontColor: String,
+		orderPayInfo:{}
 	},
 	data() {
 		return {
@@ -53,14 +56,6 @@ export default {
 			menberOrder : {
 				count: '2',
 				countAfter: '1',
-			},
-			wechatOrder : {
-				price: '30',
-				preferentialType: '首次优惠',
-				discountPrice: '18',
-				deposit: '100',
-				payIntegral: '1000',
-				integral: '5000'
 			}
 		}
 	},

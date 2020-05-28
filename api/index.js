@@ -73,4 +73,7 @@ api.modAddress = params => request.globalRequest('/api/address/modAddress', 'POS
 // 修改默认收货地址
 api.modAddressDefault = params => request.globalRequest('/api/address/modAddressDefault', 'POST', params)
 
+// 获取订单信息接口
+api.getOrder = params => request.globalRequest('/api/order/getOrder', 'POST', params)
+
 export default api

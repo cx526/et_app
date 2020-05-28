@@ -2,15 +2,15 @@
 	<view class="content" >
 		<view class="price-position">
 			<text>原价：</text>
-			<text style="text-decoration:line-through">{{order.price}}元</text>
+			<text style="text-decoration:line-through">{{order.orderMoney}}元</text>
 		</view>
 		
 		<view class="discount-price-position position-style">
 			<view class="preferentialType-position">
-				<text style="color: #000204;">{{order.preferentialType}}</text>
+				<text style="color: #000204;">{{order.discountType}}</text>
 			</view>
 			<text style="font-weight: bold; color: #000204;"> 现金：</text>
-			<text style="font-weight: bold; color: #2BAEC4;">{{order.discountPrice}}元</text>
+			<text style="font-weight: bold; color: #2BAEC4;">{{order.afterDiscountMoney}}元</text>
 		</view>
 		
 		<view class="deposit-position position-style">
@@ -19,7 +19,8 @@
 		
 		<view style="height: 10upx;"></view>
 		
-		<view class="payIntegral-position position-style">
+		<!-- 积分部分后续开放 -->
+		<!-- <view class="payIntegral-position position-style">
 			<view>
 				<switch style="transform: scale(0.5)"  color="#2AAEC4" checked />
 			</view>
@@ -28,7 +29,8 @@
 		
 		<view class="position-style">
 			<text >积分： {{order.integral}}元</text>
-		</view>
+		</view> -->
+		<!-- 积分部分后续开放 -->
 	</view>
 </template>
 
