@@ -12,7 +12,11 @@
 			<view class="white-space"></view>
 			
 			<view class="white-border address-position">
-				<et-address :address='defalutAddress' @tap='btnClick' v-if="defalutAddress.name"></et-address>
+				<view style="width: 100%;" v-if="defalutAddress.name">
+					<picker style="width: 100%;" @change="bindPickerChange" :value="addressIndex" :range="addressList">
+						<et-address style="width:100%;" :address='defalutAddress' @changeAddressInfo="changeAddressInfo" v-if="defalutAddress.name"></et-address>
+					</picker>
+				</view>
 				<view v-else class="add-address-position">
 					<image src="../../static/cart/add.png" style="width: 120upx; height: 120upx;"></image>
 					<text style="color:#9FB2BF; font-size: 25upx;">请添加收货地址</text>
@@ -79,26 +83,55 @@ export default {
 	},
 	data() {
 		return {
+			customerInfo:{},
 			bookCount: "0",
 			moneyCount: "0",
-			defalutAddress : {
-				// 'name':'麦家杰',
-				'phone':'13690394900',
-				'address' : '广东省佛山市顺德区大良街道凤翔路创意产业园C栋301'
-			},
+			defalutAddress : {},
 			orderList : {
 				bookList: []
-			}
+			},
+			addressIndex: 0,
+			addressList: []
 		}
 	},
 	onLoad(option) {
-		this.bookCount = JSON.parse(decodeURIComponent(option.bookCount));
-		this.moneyCount = JSON.parse(decodeURIComponent(option.moneyCount));
-		this.orderList.bookList = JSON.parse(decodeURIComponent(option.orderList));
+		// 获取customerID
+		const userInfo = uni.getStorageSync('userInfo');
+		this.$api.getCustom({ filterItems: { mobile: userInfo.mobile } }).then(res=>{
+			this.customerInfo = res.data[0];
+			console.log(this.customerInfo);
+			
+			if(this.customerInfo.addressInfo.length > 0){
+				this.customerInfo.addressInfo.map(item=>{
+					if(item.is_default === '1'){
+						this.defalutAddress = item;
+						this.defalutAddress.optionType = 'orderDetail';
+						this.defalutAddress.is_default = '0';
+					}
+					
+					//合成更换地址数组，用于用户更换地址
+					let addressString = item.name + "," + item.mobile + "," + item.showing_address+item.address;
+					this.addressList.push(addressString);
+				});
+			}
+		});
+		
+		let orderObject = uni.getStorageSync('orderInfo');
+		this.bookCount = orderObject.bookCount;
+		this.moneyCount = orderObject.moneyCount;
+		this.orderList.bookList = orderObject.bookList;
 	},
 	methods: {
 		btnClick() {
 			console.log(this.defalutAddress);
+		},
+		changeAddressInfo(){
+			console.log("123");
+		},
+		bindPickerChange(e){
+			this.defalutAddress = this.customerInfo.addressInfo[e.detail.value];
+			this.defalutAddress.optionType = 'orderDetail';
+			this.defalutAddress.is_default = '0';
 		},
 		buySelect() {
 			// 发起微信支付请求

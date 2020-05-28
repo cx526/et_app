@@ -151,14 +151,32 @@ export default {
 		// 下订单
 		buySelect() {
 			let select = [];
+			let unSelect = [];
 			let bookCount = 0;
 			this.listData.forEach(item=>{
 				if(item.select) {
 					select.push(item);
 					bookCount = bookCount + item.count;					
+				}else{
+					unSelect.push(item);
 				}
 			});
-			uni.navigateTo({url: "orderDetail?orderList=" + encodeURIComponent(JSON.stringify(select)) + "&bookCount=" + encodeURIComponent(JSON.stringify(bookCount)) + "&moneyCount=" + encodeURIComponent(JSON.stringify(this.moneyCount))});
+			
+			//插入订单缓存
+			let orderObject = {
+				bookCount: bookCount,
+				moneyCount: this.moneyCount,
+				bookList: select
+			};
+			uni.setStorageSync('orderInfo', orderObject);
+			
+			//更新书篮数据
+			uni.setStorageSync('carListInfo', unSelect);
+
+			//跳转到订单页面
+			uni.navigateTo({
+				url: "orderDetail"
+			})
 		}
 	}
 }

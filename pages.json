@@ -10,6 +10,26 @@
 			}
 		},
 		{
+			"path": "pages/cart/orderDetail",
+			"style": {
+				"navigationBarTitleText": "订单详情",
+				"app-plus": {
+					"titleNView": false
+				}
+			}
+		},
+		
+		{
+			"path": "pages/promote/pictureUpload",
+			"style": {
+				"navigationBarTitleText": "童创手工坊",
+				"app-plus": {
+					"titleNView": false
+				}
+			}
+		},
+		
+		{
 			"path": "pages/promote/pictureMonth",
 			"style": {
 				"navigationBarTitleText": "欢动6.1童乐月",
@@ -83,15 +103,7 @@
 				}
 			}
 		},
-		{
-			"path": "pages/cart/orderDetail",
-			"style": {
-				"navigationBarTitleText": "订单详情",
-				"app-plus": {
-					"titleNView": false
-				}
-			}
-		},
+		
 		{
 			"path": "pages/index/sign",
 			"style": {

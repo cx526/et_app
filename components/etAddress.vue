@@ -18,13 +18,18 @@
 			<view class="white-space"></view>
 			
 			<view class="middle-address-position">
-				<text>{{address.showing_address}}</text>
+				<text>{{address.showing_address}}{{address.address}}</text>
 			</view>
 		</view>
 		
-		<view class="right-position">
-			<image src="../static/cart/edit.png" style="width: 45upx;height: 45upx;" @tap='modAddressInfo(address.id)'></image>
-			<image src="https://et-pic-server.oss-cn-shenzhen.aliyuncs.com/app_img/cart_rubbish.png" style="width: 45upx;height: 45upx;" @tap='delAddressInfo(address.id)'></image>
+		<view class="right-position"> 
+			<view v-if="address.optionType === 'orderDetail'">
+				<image src="https://et-pic-server.oss-cn-shenzhen.aliyuncs.com/app_img/address_change.png" style="width: 45upx;height: 45upx;" @tap='changeAddressInfo()'></image>
+			</view>
+			<view v-else>
+				<image src="../static/cart/edit.png" style="width: 45upx;height: 45upx;" @tap='modAddressInfo(address.id)'></image>
+				<image src="https://et-pic-server.oss-cn-shenzhen.aliyuncs.com/app_img/cart_rubbish.png" style="width: 45upx;height: 45upx;" @tap='delAddressInfo(address.id)'></image>
+			</view>
 		</view>
 	</view>
 </template>
@@ -55,6 +60,9 @@ export default {
 				});
 			});
 			this.$emit('delAddressInfo');
+		},
+		changeAddressInfo(){
+			this.$emit('changeAddressInfo');
 		}
 	}
 }
