@@ -7,7 +7,7 @@
 		
 		<view class="right-position" @tap="insertToCart">
 			<view class="right-content">
-				<text>加入书架</text>
+				<text>加入书篮</text>
 			</view>
 		</view>
 	</view>
@@ -34,11 +34,11 @@ export default {
 				'count':1
 			};
 			insertBook.insertToCart(cartList);
-			uni.showToast({
-				title: '加入书架成功',
-				duration: 2000,
-				icon: 'none'
-			});
+			// uni.showToast({
+			// 	title: '加入书篮成功',
+			// 	duration: 2000,
+			// 	icon: 'none'
+			// });
 			try {
 			    let carListArr = uni.getStorageSync('carListInfo');
 			    console.log(carListArr);

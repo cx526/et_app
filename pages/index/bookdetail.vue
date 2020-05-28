@@ -193,6 +193,11 @@ export default {
 				'count':1
 			};
 			insertBook.insertToCart(cartList);
+			uni.showToast({
+				title: '加入书篮成功',
+				duration: 2000,
+				icon: 'none'
+			});
 			try {
 			    let carListArr = uni.getStorageSync('carListInfo');
 			    console.log(carListArr);

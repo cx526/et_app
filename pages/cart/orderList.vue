@@ -1,10 +1,10 @@
 <template>
 	<view class="content">
 		<view class="top-search">
-			<view class="search-box" @tap="toSearch">
+			<!-- <view class="search-box" @tap="toSearch">
 				<icon class="search-icon" type="search"/>
 				<input class="search-input" type="text" placeholder="请输入订单号" disabled />
-			</view>
+			</view> -->
 		</view>
 		
 		<view class="tabs-position">

@@ -19,16 +19,31 @@ function insertToCart(bookDetail) {
   let carListArr = getBookListData();
   let countStuats = 0;
   
+  if(carListArr.length >= 10){
+	  uni.showToast({
+	  	title: '加入图书不能超过10本',
+	  	duration: 2000,
+	  	icon: 'none'
+	  });
+	  return;
+  }
+  
   // 处理数据
+  let arrList = [];
   if (carListArr.length > 0){
 	  carListArr.forEach(obj=>{
-		  if(obj.bookID === bookDetail.bookID) {
-			  obj.count = obj.count + 1;
-			  obj.coin = parseFloat(obj.coin) + parseFloat(bookDetail.coin);
-			  obj.coin = obj.coin.toFixed(2);
-			  countStuats = 1; 
-		  }
+		  arrList.push(obj.bookID);
 	  });
+  }
+ 
+  
+  if(arrList.includes(bookDetail.bookID)){
+	  uni.showToast({
+	  	title: '相同图书请不要重复添加',
+	  	duration: 2000,
+	  	icon: 'none'
+	  });
+	  return;
   }
   
   if(countStuats === 0) {
@@ -37,6 +52,12 @@ function insertToCart(bookDetail) {
   
   // 数据插入
   uni.setStorageSync('carListInfo', carListArr);
+  
+  uni.showToast({
+  	title: '加入书篮成功',
+  	duration: 2000,
+  	icon: 'none'
+  });
 }
 
 // 删除购物车
