@@ -1,6 +1,6 @@
 <template>
 	<view class="index">
-		<view class="sign-button" @tap="toSign">
+		<view style="display: none;" class="sign-button" @tap="toSign">
 			<text>签到</text>
 		</view>
 		<!-- 头部内容 -->
