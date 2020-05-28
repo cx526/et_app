@@ -81,6 +81,11 @@ export default {
 		etOrderPay,
 		etTag
 	},
+	computed: {
+		userInfo() {
+			return uni.getStorageSync('userInfo')
+		}
+	},
 	data() {
 		return {
 			customerInfo:{},
@@ -96,8 +101,7 @@ export default {
 	},
 	onLoad(option) {
 		// 获取customerID
-		const userInfo = uni.getStorageSync('userInfo');
-		this.$api.getCustom({ filterItems: { mobile: userInfo.mobile } }).then(res=>{
+		this.$api.getCustom({ filterItems: { mobile: this.userInfo.mobile } }).then(res=>{
 			this.customerInfo = res.data[0];
 			console.log(this.customerInfo);
 			
