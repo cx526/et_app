@@ -162,6 +162,15 @@ export default {
 				}
 			});
 			
+			if(select.length === 0){
+				uni.showToast({
+					title:'请先选择好书本',
+					duration: 2000,
+					icon: 'none'
+				});
+				return;
+			}
+			
 			//插入订单缓存
 			let orderObject = {
 				bookCount: bookCount,

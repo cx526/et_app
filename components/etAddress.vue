@@ -52,7 +52,7 @@ export default {
 			this.$api.delAddress({ id: id }).then(res=>{
 				uni.showToast({
 	　　　　　　　　　　title: '删除成功',
-	　　　　　　　　　　icon: 'success',
+	　　　　　　　　　　icon: 'none',
 					  duration: 2000
 	　　　　　　　});
 				uni.navigateTo({

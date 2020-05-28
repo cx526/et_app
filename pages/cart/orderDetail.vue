@@ -17,7 +17,7 @@
 						<et-address style="width:100%;" :address='defalutAddress' @changeAddressInfo="changeAddressInfo" v-if="defalutAddress.name"></et-address>
 					</picker>
 				</view>
-				<view v-else class="add-address-position">
+				<view v-else class="add-address-position" @tap='addAddress'>
 					<image src="../../static/cart/add.png" style="width: 120upx; height: 120upx;"></image>
 					<text style="color:#9FB2BF; font-size: 25upx;">请添加收货地址</text>
 				</view>
@@ -99,31 +99,11 @@ export default {
 			addressList: []
 		}
 	},
+	onShow(){
+		this.dataInit();
+	},
 	onLoad(option) {
-		// 获取customerID
-		this.$api.getCustom({ filterItems: { mobile: this.userInfo.mobile } }).then(res=>{
-			this.customerInfo = res.data[0];
-			console.log(this.customerInfo);
-			
-			if(this.customerInfo.addressInfo.length > 0){
-				this.customerInfo.addressInfo.map(item=>{
-					if(item.is_default === '1'){
-						this.defalutAddress = item;
-						this.defalutAddress.optionType = 'orderDetail';
-						this.defalutAddress.is_default = '0';
-					}
-					
-					//合成更换地址数组，用于用户更换地址
-					let addressString = item.name + "," + item.mobile + "," + item.showing_address+item.address;
-					this.addressList.push(addressString);
-				});
-			}
-		});
-		
-		let orderObject = uni.getStorageSync('orderInfo');
-		this.bookCount = orderObject.bookCount;
-		this.moneyCount = orderObject.moneyCount;
-		this.orderList.bookList = orderObject.bookList;
+		this.dataInit();
 	},
 	methods: {
 		async getCustomerInfo(){
@@ -131,6 +111,37 @@ export default {
 			const userInfoArr = await this.$api.getCustom({ filterItems: { mobile: this.userInfo.mobile } }).then(res=>{
 				return res.data[0];
 			});
+		},
+		dataInit() {
+			// 获取customerID
+			this.$api.getCustom({ filterItems: { mobile: this.userInfo.mobile } }).then(res=>{
+				this.customerInfo = res.data[0];
+				console.log(this.customerInfo);
+				
+				if(this.customerInfo.addressInfo.length > 0){
+					this.customerInfo.addressInfo.map(item=>{
+						if(item.is_default === '1'){
+							this.defalutAddress = item;
+							this.defalutAddress.optionType = 'orderDetail';
+							this.defalutAddress.is_default = '0';
+						}
+						
+						//合成更换地址数组，用于用户更换地址
+						let addressString = item.name + "," + item.mobile + "," + item.showing_address+item.address;
+						this.addressList.push(addressString);
+					});
+				}
+			});
+			
+			let orderObject = uni.getStorageSync('orderInfo');
+			this.bookCount = orderObject.bookCount;
+			this.moneyCount = orderObject.moneyCount;
+			this.orderList.bookList = orderObject.bookList;
+		},
+		addAddress(){
+			uni.navigateTo({
+				url:'/pages/cart/addressEdit'
+			})
 		},
 		btnClick() {
 			console.log(this.defalutAddress);
@@ -144,6 +155,16 @@ export default {
 			this.defalutAddress.is_default = '0';
 		},
 		buySelect() {
+			// 判断物流信息是否为空，如果为空不可以执行下面的操作
+			if(this.defalutAddress.name === '' || this.defalutAddress.name === undefined){
+				uni.showToast({
+					title:'请填写好物流信息',
+					duration: 2000,
+					icon:'none'
+				})
+				return;
+			}
+			
 			// 发起微信支付请求
 			// 注意：仅限正式环境才能发起支付
 			// 请求参数 userInfo {}
