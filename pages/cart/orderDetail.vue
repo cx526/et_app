@@ -88,15 +88,23 @@ export default {
 			},
 			orderList : {
 				bookList: []
-			}
+			},
+			userInfo: {}
 		}
 	},
 	onLoad(option) {
 		this.bookCount = JSON.parse(decodeURIComponent(option.bookCount));
 		this.moneyCount = JSON.parse(decodeURIComponent(option.moneyCount));
 		this.orderList.bookList = JSON.parse(decodeURIComponent(option.orderList));
+		
 	},
 	methods: {
+		async getCustomerInfo(){
+			this.userInfo = uni.getStorageSync('userInfo');
+			const userInfoArr = await this.$api.getCustom({ filterItems: { mobile: this.userInfo.mobile } }).then(res=>{
+				return res.data[0];
+			});
+		},
 		btnClick() {
 			console.log(this.defalutAddress);
 		},
@@ -107,10 +115,10 @@ export default {
 			// 请求参数 money 0.01
 			// 请求参数 usage 用途
 			if (process.env.NODE_ENV === 'production') {
-				const userInfo = uni.getStorageSync('userInfo')
+				// const userInfo = uni.getStorageSync('userInfo')
 				if (userInfo.name !== 'guest') {
 					let param = {
-						userInfo: userInfo,
+						userInfo: this.userInfo,
 						orderInfo: {
 							goods: '669,184,229',
 							count: 3,
