@@ -13,7 +13,7 @@
 					 
 					<view class="top-right-position">
 						<view class="top-right-content">
-							<text>1223</text>
+							<text>{{userInfoAll.coin}}</text>
 						</view>
 					</view>
 				</view>
@@ -33,11 +33,26 @@ export default {
 	components: {
 		etMyBox
 	},
-	data() {
-		return {
-			test: '123456',
+	computed: {
+		userInfo() {
+			return uni.getStorageSync('userInfo')
 		}
 	},
+	onLoad() {
+		this.getCustomerInfo()
+	},
+	data() {
+		return {
+			userInfoAll: {}
+		}
+	},
+	methods: {
+		async getCustomerInfo(){
+			this.userInfoAll = await this.$api.getCustom({ filterItems: { mobile: this.userInfo.mobile } }).then(res=>{
+				return res.data[0];
+			});
+		}
+	}
 }
 </script>
 

@@ -135,19 +135,19 @@ export default {
 						'imgSrc' : this.$aliImage + 'my2_1.png',
 						'title'	: '押金',
 						'toUrl'	: 'bookdetail?bookID=900',
-						'buttomContent' : '$ 200'
+						'buttomContent' : ''
 					},
 					{
 						'imgSrc' : this.$aliImage + 'my2_2.png',
 						'title'	: '积分',
 						'toUrl'	: '/pages/my/myIntegral',
-						'buttomContent' : '2000'
+						'buttomContent' : ''
 					},
 					{
 						'imgSrc' : this.$aliImage + 'my2_3.png',
 						'title'	: '签到',
 						'toUrl'	: '/pages/index/sign',
-						'buttomContent' : '0/1'
+						'buttomContent' : ''
 					},
 					{
 						'imgSrc' : this.$aliImage + 'my2_4.png',
