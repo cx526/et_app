@@ -6,7 +6,7 @@
 			<view class="userInfo-position">
 				<view class="user-left-position">
 					<view class="userInfo-content">
-						<text style="color: #FFFFFF;font-size: 30upx;">{{userInfo.name}}</text>
+						<text style="color: #FFFFFF;font-size: 30upx;">{{userInfo.name === 'guest' ? '五车书游客, 您好！' : userInfo.name}}</text>
 						<view class="white-space-width"></view>
 						<!-- <image src="../../static/my/diamond.png" style="width: 40upx; height: 40upx;"></image> -->
 					</view>
@@ -23,7 +23,12 @@
 				</view>
 				
 				<view class="user-right-position">
-					<image :src="userInfo.avatar" style="border-radius: 50%; width: 120upx; height: 120upx;"></image>
+					<view v-if="userInfo.name === 'guest'" @tap="goAuth">
+						<image src="https://et-pic-server.oss-cn-shenzhen.aliyuncs.com/app_img/avatar.png" style="border-radius: 50%; width: 120upx; height: 120upx;"></image>
+					</view>
+					<view v-else>
+						<image :src="userInfo.avatar" style="border-radius: 50%; width: 120upx; height: 120upx;"></image>
+					</view>
 				</view>
 			</view>
 			
@@ -130,19 +135,19 @@ export default {
 						'imgSrc' : this.$aliImage + 'my2_1.png',
 						'title'	: '押金',
 						'toUrl'	: 'bookdetail?bookID=900',
-						'buttomContent' : '$ 200'
+						'buttomContent' : ''
 					},
 					{
 						'imgSrc' : this.$aliImage + 'my2_2.png',
 						'title'	: '积分',
 						'toUrl'	: '/pages/my/myIntegral',
-						'buttomContent' : '2000'
+						'buttomContent' : ''
 					},
 					{
 						'imgSrc' : this.$aliImage + 'my2_3.png',
 						'title'	: '签到',
 						'toUrl'	: '/pages/index/sign',
-						'buttomContent' : '0/1'
+						'buttomContent' : ''
 					},
 					{
 						'imgSrc' : this.$aliImage + 'my2_4.png',
@@ -174,6 +179,12 @@ export default {
 			}
 		}
 	},
+	methods: {
+		goAuth() {
+			uni.removeStorageSync('userInfo')
+			uni.reLaunch({url: '../guide/guide'})
+		}
+	}
 }
 </script>
 
