@@ -6,7 +6,7 @@
 			<view class="userInfo-position">
 				<view class="user-left-position">
 					<view class="userInfo-content">
-						<text style="color: #FFFFFF;font-size: 30upx;">{{userInfo.name}}</text>
+						<text style="color: #FFFFFF;font-size: 30upx;">{{userInfo.name === 'guest' ? '五车书游客, 您好！' : userInfo.name}}</text>
 						<view class="white-space-width"></view>
 						<!-- <image src="../../static/my/diamond.png" style="width: 40upx; height: 40upx;"></image> -->
 					</view>
@@ -23,7 +23,12 @@
 				</view>
 				
 				<view class="user-right-position">
-					<image :src="userInfo.avatar" style="border-radius: 50%; width: 120upx; height: 120upx;"></image>
+					<view v-if="userInfo.name === 'guest'" @tap="goAuth">
+						<image src="https://et-pic-server.oss-cn-shenzhen.aliyuncs.com/app_img/avatar.png" style="border-radius: 50%; width: 120upx; height: 120upx;"></image>
+					</view>
+					<view v-else>
+						<image :src="userInfo.avatar" style="border-radius: 50%; width: 120upx; height: 120upx;"></image>
+					</view>
 				</view>
 			</view>
 			
@@ -174,6 +179,12 @@ export default {
 			}
 		}
 	},
+	methods: {
+		goAuth() {
+			uni.removeStorageSync('userInfo')
+			uni.reLaunch({url: '../guide/guide'})
+		}
+	}
 }
 </script>
 

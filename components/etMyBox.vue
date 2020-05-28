@@ -34,13 +34,32 @@ export default {
 	onLoad(){
 		console.log(this.myMenuInfo);
 	},
+	computed: {
+		userInfo() {
+			return uni.getStorageSync('userInfo')
+		}
+	},
 	methods: {
-		btnClick(toUrl) {			
-			uni.navigateTo({url: toUrl});
-			if (toUrl === '/pages/promote/pictureMonth'){
-				uni.switchTab({
-					url:toUrl
+		btnClick(toUrl) {		
+			if (this.userInfo.name === 'guest') {
+				//游客 发出提示
+				uni.showModal({
+					title: '请先登录',
+					confirmText: '登录',
+					success: (res) => {
+						if (res.confirm) {
+							uni.removeStorageSync('userInfo')
+							uni.reLaunch({url: '../guide/guide'})
+						}
+					}
 				})
+			} else {
+				uni.navigateTo({url: toUrl});
+				if (toUrl === '/pages/promote/pictureMonth'){
+					uni.switchTab({
+						url:toUrl
+					})
+				}
 			}
 		}
 	}
