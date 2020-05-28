@@ -221,7 +221,7 @@ export default {
 									}
 								},
 								err => {
-									uni.showToast({ icon: 'none', title: 'pay fail' + JSON.stringify(err) })
+									// uni.showToast({ icon: 'none', title: 'pay fail' + JSON.stringify(err) })
 								}
 							)
 						} else {
