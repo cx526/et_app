@@ -190,7 +190,7 @@ export default {
 			// 请求参数 usage 用途
 			if (process.env.NODE_ENV === 'production') {
 				// const userInfo = uni.getStorageSync('userInfo')
-				if (userInfo.name !== 'guest') {
+				if (this.userInfo.name !== 'guest') {
 					let param = {
 						userInfo: this.userInfo,
 						orderInfo: {
