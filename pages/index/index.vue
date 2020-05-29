@@ -16,8 +16,8 @@
 			<!-- 轮播图 -->
 			<view style="position: relative;">
 				<swiper class="carousel" circular autoplay @change="swiperChange">
-					<swiper-item v-for="(item, i) in carouselList" :key="i" class="carousel-item">
-						<image :src="item.img" />
+					<swiper-item v-for="(item, i) in carouselList" :key="i" class="carousel-item" @tap="toTargetUrl(item.target)">
+						<image :src="item.img"  />
 					</swiper-item>
 				</swiper>
 				<!-- 自定义swiper指示器 -->
@@ -40,7 +40,7 @@
 		
 		<!-- banner -->
 		<view class="banner">
-			<image :src="oneBanner" class="banner-img" mode=""></image>
+			<image :src="oneBanner" class="banner-img" mode="widthFix"></image>
 		</view>
 		
 		<view class="white-space"></view>
@@ -74,7 +74,7 @@
 		
 		<!-- banner -->
 		<view class="banner">
-			<image :src="secondBanner" class="read-img" mode="aspectFit"></image>
+			<image :src="secondBanner" class="read-img" mode="widthFix"></image>
 		</view>
 		
 		<view class="white-space"></view>
@@ -103,6 +103,8 @@ import etBookcat from '../../components/etBookcat.vue'
 import etImgbox from '../../components/etImgbox.vue'
 import uniLoadMore from "@/components/uni-load-more/uni-load-more.vue"
 
+const toUrlFunction = require('@/common/toUrlFunction');
+
 export default {
 	components: {
 		uniLoadMore,
@@ -130,7 +132,7 @@ export default {
 				{
 					'name' : '绘本',
 					'img'  : 'https://et-pic-server.oss-cn-shenzhen.aliyuncs.com/app_img/01.png',
-					'toUrl' : './kind',
+					'toUrl' : '/pages/promote/promotePictureBook',
 					// 'toUrl' : '/pages/index/bookdetail?bookID=900'
 				},
 				{
@@ -214,6 +216,9 @@ export default {
 			   this.carouselList = res.data
 			   this.swiperLength = this.carouselList.length;
 			})
+		},
+		toTargetUrl(url){
+			toUrlFunction.toUrl(url);
 		},
 		toBookDetail(bookID) {
 			uni.navigateTo({ url: 'bookdetail?bookID=' + JSON.stringify(bookID) })
@@ -347,7 +352,7 @@ export default {
 	display: flex;
 	flex-direction: column;
 	background-image:url(../../static/index/topBackground.png);
-	background-size:cover;
+	background-size:100% 500upx;
 }
 .search-box {
 	padding: 8upx 30upx;

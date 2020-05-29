@@ -38,6 +38,8 @@ export default {
 		this.pKeysArray = Object.keys(regionData['86'])
 		this.region[0] = this.provinceArray
 		this.selectedProvinceValue = this.$props.showing_address;
+		
+		this.preSelectRegion();
 	},
 	data() {
 		return {
@@ -68,11 +70,16 @@ export default {
 		}
 	},
 	methods: {
+		preSelectRegion() {
+			this.regionColChange({detail: {column:0, value: 18}})
+			this.regionColChange({detail: {column:1, value: 5}})
+			this.regionColChange({detail: {column:2, value: 2}})
+		},
 		regionColChange(e) {
 			// console.log(e)
 			let col = e.detail.column
 			let val = e.detail.value
-			// console.log(col, val)
+			console.log(col, val)
 			
 			if (col === 0) {
 				this.provinceKey = Object.keys(regionData['86'])[val]

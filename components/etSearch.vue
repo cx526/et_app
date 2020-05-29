@@ -41,6 +41,7 @@ export default {
 	display: flex;
 	justify-content: row;
 	align-items: center;
+	width: 100%;
 }
 .title-content {
 	font-size: 25upx;
@@ -50,6 +51,8 @@ export default {
 	font-size: 25upx;
 	color: #868886;
 	padding-left: 10upx;
+	/* background-color: #000000; */
+	width: 100%;
 }
 .search-button {
 	color: #FFFFFF;

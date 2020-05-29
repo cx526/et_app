@@ -10,6 +10,15 @@
 			}
 		},
 		{
+			"path": "pages/guide/complateInfo",
+			"style": {
+				"navigationBarTitleText": "完善幼儿园信息",
+				"app-plus": {
+					"titleNView": false
+				}
+			}
+		},
+		{
 			"path": "pages/promote/promotePictureBook",
 			"style": {
 				"navigationBarTitleText": "绘本",
@@ -201,15 +210,7 @@
 		},
 		
 		// 上面是测试地址
-		// {
-		// 	"path": "pages/guide/complateInfo",
-		// 	"style": {
-		// 		"navigationBarTitleText": "完善幼儿园信息",
-		// 		"app-plus": {
-		// 			"titleNView": false
-		// 		}
-		// 	}
-		// },
+		
 		{
 			"path": "pages/guide/register",
 			"style": {
@@ -259,7 +260,7 @@
 		{
 			"path": "pages/cart/cart",
 			"style": {
-				"navigationBarTitleText": "书架",
+				"navigationBarTitleText": "书篮",
 				"app-plus": {
 					"titleNView": false
 				}
