@@ -20,13 +20,21 @@
 		
 		<view class="white-space" style="height: 40upx;"></view>
 		
-		<view class="last-position">
+		<!-- <view class="last-position">
 			<view class="last-img-one-position">
-				<image class="last-img-one" src="../../static/cart/submit.png"></image>
+				<view class="button-style" @tap="buttomClick">
+					<text>确认</text>
+				</view>
 			</view>
 			
 			<view class="last-img-tow-position">
 				<image class="last-img-two" src="../../static/cart/return.png"></image>
+			</view>
+		</view> -->
+		
+		<view class="middle-position button-position">
+			<view class="button-style" @tap="buttomClick">
+				<text>确认</text>
 			</view>
 		</view>
 	</view>
@@ -45,7 +53,9 @@ export default {
     },
     methods: {
 		buttomClick() {
-			console.log('123');
+			uni.navigateTo({
+				url:'/pages/cart/orderList?status_text=全部'
+			})
 		},
 	}
 }
@@ -94,5 +104,22 @@ export default {
 .last-img-two {
 	width: 350upx;
 	height: 100upx;
+}
+.button-style {
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+	background-color: #00B7CC;
+	border-radius: 40upx;
+	padding: 20upx 100upx;
+	color: #FFFFFF;
+	font-size: 35upx;
+	position: absolute;
+	bottom: -30upx;
+}
+.button-position {
+	position: absolute;
+	bottom:300upx;
 }
 </style>
