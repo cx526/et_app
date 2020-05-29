@@ -84,12 +84,13 @@ export default {
 			myOrderInfo: {
 				'menuTitle' : '我的订单',
 				'moreMenu' : '更多 >',
+				'moreMenuUrl':'/pages/cart/orderList?status_text=全部',
 				'allMenu': [
 					{
 						'imgSrc' : this.$aliImage + 'my1_1.png',
 						'title'	: '待支付',
 						'toUrl'	: '/pages/cart/orderList?status_text=待支付',
-						'count'	: '99+'
+						// 'count'	: '99+'
 					},
 					{
 						'imgSrc' : this.$aliImage + 'my1_2.png',
@@ -105,7 +106,7 @@ export default {
 						'imgSrc' : this.$aliImage + 'my1_4.png',
 						'title'	: '阅读中',
 						'toUrl'	: '/pages/cart/orderList?status_text=阅读中',
-						'count'	: '2'
+						// 'count'	: '2'
 					},
 					{
 						'imgSrc' : this.$aliImage + 'my1_5.png',
@@ -154,7 +155,7 @@ export default {
 						'imgSrc' : this.$aliImage + 'my2_4.png',
 						'title'	: '活动',
 						'toUrl' : '/pages/promote/pictureMonth',
-						'count'	: '2'
+						// 'count'	: '2'
 					},
 					{
 						'imgSrc' : this.$aliImage + 'my2_5.png',

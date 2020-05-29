@@ -7,7 +7,7 @@
 					<text style="font-weight: bold;">{{myMenuInfo.menuTitle}}</text>
 				</view>
 				<view class="8B8380" v-if="myMenuInfo.moreMenu">
-					<text style="color: #2BAEC4; font-size: 25upx;">{{myMenuInfo.moreMenu}}</text>
+					<text style="color: #2BAEC4; font-size: 25upx;" @tap="menuUrl(myMenuInfo.moreMenuUrl)">{{myMenuInfo.moreMenu}}</text>
 				</view>
 			</view>
 		</view>
@@ -40,6 +40,11 @@ export default {
 		}
 	},
 	methods: {
+		menuUrl(toUrl){
+			uni.navigateTo({
+				url:toUrl
+			})
+		},
 		btnClick(toUrl) {		
 			if (this.userInfo.name === 'guest') {
 				//游客 发出提示

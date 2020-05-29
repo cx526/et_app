@@ -13,10 +13,13 @@
 			</cl-tabs>
 		</view>
 		
-		<view class="order-list-position">
+		<view class="order-list-position" v-if="orderList.length > 0">
 			<view class="white-border" style="margin: 20upx 0;" v-for="(item,index) in orderList" :key="index">
 				<et-order-list :orderList="item"></et-order-list>
 			</view>
+		</view>
+		<view class="order-list-position-null" v-else>
+			<text>列表空空如也</text>
 		</view>
 	</view>
 </template>
@@ -28,12 +31,18 @@ export default {
 	components: {
 		etOrderList
 	},
+	computed: {
+		userInfo() {
+			return uni.getStorageSync('userInfo')
+		}
+	},
 	data() {
 		return {
 			tabBars:['全部','待支付','待发货','待收货','阅读中','待归还','待评价','逾期','退款'],	//订单tab
 			tabBarID:0,  //初始化标签数据库ID
 			tabCurrentIndex:-1,
 			money:"30",
+			customerInfo:{},
 			defalutAddress : {
 				// 'name':'麦家杰',
 				'phone':'13690394900',
@@ -114,17 +123,37 @@ export default {
 		tabChange(e){
 			this.tabCurrentIndex = e;		// 更新标签序号
 			
+			
 			const status_text = this.tabBars[this.tabCurrentIndex];
-			this.$api.getOrder({ filterItems:{'status_text':status_text} }).then(res=>{
-				this.orderList = res.data;
-			}) 
-			// 变更商品列表
+			
+			// 获取customerID
+			this.$api.getCustom({ filterItems: { mobile: this.userInfo.mobile } }).then(res=>{
+				this.customerInfo = res.data[0];
+				let filterItems = {
+					custom_id:this.customerInfo.id
+				};
+				if(status_text !== '全部'){
+					filterItems.status_text = status_text;
+				}
+				this.$api.getOrder({ filterItems }).then(res=>{
+					this.orderList = res.data;
+				}) 
+			})
+			
 			
 		},
 		dataInit(){
-			this.$api.getOrder().then(res=>{
-				this.orderList = res.data;
-			}) 
+			this.$api.getCustom({ filterItems: { mobile: this.userInfo.mobile } }).then(res=>{
+				this.customerInfo = res.data[0];
+				// 获取customerID
+				let filterItems = {
+					custom_id:this.customerInfo.id
+				};
+				this.$api.getOrder({filterItems}).then(orderRes=>{
+					this.orderList = orderRes.data;
+				})
+			})
+			 
 		},
 		statusTextInit(type){
 			this.tabBars.map((item,index)=>{
@@ -132,9 +161,18 @@ export default {
 					this.tabCurrentIndex = index;
 				}
 			});
-			this.$api.getOrder({ filterItems:{'status_text':type} }).then(res=>{
-				this.orderList = res.data;
-			}) 
+			this.$api.getCustom({ filterItems: { mobile: this.userInfo.mobile } }).then(res=>{
+				this.customerInfo = res.data[0];
+				let filterItems = {
+					custom_id:this.customerInfo.id
+				};
+				if(type !== '全部'){
+					filterItems.status_text = type;
+				}
+				this.$api.getOrder({ filterItems }).then(res=>{
+					this.orderList = res.data;
+				}) 
+			});
 		}
 	}
 }
@@ -211,6 +249,15 @@ export default {
 }
 .order-list-position {
 	width: 90%;
+}
+.order-list-position-null{
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	width: 100%;
+	height: 300upx;
+	font-size: 40upx;
+	color: #6A6A6A;
 }
 .pay-position {
 	width: 90%;
