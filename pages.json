@@ -1,14 +1,5 @@
 {
-	"pages": [ //pages数组中第一项表示应用启动页，参考：https://uniapp.dcloud.io/collocation/pages
-		{
-			"path": "pages/guide/complateInfo",
-			"style": {
-				"navigationBarTitleText": "完善幼儿园信息",
-				"app-plus": {
-					"titleNView": false
-				}
-			}
-		},
+	"pages": [ //pages数组中第一项表示应用启动页，参考：https://uniapp.dcloud.io/collocation/pages		
 		{
 			"path": "pages/index/index",
 			"style": {
@@ -18,6 +9,25 @@
 				}
 			}
 		},
+		{
+			"path": "pages/promote/promotePictureBook",
+			"style": {
+				"navigationBarTitleText": "绘本",
+				"app-plus": {
+					"titleNView": false
+				}
+			}
+		},
+		{
+			"path": "pages/my/myMember",
+			"style": {
+				"navigationBarTitleText": "我的会员",
+				"app-plus": {
+					"titleNView": false
+				}
+			}
+		},
+		
 		{
 			"path": "pages/my/myDeposit",
 			"style": {
