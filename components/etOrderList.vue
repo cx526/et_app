@@ -108,7 +108,7 @@ export default {
 			})
 		},
 		cancleOrder(){
-			this.$api.cancelOrder({ param : this.$props.orderList.order_no , type : "online" ,  custom_id : this.$props.orderList.custom_id }).then(res=>{
+			this.$api.cancelOrder({ param : this.$props.orderList.order_no}).then(res=>{
 				uni.showToast({
 					duration:1500,
 					title:"订单已取消",
@@ -128,7 +128,7 @@ export default {
 			this.$emit('reloadPages');
 		},
 		customCloseOrder(){
-			this.$api.customCloseOrder({ param : this.$props.orderList.order_no}).then(res=>{
+			this.$api.customCloseOrder({ param : this.$props.orderList.order_no , type : "online" ,  custom_id : this.$props.orderList.custom_id }).then(res=>{
 				uni.showToast({
 					duration:1500,
 					title:"已还书",
