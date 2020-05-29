@@ -20,9 +20,23 @@ export default {
     },
     methods: {
 		toUrl() {
-			uni.switchTab({
-				url:'/pages/index/kind'
-			})
+			if (this.userInfo.name === 'guest') {
+				//游客 发出提示
+				uni.showModal({
+					title: '请先登录',
+					confirmText: '登录',
+					success: (res) => {
+						if (res.confirm) {
+							uni.removeStorageSync('userInfo')
+							uni.reLaunch({url: '../guide/guide'})
+						}
+					}
+				})
+			} else {
+				uni.navigateTo({
+					url:'/pages/promote/promoteUpload?pTitle=童彩小画社',
+				})
+			}
 		},
 	}
 }

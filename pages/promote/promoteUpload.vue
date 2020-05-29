@@ -72,6 +72,7 @@
 				preUploadPic: '',
 				percent: 0,
 				inputText: '',
+				promoteTitle: '',
 	        }
 	    },
 		computed: {
@@ -79,12 +80,16 @@
 				return uni.getStorageSync('userInfo')
 			}
 		},
-	    onLoad() {
-	        this.$api.getCustom({ filterItems: { mobile: this.userInfo.mobile } }).then(res=>{
-				this.allCustomInfo = res.data[0]
-			})
+	    onLoad(option) {
+			this.promoteTitle = option.pTitle
+	        this.getCustomInfo()
 	    },
 	    methods: {
+			getCustomInfo() {
+				this.$api.getCustom({ filterItems: { mobile: this.userInfo.mobile } }).then(res=>{
+					this.allCustomInfo = res.data[0]
+				})
+			},
 			inputChange(e) {
 				this.inputText = e.target.value
 			},
@@ -118,7 +123,7 @@
 					success: (res) => {
 						console.log(res)
 						let param = {
-							promote_name: '',
+							promote_name: this.promoteTitle,
 							custom_id: this.allCustomInfo.id,
 							promote_pic: res.data.url,
 							promote_text: this.inputText,
