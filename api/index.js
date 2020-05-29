@@ -79,4 +79,13 @@ api.getOrder = params => request.globalRequest('/api/order/getOrder', 'POST', pa
 //检测订单是否存在
 api.checkExistOrder = params => request.globalRequest('/api/order/checkExistOrder', 'POST', params)
 
+//取消订单
+api.cancelOrder = params => request.globalRequest('/api/order/cancelOrder', 'POST', params)
+
+//确认收货
+api.customConfirmOrder = params => request.globalRequest('/api/order/customConfirmOrder', 'POST', params)
+
+//还书
+api.customCloseOrder = params => request.globalRequest('/api/order/customCloseOrder', 'POST', params)
+
 export default api

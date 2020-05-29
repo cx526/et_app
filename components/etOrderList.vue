@@ -31,7 +31,7 @@
 		<view class="white-space"></view>
 		
 		<view class="bottom-button-position" v-if="orderList.order_no">
-			<view class="botton-position botton-cancle-position" v-if="orderList.status_text === '待支付'">
+			<view class="botton-position botton-cancle-position" v-if="orderList.status_text === '待支付'" @tap="cancleOrder">
 				<text>取消订单</text>
 			</view>
 			
@@ -49,13 +49,13 @@
 			
 			<view class="white-space-width"></view>
 			
-			<view class="botton-position" v-if="orderList.status === '待收货'">
+			<view class="botton-position" v-if="orderList.status === '待收货'" @tap="customConfirmOrder">
 				<text>确认收货</text>
 			</view>
 			
 			<view class="white-space-width"></view>
 			
-			<view class="botton-position" v-if="orderList.status === '阅读中'">
+			<view class="botton-position" v-if="orderList.status === '阅读中'" @tap="customCloseOrder">
 				<text>还书</text>
 			</view>
 		</view>
@@ -106,6 +106,36 @@ export default {
 			uni.navigateTo({
 				url:'/pages/cart/orderDetail'
 			})
+		},
+		cancleOrder(){
+			this.$api.cancelOrder({ param : this.$props.orderList.order_no , type : "online" ,  custom_id : this.$props.orderList.custom_id }).then(res=>{
+				uni.showToast({
+					duration:1500,
+					title:"订单已取消",
+					icon:"none"
+				})
+			});
+			this.$emit('reloadPages');
+		},
+		customConfirmOrder(){
+			this.$api.customConfirmOrder({ param : this.$props.orderList.order_no}).then(res=>{
+				uni.showToast({
+					duration:1500,
+					title:"已确认收货",
+					icon:"none"
+				})
+			});
+			this.$emit('reloadPages');
+		},
+		customCloseOrder(){
+			this.$api.customCloseOrder({ param : this.$props.orderList.order_no}).then(res=>{
+				uni.showToast({
+					duration:1500,
+					title:"已还书",
+					icon:"none"
+				})
+			});
+			this.$emit('reloadPages');
 		}
 	}
 }

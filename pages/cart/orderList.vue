@@ -15,7 +15,7 @@
 		
 		<view class="order-list-position" v-if="orderList.length > 0">
 			<view class="white-border" style="margin: 20upx 0;" v-for="(item,index) in orderList" :key="index">
-				<et-order-list :orderList="item"></et-order-list>
+				<et-order-list :orderList="item" @reloadPages = "reloadPages"></et-order-list>
 			</view>
 		</view>
 		<view class="order-list-position-null" v-else>
@@ -110,10 +110,10 @@ export default {
 	onLoad(option) {
 		this.tabCurrentIndex = 0; //初始化标签序号
 		
-		this.dataInit();
-		
 		if(option.status_text){
 			this.statusTextInit(option.status_text);
+		}else{
+			this.dataInit();
 		}
 	},
 	methods: {
@@ -122,37 +122,11 @@ export default {
 		},
 		tabChange(e){
 			this.tabCurrentIndex = e;		// 更新标签序号
-			
-			
 			const status_text = this.tabBars[this.tabCurrentIndex];
-			
-			// 获取customerID
-			this.$api.getCustom({ filterItems: { mobile: this.userInfo.mobile } }).then(res=>{
-				this.customerInfo = res.data[0];
-				let filterItems = {
-					custom_id:this.customerInfo.id
-				};
-				if(status_text !== '全部'){
-					filterItems.status_text = status_text;
-				}
-				this.$api.getOrder({ filterItems }).then(res=>{
-					this.orderList = res.data;
-				}) 
-			})
-			
-			
+			this.getData(status_text);
 		},
 		dataInit(){
-			this.$api.getCustom({ filterItems: { mobile: this.userInfo.mobile } }).then(res=>{
-				this.customerInfo = res.data[0];
-				// 获取customerID
-				let filterItems = {
-					custom_id:this.customerInfo.id
-				};
-				this.$api.getOrder({filterItems}).then(orderRes=>{
-					this.orderList = orderRes.data;
-				})
-			})
+			this.getData('');
 			 
 		},
 		statusTextInit(type){
@@ -161,10 +135,13 @@ export default {
 					this.tabCurrentIndex = index;
 				}
 			});
+			this.getData(type);
+		},
+		getData(type){
 			this.$api.getCustom({ filterItems: { mobile: this.userInfo.mobile } }).then(res=>{
 				this.customerInfo = res.data[0];
 				let filterItems = {
-					custom_id:this.customerInfo.id
+					// custom_id:this.customerInfo.id
 				};
 				if(type !== '全部'){
 					filterItems.status_text = type;
@@ -173,6 +150,10 @@ export default {
 					this.orderList = res.data;
 				}) 
 			});
+		},
+		reloadPages(){
+			const status_text = this.tabBars[this.tabCurrentIndex];
+			this.statusTextInit(status_text);
 		}
 	}
 }
