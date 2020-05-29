@@ -4,8 +4,16 @@
 			<view class="sub-content">
 				<view class="in-position">
 					<text class="title-content">所在地</text>
-					<!-- <view class="input-style">{{ finalRegionString.length === 0 ? '选择幼儿园所在地': finalRegionString }}</view> -->
-					<et-region inputStyle @regionChange="regionChange" :showing_address="finalRegionString"  title='选择幼儿园所在地'></et-region>
+					<picker 
+						class="picker-input" 
+						mode="multiSelector" 
+						@change="regionChange"
+						@columnchange="regionColChange"
+						:value="regionResult" 
+						:range="region"
+					>
+						<view class="input-style">{{ finalRegionString.length === 0 ? '选择幼儿园所在地': finalRegionString }}</view>
+					</picker>
 					<image src="../../static/guide/arrow.png" class="arrow"></image>
 				</view>
 				
@@ -48,19 +56,23 @@
 
 <script>
 import regionData from '../../common/regionData.js'
-import etRegion from '../../components/etRegion.vue'
 
 export default {
-	components: {
-		etRegion	
-	},
     data() {
         return {
+			provinceKey: '',
+			cityKey: '',
+			provinceArray: [],
+			cityArray: [],
+			areaArray: [],
 			region: [
 				[],
 				[],
 				[],
 			],
+			pKeysArray: [],
+			cKeysArray: [],
+			aKeysArray: [],
 			regionResult: [
 				[],
 				[],
@@ -99,6 +111,14 @@ export default {
 		},
 	},
     onLoad(option) {
+        this.provinceArray = Object.values(regionData['86'])
+		this.pKeysArray = Object.keys(regionData['86'])
+		this.region[0] = this.provinceArray
+		
+		this.regionChange()
+		
+		let e = { detail: { column: 0, value: 18 } }
+		this.regionColChange(e)
 		
 		if(option.complateInfoData) { 
 			const objectArr = JSON.parse(decodeURIComponent(option.complateInfoData));
@@ -157,12 +177,44 @@ export default {
 		}
     },
     methods: {
+		regionColChange(e) {
+			// console.log(e)
+			let col = e.detail.column
+			let val = e.detail.value
+			console.log(col, val)
+			
+			if (col === 0) {
+				this.provinceKey = Object.keys(regionData['86'])[val]
+				this.cityArray = Object.values(regionData[this.provinceKey]) 
+				this.region[1] = this.cityArray
+				this.cKeysArray = Object.keys(regionData[this.provinceKey])
+				this.selectedProvinceValue = Object.values(regionData['86'])[val]
+				this.selectedCityValue = ''
+				this.selectedAreaValue = ''
+				// this.regionResult[0] = this.provinceArray[val]
+				// this.regionResult[1] = this.cityArray[0]
+				// this.regionResult[2] = []
+			}
+			if (col === 1 ) {
+				this.cityKey = Object.keys(regionData[this.provinceKey])[val]
+				this.selectedCityValue = Object.values(regionData[this.provinceKey])[val]
+				this.areaArray = Object.values(regionData[this.cityKey])
+				this.region[2] = this.areaArray
+				this.aKeysArray = Object.keys(regionData[this.cityKey])
+				this.selectedAreaValue = ''
+				// this.regionResult[1] = this.cityArray[val]
+				// this.regionResult[2] = this.areaArray[0]
+			}
+			if (col === 2) {
+				this.selectedAreaValue = Object.values(regionData[this.cityKey])[val]
+			}
+			// this.$forceUpdate()
+		},
 		regionChange(e) {
 			if (e) {
-				this.selectedProvinceCode = e.filterItems.province;
-				this.selectedCityCode = e.filterItems.city;
-				this.selectedAreaCode = e.filterItems.area;
-				this.finalRegionString = e.filterItems.showAddress;
+				this.selectedProvinceCode = this.pKeysArray[e.target.value[0]]
+				this.selectedCityCode = this.cKeysArray[e.target.value[1]]
+				this.selectedAreaCode = this.aKeysArray[e.target.value[2]]
 			}
 			// console.log(e.target.value)
 			console.log(this.selectedProvinceCode, this.selectedCityCode, this.selectedAreaCode)

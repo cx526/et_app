@@ -8,7 +8,7 @@
 			:value="regionResult" 
 			:range="region"
 		>
-		<view class="input-style" :class="[finalRegionString.length === 0 ? 'color-one' : 'color-two']">{{ finalRegionString.length === 0 ? title : finalRegionString }}</view>
+		<view :style="inputStyle ? 'font-size: 30upx;color: #6A6A6A;' : ''" :class="[finalRegionString.length === 0 ? 'color-one' : 'color-two']">{{ finalRegionString.length === 0 ? title : finalRegionString }}</view>
 		</picker>
 	</view>
 </template>
@@ -19,7 +19,8 @@ import regionData from '../common/regionData.js'
 export default {
 	props: {
 		title: String,
-		showing_address: String
+		showing_address: String,
+		inputStyle: Boolean,
 	},
 	computed: {
 		finalRegionString() {
@@ -132,5 +133,8 @@ export default {
 .color-two{
 	color:#000000;
 }
-
+.input-style {
+	font-size: 30upx;
+	color: #6A6A6A;
+}
 </style>

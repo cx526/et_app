@@ -180,15 +180,7 @@
 				}
 			}
 		},
-		{
-			"path": "pages/guide/complateInfo",
-			"style": {
-				"navigationBarTitleText": "完善幼儿园信息",
-				"app-plus": {
-					"titleNView": false
-				}
-			}
-		},
+		
 		{
 			"path": "pages/cart/addressList",
 			"style": {
