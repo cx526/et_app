@@ -20,7 +20,7 @@
 		
 		<view class="like-position">
 			<image class="like-img" src="../static/kindlist/zan.png"></image>
-			<!-- <text>{{people}} 人推荐</text> -->
+			<text>{{people}} 人推荐</text>
 		</view>
 		
 		<view class="out-position">

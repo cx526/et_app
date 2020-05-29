@@ -333,7 +333,8 @@ export default {
 					book.tagData  = tagArr;
 				}
 				book.remark = obj.goods_info.summary;
-				bookList .push(book);
+				book.peopleCount = obj.goods_info.peopleCount;
+				bookList.push(book);
 			});
 			console.log(bookList);
 			uni.navigateTo({ url: './kindlist?noPull=1&selectID=0&tabBars=' + encodeURIComponent(JSON.stringify(tabBars)) + '&bookList=' + encodeURIComponent(JSON.stringify(bookList))});
