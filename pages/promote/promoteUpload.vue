@@ -13,44 +13,50 @@
 				<view class="top-left-content">
 					<text style="font-size: 35upx;">{{userInfo.name}}</text>
 					<view class="intergal-type" style="font-size: 20upx; margin-top: 5upx;">
-						<text>当前积分：{{userInfo.coin}}</text>
+						<text class="spacing">当前积分：{{allCustomInfo.coin}}</text>
 					</view>
 				</view>
 				
 				<view class="top-right-content">
-					<image src="https://et-pic-server.oss-cn-shenzhen.aliyuncs.com/app_img/my_baby.png" style="width: 120upx; height: 120upx; border-radius: 50%;"></image>
+					<!-- <image src="https://et-pic-server.oss-cn-shenzhen.aliyuncs.com/app_img/my_baby.png" style="width: 120upx; height: 120upx; border-radius: 50%;"></image> -->
+					<image :src="allCustomInfo.avatar" style="width: 120upx; height: 120upx; border-radius: 50%;"></image>
 				</view>
 			</view>
 			
 			<view class="middle-conten-position white-border">
 				<view class="top-content">
-					<text>就读学校</text>
-					<text style="color: #8E8E8E; font-weight: 400;">{{userInfo.name}}</text>
+					<text class="spacing">就读学校</text>
+					<text style="color: #8E8E8E; font-weight: 400;">{{allCustomInfo.schoolInfo.name}}</text>
 				</view>
 				<view class="top-content">
-					<text>所在班级</text>
-					<text style="color: #8E8E8E; font-weight: 400;">{{userInfo.name}}</text>
+					<text class="spacing">所在班级</text>
+					<text style="color: #8E8E8E; font-weight: 400;">{{allCustomInfo.gradeInfo.name}}</text>
 				</view>
 				<view class="top-content" style="border: 0upx;">
-					<text>宝贝姓名</text>
-					<text style="color: #8E8E8E; font-weight: 400;">{{userInfo.name}}</text>
+					<text class="spacing">宝贝姓名</text>
+					<text style="color: #8E8E8E; font-weight: 400;">{{allCustomInfo.childInfo.name}}</text>
 				</view>
 			</view>
 			
 			<view class="middle-conten-position white-border" style="margin-top: 30upx;">
 				<view class="top-content">
-					<text>作品介绍</text>
-					<input type="text" value=""  placeholder="大胆说出你的创意"/>
+					<text class="spacing">作品介绍</text>
+					<input type="text" :value="inputText"  placeholder="大胆说出你的创意" @input="inputChange"/>
 				</view>
 				<view class="top-content"  style="align-items: flex-start; border: 0;">
-					<text>我的作品</text>
-					<image src="../../static/cart/color.png" style="width:300upx; height: 200upx;" mode=""></image>
-					<image src="https://et-pic-server.oss-cn-shenzhen.aliyuncs.com/app_img/promote_add.png" style="width:100upx; height: 100upx;" mode=""></image>
+					<text class="spacing">我的作品</text>
+					<!-- <image src="../../static/cart/color.png" style="width:300upx; height: 200upx;" mode=""></image> -->
+					<view @tap="doSelectPic" v-if="preUploadPic === ''">
+						<image src="https://et-pic-server.oss-cn-shenzhen.aliyuncs.com/app_img/promote_add.png" style="width:160upx; height: 160upx;" mode=""></image>
+					</view>
+					<view v-if="preUploadPic !== ''" @tap="preViewPic">
+						<image :src="preUploadPic" style="width:160upx; height: 160upx;" mode=""></image>
+					</view>
 				</view>
 				<view style="height: 100upx;"></view>
 			</view>
 			
-			<view class="button-style">
+			<view class="button-style" @tap="doUploadPic">
 				<text>保存并上传</text>
 			</view>
 			
@@ -62,8 +68,10 @@
 	export default {
 	    data() {
 	        return {
+				allCustomInfo: {},
 				preUploadPic: '',
 				percent: 0,
+				inputText: '',
 	        }
 	    },
 		computed: {
@@ -72,9 +80,14 @@
 			}
 		},
 	    onLoad() {
-	        
+	        this.$api.getCustom({ filterItems: { mobile: this.userInfo.mobile } }).then(res=>{
+				this.allCustomInfo = res.data[0]
+			})
 	    },
 	    methods: {
+			inputChange(e) {
+				this.inputText = e.target.value
+			},
 			doSelectPic() {
 				uni.chooseImage({
 				    count: 1, 
@@ -85,7 +98,17 @@
 				    }
 				});
 			},
+			preViewPic() {
+				// 预览图片
+				uni.previewImage({
+					urls: [this.preUploadPic],
+					longPressActions: { 
+						itemList: ['保存图片'],
+					}
+				})
+			},
 			doUploadPic() {
+				uni.showLoading()
 				let uper = uni.uploadFile({
 					// 需要上传的地址
 					url:'https://www.52diyike.com/api/api/upload/uploadPicToAliyun',
@@ -94,6 +117,18 @@
 					name: 'file',
 					success: (res) => {
 						console.log(res)
+						let param = {
+							promote_name: '',
+							custom_id: this.allCustomInfo.id,
+							promote_pic: res.data.url,
+							promote_text: this.inputText,
+							promote_title: '',
+							remark: res.data.name
+						}
+						this.$api.addPromote(param).then(res => {
+							uni.hideLoading()
+							uni.showToast({ icon: '', title: '上传作品成功' })
+						})
 					}
 				})
 				// onProgressUpdate 上传对象更新的方法
@@ -158,12 +193,15 @@
 	width: 85%;
 	display: flex;
 	flex-direction: row;
-	justify-content: space-between;
+	justify-content: flex-start;
 	align-items: center;
 	padding: 20upx 0;
 	border-bottom: 1UPX solid #F3F3F3;
 	font-weight: bold;
 	font-size: 25upx;
+}
+.spacing {
+	padding-right: 50upx;
 }
 .button-style {
 	display: flex;

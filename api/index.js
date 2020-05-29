@@ -88,4 +88,7 @@ api.customConfirmOrder = params => request.globalRequest('/api/order/customConfi
 //还书
 api.customCloseOrder = params => request.globalRequest('/api/order/customCloseOrder', 'POST', params)
 
+// promote 活动api
+api.addPromote = params => request.globalRequest('/api/promote/addPromote', 'POST', params)
+
 export default api
