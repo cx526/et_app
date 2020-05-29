@@ -9,8 +9,8 @@
 		
 		<view class="list-content-father-position">
 			<view class="list-content-father-position" v-if="listData.length > 0">
-				<view class="list-content-position">
-					<et-imgbox  v-for="(item,i) in listData" :key="i" :title="item.name" :img="item.imgSrc" :bookCount="item.stock" :tag="item.tagData" :peopleCount="item.peopleCount" :bookInfo="item"></et-imgbox>
+				<view class="list-content-position">					
+					<et-imgbox  v-for="(item,i) in listData" :key="i" :bookInfo="item.goods_info"></et-imgbox>
 				</view>
 				<view class="white-space"></view>
 				<uni-load-more :status="loadStatus" :content-text="loadText" />
@@ -74,6 +74,7 @@ export default {
 		// 初始化商品列表
 		if(option.bookList){
 			this.listData = JSON.parse(decodeURIComponent(option.bookList));
+			console.log(this.listData);
 			this.loadStatus = 'noMore';
 		}else{
 			uni.showLoading();
@@ -86,7 +87,12 @@ export default {
 		         }
 	       	};
 			this.$api.getGoodsInfo(param).then(res => {
-			   this.listData = this.transformListData(res.data.rows);
+			   let objArr = [];
+			   res.data.rows.map((item,index)=>{
+				   objArr[index] = {};
+				   objArr[index].goods_info = item
+			   });
+			   this.listData = objArr;
 			   this.currentPage++;
 			   uni.hideLoading();
 			})
@@ -113,9 +119,11 @@ export default {
 				this.loadStatus = 'noMore';  //没有数据时显示‘没有更多’
 				return;
 			}
-			let objArr = this.transformListData(res.data.rows);
-			objArr.forEach(obj=>{
-				this.listData.push(obj);
+			let objArr = [];
+			res.data.rows.map((item,index)=>{
+			    objArr[index] = {};
+				objArr[index].goods_info = item;
+				this.listData.push(objArr[index]);
 			});
 			this.currentPage++;
 			this.loadStatus = 'more';
@@ -138,39 +146,17 @@ export default {
 		         }
 	       	};
 			this.$api.getGoodsInfo(param).then(res => {
-			   this.listData = this.transformListData(res.data.rows);
+			   let objArr = [];
+			   res.data.rows.map((item,index)=>{
+					objArr[index] = {};
+					objArr[index].goods_info = item
+					// this.listData.push(objArr);
+			   });
+			   this.listData =  objArr;
+			   // this.listData.push(objArr);
 			   this.currentPage++;
 			   uni.hideLoading();
 			})
-		},
-		// 转换接口数据为视图数据
-		transformListData(data){
-			let resultArr = [];
-			data.forEach((item) => {
-				let resultObj = {};
-				resultObj.bookID = item.id;
-				if (item.forGoodsPic && item.forGoodsPic.length > 0) {
-					resultObj.imgSrc = item.forGoodsPic[0].url;
-				}else{
-					resultObj.imgSrc = item.pic; 
-				}
-				resultObj.name = item.title;
-				resultObj.peopleCount = item.peopleCount;
-				resultObj.bookCount = item.stock;
-				if(item.tagInfo && item.tagInfo.length > 0) {
-					let tagArr = [];
-					item.tagInfo.forEach((obj) => {
-						let tagObj = {};
-						tagObj.title = obj.tag_name;
-						tagObj.backgroundColor = obj.bg_color;
-						tagObj.fontColor = obj.text_color;
-						tagArr.push(tagObj);
-					});
-					resultObj.tagData = tagArr;
-				}
-				resultArr.push(resultObj);
-			});
-			return resultArr;
 		},
 		toDetail(id){
 			uni.navigateTo({url: 'bookdetail?bookID=' + JSON.stringify(id)})

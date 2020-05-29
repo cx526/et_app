@@ -3,25 +3,25 @@
 		
 		<view @tap="toBookDetail()">
 			<view class="img-content">
-				<image :src=img class="img"></image>
+				<image :src="bookInfo.forGoodsPic[0].url" class="img"></image>
 			</view>
 			
 			<view class="font-content">
 				<view class="title">
-					<text>{{title}}</text>
+					<text>{{bookInfo.title}}</text>
 				</view>			
 				<view class="tag-style">
 					<!-- 只显示两个标签 -->
 					<!-- <text class="tag-content"  v-for="(item,i) in tag" v-if="i < 2" :key="i">{{item}}</text> -->
-					<view class="tag-content" v-for="(item,index) in tag" v-if="item && index < 2" :key="index">
-						<et-tag :title="item.title" :backgroundColor="item.backgroundColor" :fontColor="item.fontColor" ></et-tag>
+					<view class="tag-content" v-for="(item,index) in bookInfo.tagInfo" v-if="item && index < 2" :key="index">
+						<et-tag :title="item.tag_name" :backgroundColor="item.bg_color" :fontColor="item.text_color" ></et-tag>
 					</view>
 				</view>
 			</view>
 		</view>
 		
 		<view class="content-buttom-position">
-			<et-add-book-to-cart :peopleCount="peopleCount" :bookInfo="bookInfo"></et-add-book-to-cart>
+			<et-add-book-to-cart :peopleCount="bookInfo.peopleCount" :bookInfo="bookInfo"></et-add-book-to-cart>
 		</view>
 	</view>
 </template>
@@ -45,7 +45,7 @@ export default {
 	},
 	methods: {
 		toBookDetail() {
-			uni.navigateTo({ url: 'bookdetail?bookID=' + encodeURIComponent(JSON.stringify(this.$props.bookInfo.bookID)) })
+			uni.navigateTo({ url: 'bookdetail?bookID=' + encodeURIComponent(JSON.stringify(this.$props.bookInfo.id)) })
 		}
 	}
 }

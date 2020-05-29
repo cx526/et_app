@@ -1,20 +1,18 @@
 <template>
 	<view class="btn-content" @tap="btnClick">
 		<view class="img-content">
-			<image :src=img class="img"></image>
+			<image :src="data.forGoodsPic[0].url" class="img"></image>
 			<!-- <text class="book-count">{{bookCount}}本</text> -->
 		</view>
 		
-		<text class="title">{{title}}</text>
+		<text class="title">{{data.title}}</text>
 	</view>
 </template>
 
 <script>
 export default {
 	props: {
-		title: String,
-		bookCount: String,
-		img: String
+		data: Object
 	},
 	methods: {
 		btnClick() {

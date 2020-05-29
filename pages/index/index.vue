@@ -51,7 +51,7 @@
 			<et-titlenavigation  title="热门推荐" img="../static/index/start.png" toUrl="baidu.com" @toMoreData="toHotListData"></et-titlenavigation>
 			
 			<view class="hotcomcontent">
-				<et-hotcomcontent  v-for="(item,i) in hotBookList" v-if="i <= 5" :key="i" :title="item.name" :img="item.img" :bookCount="item.bookCount" @tap="toBookDetail(item.bookID)"></et-hotcomcontent>
+				<et-hotcomcontent  v-for="(item,i) in hotBookList" v-if="i <= 5" :key="i"  :data="item.goods_info" @tap="toBookDetail(item.goods_info.id)"></et-hotcomcontent>
 			</view>
 		</view>
 		
@@ -86,7 +86,7 @@
 			
 			<!-- 内容 -->
 			<view class="guess-content">
-				<et-imgbox  v-for="(item,i) in guessBookList" :key="i" :title="item.name" :img="item.img" :bookCount="item.bookCount" :tag="item.tag" :peopleCount="item.peopleCount" :bookInfo="item"></et-imgbox>
+				<et-imgbox  v-for="(item,i) in guessBookList" :key="i"  :bookInfo="item"></et-imgbox>
 			</view>
 		</view>
 		<uni-load-more :status="loadStatus" :content-text="loadText" />
@@ -241,27 +241,8 @@ export default {
 		},
 		getHotBook(type){
 			this.$api.getRecommend().then(res => {
-			   this.toHotBookList = res.data;
-			   let dataArr = [];
-			   res.data.forEach(obj=>{
-				   let dataObj = {};
-				   dataObj.name = obj.goods_info.title;
-				   dataObj.img = obj.goods_info.cover;
-				   // dataObj.img = obj.goods_info.forGoodsPic[0].url;
-				   if (obj.goods_info.forGoodsPic && obj.goods_info.forGoodsPic.length > 0) {
-						dataObj.img = obj.goods_info.forGoodsPic[0].url;
-				   }
-				   dataObj.bookCount = '100';
-				   dataObj.bookID = obj.goods_info.id;
-				   if (type === 'push'){
-						this.hotBookList.push(dataObj);
-				   } else if (type === 'init') {
-						dataArr.push(dataObj);  
-				   }
-			   });
-			   if (dataArr.length > 0) {
-				   this.hotBookList = dataArr;
-			   }
+			   this.hotBookList = res.data;
+			   console.log(this.hotBookList);
 			})
 		},
 		getGuessBook(type){
@@ -270,38 +251,11 @@ export default {
 				return;
 			}
 			this.$api.getGuess().then(res => {
-			   let dataArr = [];
-			   res.data.forEach(obj=>{
-				   // console.log(obj);
-				   let dataObj = {};
-				   dataObj.name = obj.title;
-				   dataObj.coin = obj.coin;
-				   dataObj.peopleCount = obj.peopleCount;
-				   if (obj.forGoodsPic && obj.forGoodsPic.length > 0) {
-						dataObj.img = obj.forGoodsPic[0].url;
-				   }else{
-						dataObj.img = obj.pic; 
-				   }
-				   dataObj.bookID = obj.id;
-				   dataObj.tag = [];
-				   if (obj.tagInfo && obj.tagInfo.length>0) {
-					   obj.tagInfo.forEach(tagObj=>{
-						   let tagObjPush = {};
-						   tagObjPush.title = tagObj.tag_name;
-						   tagObjPush.backgroundColor = tagObj.bg_color;
-						   tagObjPush.fontColor = tagObj.text_color;
-						    dataObj.tag.push(tagObjPush);
-					   });
-				   }
-				   if (type === 'push'){
-						this.guessBookList.push(dataObj);
-				   } else if (type === 'init') {
-						dataArr.push(dataObj);  
-				   }
-			   });
-			   if (dataArr.length > 0) {
-				   this.guessBookList = dataArr;
-			   }
+				console.log(res);
+				// this.guessBookList.push(res.data);
+				res.data.map(item=>{
+					this.guessBookList.push(item);
+				});
 			})
 		},
 		toSign() {
@@ -310,34 +264,7 @@ export default {
 		toHotListData() {
 			console.log(this.toHotBookList);
 			let tabBars = [{'name':'热门推荐'}];
-			let bookList = [];
-			this.toHotBookList.forEach(obj=>{
-				let book = {};
-				book.bookID = obj.goods_info.id;
-				book.bookName = obj.goods_info.title;
-				if (obj.goods_info.forGoodsPic && obj.goods_info.forGoodsPic.length > 0) {
-					book.imgSrc = obj.goods_info.forGoodsPic[0].url;
-				}else{
-					book.imgSrc = obj.pic; 
-				}
-				book.tagData = [];
-				if(obj.goods_info.tagInfo && obj.goods_info.tagInfo.length > 0) {
-					let tagArr = [];
-					obj.goods_info.tagInfo.forEach((obj) => {
-						let tagObj = {};
-						tagObj.title = obj.tag_name;
-						tagObj.backgroundColor = obj.bg_color;
-						tagObj.fontColor = obj.text_color;
-						tagArr.push(tagObj);
-					});
-					book.tagData  = tagArr;
-				}
-				book.remark = obj.goods_info.summary;
-				book.peopleCount = obj.goods_info.peopleCount;
-				bookList.push(book);
-			});
-			console.log(bookList);
-			uni.navigateTo({ url: './kindlist?noPull=1&selectID=0&tabBars=' + encodeURIComponent(JSON.stringify(tabBars)) + '&bookList=' + encodeURIComponent(JSON.stringify(bookList))});
+			uni.navigateTo({ url: './kindlist?noPull=1&selectID=0&tabBars=' + encodeURIComponent(JSON.stringify(tabBars)) + '&bookList=' + encodeURIComponent(JSON.stringify(this.hotBookList))});
 		}
 	}	
 }
