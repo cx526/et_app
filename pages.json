@@ -1,18 +1,19 @@
 {
 	"pages": [ //pages数组中第一项表示应用启动页，参考：https://uniapp.dcloud.io/collocation/pages
+		
 		{
-			"path": "pages/promote/promoteUpload",
+			"path": "pages/index/index",
 			"style": {
-				"navigationBarTitleText": "作品上传",
+				"navigationBarTitleText": "五车书",
 				"app-plus": {
 					"titleNView": false
 				}
 			}
 		},
 		{
-			"path": "pages/index/index",
+			"path": "pages/promote/promoteUpload",
 			"style": {
-				"navigationBarTitleText": "五车书",
+				"navigationBarTitleText": "作品上传",
 				"app-plus": {
 					"titleNView": false
 				}

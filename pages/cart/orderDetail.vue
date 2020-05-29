@@ -1,5 +1,8 @@
 <template>
 	<view class="content">
+		<view class="sign-button" @tap="toTest">
+			<text style="font-size: 24upx;">支付测试</text>
+		</view>
 		<view class="top-position"></view>
 		
 		<view class="content-position">
@@ -109,6 +112,10 @@ export default {
 		this.dataInit();
 	},
 	methods: {
+		toTest() {
+			this.finalPayOrderInfo.payMoney = '0.01'
+			this.moneyCount = '0.01';
+		},
 		async getCustomerInfo(){
 			this.userInfo = uni.getStorageSync('userInfo');
 			const userInfoArr = await this.$api.getCustom({ filterItems: { mobile: this.userInfo.mobile } }).then(res=>{
@@ -223,8 +230,11 @@ export default {
 									if (res.errMsg === "requestPayment:ok") {
 										this.$api.updatePayment({order_no: order_no}).then(res => {
 											//跳出支付成功界面
-											//res.data.xml.return_code[0] === 'SUCCESS'
-											console.log(res)
+											if (res.data.xml.return_code[0] === 'SUCCESS') {
+												uni.navigateTo({
+													url:'/pages/cart/paysuccess'
+												})
+											}
 										})
 									}
 								},
@@ -453,5 +463,18 @@ export default {
 	width: 150upx;
 	height: 45upx;
 	margin-right: 20upx;
+}
+.sign-button {
+	position: fixed;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	top: 60%;
+	right: 0upx;
+	z-index: 999;
+	width: 120upx;
+	height: 120upx;
+	border-radius: 60upx;
+	background: #ccc;
 }
 </style>

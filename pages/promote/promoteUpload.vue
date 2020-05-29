@@ -13,7 +13,7 @@
 				<view class="top-left-content">
 					<text style="font-size: 35upx;">{{userInfo.name}}</text>
 					<view class="intergal-type" style="font-size: 20upx; margin-top: 5upx;">
-						<text>当前积分：{{userInfo.score}}</text>
+						<text>当前积分：{{userInfo.coin}}</text>
 					</view>
 				</view>
 				
@@ -64,12 +64,13 @@
 	        return {
 				preUploadPic: '',
 				percent: 0,
-				userInfo:{
-					name:'小爱同学',
-					score: 1223
-				}
 	        }
 	    },
+		computed: {
+			userInfo() {
+				return uni.getStorageSync('userInfo')
+			}
+		},
 	    onLoad() {
 	        
 	    },
