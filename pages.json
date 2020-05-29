@@ -19,6 +19,15 @@
 			}
 		},
 		{
+			"path": "pages/my/myDeposit",
+			"style": {
+				"navigationBarTitleText": "我的押金",
+				"app-plus": {
+					"titleNView": false
+				}
+			}
+		},
+		{
 			"path": "pages/promote/promoteUpload",
 			"style": {
 				"navigationBarTitleText": "作品上传",
