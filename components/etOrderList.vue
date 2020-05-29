@@ -49,13 +49,13 @@
 			
 			<view class="white-space-width"></view>
 			
-			<view class="botton-position" v-if="orderList.status === '待收货'" @tap="customConfirmOrder">
+			<view class="botton-position" v-if="orderList.status_text === '待收货'" @tap="customConfirmOrder">
 				<text>确认收货</text>
 			</view>
 			
 			<view class="white-space-width"></view>
 			
-			<view class="botton-position" v-if="orderList.status === '阅读中'" @tap="customCloseOrder">
+			<view class="botton-position" v-if="orderList.status_text === '阅读中'" @tap="customCloseOrder">
 				<text>还书</text>
 			</view>
 		</view>
