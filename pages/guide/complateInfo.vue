@@ -3,9 +3,10 @@
 		<view class="content-position" style="background-image: url(https://et-pic-server.oss-cn-shenzhen.aliyuncs.com/app_img/paper.png);">
 			<view class="sub-content">
 				<view class="in-position">
-					<text class="title-content">所在地</text>
-					<!-- <view class="input-style">{{ finalRegionString.length === 0 ? '选择幼儿园所在地': finalRegionString }}</view> -->
-					<et-region inputStyle @regionChange="regionChange" :showing_address="finalRegionString"  title='选择幼儿园所在地'></et-region>
+					<text class="title-content">所在地</text>	
+					<region-picker class="picker-input" @change="region_change" value="440000,440600,440606" >
+					    <view style="color: #6A6A6A;">{{showing_address}}</view>
+					</region-picker>
 					<image src="../../static/guide/arrow.png" class="arrow"></image>
 				</view>
 				
@@ -49,29 +50,18 @@
 <script>
 import regionData from '../../common/regionData.js'
 import etRegion from '../../components/etRegion.vue'
+import regionPicker from "../../components/region-picker/region-picker.vue"
 
 export default {
 	components: {
-		etRegion	
+		etRegion,
+		regionPicker
 	},
     data() {
         return {
-			region: [
-				[],
-				[],
-				[],
-			],
-			regionResult: [
-				[],
-				[],
-				[],
-			],
 			selectedProvinceCode: '440000',
 			selectedCityCode: '440600',
 			selectedAreaCode: '440606',
-			selectedProvinceValue: '',
-			selectedCityValue: '',
-			selectedAreaValue: '',
 			schoolInfo: [],
 			gradeInfo: [],
 			kindergartenIndex: 0,
@@ -98,11 +88,12 @@ export default {
 			}
 		},
 	},
-    onLoad(option) {
+    onLoad(option) {	
+		// 初始化数据
+		this.dataInit();
 		
 		if(option.complateInfoData) { 
 			const objectArr = JSON.parse(decodeURIComponent(option.complateInfoData));
-			console.log(objectArr);
 			this.teamIndex = parseInt(objectArr.class) - 1;
 			this.selectedProvinceCode = objectArr.schoolInfo.province;
 			this.selectedCityCode = objectArr.schoolInfo.city;
@@ -157,16 +148,14 @@ export default {
 		}
     },
     methods: {
-		regionChange(e) {
-			if (e) {
-				this.selectedProvinceCode = e.filterItems.province;
-				this.selectedCityCode = e.filterItems.city;
-				this.selectedAreaCode = e.filterItems.area;
-				this.finalRegionString = e.filterItems.showAddress;
-			}
-			// console.log(e.target.value)
-			console.log(this.selectedProvinceCode, this.selectedCityCode, this.selectedAreaCode)
+		dataInit(){
+			//默认为顺德区
+			this.showing_address = '广东省佛山市顺德区';
+			this.selectedProvinceCode =  '440000';
+			this.selectedCityCode = '440600';
+			this.selectedAreaCode =  '440606';
 			
+			//默认幼儿园
 			let param = {
 				filterItems: {
 					province: this.selectedProvinceCode,
@@ -176,13 +165,32 @@ export default {
 			}
 			this.$api.getSchoolInfo(param).then(res => {
 				this.schoolInfo = res.data
+				console.log(this.schoolInfo);
 				if (res.data.length > 0) {
 					res.data.map(item => {
 						this.kindergarten.push(item.name)
 					})
 				}
-				this.selectSchoolId = this.schoolInfo[0].id
+				this.selectSchoolId = this.schoolInfo[0].id;
+				//默认班级
+				this.gradeIndex = 0;
+				this.gradeInfo = this.schoolInfo[0].classInfo;
+				this.grade = [];
+				this.gradeInfo.map(subItem => {
+					this.grade.push(subItem.name)
+				});
+				this.selectGradeId = this.gradeInfo[0].id;
 			})
+			
+			//默认班级
+			// let gradeArrIndex = 0;
+			// this.gradeInfo = res.data[0].classInfo;
+		},
+		region_change(e){
+			this.showing_address = e.detail.value[0] + e.detail.value[1] + e.detail.value[2];  
+			this.selectedProvinceCode =  e.detail.code[0];
+			this.selectedCityCode = e.detail.code[1];
+			this.selectedAreaCode =  e.detail.code[2];
 		},
 		bindKindergartenChange(e) {			
 			this.selectSchoolId = this.schoolInfo[e.target.value].id
@@ -190,6 +198,7 @@ export default {
 			this.schoolInfo.map(item => {
 				if (item.name === this.kindergarten[e.target.value]) {
 					this.gradeInfo = item.classInfo
+					this.grade = [];
 					item.classInfo.map(subItem => {
 						this.grade.push(subItem.name)
 					})
