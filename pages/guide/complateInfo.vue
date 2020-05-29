@@ -39,7 +39,7 @@
 			</view>
 			
 			<view class="button-position">
-				<view class="act-button" @tap="postSchoolInfo">保存并领取借阅币</view>
+				<view class="act-button" @tap="postSchoolInfo">保存并领取积分</view>
 				<view class="act-button sub-act-button" @tap="goIndex">先行体验</view>
 			</view>
 		</view>
