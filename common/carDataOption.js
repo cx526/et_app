@@ -109,7 +109,7 @@ function changSelectType(bookID) {
 	uni.setStorageSync('carListInfo', carListArr);
 }
 
-// 计算借阅币
+// 计算积分
 function countCoin() {
 	let carListArr = getBookListData();
 	let coinAll = 0;

@@ -8,7 +8,7 @@
 					<view class="top-content-left">
 						<image class="top-content-left-img" src="../../static/cart/money.png"></image>
 						<view style="width: 20upx;"></view>
-						<text>我的借阅币：{{money}}</text>
+						<text>我的积分：{{money}}</text>
 					</view>
 					
 					<view class="top-content-right">
@@ -38,7 +38,7 @@
 						<view class="bottom-text">
 							<text>合计：</text>
 							<text style="color: #DB3E49;">{{moneyCount}}</text>
-							<text>借阅币</text>
+							<text>积分</text>
 						</view>
 						
 						<view class="bottom-tag">

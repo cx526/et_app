@@ -53,9 +53,11 @@ export default {
 <style scoped>
 .content {
 	display: flex;
+	width: 300upx;
 	flex-direction: row;
 	justify-content: space-between;
 	align-content: center;
+	padding-left: 20upx;
 }
 .left-position {
 	display: flex;

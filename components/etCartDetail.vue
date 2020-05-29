@@ -22,7 +22,7 @@
 			<view class="white-space" style="height: 90upx"></view>
 			
 			<view class="coin-position title-position">
-				<text>借阅币：{{coin}}</text>
+				<text>积分：{{coin}}</text>
 			</view>
 		</view>
 		

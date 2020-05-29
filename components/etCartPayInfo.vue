@@ -25,7 +25,7 @@
 			</view>
 			
 			<view class="money-position">
-				<text>借阅币</text>
+				<text>积分</text>
 				<view class="money-style">
 					<image src="../static/cart/load.png" class="money-img"></image>
 				</view>

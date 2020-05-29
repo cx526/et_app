@@ -98,13 +98,15 @@ export default {
 	flex-wrap: wrap;
 	padding-top: 10upx;
 }
-.tag-content {
-
+.tag-content + .tag-content {
+	padding-left: 16upx;
 }
 .content-buttom-position {
 	padding: 20upx 0;
+	width: 100%;
 	display: flex;
 	flex-direction: row;
+	align-items: center;
 	justify-content: space-between;
 }
 </style>

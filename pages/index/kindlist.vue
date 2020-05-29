@@ -10,7 +10,7 @@
 		<view class="list-content-father-position">
 			<view class="list-content-father-position" v-if="listData.length > 0">
 				<view class="list-content-position">
-					<et-imgbox  v-for="(item,i) in listData" :key="i" :title="item.name" :img="item.imgSrc" :bookCount="item.bookCount" :tag="item.tagData" :peopleCount="item.people" :bookInfo="item"></et-imgbox>
+					<et-imgbox  v-for="(item,i) in listData" :key="i" :title="item.name" :img="item.imgSrc" :bookCount="item.stock" :tag="item.tagData" :peopleCount="item.peopleCount" :bookInfo="item"></et-imgbox>
 				</view>
 				<view class="white-space"></view>
 				<uni-load-more :status="loadStatus" :content-text="loadText" />
@@ -155,8 +155,8 @@ export default {
 					resultObj.imgSrc = item.pic; 
 				}
 				resultObj.name = item.title;
-				resultObj.people = '311';
-				resultObj.bookCount = '30';
+				resultObj.peopleCount = item.peopleCount;
+				resultObj.bookCount = item.stock;
 				if(item.tagInfo && item.tagInfo.length > 0) {
 					let tagArr = [];
 					item.tagInfo.forEach((obj) => {

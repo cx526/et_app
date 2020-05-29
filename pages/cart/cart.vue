@@ -38,7 +38,7 @@
 						<view class="bottom-text">
 							<text>合计：</text>
 							<text style="color: #DB3E49;">{{moneyCount}}</text>
-							<text>借阅币</text>
+							<text>积分</text>
 						</view>
 						
 						<view class="bottom-tag">
