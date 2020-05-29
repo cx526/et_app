@@ -259,12 +259,12 @@ export default {
 	display: flex;
 	flex-direction: row;
 	flex-wrap: wrap;
-	padding-bottom: 10upx;
+	padding: 40upx 0;
 }
 .detail-tag-content {
 	width: 150upx;
-	margin-top: 5upx;
-	margin-left: 5upx;
+	margin-top: 15upx;
+	margin-right: 20upx;
 }
 .detail-writer-position,.detail-publisher-position {
 	color: #B4B4B4;

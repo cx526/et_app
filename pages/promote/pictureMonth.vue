@@ -76,27 +76,27 @@ export default {
 	/* background-color: #FFFFFF; */
 }
 .to-sign-button {
-	width: 400UPX;
-	height: 100upx;
+	width: 100%;
+	height: 300upx;
 	position: absolute;
 	bottom: 900upx;
-	right: 100upx;
+	/* right: 100upx; */
 	/* background-color: #FFFFFF; */
 }
 .painting-button {
-	width: 400UPX;
-	height: 100upx;
+	width: 100%;
+	height: 300upx;
 	position: absolute;
 	bottom: 550upx;
-	right: 250upx;
+	/* right: 250upx; */
 	/* background-color: #FFFFFF; */
 }
 .work-button {
-	width: 400UPX;
-	height: 100upx;
+	width: 100%;
+	height: 300upx;
 	position: absolute;
 	bottom: 230upx;
-	right: 100upx;
+	/* right: 100upx; */
 	/* background-color: #FFFFFF; */
 }
 </style>
