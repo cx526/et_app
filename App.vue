@@ -37,4 +37,17 @@
 	padding: 30upx 0;
 	background-color: #FFFFFF;
 }
+.button-style {
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+	background-color: #00B7CC;
+	border-radius: 40upx;
+	padding: 20upx 100upx;
+	color: #FFFFFF;
+	font-size: 35upx;
+	position: absolute;
+	bottom: -30upx;
+}
 </style>

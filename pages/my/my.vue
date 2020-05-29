@@ -136,7 +136,7 @@ export default {
 					{
 						'imgSrc' : this.$aliImage + 'my2_1.png',
 						'title'	: '押金',
-						'toUrl'	: 'bookdetail?bookID=900',
+						'toUrl'	: '/pages/my/myDeposit',
 						'buttomContent' : ''
 					},
 					{

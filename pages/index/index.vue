@@ -135,7 +135,8 @@ export default {
 				},
 				{
 					'name' : '积分',
-					'img'  : 'https://et-pic-server.oss-cn-shenzhen.aliyuncs.com/app_img/02.png'
+					'img'  : 'https://et-pic-server.oss-cn-shenzhen.aliyuncs.com/app_img/02.png',
+					'toUrl' : '/pages/my/myIntegral',
 				},
 				{
 					'name' : '打卡',
@@ -144,7 +145,8 @@ export default {
 				},
 				{
 					'name' : '会员',
-					'img'  : 'https://et-pic-server.oss-cn-shenzhen.aliyuncs.com/app_img/04.png'
+					'img'  : 'https://et-pic-server.oss-cn-shenzhen.aliyuncs.com/app_img/04.png',
+					'toUrl' : '/pages/my/myMember',
 				},
 				{
 					'name' : '分类',

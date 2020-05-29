@@ -8,12 +8,12 @@
 					<view class="top-content-left">
 						<image class="top-content-left-img" src="../../static/cart/money.png"></image>
 						<view style="width: 20upx;"></view>
-						<text>我的借阅币：{{money}}</text>
+						<text>我的积分：{{coin}}</text>
 					</view>
 					
 					<view class="top-content-right">
 						<image class="top-content-right-img-one" src="../../static/cart/getMoney.png"></image>
-						<image class="top-content-right-img-two" src="../../static/cart/sign.png"></image>
+						<image class="top-content-right-img-two" src="../../static/cart/sign.png" @tap="toSign"></image>
 					</view>
 				</view>
 				
@@ -63,57 +63,38 @@ export default {
 		etCartDetail,
 		etTag
 	},
+	computed: {
+		userInfo() {
+			return uni.getStorageSync('userInfo')
+		}
+	},
 	data() {
 		return {
-			money:"30",
+			coin:"40",
 			moneyCount:"199",
 			allSelect:"true",
-			listData: [
-				{
-					imgSrc: "../static/cart/oldMan.png",
-					title: "巴巴和圣诞老人",
-					status: "可借阅",
-					corn: "30",
-					count: "9",
-				},
-				{
-					imgSrc: "../static/cart/oldMan.png",
-					title: "巴巴和圣诞老人",
-					status: "可借阅",
-					corn: "30",
-					count: "9",
-				},
-				{
-					imgSrc: "../static/cart/oldMan.png",
-					title: "巴巴和圣诞老人",
-					status: "可借阅",
-					corn: "30",
-					count: "9",
-				},
-				{
-					imgSrc: "../static/cart/oldMan.png",
-					title: "巴巴和圣诞老人",
-					status: "可借阅",
-					corn: "30",
-					count: "9",
-				},
-				{
-					imgSrc: "../static/cart/oldMan.png",
-					title: "巴巴和圣诞老人",
-					status: "可借阅",
-					corn: "30",
-					count: "9",
-				}
-			]
+			listData: []
 		}
 	},
 	onLoad() {
 		this.statusUpdate();
+		this.getCustomerInfo();
 	},
 	onShow() {
 		this.statusUpdate();
+		this.getCustomerInfo();
 	},
 	methods: {
+		getCustomerInfo(){
+			this.$api.getCustom({ filterItems: { mobile: this.userInfo.mobile } }).then(res=>{
+				this.coin = res.data[0].coin;
+			});
+		},
+		toSign(){
+			uni.navigateTo({
+				url:'/pages/index/sign'
+			})
+		},
 		// 数据更新
 		statusUpdate(){
 			// 获取书篮列表数据

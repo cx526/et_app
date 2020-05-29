@@ -1,7 +1,9 @@
 <template>
 	<view class="content">
 		<image src="https://et-pic-server.oss-cn-shenzhen.aliyuncs.com/app_img/promote_month.png" style="width: 100%;" mode="widthFix"></image>
-		<view class="to-home-button" @tap="toHomeUrl"></view>
+		<view class="to-picture-button" @tap="toPictureeUrl"></view>
+		<view class="to-gift-button" @tap="toGiftUrl"></view>
+		<view class="to-sign-button" @tap="toSignUrl"></view>
 		<view class="painting-button" @tap="paintingUrl"></view>
 		<view class="work-button" @tap="workUrl"></view>
 	</view>
@@ -19,9 +21,19 @@ export default {
         
     },
     methods: {
-		toHomeUrl() {
+		toPictureeUrl() {
 			uni.navigateTo({
 				url:'/pages/promote/pictureToHome'
+			})
+		},
+		toGiftUrl() {
+			uni.navigateTo({
+				url:'/pages/promote/pictureToHome'
+			})
+		},
+		toSignUrl() {
+			uni.navigateTo({
+				url:'/pages/index/sign'
 			})
 		},
 		paintingUrl() {
@@ -47,11 +59,27 @@ export default {
 	background-color: #CAE6CE;
 	position: relative;
 }
-.to-home-button {
+.to-picture-button {
 	width: 400UPX;
 	height: 100upx;
 	position: absolute;
-	bottom: 1100upx;
+	bottom: 1915upx;
+	right: 40upx;
+	/* background-color: #FFFFFF; */
+}
+.to-gift-button {
+	width: 400UPX;
+	height: 100upx;
+	position: absolute;
+	bottom: 1600upx;
+	right: 100upx;
+	/* background-color: #FFFFFF; */
+}
+.to-sign-button {
+	width: 400UPX;
+	height: 100upx;
+	position: absolute;
+	bottom: 900upx;
 	right: 100upx;
 	/* background-color: #FFFFFF; */
 }
@@ -59,7 +87,7 @@ export default {
 	width: 400UPX;
 	height: 100upx;
 	position: absolute;
-	bottom: 750upx;
+	bottom: 550upx;
 	right: 250upx;
 	/* background-color: #FFFFFF; */
 }
@@ -67,7 +95,7 @@ export default {
 	width: 400UPX;
 	height: 100upx;
 	position: absolute;
-	bottom: 430upx;
+	bottom: 230upx;
 	right: 100upx;
 	/* background-color: #FFFFFF; */
 }

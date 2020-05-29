@@ -43,7 +43,9 @@ export default {
 		getCustomerInfo(){
 			this.$api.getCustom({ filterItems: { mobile: this.userInfo.mobile } }).then(res=>{
 				this.userInfoAll = res.data[0];
-				console.log(this.userInfoAll);
+				if(!this.userInfoAll.deposit) {
+					this.userInfoAll.deposit = 0;
+				}
 			});
 		}
 	}
