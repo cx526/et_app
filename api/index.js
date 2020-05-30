@@ -91,4 +91,6 @@ api.customCloseOrder = params => request.globalRequest('/api/order/customCloseOr
 // promote 活动api
 api.addPromote = params => request.globalRequest('/api/promote/addPromote', 'POST', params)
 
+api.getPromote = params => request.globalRequest('/api/promote/getPromote', 'POST', params)
+
 export default api

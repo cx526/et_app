@@ -5,9 +5,9 @@
 		</view>
 		
 		<view class="sub-content">
-			<button :disabled="weChatCheck" class="auth-button" open-type="getUserInfo" @getuserinfo="getuserinfo" withCredentials="true">1、微信授权</button>
+			<button :disabled="weChatCheck" class="auth-button" open-type="getUserInfo" @getuserinfo="getuserinfo" withCredentials="true">第1步 微信授权</button>
 			<view style="height: 40upx;"></view>
-			<button :disabled="phoneCheck" class="auth-button" open-type="getPhoneNumber" @getphonenumber="getPhoneNumber">2、手机授权</button> 
+			<button :disabled="phoneCheck" class="auth-button" open-type="getPhoneNumber" @getphonenumber="getPhoneNumber">第2步 手机授权</button> 
 			<view style="height: 40upx;"></view>
 			<view class="auth-button" style="margin: 0 auto; text-align: center; line-height: 2.4; background: #fff; color: rgba(0,183,204,1); border: 1px solid #ccc;
 " @tap="goIndex">暂不登录</view>
