@@ -67,7 +67,7 @@
 		
 		<!-- 书籍分类 -->
 		<view class="book-cat">
-			<et-bookcat v-for="(item,i) in bookCat" :key="i" :title="item.name" :img="item.img" @clickHandle="btnGroupClick"></et-bookcat>
+			<et-bookcat v-for="(item,i) in bookCat" :key="i" :title="item.name" :img="item.img" @clickBookCat="clickBookCat(item.name)"></et-bookcat>
 		</view>
 		
 		<view class="white-space"></view>
@@ -199,6 +199,20 @@ export default {
 		this.getGuessBook('push')
 	},
 	methods: {
+		clickBookCat(name){
+			this.$api.getKindsWithThreeKind({ kind_name : name }).then(res=>{
+				// console.log(res);
+				let tabBars = res.data;
+				let selectID = 0;
+				tabBars.map((item,index)=>{
+					if(item.name === name){
+						selectID = index;
+					}
+				});
+				//传递三级分类去商品列表
+				uni.navigateTo({url: 'kindlist?selectID='+ JSON.stringify(selectID) +'&tabBars='+ JSON.stringify(tabBars)});
+			});
+		},
 		oneBannerUrl(){
 			uni.navigateTo({
 				url:'/pages/promote/pictureToHome'
