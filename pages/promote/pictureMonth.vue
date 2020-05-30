@@ -23,13 +23,18 @@ export default {
     methods: {
 		toPictureeUrl() {
 			uni.navigateTo({
-				url:'/pages/promote/pictureToHome'
+				url:'/pages/promote/pictureToHomeDetail'
 			})
 		},
 		toGiftUrl() {
-			uni.navigateTo({
-				url:'/pages/promote/pictureToHome'
+			uni.showToast({
+				title:'活动即将开放',
+				icon:"none",
+				duration:2000
 			})
+			// uni.navigateTo({
+			// 	url:'/pages/promote/pictureToHome'
+			// })
 		},
 		toSignUrl() {
 			uni.navigateTo({

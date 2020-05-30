@@ -74,12 +74,31 @@ export default {
 		// 初始化商品列表
 		if(option.bookList){
 			let listDataArr = JSON.parse(decodeURIComponent(option.bookList));
+			// console.log(listDataArr);
+			let objStatus = 0;    //兼容goods_info状态
 			let objArr = [];
 			listDataArr.map((item,index)=>{
-				objArr[index] = {};
-				objArr[index].goods_info = item
-			});
-			this.listData = objArr;
+				if(item.goods_info){
+					objStatus = 1;
+					return;
+				}
+				let objArr = [];
+				listDataArr.map((item,index)=>{
+					objArr[index] = {};
+					objArr[index].goods_info = item
+				});
+				this.listData = objArr;
+			})
+			if(objStatus === 1){
+				this.listData = listDataArr;
+			}
+			
+			// let objArr = [];
+			// listDataArr.map((item,index)=>{
+			// 	objArr[index] = {};
+			// 	objArr[index].goods_info = item
+			// });
+			// this.listData = objArr;
 			this.loadStatus = 'noMore';
 		}else{
 			uni.showLoading();

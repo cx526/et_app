@@ -39,7 +39,7 @@
 		<view class="white-space"></view>
 		
 		<!-- banner -->
-		<view class="banner">
+		<view class="banner" @tap="oneBannerUrl">
 			<image :src="oneBanner" class="banner-img" mode="widthFix"></image>
 		</view>
 		
@@ -60,7 +60,7 @@
 		<!-- 新书推荐 -->
 		<view class="new-recom">
 			<!-- 导航条 -->
-			<et-titlenavigation  title="新书推荐" img="../static/index/start.png" toUrl="baidu.com" @clickHandle="btnGroupClick"></et-titlenavigation>
+			<et-titlenavigation  title="新书推荐" img="../static/index/start.png" toUrl="baidu.com"  @toMoreData="toKineList"></et-titlenavigation>
 		</view>
 		
 		<view class="white-space"></view>
@@ -119,8 +119,8 @@ export default {
 			swiperCurrent: 0,
 			swiperLength: 0,
 			carouselList: [],
-			oneBanner: "https://et-pic-server.oss-cn-shenzhen.aliyuncs.com/app_img/index_giftbanner.png",
-			secondBanner: "https://et-pic-server.oss-cn-shenzhen.aliyuncs.com/app_img/index_readbanner.png",
+			oneBanner: "https://et-pic-server.oss-cn-shenzhen.aliyuncs.com/app_img/index_pricture_gift.png",
+			secondBanner: "https://et-pic-server.oss-cn-shenzhen.aliyuncs.com/app_img/index_banner_tow.png",
 			loadStatus : 'loading',
 			loadText: {
 				contentdown: '上拉加载更多',
@@ -157,30 +157,30 @@ export default {
 				}
 			],
 			hotBookList: [],
-			bookCat: [
+			bookCat: [   
+				{
+					'name' : '中国原创',
+					'img'  : 'https://et-pic-server.oss-cn-shenzhen.aliyuncs.com/app_img/index_new5.png'
+				},
+				{
+					'name' : '获奖绘本',
+					'img'  : 'https://et-pic-server.oss-cn-shenzhen.aliyuncs.com/app_img/index_new1.png'
+				},
+				{
+					'name' : '情感治愈',
+					'img'  : 'https://et-pic-server.oss-cn-shenzhen.aliyuncs.com/app_img/index_new4.png'
+				},
 				{
 					'name' : '科普百科',
-					'img'  : '../static/index/encyclopedia.png'
+					'img'  : 'https://et-pic-server.oss-cn-shenzhen.aliyuncs.com/app_img/index_new2.png'
 				},
 				{
 					'name' : '能力培养',
-					'img'  : '../static/index/ability.png'
+					'img'  : 'https://et-pic-server.oss-cn-shenzhen.aliyuncs.com/app_img/index_new3.png'
 				},
 				{
 					'name' : '自我认知',
-					'img'  : '../static/index/me.png'
-				},
-				{
-					'name' : '科普百科',
-					'img'  : '../static/index/encyclopedia.png'
-				},
-				{
-					'name' : '能力培养',
-					'img'  : '../static/index/ability.png'
-				},
-				{
-					'name' : '自我认知',
-					'img'  : '../static/index/me.png'
+					'img'  : 'https://et-pic-server.oss-cn-shenzhen.aliyuncs.com/app_img/index_new6.png'
 				}
 			],
 			guessBookList: []
@@ -199,6 +199,11 @@ export default {
 		this.getGuessBook('push')
 	},
 	methods: {
+		oneBannerUrl(){
+			uni.navigateTo({
+				url:'/pages/promote/pictureToHome'
+			})
+		},
 		checkAuth() {
 			uni.getStorage({
 				key: 'userInfo',
@@ -265,6 +270,13 @@ export default {
 			console.log(this.toHotBookList);
 			let tabBars = [{'name':'热门推荐'}];
 			uni.navigateTo({ url: './kindlist?noPull=1&selectID=0&tabBars=' + encodeURIComponent(JSON.stringify(tabBars)) + '&bookList=' + encodeURIComponent(JSON.stringify(this.hotBookList))});
+		},
+		toKineList(){
+			let kindObject = {
+				secondValue : '主题分类'
+			};
+			console.log(kindObject);
+			uni.navigateTo({ url: './kind?kindObject=' + encodeURIComponent(JSON.stringify(kindObject)) });
 		}
 	}	
 }

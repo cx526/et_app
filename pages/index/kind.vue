@@ -41,18 +41,35 @@
 				currentId: 0,
 			}
 		},
-		onLoad() {
+		onLoad(option) {
 			// 获取分类数据
 			uni.showLoading();
 			this.$api.getKinds().then(res =>{
 				res.data.forEach(item=>{
-					console.log(item.name);
+					console.log(item);
 					if(this.oneKind === item.name) {
 						this.secondKind = item.children;
 						this.thirdKind = this.secondKind[0].children;
-						
 					}
 				})
+				
+				//如果有请求二级分类地址要加工一下
+				if(option.kindObject){
+					let kindObject = JSON.parse(decodeURIComponent(option.kindObject));
+					
+					res.data.forEach((item,index)=>{
+						if(this.oneKind === item.name) {
+							this.secondKind = item.children;
+							item.children.map((citem,cindex)=>{
+								if(citem.name === kindObject.secondValue){
+									this.thirdKind = this.secondKind[cindex].children;
+									this.currentId = cindex;
+								}
+							});
+						}
+					})
+				}
+				
 				uni.hideLoading();
 			})
 		},
@@ -69,7 +86,7 @@
 	}
 </script>
 
-<style>
+<style scoped>
 	.content {
 		display: flex;
 	}
