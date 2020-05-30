@@ -286,7 +286,8 @@ export default {
 				if(userType === 'schoolUser'){	//学校用户
 					if(0 < bookCount <=3){
 						payRuleType = 1
-					}else if(3 < bookCount <=10){
+					}
+					if(3 < bookCount <=10){
 						payRuleType = 2
 					}					
 				}else if(userType === 'commonUser'){	//游客用户
