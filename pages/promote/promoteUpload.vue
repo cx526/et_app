@@ -114,7 +114,7 @@
 			},
 			doUploadPic() {
 				uni.showLoading()
-				let uper = uni.uploadFile({
+				uni.uploadFile({
 					// 需要上传的地址
 					url:'https://www.52diyike.com/api/api/upload/uploadPicToAliyun',
 				    // filePath  需要上传的文件
@@ -122,6 +122,7 @@
 					name: 'file',
 					success: (res) => {
 						console.log(res)
+						console.log(res.data)
 						let param = {
 							promote_name: this.promoteTitle,
 							custom_id: this.allCustomInfo.id,
@@ -137,10 +138,10 @@
 					}
 				})
 				// onProgressUpdate 上传对象更新的方法
-				uper.onProgressUpdate((res) => {
-					// 进度条等于 上传到的进度
-					this.percent = res.progress
-				})
+				// uper.onProgressUpdate((res) => {
+				// 	// 进度条等于 上传到的进度
+				// 	this.percent = res.progress
+				// })
 			}
 		}
 	}

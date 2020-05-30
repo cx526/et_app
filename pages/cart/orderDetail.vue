@@ -205,7 +205,8 @@ export default {
 			// 请求参数 userInfo {}
 			// 请求参数 money 0.01
 			// 请求参数 usage 用途
-			if (process.env.NODE_ENV === 'production') {
+			if (true) {
+			// if (process.env.NODE_ENV === 'production') {
 				// const userInfo = uni.getStorageSync('userInfo')
 				if (this.userInfo.name !== 'guest') {
 					let param = {

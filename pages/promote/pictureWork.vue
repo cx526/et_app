@@ -15,6 +15,11 @@ export default {
 			
         }
     },
+	computed: {
+		userInfo() {
+			return uni.getStorageSync('userInfo')
+		}
+	},
     onLoad() {
         
     },
