@@ -56,7 +56,7 @@
 				<view style="height: 100upx;"></view>
 			</view>
 			
-			<view class="button-style" @tap="doUploadPic">
+			<view class="button-style" @tap="doUploadPic" v-if="!hasPromote">
 				<text>保存并上传</text>
 			</view>
 			
@@ -73,6 +73,7 @@
 				percent: 0,
 				inputText: '',
 				promoteTitle: '',
+				hasPromote: false
 	        }
 	    },
 		computed: {
@@ -85,9 +86,24 @@
 	        this.getCustomInfo()
 	    },
 	    methods: {
+			getPromote() {
+				let param = {
+					custom_id: this.allCustomInfo.id,
+					promote_name: this.promoteTitle
+				}
+				this.$api.getPromote(param).then(res => {
+					if (res.data && res.data.length > 0) {
+						let result = res.data[0]
+						this.preUploadPic = result.promote_pic
+						this.inputText = result.promote_text
+						this.hasPromote = true
+					}
+				})
+			},
 			getCustomInfo() {
 				this.$api.getCustom({ filterItems: { mobile: this.userInfo.mobile } }).then(res=>{
 					this.allCustomInfo = res.data[0]
+					this.getPromote()
 				})
 			},
 			inputChange(e) {
@@ -113,6 +129,14 @@
 				})
 			},
 			doUploadPic() {
+				if (this.inputText === '') {
+					uni.showToast({ icon: '', title: '请完善相关信息' })	
+					return 
+				}
+				if (this.preUploadPic === '') {
+					uni.showToast({ icon: '', title: '请完善相关信息' })	
+					return 
+				}
 				uni.showLoading()
 				uni.uploadFile({
 					// 需要上传的地址
