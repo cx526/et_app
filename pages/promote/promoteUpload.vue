@@ -159,8 +159,9 @@
 						}
 						this.$api.addPromote(param).then(res => {
 							uni.showToast({ icon: '', title: res.data.msg })	
-							uni.hideLoading()
+							this.getCustomInfo()
 						})
+						uni.hideLoading()
 					}
 				})
 				// onProgressUpdate 上传对象更新的方法
