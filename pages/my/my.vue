@@ -165,7 +165,7 @@ export default {
 					{
 						'imgSrc' : this.$aliImage + 'my2_6.png',
 						'title'	: '会员',
-						'toUrl'	: 'bookdetail?bookID=900'
+						'toUrl'	: '/pages/my/myMember'
 					},
 					{
 						'imgSrc' : this.$aliImage + 'my2_7.png',

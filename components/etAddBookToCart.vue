@@ -26,10 +26,10 @@ export default {
 			uni.showLoading();
 			// 处理数据
 			let cartList = {
-				'bookID': this.$props.bookInfo.bookID,
-				'title': this.$props.bookInfo.name,
+				'bookID': this.$props.bookInfo.id,
+				'title': this.$props.bookInfo.title,
 				'coin': this.$props.bookInfo.coin,
-				'cover': this.$props.bookInfo.img,
+				'cover': this.$props.bookInfo.forGoodsPic[0].url,
 				'select': true,
 				'count':1
 			};

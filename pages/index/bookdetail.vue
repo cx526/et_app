@@ -3,7 +3,7 @@
 		<!-- 轮播图 -->
 		<view class="swiper-position" style="position: relative;">
 			<swiper class="carousel" indicator-dots="ture" indicator-color="rgba(230,230,230,.3)"  indicator-active-color="rgba(230,230,230,1)" circular autoplay @change="swiperChange">
-				<swiper-item v-for="(item, i) in carouselList" :key="i" class="carousel-item">
+				<swiper-item v-for="(item, i) in bookInfo.forGoodsPic" :key="i" class="carousel-item">
 					<image :src="item.url" />
 				</swiper-item>
 			</swiper>
@@ -15,21 +15,21 @@
 		<view class="detail-content-father-position">
 			<view class="detail-content-position">
 				<view class="detail-title-position">
-					<text>{{detailTitle}}</text>
+					<text>{{bookInfo.title}}</text>
 				</view>
 				
 				<view class="detail-tag-position">
-					<et-tag v-for="(item,index) in tagData" :key="index" :backgroundColor="item.backgroundColor" :fontColor="item.fontColor" :title="item.text" class="detail-tag-content"></et-tag>
+					<et-tag v-for="(item,index) in bookInfo.tagInfo" :key="index" :backgroundColor="item.bg_color" :fontColor="item.text_color" :title="item.tag_name" class="detail-tag-content"></et-tag>
 				</view>
 				
 				<view class="detail-writer-position">
 					<text style="font-weight: bold;">作者:</text>
-					<text>{{writer}}</text>
+					<text>{{bookInfo.author}}</text>
 				</view>
 				
 				<view class="detail-publisher-position">
 					<text style="font-weight: bold;">出版社:</text>
-					<text>{{publisher}}</text>
+					<text>{{bookInfo.publisher}}</text>
 				</view>
 				
 				<!-- <view class="detail-grade-position">
@@ -66,26 +66,26 @@
 		</view>
 		
 		<view class="remark-position">
-			<text>{{remark}}</text>
+			<text>{{bookInfo.summary}}</text>
 		</view>
 		
 		<view class="white-space"></view>
 		
 		<view class="process-position">
-			<image :src="detailImg" mode="widthFix"></image>
+			<image :src="bookInfo.detail" mode="widthFix"></image>
 		</view>
 		
 		<view class="white-space"></view>
 		
 		<view class="bottom-position">
 			<view class="bottom-button-position">
-				<view class="bottom-button">
+				<view class="bottom-button" @tap="collection">
 					<image src="https://et-pic-server.oss-cn-shenzhen.aliyuncs.com/app_img/bookdetail_add.png" class="bottom-image"></image>
 					<text style="font-size: 20upx;color: #2AAEC4;">收藏</text>
 				</view>
 			</view>
 			<view class="bottom-button-position">
-				<view class="bottom-button">
+				<view class="bottom-button" @tap="toCartUrl('/pages/cart/cart')">
 					<image src="https://et-pic-server.oss-cn-shenzhen.aliyuncs.com/app_img/bookdetail_cart.png" class="bottom-image"></image>
 					<text style="font-size: 20upx;color: #2AAEC4;">书篮</text>
 				</view>
@@ -102,6 +102,7 @@ import etPeoplelist from '../../components/etPeoplelist.vue'
 import etTag from '../../components/etTag.vue'
 
 const insertBook = require('@/common/carDataOption');
+const toUrlFunction = require('@/common/toUrlFunction');
 
 export default {
 	components: {
@@ -110,18 +111,10 @@ export default {
 	},
 	data() {
 		return {
+			bookInfo:{},
 			bookID:	0,
-			coin:0,
-			cover:"",
 			swiperCurrent: 0,
 			swiperLength: 0,
-			carouselList: [],
-			detailTitle: '',
-			writer: '',
-			publisher: '',
-			remark: '',
-			tagData: [],
-			detailImg: '',
 			imgInfo: [
 				{
 					'imgUrl' : "../static/bookdetail/people.png"
@@ -150,54 +143,43 @@ export default {
 		
 	},
 	methods: {
+		collection(){
+			uni.showToast({
+				title: '收藏功能暂未开放，敬请期待！',
+				duration: 2000,
+				icon: 'none'
+			});
+		},
+		toCartUrl(url){
+			toUrlFunction.toUrl(url);
+		},
 		getBookData() {
 			uni.showLoading();
 			this.$api.getGoodsInfo({ 'NoPageing': '1', 'filterItems': {'id': this.bookID} }).then(res => {
-			   this.transformBookData(res.data.rows[0]);
+			   console.log(res.data.rows[0]);
+			   this.bookInfo = res.data.rows[0];
 			   uni.hideLoading();
 			})
 		},
 		swiperChange(e) {
 			const index = e.detail.current;
 		},
-		// 转换接口数据为视图数据
-		transformBookData(data){
-			carouselList: [],
-			this.detailTitle = data.title;
-			this.writer = data.author;
-			this.publisher = data.publisher;
-			this.remark = data.summary;
-			this.cover = data.cover;
-			this.coin = data.coin;
-			let tagArr = [];
-			if (data.tagInfo && data.tagInfo.length >0) {
-				data.tagInfo.forEach((item) => {
-					let tagObj = {};
-					tagObj.text = item.tag_name;
-					tagObj.backgroundColor = item.bg_color;
-					tagObj.fontColor = item.text_color;
-					this.tagData.push(tagObj);
-				});
-			}
-			this.carouselList = data.forGoodsPic;
-			this.detailImg = data.detail;
-		},
 		insertToCart() { 			
 			// 处理数据
 			let cartList = {
-				'bookID': this.bookID,
-				'title': this.detailTitle,
-				'coin': this.coin,
-				'cover': this.cover,
+				'bookID': this.bookInfo.id,
+				'title': this.bookInfo.title,
+				'coin': this.bookInfo.coin,
+				'cover': this.bookInfo.forGoodsPic[0].url,
 				'select': true,
 				'count':1
 			};
 			insertBook.insertToCart(cartList);
-			uni.showToast({
-				title: '加入书篮成功',
-				duration: 2000,
-				icon: 'none'
-			});
+			// uni.showToast({
+			// 	title: '加入书篮成功',
+			// 	duration: 2000,
+			// 	icon: 'none'
+			// });
 			try {
 			    let carListArr = uni.getStorageSync('carListInfo');
 			    console.log(carListArr);
