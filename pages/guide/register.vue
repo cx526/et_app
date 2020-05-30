@@ -71,6 +71,7 @@ export default {
 	},
     data() {
         return {
+			userInfo:{},
 			child_id: '',
 			name: '',
 			birth_day: this.getDate(),
@@ -81,12 +82,13 @@ export default {
     onLoad(option) {
 		// 如果传递了信息过来，就是编辑不是新增
         if(option.childInfo){
-			const childInfo = JSON.parse(decodeURIComponent(option.childInfo));
-			this.name = childInfo.name;
-			this.birth_day = childInfo.birth_day;
-			this.gender = parseInt(childInfo.gender);
-			this.child_id = childInfo.id;
-			this.complateInfo = option.childInfo;
+			this.userInfo = JSON.parse(decodeURIComponent(option.childInfo));
+			console.log(this.userInfo);
+			this.name = this.userInfo.childInfo.name;
+			this.birth_day = this.userInfo.childInfo.birth_day;
+			this.gender = parseInt(this.userInfo.gender);
+			this.child_id = this.userInfo.childInfo.id;
+			this.complateInfo = this.userInfo;
 		}
     },
     methods: {
@@ -119,7 +121,7 @@ export default {
 				if (res.data.status === 'ok') {
 					let toUrl = './complateInfo';
 					if(this.child_id){     //存在child_id 就是编辑信息，否则就是新增信息
-						toUrl = toUrl + '?complateInfoData=' +  this.complateInfo ;
+						toUrl = toUrl + '?complateInfoData=' + encodeURIComponent(JSON.stringify(this.complateInfo));
 					}
 					uni.navigateTo({ url: toUrl })	
 				} else {

@@ -62,12 +62,13 @@ export default {
 			const userInfoArr = await this.$api.getCustom({ filterItems: { mobile: this.userInfo.mobile } }).then(res=>{
 				return res.data[0];
 			});
-			this.babyInfo = userInfoArr.childInfo;
+			this.babyInfo = userInfoArr;
 			if(JSON.stringify(userInfoArr.schoolInfo) !== '{}'){
-				this.babyInfo.showing_address =  this.transformAddress(userInfoArr.schoolInfo);
-				this.babyInfo.school = userInfoArr.schoolInfo.name;				
-				this.babyInfo.schoolInfo = userInfoArr.schoolInfo;
+				this.babyInfo.schoolInfo.showing_address =  this.transformAddress(userInfoArr.schoolInfo);
+				// this.babyInfo.childInfo.school = userInfoArr.childInfo.schoolInfo.name;				
+				// this.babyInfo.childInfo.schoolInfo = userInfoArr.childInfo.schoolInfo;
 			}
+			console.log(this.babyInfo);
 		}
 	}
 }

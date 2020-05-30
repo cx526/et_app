@@ -5,35 +5,35 @@
 			<image src="https://et-pic-server.oss-cn-shenzhen.aliyuncs.com/app_img/my_baby.png" style="width: 60upx; height: 60upx;" ></image>
 		</view>
 		
-		<view class="content-position" v-if="JSON.stringify(babyInfo) !== '{}'">
-			<view class="baby-content">
-				<text>宝宝姓名：{{babyInfo.name}}</text>
-				<view class="baby-gender" style="background-color: #BCEDF5; margin-left: 10upx;" v-if="babyInfo.gender === 1">
+		<view class="content-position" v-if="JSON.stringify(babyInfo.childInfo) !== '{}'">
+			<view class="baby-content" v-if="babyInfo.childInfo.name">
+				<text>宝宝姓名：{{babyInfo.childInfo.name}}</text>
+				<view class="baby-gender" style="background-color: #BCEDF5; margin-left: 10upx;" v-if="babyInfo.childInfo.gender === 1">
 					<text>男孩</text>
 				</view>
-				<view class="baby-gender" style="background-color: #FFBDD8;  margin-left: 10upx;" v-else-if="babyInfo.gender === 2">
+				<view class="baby-gender" style="background-color: #FFBDD8;  margin-left: 10upx;" v-else-if="babyInfo.childInfo.gender === 2">
 					<text>女孩</text>
 				</view>
 			</view>
 			
-			<view class="baby-content">
-				<text>所在地：{{babyInfo.showing_address}}</text>
+			<view class="baby-content" v-if="babyInfo.childInfo.name">
+				<text>所在地：{{babyInfo.schoolInfo.showing_address}}</text>
 			</view>
 			
-			<view class="baby-content">
-				<text>幼儿园：{{babyInfo.school}}</text>
+			<view class="baby-content" v-if="babyInfo.childInfo.name">
+				<text>幼儿园：{{babyInfo.schoolInfo.name}}</text>
 			</view>
 			
-			<view class="baby-content">
-				<text>班级：{{babyInfo.class}}</text>
+			<view class="baby-content" v-if="babyInfo.childInfo.name">
+				<text>班级：{{babyInfo.gradeInfo.name}} {{babyInfo.gradeInfo.level}}班</text>
 			</view>
 			
-			<view class="baby-content">
-				<text>生日：{{babyInfo.birth_day}}</text>
+			<view class="baby-content" v-if="babyInfo.childInfo.name">
+				<text>生日：{{babyInfo.childInfo.birth_day}}</text>
 			</view>
 			
-			<view class="baby-content baby-buttom">
-				<text>岁数：{{babyInfo.age}}岁</text>
+			<view class="baby-content baby-buttom" v-if="babyInfo.childInfo.name">
+				<text>岁数：{{babyInfo.childInfo.age}}岁</text>
 				<image src="../static/cart/edit.png" style="width: 45upx;height: 45upx;" @tap='editBabyInfo'></image>
 			</view>
 		</view>
@@ -59,6 +59,7 @@ export default {
 		editBabyInfo() {
 			let toUrl = '/pages/guide/register'
 			if(this.$props.babyInfo.id){
+				// console.log(this.$props.babyInfo);
 				toUrl = toUrl + '?childInfo=' +  encodeURIComponent(JSON.stringify(this.$props.babyInfo))
 			}
 			uni.navigateTo({
