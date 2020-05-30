@@ -20,7 +20,7 @@
 				<!-- 列表数据 -->
 				<view class="cat-detail-position">
 					<view class="cat-detail" v-for="(item,index) in listData">
-						<et-cart-detail :key="index" :bookID="item.bookID"  :select="item.select" :imgSrc="item.cover" :title="item.title" :status="item.status" :coin="item.coin" :count="item.count" @changSelectType="changAllSelectType" @deleteData="deleteData"></et-cart-detail>
+						<et-cart-detail :key="index" :bookID="item.id"  :select="item.select" :imgSrc="item.forGoodsPic[0].url" :title="item.title" :status="item.status" :coin="item.coin" :count="item.count" @changSelectType="changAllSelectType" @deleteData="deleteData"></et-cart-detail>
 						<view class="white-space"></view>
 					</view>
 				</view>
@@ -99,6 +99,7 @@ export default {
 		statusUpdate(){
 			// 获取书篮列表数据
 			this.listData = bookListData.getBookListData();
+			console.log(this.listData);
 			
 			// 获取合计金额
 			this.moneyCount = bookListData.countCoin();

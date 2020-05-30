@@ -32,12 +32,12 @@ function insertToCart(bookDetail) {
   let arrList = [];
   if (carListArr.length > 0){
 	  carListArr.forEach(obj=>{
-		  arrList.push(obj.bookID);
+		  arrList.push(obj.id);
 	  });
   }
  
   
-  if(arrList.includes(bookDetail.bookID)){
+  if(arrList.includes(bookDetail.id)){
 	  uni.showToast({
 	  	title: '相同图书请不要重复添加',
 	  	duration: 2000,
@@ -68,7 +68,7 @@ function deleteToCart(bookID) {
 	// 处理数据
 	if (carListArr.length > 0){
 		  carListArr.forEach((obj,index)=>{
-			  if(parseInt(obj.bookID) === parseInt(bookID)) {
+			  if(parseInt(obj.id) === parseInt(bookID)) {
 				carListArr.splice(index,1);
 			  }
 		  });
@@ -97,7 +97,7 @@ function changSelectType(bookID) {
 	// 获取书蓝列表
 	let carListArr = getBookListData();
 	carListArr.forEach(item=>{
-		 if(String(item.bookID) === String(bookID)){
+		 if(String(item.id) === String(bookID)){
 			 console.log(item);
 			if(item.select === true){
 				item.select = false;

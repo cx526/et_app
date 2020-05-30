@@ -152,6 +152,8 @@ export default {
 					this.bookCount = orderObject.bookCount;
 					this.orderList.goodsInfo = orderObject.goodsInfo;
 					
+					console.log(orderObject);
+					
 					//最终支付订单信息
 					this.finalPayOrderInfo = this.orderHandle();
 					this.finalPayOrderInfo.createTime = formatDate.formatDate(new Date());

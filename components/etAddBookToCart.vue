@@ -25,20 +25,19 @@ export default {
 		insertToCart() {
 			uni.showLoading();
 			// 处理数据
-			let cartList = {
-				'bookID': this.$props.bookInfo.id,
-				'title': this.$props.bookInfo.title,
-				'coin': this.$props.bookInfo.coin,
-				'cover': this.$props.bookInfo.forGoodsPic[0].url,
-				'select': true,
-				'count':1
-			};
+			// let cartList = {
+			// 	'bookID': this.$props.bookInfo.id,
+			// 	'title': this.$props.bookInfo.title,
+			// 	'coin': this.$props.bookInfo.coin,
+			// 	'cover': this.$props.bookInfo.forGoodsPic[0].url,
+			// 	'select': true,
+			// 	'count':1
+			// };
+			
+			let cartList = this.$props.bookInfo;
+			cartList.select = true;
+			cartList.count = 1;
 			insertBook.insertToCart(cartList);
-			// uni.showToast({
-			// 	title: '加入书篮成功',
-			// 	duration: 2000,
-			// 	icon: 'none'
-			// });
 			try {
 			    let carListArr = uni.getStorageSync('carListInfo');
 			    console.log(carListArr);

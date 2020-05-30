@@ -15,10 +15,11 @@
 			
 			<view class="white-space" style="height: 20upx"></view>
 			
-			<view class="status-position">
-				<text>{{status}}</text>
+			<!-- <view class="status-position">
+				<text v-if="status === '1'">可借阅</text>
+				<text v-else>已借完</text>
 			</view>	
-			
+			 -->
 			<view class="white-space" style="height: 90upx"></view>
 			
 			<view class="coin-position title-position">
