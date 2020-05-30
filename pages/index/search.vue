@@ -36,20 +36,7 @@ export default {
 			history: {
 				title : '历史搜索',
 				img : '../static/index/close.png',
-				contentList : [
-					'十万个为什么',
-					'毛毛虫',
-					'机器人是我',
-					'巴巴国王',
-					'十万个为什么',
-					'毛毛虫',
-					'机器人是我',
-					'巴巴国王',
-					'十万个为什么',
-					'毛毛虫',
-					'机器人是我',
-					'巴巴国王'
-				]
+				contentList : []
 			},
 			hot: {
 				title : '热门搜索',
@@ -88,7 +75,8 @@ export default {
 	       	};
 			this.$api.getGoodsInfo(param).then(res => {
 			   uni.showLoading();
-			   let listData = this.transformListData(res.data.rows);
+			   // let listData = this.transformListData(res.data.rows);
+			   let listData = res.data.rows;
 			   let tabBars = [{'name':'搜索结果'}];
 			   uni.navigateTo({ url: './kindlist?noPull=1&selectID=0&tabBars=' + encodeURIComponent(JSON.stringify(tabBars)) + '&bookList=' + encodeURIComponent(JSON.stringify(listData))});
 			   uni.hideLoading();

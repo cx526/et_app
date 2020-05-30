@@ -73,8 +73,13 @@ export default {
 		
 		// 初始化商品列表
 		if(option.bookList){
-			this.listData = JSON.parse(decodeURIComponent(option.bookList));
-			console.log(this.listData);
+			let listDataArr = JSON.parse(decodeURIComponent(option.bookList));
+			let objArr = [];
+			listDataArr.map((item,index)=>{
+				objArr[index] = {};
+				objArr[index].goods_info = item
+			});
+			this.listData = objArr;
 			this.loadStatus = 'noMore';
 		}else{
 			uni.showLoading();

@@ -148,6 +148,8 @@ export default {
 					let orderObject = uni.getStorageSync('orderInfo');
 					if(orderObject.defalutAddress){
 						this.defalutAddress = orderObject.defalutAddress;
+						this.defalutAddress.is_default = 0;
+						this.defalutAddress.optionType = 'orderDetail';
 					}
 					this.bookCount = orderObject.bookCount;
 					this.orderList.goodsInfo = orderObject.goodsInfo;
