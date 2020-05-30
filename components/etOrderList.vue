@@ -98,9 +98,9 @@ export default {
 				moneyCount: this.$props.orderList.final_price,
 				goodsInfo: this.$props.orderList.goodsInfo
 			};
-			console.log(orderObject);
-			if (this.$props.orderList.address_id) {
+			if (this.$props.orderList.addressInfo) {
 				//加上默认地址即可
+				orderObject.defalutAddress = this.$props.orderList.addressInfo;
 			}
 			uni.setStorageSync('orderInfo', orderObject);
 			uni.navigateTo({

@@ -148,6 +148,8 @@ export default {
 					let orderObject = uni.getStorageSync('orderInfo');
 					if(orderObject.defalutAddress){
 						this.defalutAddress = orderObject.defalutAddress;
+						this.defalutAddress.is_default = 0;
+						this.defalutAddress.optionType = 'orderDetail';
 					}
 					this.bookCount = orderObject.bookCount;
 					this.orderList.goodsInfo = orderObject.goodsInfo;
@@ -196,7 +198,7 @@ export default {
 			//组合商品id
 			let bookidString = '';
 			this.orderList.goodsInfo.map(item=>{
-				bookidString = bookidString + ',' + item.bookID;
+				bookidString = bookidString + ',' + item.id;
 			});
 			bookidString = bookidString.substr(1);
 			
