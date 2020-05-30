@@ -141,7 +141,7 @@ export default {
 			this.$api.getCustom({ filterItems: { mobile: this.userInfo.mobile } }).then(res=>{
 				this.customerInfo = res.data[0];
 				let filterItems = {
-					// custom_id:this.customerInfo.id
+					custom_id:this.customerInfo.id
 				};
 				if(type !== '全部'){
 					filterItems.status_text = type;
@@ -149,7 +149,6 @@ export default {
 				uni.showLoading()
 				this.$api.getOrder({ filterItems }).then(res=>{
 					this.orderList = res.data;
-					console.log(this.orderList);
 					uni.hideLoading()
 				}) 
 			});
