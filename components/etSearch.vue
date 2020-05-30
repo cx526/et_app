@@ -41,7 +41,7 @@ export default {
 	display: flex;
 	justify-content: row;
 	align-items: center;
-	width: 100%;
+	width: 75%;
 }
 .title-content {
 	font-size: 25upx;

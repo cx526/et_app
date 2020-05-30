@@ -198,7 +198,7 @@ export default {
 			//组合商品id
 			let bookidString = '';
 			this.orderList.goodsInfo.map(item=>{
-				bookidString = bookidString + ',' + item.bookID;
+				bookidString = bookidString + ',' + item.id;
 			});
 			bookidString = bookidString.substr(1);
 			
