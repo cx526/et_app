@@ -121,19 +121,22 @@
 					filePath: this.preUploadPic,
 					name: 'file',
 					success: (res) => {
-						console.log(res)
-						console.log(res.data)
+						let result = JSON.parse(res.data)
 						let param = {
 							promote_name: this.promoteTitle,
 							custom_id: this.allCustomInfo.id,
-							promote_pic: res.data.url,
+							promote_pic: result.url,
 							promote_text: this.inputText,
 							promote_title: '',
-							remark: res.data.name
+							remark: result.name
 						}
 						this.$api.addPromote(param).then(res => {
+							if (res.data.status === 'fail') {
+								uni.showToast({ icon: '', title: res.data.msg })	
+							} else {
+								uni.showToast({ icon: '', title: '上传作品成功' })	
+							}
 							uni.hideLoading()
-							uni.showToast({ icon: '', title: '上传作品成功' })
 						})
 					}
 				})
