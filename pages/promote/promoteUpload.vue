@@ -152,14 +152,11 @@
 							promote_pic: result.url,
 							promote_text: this.inputText,
 							promote_title: '',
-							remark: result.name
+							remark: result.name,
+							mobile: this.allCustomInfo.mobile,
 						}
 						this.$api.addPromote(param).then(res => {
-							if (res.data.status === 'fail') {
-								uni.showToast({ icon: '', title: res.data.msg })	
-							} else {
-								uni.showToast({ icon: '', title: '上传作品成功' })	
-							}
+							uni.showToast({ icon: '', title: res.data.msg })	
 							uni.hideLoading()
 						})
 					}

@@ -1,8 +1,10 @@
 <template>
 	<view class="content">
+		<!-- 
 		<view class="sign-button" @tap="toTest">
 			<text style="font-size: 24upx;">支付测试</text>
-		</view>
+		</view> 
+		-->
 		<view class="top-position"></view>
 		
 		<view class="content-position">
@@ -108,14 +110,14 @@ export default {
 	onShow(){
 		this.dataInit();
 	},
-	onLoad(option) {
-		this.dataInit();
-	},
+	// onLoad(option) {
+	// 	this.dataInit();
+	// },
 	methods: {
-		toTest() {
-			this.finalPayOrderInfo.payMoney = '0.01'
-			this.moneyCount = '0.01';
-		},
+		// toTest() {
+		// 	this.finalPayOrderInfo.payMoney = '0.01'
+		// 	this.moneyCount = '0.01';
+		// },
 		async getCustomerInfo(){
 			this.userInfo = uni.getStorageSync('userInfo');
 			const userInfoArr = await this.$api.getCustom({ filterItems: { mobile: this.userInfo.mobile } }).then(res=>{
@@ -239,6 +241,8 @@ export default {
 												uni.navigateTo({
 													url:'/pages/cart/paysuccess'
 												})
+												//更新书篮数据
+												uni.setStorageSync('carListInfo', [])
 											}
 										})
 									}

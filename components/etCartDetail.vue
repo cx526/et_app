@@ -32,9 +32,9 @@
 				<image class="rubbish-img" src="../static/cart/rubbish.png"></image>
 			</view>
 			
-			<view class="count-position">
+			<!-- <view class="count-position">
 				<text>X {{count}}</text>
-			</view>	
+			</view>	 -->
 		</view>
 	</view>
 </template>
@@ -78,6 +78,7 @@ export default {
 	border: 1upx solid rgba(179,179,179,0.3);
 	box-shadow: 1upx 1upx 1upx 1upx rgba(179,179,179,0.5);
 	background-color: #FFFFFF;
+	overflow: hidden;
 }
 .check-position {
 	background-color: #FFFFFF;

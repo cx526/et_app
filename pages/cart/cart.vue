@@ -160,9 +160,6 @@ export default {
 				goodsInfo: select
 			};
 			uni.setStorageSync('orderInfo', orderObject);
-			
-			//更新书篮数据
-			uni.setStorageSync('carListInfo', unSelect);
 
 			//跳转到订单页面
 			uni.navigateTo({
