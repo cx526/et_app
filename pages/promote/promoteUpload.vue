@@ -88,8 +88,10 @@
 	    methods: {
 			getPromote() {
 				let param = {
-					custom_id: this.allCustomInfo.id,
-					promote_name: this.promoteTitle
+					filterItems: {
+						custom_id: this.allCustomInfo.id,
+						promote_name: this.promoteTitle,
+					}
 				}
 				this.$api.getPromote(param).then(res => {
 					if (res.data && res.data.length > 0) {
