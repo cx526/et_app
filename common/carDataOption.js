@@ -80,16 +80,17 @@ function deleteToCart(bookID) {
 function deleteSelect() {
 	// 获取书蓝列表
 	let carListArr = getBookListData();
+	let carListArrFinal = [];
 	// 处理数据
 	if (carListArr.length > 0){
 		  carListArr.forEach((obj,index)=>{
-			  if(obj.select === true) {
-				carListArr.splice(index,1);
+			  if(obj.select !== true) {
+				carListArrFinal.push(obj);
 			  }
 		  });
 	}
 	// 数据插入
-	uni.setStorageSync('carListInfo', carListArr);
+	uni.setStorageSync('carListInfo', carListArrFinal);
 }
 
 // 修改购物车中状态
