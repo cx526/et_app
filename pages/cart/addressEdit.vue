@@ -79,6 +79,12 @@ export default {
         }
     },
     onLoad(option) {
+		// 默认地区
+		this.address.province = "44000";
+		this.address.city = "440600";
+		this.address.area = "440606";
+		this.address.showing_address = "广东省佛山市顺德区";
+		
 		// 编辑时候需要加载数据
 		if(option.id) {
 			this.optionType = 'mod';
@@ -91,6 +97,7 @@ export default {
 		if(option.toBackUrl) {
 			this.toBackUrl = option.toBackUrl
 		}
+		console.log(this.address);
     },
     methods: {
 		//由于unni-app没有双向绑定，所以要弄一个功能去处理字段变更
