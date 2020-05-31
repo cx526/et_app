@@ -93,7 +93,7 @@ export default {
     },
     methods: {
 		goClassInfo() {
-			if (this.name === '') {
+			if (this.name.length === 0) {
 				uni.showToast({
 					icon: 'none',
 					title: '请输入幼儿昵称'
