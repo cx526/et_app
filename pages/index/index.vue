@@ -130,6 +130,11 @@ export default {
 			toHotBookList: [],
 			groupList: [
 				{
+					'name' : '选书',
+					'img'  : 'https://et-pic-server.oss-cn-shenzhen.aliyuncs.com/app_img/05.png',
+					'toUrl' : './kind',
+				},
+				{
 					'name' : '绘本',
 					'img'  : 'https://et-pic-server.oss-cn-shenzhen.aliyuncs.com/app_img/01.png',
 					'toUrl' : '/pages/promote/promotePictureBook',
@@ -141,7 +146,7 @@ export default {
 					'toUrl' : '/pages/my/myIntegral',
 				},
 				{
-					'name' : '打卡',
+					'name' : '签到',
 					'img'  : 'https://et-pic-server.oss-cn-shenzhen.aliyuncs.com/app_img/03.png',
 					'toUrl' : './sign',
 				},
@@ -149,11 +154,6 @@ export default {
 					'name' : '会员',
 					'img'  : 'https://et-pic-server.oss-cn-shenzhen.aliyuncs.com/app_img/04.png',
 					'toUrl' : '/pages/my/myMember',
-				},
-				{
-					'name' : '分类',
-					'img'  : 'https://et-pic-server.oss-cn-shenzhen.aliyuncs.com/app_img/05.png',
-					'toUrl' : './kind',
 				}
 			],
 			hotBookList: [],

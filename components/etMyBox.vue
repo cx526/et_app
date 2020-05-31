@@ -59,6 +59,16 @@ export default {
 					}
 				})
 			} else {
+				if(toUrl === '敬请期待'){
+					uni.showToast({
+						title:'敬请期待！',
+						duration:2000,
+						icon:"none"
+					})
+					
+					return;
+				}
+				
 				uni.navigateTo({url: toUrl});
 				if (toUrl === '/pages/promote/pictureMonth'){
 					uni.switchTab({

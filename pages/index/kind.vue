@@ -10,7 +10,7 @@
 		<scroll-view scroll-with-animation scroll-y class="right-aside" >
 			<view v-for="(item,index) in thirdKind" :key="item.id" class="s-list" :id="'main-'+item.id" @tap="toKindList(index,thirdKind)">
 				<view class="item-img">
-					<image class="item-img-img" :src="item.kind_img"></image>
+					<image class="item-img-img" :src="item.kind_img" mode="widthFix"></image>
 				</view>
 				
 				<view class="item-content-father">

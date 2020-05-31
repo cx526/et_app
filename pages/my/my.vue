@@ -171,7 +171,7 @@ export default {
 					{
 						'imgSrc' : this.$aliImage + 'my2_7.png',
 						'title'	: '反馈',
-						'toUrl'	: 'bookdetail?bookID=900'
+						'toUrl'	: '敬请期待'
 					},
 					{
 						'imgSrc' : this.$aliImage + 'my2_8.png',
