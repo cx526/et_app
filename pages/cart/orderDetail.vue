@@ -221,6 +221,7 @@ export default {
 				// const userInfo = uni.getStorageSync('userInfo')
 				if (this.userInfo.name !== 'guest') {
 					let param = {
+						custom_id: this.allcustomInfo.id,
 						userInfo: this.userInfo,
 						orderInfo: {
 							goods: this.bookidString,
