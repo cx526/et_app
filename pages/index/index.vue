@@ -175,7 +175,7 @@ export default {
 					'img'  : 'https://et-pic-server.oss-cn-shenzhen.aliyuncs.com/app_img/index_new2.png'
 				},
 				{
-					'name' : '能力培养',
+					'name' : '能力习惯',
 					'img'  : 'https://et-pic-server.oss-cn-shenzhen.aliyuncs.com/app_img/index_new3.png'
 				},
 				{

@@ -48,12 +48,12 @@
 		<view class="out-position">
 			<view class="out-content" style="position-bottom:20upx;">
 				<text class="title-content-process">借阅流程</text>
-				<text class="link-content">详情 ></text>
+				<text class="link-content"  @tap='toProgressUrl'>详情></text>
 			</view>
 		</view>
 		
 		<view class="process-position">
-			<image class="out-img" src="https://et-pic-server.oss-cn-shenzhen.aliyuncs.com/app_img/index_bookdetail_progress.png"></image>
+			<image class="out-img" src="https://et-pic-server.oss-cn-shenzhen.aliyuncs.com/app_img/index_bookdetail_progress.png" mode="widthFix"></image>
 		</view>
 	
 		
@@ -143,6 +143,9 @@ export default {
 		
 	},
 	methods: {
+		toProgressUrl(){
+			toUrlFunction.toUrl('/pages/guide/borrowExplain');
+		},
 		collection(){
 			uni.showToast({
 				title: '收藏功能暂未开放，敬请期待！',
@@ -270,7 +273,8 @@ export default {
 	justify-content: center;
 }
 .out-img {
-	height: 180upx;
+	/* height: 180upx; */
+	width: 100%;
 }
 .remark-position {
 	width: 90%;

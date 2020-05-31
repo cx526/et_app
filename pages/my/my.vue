@@ -32,13 +32,13 @@
 				</view>
 			</view>
 			
-			<view class="vip-button-position">
+			<view class="vip-button-position"  @tap="vipButton">
 				<image style="width: 640upx; height: 145upx;" src="https://et-pic-server.oss-cn-shenzhen.aliyuncs.com/app_img/vip_button.png"></image>
 			</view>
 			
 			<view class="white-space"></view>
 			
-			<view class="vip-button-position">
+			<view class="vip-button-position" @tap="vipBanner">
 				<image style="width: 660upx; height: 200upx;" src="https://et-pic-server.oss-cn-shenzhen.aliyuncs.com/app_img/vip_banner.png"></image>
 			</view>
 			
@@ -61,6 +61,7 @@
 
 <script>
 import etMyBox from '../../components/etMyBox.vue'
+const toUrlFunction = require('@/common/toUrlFunction');
 
 export default {
 	computed: {
@@ -185,6 +186,16 @@ export default {
 		goAuth() {
 			uni.removeStorageSync('userInfo')
 			uni.reLaunch({url: '../guide/guide'})
+		},
+		vipButton(){
+			uni.showToast({
+				title:'暂未开放，敬请期待！',
+				duration:2000,
+				icon:"none"
+			})
+		},
+		vipBanner(){
+			toUrlFunction.toUrl('/pages/my/myMember');
 		}
 	}
 }

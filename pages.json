@@ -10,6 +10,25 @@
 			}
 		},
 		{
+			"path": "pages/guide/borrowExplain",
+			"style": {
+				"navigationBarTitleText": "借阅流程",
+				"app-plus": {
+					"titleNView": false
+				}
+			}
+		},
+		{
+			"path": "pages/my/myInfoList",
+			"style": {
+				"navigationBarTitleText": "我的信息",
+				"app-plus": {
+					"titleNView": false
+				}
+			}
+		},		
+		
+		{
 			"path": "pages/guide/complateInfo",
 			"style": {
 				"navigationBarTitleText": "完善幼儿园信息",
@@ -120,15 +139,7 @@
 				}
 			}
 		},
-		{
-			"path": "pages/my/myInfoList",
-			"style": {
-				"navigationBarTitleText": "我的信息",
-				"app-plus": {
-					"titleNView": false
-				}
-			}
-		},		
+		
 		{
 			"path": "pages/my/myIntegral",
 			"style": {
