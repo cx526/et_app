@@ -244,6 +244,16 @@ export default {
 											order_no: order_no, 
 											custom_id: allcustomInfo.id,
 											deposit: this.finalPayOrderInfo.deposit,
+											userInfo: this.userInfo,
+											orderInfo: {
+												goods: bookidString,
+												count: this.bookCount,
+												order_type: 'online',
+												price: this.finalPayOrderInfo.afterDiscountMoney,
+												deposit: this.finalPayOrderInfo.deposit,
+												final_price: this.finalPayOrderInfo.payMoney,
+												address_id: this.defalutAddress.id
+											}
 										}).then(res => {
 											//跳出支付成功界面
 											if (res.data.xml.return_code[0] === 'SUCCESS') {
