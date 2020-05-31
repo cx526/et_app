@@ -1,10 +1,8 @@
 <template>
 	<view class="content">
-		<!-- 
 		<view class="sign-button" @tap="toTest">
 			<text style="font-size: 24upx;">支付测试</text>
 		</view> 
-		-->
 		<view class="top-position"></view>
 		
 		<view class="content-position">
@@ -111,15 +109,18 @@ export default {
 	},
 	onShow(){
 		this.dataInit();
+		this.getCustomerInfo();
 	},
 	// onLoad(option) {
 	// 	this.dataInit();
 	// },
 	methods: {
-		// toTest() {
-		// 	this.finalPayOrderInfo.payMoney = '0.01'
-		// 	this.moneyCount = '0.01';
-		// },
+		toTest() {
+			this.finalPayOrderInfo.afterDiscountMoney = '0.01'
+			this.finalPayOrderInfo.deposit = '0.01'
+			// this.moneyCount = '0.01';
+			this.finalPayOrderInfo.payMoney = '0.02'
+		},
 		toMemberUrl(){
 			toUrlFunction.toUrl('/pages/my/myMember');
 		},
@@ -242,7 +243,7 @@ export default {
 									if (res.errMsg === "requestPayment:ok") {
 										this.$api.updatePayment({
 											order_no: order_no, 
-											custom_id: allcustomInfo.id,
+											custom_id: this.allcustomInfo.id,
 											deposit: this.finalPayOrderInfo.deposit,
 											userInfo: this.userInfo,
 											orderInfo: {
