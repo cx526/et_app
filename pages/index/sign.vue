@@ -131,6 +131,7 @@ export default {
 	background-image: url('https://et-pic-server.oss-cn-shenzhen.aliyuncs.com/app_img/sign_bg.png');
 	background-size: 100%;
 	background-repeat: no-repeat;
+	background-color: #EBF8FF;
 }
 .year {
 	padding-top: 150upx;
