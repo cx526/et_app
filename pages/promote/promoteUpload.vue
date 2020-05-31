@@ -107,7 +107,7 @@
 					this.allCustomInfo = res.data[0]
 					// if (this.allCustomInfo.schoolInfo && Object.keys(this.allCustomInfo.schoolInfo).length > 0 ) {
 					// 	//判断是学校用户
-					// 	this.getPromote()	
+						this.getPromote()	
 					// 	this.hasPromote = false
 					// } else {
 					// 	this.hasPromote = true
