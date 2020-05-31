@@ -23,7 +23,8 @@
 			<view class="white-space" style="height: 90upx"></view>
 			
 			<view class="coin-position title-position">
-				<text>积分：{{coin}}</text>
+				<!-- <text>积分：{{coin}}</text> -->
+				<text>X 1</text>
 			</view>
 		</view>
 		

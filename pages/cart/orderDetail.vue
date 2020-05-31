@@ -126,7 +126,7 @@ export default {
 			toUrlFunction.toUrl('/pages/my/myMember');
 		},
 		async getCustomerInfo(){
-			this.userInfo = uni.getStorageSync('userInfo');
+			// this.userInfo = uni.getStorageSync('userInfo');
 			this.allcustomInfo = await this.$api.getCustom({ filterItems: { mobile: this.userInfo.mobile } }).then(res=>{
 				return res.data[0];
 			});
@@ -306,24 +306,24 @@ export default {
 			let payRuleType = 0;
 			if(buyCount === 1){   //首单
 				if(userType === 'schoolUser'){	//学校用户
-					if(0 < bookCount <=3){
+					if(0 < bookCount && bookCount <=3){
 						payRuleType = 1
 					}
-					if(3 < bookCount <=10){
+					if(4 <= bookCount && bookCount <=10){
 						payRuleType = 2
 					}					
 				}else if(userType === 'commonUser'){	//游客用户
-					if(0 < bookCount <=10){
+					if(0 < bookCount && bookCount <=10){
 						payRuleType = 3
 					}
 				}
 			}else if(buyCount > 1){  //非首单
 				if(userType === 'schoolUser'){	//学校用户
-					if(0 < bookCount <=10){
+					if(0 < bookCount && bookCount  <=10){
 						payRuleType = 4
 					}				
 				}else if(userType === 'commonUser'){	//游客用户
-					if(0 < bookCount <=10){
+					if(0 < bookCount && bookCount <=10){
 						payRuleType = 5
 					}
 				}
