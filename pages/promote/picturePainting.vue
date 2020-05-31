@@ -33,7 +33,8 @@ export default {
 					//判断是学校用户
 					this.isSchool = true
 				} else {
-					this.uni.showToast({ icon: '', title: '请先补充学校信息' });
+					this.isSchool = false
+					// uni.showToast({ icon: '', title: '请先补充学校信息' });
 				}
 			})
 		},

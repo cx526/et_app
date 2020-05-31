@@ -177,6 +177,7 @@
 							mobile: this.allCustomInfo.mobile,
 						}
 						this.$api.addPromote(param)
+						this.hasPromote = true
 					},
 					complete: res => {
 						uni.hideLoading()
