@@ -138,6 +138,9 @@ export default {
 					this.grade.push(subItem.name)
 				});
 				this.selectGradeId = this.gradeInfo[0].id;
+				
+				//设置班选中项
+				this.teamIndex = 0;
 			})
 			
 		},

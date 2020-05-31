@@ -7,7 +7,7 @@
 		
 		<view class="content-position" v-if="JSON.stringify(babyInfo.childInfo) !== '{}'">
 			<view class="baby-content" v-if="babyInfo.childInfo.name">
-				<text>宝宝姓名：{{babyInfo.childInfo.name}}</text>
+				<text>宝宝姓名：{{babyInfo.childInfo.name ? babyInfo.childInfo.name : ''}}</text>
 				<view class="baby-gender" style="background-color: #BCEDF5; margin-left: 10upx;" v-if="babyInfo.childInfo.gender === 1">
 					<text>男孩</text>
 				</view>
@@ -17,23 +17,23 @@
 			</view>
 			
 			<view class="baby-content" v-if="babyInfo.childInfo.name">
-				<text>所在地：{{babyInfo.schoolInfo.showing_address}}</text>
+				<text>所在地：{{babyInfo.schoolInfo.showing_address ? babyInfo.schoolInfo.showing_address : ''}}</text>
 			</view>
 			
 			<view class="baby-content" v-if="babyInfo.childInfo.name">
-				<text>幼儿园：{{babyInfo.schoolInfo.name}}</text>
+				<text>幼儿园：{{babyInfo.schoolInfo.name ? babyInfo.schoolInfo.name : ''}}</text>
 			</view>
 			
 			<view class="baby-content" v-if="babyInfo.childInfo.name">
-				<text>班级：{{babyInfo.gradeInfo.name}} {{babyInfo.gradeInfo.level}}班</text>
+				<text>班级：{{babyInfo.gradeInfo.name ? babyInfo.gradeInfo.name : ''}} {{babyInfo.gradeInfo.level ? babyInfo.gradeInfo.level+'班' : ''}}</text>
 			</view>
 			
 			<view class="baby-content" v-if="babyInfo.childInfo.name">
-				<text>生日：{{babyInfo.childInfo.birth_day}}</text>
+				<text>生日：{{babyInfo.childInfo.birth_day ? babyInfo.childInfo.birth_day : ''}}</text>
 			</view>
 			
 			<view class="baby-content baby-buttom" v-if="babyInfo.childInfo.name">
-				<text>岁数：{{babyInfo.childInfo.age}}岁</text>
+				<text>岁数：{{babyInfo.childInfo.age ? babyInfo.childInfo.age+'岁' : ''}}</text>
 				<image src="../static/cart/edit.png" style="width: 45upx;height: 45upx;" @tap='editBabyInfo'></image>
 			</view>
 		</view>
