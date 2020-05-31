@@ -1,10 +1,8 @@
 <template>
 	<view class="content">
-		<!-- 
 		<view class="sign-button" @tap="toTest">
 			<text style="font-size: 24upx;">支付测试</text>
 		</view> 
-		-->
 		<view class="top-position"></view>
 		
 		<view class="content-position">
@@ -106,20 +104,24 @@ export default {
 			addressIndex: 0,		//被选择地址的索引
 			addressList: [],		//选择框的地址列表
 			hestoryOrderInfo: [],   //客户历史订单信息，用于第几次订单
-			finalPayOrderInfo:{}	//最终的订单支付信息
+			finalPayOrderInfo:{},	//最终的订单支付信息
+			bookidString: '',
 		}
 	},
 	onShow(){
 		this.dataInit();
+		this.getCustomerInfo();
 	},
 	// onLoad(option) {
 	// 	this.dataInit();
 	// },
 	methods: {
-		// toTest() {
-		// 	this.finalPayOrderInfo.payMoney = '0.01'
-		// 	this.moneyCount = '0.01';
-		// },
+		toTest() {
+			this.finalPayOrderInfo.afterDiscountMoney = '0.01'
+			this.finalPayOrderInfo.deposit = '1'
+			// this.moneyCount = '0.01';
+			this.finalPayOrderInfo.payMoney = '0.02'
+		},
 		toMemberUrl(){
 			toUrlFunction.toUrl('/pages/my/myMember');
 		},
@@ -203,11 +205,11 @@ export default {
 			}
 			
 			//组合商品id
-			let bookidString = '';
+			this.bookidString = '';
 			this.orderList.goodsInfo.map(item=>{
-				bookidString = bookidString + ',' + item.id;
+				this.bookidString = this.bookidString + ',' + item.id;
 			});
-			bookidString = bookidString.substr(1);
+			this.bookidString = this.bookidString.substr(1);
 			
 			// 发起微信支付请求
 			// 注意：仅限正式环境才能发起支付
@@ -221,7 +223,7 @@ export default {
 					let param = {
 						userInfo: this.userInfo,
 						orderInfo: {
-							goods: bookidString,
+							goods: this.bookidString,
 							count: this.bookCount,
 							order_type: 'online',
 							price: this.finalPayOrderInfo.afterDiscountMoney,
@@ -242,11 +244,11 @@ export default {
 									if (res.errMsg === "requestPayment:ok") {
 										this.$api.updatePayment({
 											order_no: order_no, 
-											custom_id: allcustomInfo.id,
+											custom_id: this.allcustomInfo.id,
 											deposit: this.finalPayOrderInfo.deposit,
 											userInfo: this.userInfo,
 											orderInfo: {
-												goods: bookidString,
+												goods: this.bookidString,
 												count: this.bookCount,
 												order_type: 'online',
 												price: this.finalPayOrderInfo.afterDiscountMoney,
