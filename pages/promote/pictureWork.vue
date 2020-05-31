@@ -55,6 +55,8 @@ export default {
 					uni.navigateTo({
 						url:'/pages/promote/promoteUpload?pTitle=童创手工坊',
 					})
+				} else {
+					uni.showToast({ icon: '', title: '请完善学校信息' })
 				}
 			}
 		},
