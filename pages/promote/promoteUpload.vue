@@ -105,7 +105,26 @@
 			getCustomInfo() {
 				this.$api.getCustom({ filterItems: { mobile: this.userInfo.mobile } }).then(res=>{
 					this.allCustomInfo = res.data[0]
-					this.getPromote()
+					if (this.allCustomInfo.schoolInfo && Object.keys(this.allCustomInfo.schoolInfo).length > 0 ) {
+						//判断是学校用户
+						this.getPromote()	
+						this.hasPromote = false
+					} else {
+						this.hasPromote = true
+						this.uni.showToast({
+							icon: '',
+							title: '请先补充学校信息'
+						});
+						// uni.showModal({
+						// 	title: '请先补充学校信息',
+						// 	confirmText: '补充',
+						// 	success: (res) => {
+						// 		if (res.confirm) {
+						// 			uni.reLaunch({url: '../guide/guide'})
+						// 		}
+						// 	}
+						// })
+					}
 				})
 			},
 			inputChange(e) {
@@ -157,11 +176,10 @@
 							remark: result.name,
 							mobile: this.allCustomInfo.mobile,
 						}
-						this.$api.addPromote(param).then(res => {
-							uni.showToast({ icon: '', title: res.data.msg })	
-							this.getCustomInfo()
-						})
+						this.$api.addPromote(param)
 						uni.hideLoading()
+						uni.showToast({ icon: '', title: res.data.msg })
+						this.getCustomInfo()
 					}
 				})
 				// onProgressUpdate 上传对象更新的方法
