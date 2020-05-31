@@ -104,7 +104,8 @@ export default {
 			addressIndex: 0,		//被选择地址的索引
 			addressList: [],		//选择框的地址列表
 			hestoryOrderInfo: [],   //客户历史订单信息，用于第几次订单
-			finalPayOrderInfo:{}	//最终的订单支付信息
+			finalPayOrderInfo:{},	//最终的订单支付信息
+			bookidString: '',
 		}
 	},
 	onShow(){
@@ -204,11 +205,11 @@ export default {
 			}
 			
 			//组合商品id
-			let bookidString = '';
+			this.bookidString = '';
 			this.orderList.goodsInfo.map(item=>{
-				bookidString = bookidString + ',' + item.id;
+				this.bookidString = this.bookidString + ',' + item.id;
 			});
-			bookidString = bookidString.substr(1);
+			this.bookidString = this.bookidString.substr(1);
 			
 			// 发起微信支付请求
 			// 注意：仅限正式环境才能发起支付
@@ -222,7 +223,7 @@ export default {
 					let param = {
 						userInfo: this.userInfo,
 						orderInfo: {
-							goods: bookidString,
+							goods: this.bookidString,
 							count: this.bookCount,
 							order_type: 'online',
 							price: this.finalPayOrderInfo.afterDiscountMoney,
@@ -247,7 +248,7 @@ export default {
 											deposit: this.finalPayOrderInfo.deposit,
 											userInfo: this.userInfo,
 											orderInfo: {
-												goods: bookidString,
+												goods: this.bookidString,
 												count: this.bookCount,
 												order_type: 'online',
 												price: this.finalPayOrderInfo.afterDiscountMoney,
