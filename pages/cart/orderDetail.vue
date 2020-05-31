@@ -8,7 +8,7 @@
 		<view class="top-position"></view>
 		
 		<view class="content-position">
-			<view class="member-position">
+			<view class="member-position" @tap="toMemberUrl">
 				<view class="member-content"> 
 					<et-member title="会员获得更多权益"></et-member>
 				</view>
@@ -78,6 +78,7 @@ import etOrderPay from '../../components/etOrderPay.vue'
 import etTag from '../../components/etTag.vue'
 const wxPay = require('@/common/wxPay')
 const formatDate = require('@/common/formatDate')
+const toUrlFunction = require('@/common/toUrlFunction');
 
 export default {
 	components: {
@@ -119,6 +120,9 @@ export default {
 		// 	this.finalPayOrderInfo.payMoney = '0.01'
 		// 	this.moneyCount = '0.01';
 		// },
+		toMemberUrl(){
+			toUrlFunction.toUrl('/pages/my/myMember');
+		},
 		async getCustomerInfo(){
 			this.userInfo = uni.getStorageSync('userInfo');
 			this.allcustomInfo = await this.$api.getCustom({ filterItems: { mobile: this.userInfo.mobile } }).then(res=>{
@@ -173,7 +177,7 @@ export default {
 		},
 		addAddress(){
 			uni.navigateTo({
-				url:'/pages/cart/addressEdit'
+				url:'/pages/cart/addressEdit?toBackUrl=/pages/cart/orderDetail'
 			})
 		},
 		btnClick() {

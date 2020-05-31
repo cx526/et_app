@@ -62,6 +62,7 @@ export default {
     data() {
         return {
 			optionType:'add',   // 操作类型mod修改， add新增
+			toBackUrl:'',
 			address: {
 				'id':'',
 				'custom_id':'',
@@ -84,6 +85,11 @@ export default {
 			let addressArr = this.$api.getAddress({ filterItems: { id: option.id } }).then(res=>{
 				this.address = res.data[0];
 			});
+		}
+		
+		// 如果是有调用的返回地址应该返回到需要的地址里面
+		if(option.toBackUrl) {
+			this.toBackUrl = option.toBackUrl
 		}
     },
     methods: {
@@ -135,8 +141,13 @@ export default {
 	　　　　　　　　　　icon: 'success',
 					  duration: 2000
 	　　　　　　　});
+				
+				let url = 'addressList?custom_id='+this.address.custom_id;
+				if(this.toBackUrl) {
+					url = this.toBackUrl;
+				}
 				uni.navigateTo({
-					url:'addressList?custom_id='+this.address.custom_id
+					url:url
 				});
 			});
 		},
@@ -148,8 +159,13 @@ export default {
 					  duration: 2000
 	　　　　　　　});
 				this.modDefault();
+				
+				let url = 'addressList?custom_id='+this.address.custom_id;
+				if(this.toBackUrl) {
+					url = this.toBackUrl;
+				}
 				uni.navigateTo({
-					url:'addressList?custom_id='+this.address.custom_id
+					url:url
 				});
 			});
 			this.modDefault();
