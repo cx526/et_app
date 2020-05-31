@@ -51,7 +51,7 @@
 			<et-titlenavigation  title="热门推荐" img="../static/index/start.png" toUrl="baidu.com" @toMoreData="toHotListData"></et-titlenavigation>
 			
 			<view class="hotcomcontent">
-				<et-hotcomcontent  v-for="(item,i) in hotBookList" v-if="i <= 5" :key="i"  :data="item.goods_info" @tap="toBookDetail(item.goods_info.id)"></et-hotcomcontent>
+				<et-hotcomcontent  v-for="(item,i) in hotBookList" v-if="i <= 5" :key="i"  :dataArr="item.goods_info" @tap="toBookDetail(item.goods_info.id)"></et-hotcomcontent>
 			</view>
 		</view>
 		

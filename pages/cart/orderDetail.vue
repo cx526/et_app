@@ -364,10 +364,10 @@ export default {
 			if(parseInt(deposit) === 0 && buyCount > 1) {
 				if(userType === 'schoolUser'){	//学校用户
 					orderPayInfo.deposit = 100;
-					orderPayInfo.payMoney = orderPayInfo.payMoney + 100;
+					orderPayInfo.payMoney = orderPayInfo.afterDiscountMoney + orderPayInfo.deposit;
 				}else if(userType === 'commonUser'){	//游客用户
 					orderPayInfo.deposit = 200;
-					orderPayInfo.payMoney = orderPayInfo.payMoney + 200;
+					orderPayInfo.payMoney = orderPayInfo.afterDiscountMoney + orderPayInfo.deposit;
 				}
 			}
 			
