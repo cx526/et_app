@@ -57,7 +57,11 @@
 					</view>
 					
 					<view class="bottom-tag">
-						<et-tag backgroundColor="#2AAEC4" title="确认借书" fontColor="#FFFFFF" class="tag-style" @tap="buySelect"></et-tag>
+						<!-- <et-tag backgroundColor="#2AAEC4" title="确认借书" fontColor="#FFFFFF" class="tag-style" @tap="buySelect"></et-tag> -->
+						
+						<view class="tag-style" style="background-color: #2AAEC4;" @tap="buySelect">
+							<text>确认借书</text>
+						</view>
 					</view>
 				</view>
 			</view>
@@ -103,7 +107,7 @@ export default {
 			},
 			addressIndex: 0,		//被选择地址的索引
 			addressList: [],		//选择框的地址列表
-			hestoryOrderInfo: [],   //客户历史订单信息，用于第几次订单
+			hestoryOrderInfo: {},   //客户历史订单信息，用于第几次订单
 			finalPayOrderInfo:{},	//最终的订单支付信息
 			bookidString: '',
 		}
@@ -231,7 +235,8 @@ export default {
 							price: this.finalPayOrderInfo.afterDiscountMoney,
 							deposit: this.finalPayOrderInfo.deposit,
 							final_price: this.finalPayOrderInfo.payMoney,
-							address_id: this.defalutAddress.id
+							address_id: this.defalutAddress.id,
+							couponType:this.finalPayOrderInfo.couponType
 						}
 					}
 					this.$api.getPayment(param).then(res => {
@@ -256,7 +261,8 @@ export default {
 												price: this.finalPayOrderInfo.afterDiscountMoney,
 												deposit: this.finalPayOrderInfo.deposit,
 												final_price: this.finalPayOrderInfo.payMoney,
-												address_id: this.defalutAddress.id
+												address_id: this.defalutAddress.id,
+												couponType:this.finalPayOrderInfo.couponType
 											}
 										}).then(res => {
 											//跳出支付成功界面
@@ -300,7 +306,11 @@ export default {
 			
 			//判断第一单还是第二单，还是其他单
 			let buyCount = 0;
-			buyCount = this.hestoryOrderInfo.length + 1;
+			let couponBuyCount = 0;
+			// buyCount = this.hestoryOrderInfo.length + 1;
+			buyCount = this.hestoryOrderInfo.normalOrder + 1;
+			couponBuyCount = this.hestoryOrderInfo.couponOrder + 1;
+			
 			
 			//判断商品数量
 			let bookCount = this.bookCount;
@@ -308,13 +318,13 @@ export default {
 			//判断是否有押金
 			let deposit = this.customerInfo.deposit;
 						
-			// 判断规则号
+			// 正常订单判断规则号
 			let payRuleType = 0;
 			if(buyCount === 1){   //首单
 				if(userType === 'schoolUser'){	//学校用户
-					if(0 < bookCount && bookCount <=3){
-						payRuleType = 1
-					}
+					// if(0 < bookCount && bookCount <=3){
+					// 	payRuleType = 1
+					// }
 					if(4 <= bookCount && bookCount <=10){
 						payRuleType = 2
 					}					
@@ -332,6 +342,15 @@ export default {
 					if(0 < bookCount && bookCount <=10){
 						payRuleType = 5
 					}
+				}
+			}
+			
+			//特殊订单判断
+			if(couponBuyCount === 1){   //首单
+				if(userType === 'schoolUser'){	//学校用户
+					if(0 < bookCount && bookCount <=3){
+						payRuleType = 1
+					}									
 				}
 			}
 			
@@ -363,6 +382,7 @@ export default {
 					return {
 						userType:'学校用户',
 						discountType:'绘本到家',
+						couponType:'pictureBookArriver',
 						deposit:100,
 						orderMoney:30,
 						discountMoney:30,
@@ -374,6 +394,7 @@ export default {
 					return {
 						userType:'学校用户',
 						discountType:'首次体验优惠',
+						couponType:'',
 						deposit:100,
 						orderMoney:30,
 						discountMoney:12,
@@ -385,6 +406,7 @@ export default {
 					return {
 						userType:'游客用户',
 						discountType:'首次体验优惠',
+						couponType:'',
 						deposit:200,
 						orderMoney:45,
 						discountMoney:17,
@@ -396,6 +418,7 @@ export default {
 					return {
 						userType:'学校用户',
 						discountType:'无优惠',
+						couponType:'',
 						deposit:0,
 						orderMoney:30,
 						discountMoney:0,
@@ -407,6 +430,7 @@ export default {
 					return {
 						userType:'游客用户',
 						discountType:'无优惠',
+						couponType:'',
 						deposit:0,
 						orderMoney:45,
 						discountMoney:0,
@@ -514,5 +538,23 @@ export default {
 	height: 120upx;
 	border-radius: 60upx;
 	background: #ccc;
+}
+.tag-style {
+	display: flex;
+	flex-direction: row;
+	justify-content: center;
+	align-items: center;
+	border-radius: 20upx;
+	color: #FFFFFF;
+	padding: 10upx 20upx;
+	width: 100upx;
+	height: 45upx;
+	margin-right: 20upx;
+}
+.bottom-content {
+	display: flex;
+	flex-direction: row;
+	justify-content: space-around;
+	align-items: center;
 }
 </style>

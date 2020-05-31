@@ -47,8 +47,16 @@
 						</view>
 						
 						<view class="bottom-tag">
-							<et-tag backgroundColor="#808080" title="删除" fontColor="#FFFFFF" class="tag-style" @tap="delectSelect"></et-tag>
-							<et-tag backgroundColor="#2AA145" title="借阅" fontColor="#FFFFFF" class="tag-style" @tap="buySelect"></et-tag>
+							<!-- <et-tag backgroundColor="#808080" title="删除" fontColor="#FFFFFF" class="tag-style" @tap="delectSelect"></et-tag>
+							<et-tag backgroundColor="#2AA145" title="借阅" fontColor="#FFFFFF" class="tag-style" @tap="buySelect"></et-tag> -->
+							
+							<view class="tag-style" style="background-color: #808080;" @tap="delectSelect">
+								<text>删除</text>
+							</view>
+							
+							<view class="tag-style" style="background-color: #2AA145;" @tap="buySelect">
+								<text>借阅</text>
+							</view>
 						</view>
 					</view>
 				</view>
@@ -272,6 +280,7 @@ export default {
 	display: flex;
 	flex-direction: row;
 	justify-content: space-around;
+	align-items: center;
 	background-color: #FFFFFF;
 }
 .bottom-check,.bottom-text {
@@ -283,7 +292,19 @@ export default {
 	flex-direction: row;
 	justify-content: space-around;
 }
+/* .tag-style {
+	width: 80upx;
+	height: 45upx;
+	margin-right: 20upx;
+} */
 .tag-style {
+	display: flex;
+	flex-direction: row;
+	justify-content: center;
+	align-items: center;
+	border-radius: 20upx;
+	color: #FFFFFF;
+	padding: 10upx 20upx;
 	width: 80upx;
 	height: 45upx;
 	margin-right: 20upx;
