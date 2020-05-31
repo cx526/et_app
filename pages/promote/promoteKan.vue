@@ -1,8 +1,8 @@
 <template>
 	<view class="content">
-		<image src="https://et-pic-server.oss-cn-shenzhen.aliyuncs.com/app_img/promote_pictureToHome_detail.png" style="width: 100%;" mode="widthFix"></image>
-		<view class="content-kan" @tap="toKanUrl"></view>
-		<view class="content-button" @tap="toUrl"></view>
+		<image src="https://et-pic-server.oss-cn-shenzhen.aliyuncs.com/app_img/promote_kan.png" style="width: 100%;" mode="widthFix"></image>
+		<!-- <view class="content-kan" @tap="toKanUrl"></view>
+		<view class="content-button" @tap="toUrl"></view> -->
 	</view>
 </template>
 
@@ -25,7 +25,7 @@ export default {
 			})
 		},
 		toKanUrl(){
-			toUrlFunction.toUrl('/pages/promote/promoteKan');
+			toUrlFunction.toUrl('/pages/index/kind');
 		}
 	}
 }

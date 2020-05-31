@@ -59,6 +59,7 @@ export default {
     },
     onLoad() {
 		this.history.contentList = hestoryList.getListData('hestoryList');
+		this.getHotBook();
     },
     methods: {
 		buttonClick() {
@@ -91,7 +92,17 @@ export default {
 		deleteData() {
 			hestoryList.deleteALL('hestoryList');
 			this.history.contentList = hestoryList.getListData('hestoryList');
-		}
+		},
+		getHotBook(){
+			this.$api.getRecommend().then(res => {
+			   let hotBookList = res.data;
+			   console.log(hotBookList);
+			   this.hot.contentList = [];
+			   hotBookList.map(item=>{
+				   this.hot.contentList.push(item.goods_info.title);
+			   });
+			})
+		},
 	}
 }
 </script>

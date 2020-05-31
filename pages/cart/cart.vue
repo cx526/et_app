@@ -1,5 +1,6 @@
 <template>
-	<view class="content-position" :style="'height: ' + listData.length < 3 ? '100vh;' : ''">
+	<view class="content-position">
+	<!-- <view :class="[listData.length < 3 ? 'content-position-one' : 'content-position-two']"> -->
 		<view class="backgroundStyle">
 			<view class="content">
 				<view class="white-space"></view>
@@ -170,8 +171,16 @@ export default {
 }
 </script>
 
-<style>
-.content-position {
+<style scoped>
+.content-position{
+	z-index: 1;
+}	
+.content-position-one {
+	height: 100vh;
+	background-color: #EBF8FF;
+	z-index: 1;
+}
+.content-position-two {
 	background-color: #EBF8FF;
 	z-index: 1;
 }

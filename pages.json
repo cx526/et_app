@@ -10,6 +10,15 @@
 			}
 		},
 		{
+			"path": "pages/promote/promoteKan",
+			"style": {
+				"navigationBarTitleText": "抗疫绘本",
+				"app-plus": {
+					"titleNView": false
+				}
+			}
+		},
+		{
 			"path": "pages/guide/borrowExplain",
 			"style": {
 				"navigationBarTitleText": "借阅流程",
