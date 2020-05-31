@@ -59,9 +59,9 @@ export default {
 					}
 				})
 			} else {
-				if(toUrl === '敬请期待'){
+				if(toUrl === '敬请期待' || toUrl === '暂未开放'){
 					uni.showToast({
-						title:'敬请期待！',
+						title:toUrl,
 						duration:2000,
 						icon:"none"
 					})

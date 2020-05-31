@@ -171,7 +171,7 @@ export default {
 					{
 						'imgSrc' : this.$aliImage + 'my2_7.png',
 						'title'	: '反馈',
-						'toUrl'	: '敬请期待'
+						'toUrl'	: '暂未开放'
 					},
 					{
 						'imgSrc' : this.$aliImage + 'my2_8.png',

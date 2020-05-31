@@ -28,7 +28,7 @@
 			</view>
 			<view v-else>
 				<image src="../static/cart/edit.png" style="width: 45upx;height: 45upx;" @tap='modAddressInfo(address.id)'></image>
-				<image src="https://et-pic-server.oss-cn-shenzhen.aliyuncs.com/app_img/cart_rubbish.png" style="width: 45upx;height: 45upx;" @tap='delAddressInfo(address.id)'></image>
+				<image src="https://et-pic-server.oss-cn-shenzhen.aliyuncs.com/app_img/cart_rubbish.png" style="width: 45upx;height: 45upx; margin-left: 10upx;" @tap='delAddressInfo(address.id)'></image>
 			</view>
 		</view>
 	</view>

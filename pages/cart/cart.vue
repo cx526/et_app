@@ -42,8 +42,8 @@
 						
 						<view class="bottom-text">
 							<text>合计：</text>
-							<text style="color: #DB3E49;">{{moneyCount}}</text>
-							<text>积分</text>
+							<text style="color: #DB3E49;">{{bookCount}}</text>
+							<text>本</text>
 						</view>
 						
 						<view class="bottom-tag">
@@ -79,7 +79,8 @@ export default {
 			coin:"40",
 			moneyCount:"199",
 			allSelect:"true",
-			listData: []
+			listData: [],
+			bookCount:0
 		}
 	},
 	onLoad() {
@@ -115,6 +116,14 @@ export default {
 			
 			// 获取全选状态
 			this.allSelect = bookListData.countAllSelect();
+			
+			let bookCount = 0;
+			this.listData.forEach(item=>{
+				if(item.select) {
+					bookCount = bookCount + 1;					
+				}
+			});
+			this.bookCount = bookCount;
 		},
 		changAllSelectType(){
 			this.statusUpdate();
