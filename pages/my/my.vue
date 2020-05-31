@@ -170,8 +170,8 @@ export default {
 					},
 					{
 						'imgSrc' : this.$aliImage + 'my2_7.png',
-						'title'	: '反馈',
-						'toUrl'	: '暂未开放'
+						'title'	: '客服',
+						'toUrl'	: '请前往【我的五车书】公众号咨询客服'
 					},
 					{
 						'imgSrc' : this.$aliImage + 'my2_8.png',

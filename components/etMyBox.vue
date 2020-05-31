@@ -59,10 +59,10 @@ export default {
 					}
 				})
 			} else {
-				if(toUrl === '敬请期待' || toUrl === '暂未开放'){
+				if(toUrl === '敬请期待' || toUrl === '暂未开放' || toUrl === '请前往【我的五车书】公众号咨询客服'){
 					uni.showToast({
 						title:toUrl,
-						duration:2000,
+						duration:3000,
 						icon:"none"
 					})
 					
