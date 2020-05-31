@@ -318,7 +318,7 @@ export default {
 			let bookCount = this.bookCount;
 			
 			//判断是否有押金
-			let deposit = this.customerInfo.deposit;
+			let deposit = this.customerInfo.deposit;  
 						
 			// 正常订单判断规则号
 			let payRuleType = 0;
@@ -371,8 +371,11 @@ export default {
 				}
 			}
 			
-			//更新微信支付信息
-			
+			//如果有押金的情况，清空初始化押金信息
+			if(parseInt(deposit) !== 0) {
+				orderPayInfo.payMoney = orderPayInfo.payMoney - orderPayInfo.deposit;
+				orderPayInfo.deposit = 0;
+			}
 			
 			return orderPayInfo;
 			
