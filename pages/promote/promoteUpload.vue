@@ -88,8 +88,10 @@
 	    methods: {
 			getPromote() {
 				let param = {
-					custom_id: this.allCustomInfo.id,
-					promote_name: this.promoteTitle
+					filterItems: {
+						custom_id: this.allCustomInfo.id,
+						promote_name: this.promoteTitle,
+					}
 				}
 				this.$api.getPromote(param).then(res => {
 					if (res.data && res.data.length > 0) {
@@ -157,8 +159,9 @@
 						}
 						this.$api.addPromote(param).then(res => {
 							uni.showToast({ icon: '', title: res.data.msg })	
-							uni.hideLoading()
+							this.getCustomInfo()
 						})
+						uni.hideLoading()
 					}
 				})
 				// onProgressUpdate 上传对象更新的方法

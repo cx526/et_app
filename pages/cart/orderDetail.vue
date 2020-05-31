@@ -95,6 +95,7 @@ export default {
 	},
 	data() {
 		return {
+			allcustomInfo: {},
 			customerInfo:{},		//客户信息
 			bookCount: "0",
 			moneyCount: "0",
@@ -124,7 +125,7 @@ export default {
 		},
 		async getCustomerInfo(){
 			this.userInfo = uni.getStorageSync('userInfo');
-			const userInfoArr = await this.$api.getCustom({ filterItems: { mobile: this.userInfo.mobile } }).then(res=>{
+			this.allcustomInfo = await this.$api.getCustom({ filterItems: { mobile: this.userInfo.mobile } }).then(res=>{
 				return res.data[0];
 			});
 		},
@@ -239,7 +240,11 @@ export default {
 								res => {
 									// res.errMsg = "requestPayment:ok"
 									if (res.errMsg === "requestPayment:ok") {
-										this.$api.updatePayment({order_no: order_no}).then(res => {
+										this.$api.updatePayment({
+											order_no: order_no, 
+											custom_id: allcustomInfo.id,
+											deposit: this.finalPayOrderInfo.deposit,
+										}).then(res => {
 											//跳出支付成功界面
 											if (res.data.xml.return_code[0] === 'SUCCESS') {
 												uni.navigateTo({
