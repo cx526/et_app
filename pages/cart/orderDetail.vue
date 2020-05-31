@@ -118,7 +118,7 @@ export default {
 	methods: {
 		toTest() {
 			this.finalPayOrderInfo.afterDiscountMoney = '0.01'
-			this.finalPayOrderInfo.deposit = '0.01'
+			this.finalPayOrderInfo.deposit = '1'
 			// this.moneyCount = '0.01';
 			this.finalPayOrderInfo.payMoney = '0.02'
 		},
