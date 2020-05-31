@@ -177,8 +177,12 @@
 							mobile: this.allCustomInfo.mobile,
 						}
 						this.$api.addPromote(param)
+						this.hasPromote = true
+					},
+					complete: res => {
 						uni.hideLoading()
 						uni.showToast({ icon: '', title: res.data.msg })
+						this.hasPromote = true
 						this.getCustomInfo()
 					}
 				})
