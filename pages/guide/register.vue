@@ -39,7 +39,7 @@
 		<view class="buttom-father">
 			<view class="button-content">
 				<view class="button-content-img">
-					<image class="button-content-img-bi" src="../../static/register/currency.png"></image>
+					<image class="button-content-img-bi" src="https://et-pic-server.oss-cn-shenzhen.aliyuncs.com/app_img/guide_register.png" mode="widthFix"></image>
 				</view>
 				<view class="button-content-son button-content-son-one" @tap="goClassInfo">
 					<text>填写幼儿园信息</text>
@@ -231,11 +231,11 @@ export default {
 	position: relative;
 }
 .button-content-img-bi {
-	width: 168upx;
-	height: 59upx;
+	width: 250upx;
+	/* height: 59upx; */
 	position: absolute;
-	top: -50upx;
-	left: 80upx;
+	top: -48upx;
+	left: 50upx;
 }
 .button-content-son {
 	width: 350upx;

@@ -53,7 +53,7 @@
 		</view>
 		
 		<view class="process-position">
-			<image class="out-img" src="https://et-pic-server.oss-cn-shenzhen.aliyuncs.com/app_img/bookdetail_process.png"></image>
+			<image class="out-img" src="https://et-pic-server.oss-cn-shenzhen.aliyuncs.com/app_img/index_bookdetail_progress.png"></image>
 		</view>
 	
 		

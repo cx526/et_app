@@ -12,7 +12,7 @@
 					</view>
 					
 					<view class="top-content-right">
-						<image class="top-content-right-img-one" src="../../static/cart/getMoney.png"></image>
+						<image class="top-content-right-img-one" src="https://et-pic-server.oss-cn-shenzhen.aliyuncs.com/app_img/cart_getMore.png"></image>
 						<image class="top-content-right-img-two" src="../../static/cart/sign.png" @tap="toSign"></image>
 					</view>
 				</view>
