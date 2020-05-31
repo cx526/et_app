@@ -1,5 +1,6 @@
 {
 	"pages": [ //pages数组中第一项表示应用启动页，参考：https://uniapp.dcloud.io/collocation/pages		
+		
 		{
 			"path": "pages/index/index",
 			"style": {
@@ -10,7 +11,25 @@
 			}
 		},
 		{
-			"path": "pages/promote/promoteKan",
+			"path": "pages/my/myMember",
+			"style": {
+				"navigationBarTitleText": "我的会员",
+				"app-plus": {
+					"titleNView": false
+				}
+			}
+		},
+		{
+			"path": "pages/guide/complateInfo",
+			"style": {
+				"navigationBarTitleText": "完善幼儿园信息",
+				"app-plus": {
+					"titleNView": false
+				}
+			}
+		},
+		{
+			"path": "pages/promote/promoteNewCovid",
 			"style": {
 				"navigationBarTitleText": "抗疫绘本",
 				"app-plus": {
@@ -37,15 +56,7 @@
 			}
 		},		
 		
-		{
-			"path": "pages/guide/complateInfo",
-			"style": {
-				"navigationBarTitleText": "完善幼儿园信息",
-				"app-plus": {
-					"titleNView": false
-				}
-			}
-		},
+		
 		{
 			"path": "pages/promote/promotePictureBook",
 			"style": {
@@ -55,15 +66,7 @@
 				}
 			}
 		},
-		{
-			"path": "pages/my/myMember",
-			"style": {
-				"navigationBarTitleText": "我的会员",
-				"app-plus": {
-					"titleNView": false
-				}
-			}
-		},
+		
 		
 		{
 			"path": "pages/my/myDeposit",

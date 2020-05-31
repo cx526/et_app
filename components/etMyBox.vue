@@ -59,6 +59,16 @@ export default {
 					}
 				})
 			} else {
+				if(toUrl === '敬请期待' || toUrl === '暂未开放' || toUrl === '请前往【我的五车书】公众号咨询客服'){
+					uni.showToast({
+						title:toUrl,
+						duration:3000,
+						icon:"none"
+					})
+					
+					return;
+				}
+				
 				uni.navigateTo({url: toUrl});
 				if (toUrl === '/pages/promote/pictureMonth'){
 					uni.switchTab({

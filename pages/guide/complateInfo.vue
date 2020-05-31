@@ -399,6 +399,7 @@ export default {
 	border: 1px solid #f1f1f1;
 }
 .picker-input {
-	width: 60%;
+	width: 70%;
+	margin-right: -80upx;
 }
 </style>

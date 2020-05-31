@@ -20,9 +20,13 @@
 				
 				<!-- 列表数据 -->
 				<view class="cat-detail-position">
-					<view class="cat-detail" v-for="(item,index) in listData">
+					<view class="cat-detail" v-if="listData.length > 0" v-for="(item,index) in listData">
 						<et-cart-detail :key="index" :bookID="item.id"  :select="item.select" :imgSrc="item.forGoodsPic[0].url" :title="item.title" :status="item.status" :coin="item.coin" :count="item.count" @changSelectType="changAllSelectType" @deleteData="deleteData"></et-cart-detail>
 						<view class="white-space"></view>
+					</view>
+					<view class="cat-add-book" @tap="toKineUrl" v-if="listData.length === 0" >
+						<image src="../../static/cart/add.png" style="width: 200upx; height: 200upx;"></image>
+						<text style="color:#9FB2BF; font-size: 30upx;">请先添加书本</text>
 					</view>
 				</view>
 				
@@ -38,8 +42,8 @@
 						
 						<view class="bottom-text">
 							<text>合计：</text>
-							<text style="color: #DB3E49;">{{moneyCount}}</text>
-							<text>积分</text>
+							<text style="color: #DB3E49;">{{bookCount}}</text>
+							<text>本</text>
 						</view>
 						
 						<view class="bottom-tag">
@@ -58,6 +62,7 @@ import etCartDetail from '../../components/etCartDetail.vue'
 import etTag from '../../components/etTag.vue'
 
 const bookListData = require('@/common/carDataOption');
+const toUrlFunction = require('@/common/toUrlFunction');
 
 export default {
 	components: {
@@ -74,7 +79,8 @@ export default {
 			coin:"40",
 			moneyCount:"199",
 			allSelect:"true",
-			listData: []
+			listData: [],
+			bookCount:0
 		}
 	},
 	onLoad() {
@@ -86,6 +92,9 @@ export default {
 		this.getCustomerInfo();
 	},
 	methods: {
+		toKineUrl(){
+			toUrlFunction.toUrl('/pages/index/kind');
+		},
 		getCustomerInfo(){
 			this.$api.getCustom({ filterItems: { mobile: this.userInfo.mobile } }).then(res=>{
 				this.coin = res.data[0].coin;
@@ -107,6 +116,14 @@ export default {
 			
 			// 获取全选状态
 			this.allSelect = bookListData.countAllSelect();
+			
+			let bookCount = 0;
+			this.listData.forEach(item=>{
+				if(item.select) {
+					bookCount = bookCount + 1;					
+				}
+			});
+			this.bookCount = bookCount;
 		},
 		changAllSelectType(){
 			this.statusUpdate();
@@ -234,6 +251,13 @@ export default {
 }
 .cat-detail {
 
+}
+.cat-add-book {
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+	height: 100vh;
 }
 .bottom-position {
 	z-index: 3;

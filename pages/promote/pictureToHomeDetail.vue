@@ -25,7 +25,7 @@ export default {
 			})
 		},
 		toKanUrl(){
-			toUrlFunction.toUrl('/pages/promote/promoteKan');
+			toUrlFunction.toUrl('/pages/promote/promoteNewCovid');
 		}
 	}
 }
