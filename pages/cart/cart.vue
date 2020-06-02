@@ -179,6 +179,15 @@ export default {
 				return;
 			}
 			
+			if(select.length > 10){
+				uni.showToast({
+					title:'最多只能借10本书',
+					duration: 2000,
+					icon: 'none'
+				});
+				return;
+			}
+			
 			//插入订单缓存
 			let orderObject = {
 				bookCount: bookCount,

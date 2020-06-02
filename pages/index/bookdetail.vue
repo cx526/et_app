@@ -16,6 +16,9 @@
 			<view class="detail-content-position">
 				<view class="detail-title-position">
 					<text>{{bookInfo.title}}</text>
+					<view class="book-count-style">
+						<text style="font-size: 30upx;">{{bookInfo.stock.usageCount}} 本</text>
+					</view>
 				</view>
 				
 				<view class="detail-tag-position">
@@ -90,7 +93,10 @@
 					<text style="font-size: 20upx;color: #2AAEC4;">书篮</text>
 				</view>
 			</view>
-			<view class="bottom-button-input" @tap="insertToCart">
+			<view v-if="bookInfo.stock.usageCount !== 0" class="bottom-button-input" @tap="insertToCart">
+				<text style="font-size: 30upx">加入书篮</text>
+			</view>
+			<view v-else class="bottom-button-input"  style="background-color:#ccc; color: #fff;" @tap="insertToCart">
 				<text style="font-size: 30upx">加入书篮</text>
 			</view>
 		</view>
@@ -167,10 +173,19 @@ export default {
 		swiperChange(e) {
 			const index = e.detail.current;
 		},
-		insertToCart() { 			
+		insertToCart() { 
+			if(this.bookInfo.stock.usageCount === 0){
+				uni.showToast({
+					title:"书本暂时借完，请选择其他书本",
+					duration:2000,
+					icon:"none"
+				})
+				return;
+			}
+			
 			// 处理数据
 			let cartList = this.bookInfo;
-			cartList.select = true;
+			cartList.select = false;
 			cartList.count = 1;
 			insertBook.insertToCart(cartList);
 			try {
@@ -229,6 +244,18 @@ export default {
 	font-size: 40upx;
 	font-weight: bold;
 	padding-bottom: 10upx;
+	display: flex;
+	flex-direction: row;
+	justify-content: space-between;
+	align-items: center;
+}
+.book-count-style {
+	background-color: rgba(204,204,204,.5);
+	font-size: 35upx;
+	border-top-right-radius: 30upx;
+	border-bottom-right-radius: 30upx;
+	color: #FFFFFF;
+	padding: 10upx 30upx;
 }
 .detail-tag-position {
 	display: flex;
@@ -317,4 +344,5 @@ export default {
 	width: 50upx;
 	height: 50upx;
 }
+
 </style>

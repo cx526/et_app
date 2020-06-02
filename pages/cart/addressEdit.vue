@@ -80,10 +80,10 @@ export default {
     },
     onLoad(option) {
 		// 默认地区
-		this.address.province = "44000";
-		this.address.city = "440600";
-		this.address.area = "440606";
-		this.address.showing_address = "广东省佛山市顺德区";
+		// this.address.province = "44000";
+		// this.address.city = "440600";
+		// this.address.area = "440606";
+		// this.address.showing_address = "广东省佛山市顺德区";
 		
 		// 编辑时候需要加载数据
 		if(option.id) {
@@ -127,6 +127,7 @@ export default {
 				return;
 			}
 			
+			uni.showLoading();
 			if(this.optionType === 'add') {
 				this.addData();
 			}else if(this.optionType === 'mod'){

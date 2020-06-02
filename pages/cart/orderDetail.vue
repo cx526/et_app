@@ -115,8 +115,10 @@ export default {
 		}
 	},
 	onShow(){
+		uni.showLoading();
 		this.dataInit();
 		this.getCustomerInfo();
+		uni.hideLoading();
 	},
 	// onLoad(option) {
 	// 	this.dataInit();

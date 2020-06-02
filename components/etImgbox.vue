@@ -4,6 +4,15 @@
 		<view @tap="toBookDetail()">
 			<view class="img-content">
 				<image :src="bookInfo.forGoodsPic[0].url" class="img"></image>
+				<view class="book-count-style" v-if="bookInfo.stock.usageCount > 0">
+					<text>{{bookInfo.stock.usageCount}}本</text>
+				</view>
+				<view class="book-zero-count-style" v-if="bookInfo.stock.usageCount === 0">
+					<view class="book-zero-content-style">
+						<text>暂时</text>
+						<text>借完</text>
+					</view>
+				</view>
 			</view>
 			
 			<view class="font-content">
@@ -51,7 +60,7 @@ export default {
 }
 </script>
 
-<style>
+<style scoped>
 .btn-content {
 	width: 300upx;
 	display: flex;
@@ -69,6 +78,41 @@ export default {
 	width: 260upx;
 	height: 280upx;
 	background-color: #FFFFFF;
+}
+.book-count-style {
+	background-color: rgba(157,160,174,.6);
+	color: #FFFFFF;
+	border-top-right-radius: 20upx;
+	border-bottom-right-radius: 20upx;
+	padding-left: 8upx;
+	font-size: 30upx;
+	width: 90upx;
+	position: absolute;
+	bottom:10upx;
+}
+.book-zero-count-style {
+	background-color: rgba(157,160,174,.6);
+	width: 260upx;
+	height: 280upx;
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+	position: absolute;
+	bottom:10upx;
+}
+.book-zero-content-style {
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+	background-color: rgba(110,116,125,.8);
+	color: #FFFFFF;
+	width: 80upx;
+	height: 80upx;
+	border-radius: 50%;
+	font-size: 30upx;
+	padding: 30upx;
 }
 .img {
 	height: 280upx;

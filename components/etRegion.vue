@@ -39,7 +39,7 @@ export default {
 		this.region[0] = this.provinceArray
 		this.selectedProvinceValue = this.$props.showing_address;
 		
-		this.preSelectRegion();
+		// this.preSelectRegion();
 	},
 	data() {
 		return {
