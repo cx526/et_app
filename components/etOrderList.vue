@@ -58,6 +58,13 @@
 			<view class="botton-position" v-if="orderList.status_text === '阅读中'" @tap="customCloseOrder">
 				<text>还书</text>
 			</view>
+			
+		</view>
+		
+		<view class="button-text-position">
+			<view class="botton-text-style" v-if="orderList.status_text === '待归还'">
+				<text style="color: #2BAEC4; font-size: 25upx;">您的归还信息已收到,稍后将有客服联系您预约取件</text>
+			</view>
 		</view>
 	</view>
 </template>
@@ -213,5 +220,18 @@ export default {
 	background-color: #FFFFFF;
 	color:#B4B4B4;
 	border: 1upx solid #B4B4B4;
+}
+.button-text-position {
+	width: 100%;
+	display: flex;
+	flex-direction: row;
+	justify-content: flex-start;
+}
+.botton-text-style {
+	width: 100%;
+	display: flex;
+	flex-direction: column;
+	justify-content: flex-start;
+	align-items: center;
 }
 </style>
