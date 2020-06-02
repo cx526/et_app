@@ -266,14 +266,15 @@ export default {
 	flex-direction: row;
 	justify-content: space-between;
 	align-items: center;
+	flex-wrap: wrap;
 }
 .book-count-style {
-	background-color: rgba(204,204,204,.5);
-	font-size: 35upx;
-	border-top-right-radius: 30upx;
-	border-bottom-right-radius: 30upx;
+	background-color: rgba(204,204,204,.8);
+	font-size: 20upx;
+	border-radius: 20upx;
 	color: #FFFFFF;
-	padding: 10upx 30upx;
+	padding: 2upx 30upx;
+	margin-left: 20upx;
 }
 .detail-tag-position {
 	display: flex;
