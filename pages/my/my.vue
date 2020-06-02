@@ -111,8 +111,8 @@ export default {
 					},
 					{
 						'imgSrc' : this.$aliImage + 'my1_5.png',
-						'title'	: '待还书',
-						'toUrl'	: '/pages/cart/orderList?status_text=待还书'
+						'title'	: '待归还',
+						'toUrl'	: '/pages/cart/orderList?status_text=待归还'
 					},
 					{
 						'imgSrc' : this.$aliImage + 'my1_6.png',
@@ -182,6 +182,12 @@ export default {
 			}
 		}
 	},
+	onLoad() {
+		this.getOrderCount();
+	},
+	onShow() {
+		this.getOrderCount();
+	},
 	methods: {
 		goAuth() {
 			uni.removeStorageSync('userInfo')
@@ -196,6 +202,21 @@ export default {
 		},
 		vipBanner(){
 			toUrlFunction.toUrl('/pages/my/myMember');
+		},
+		getOrderCount(){
+			this.$api.getCustom({ filterItems: { mobile: this.userInfo.mobile } }).then(res=>{
+				this.$api.getOrderCountWithCustomID({  custom_id: res.data[0].id }).then(sres=>{
+					console.log(sres);
+					sres.data.map((item,index) => {
+						this.myOrderInfo.allMenu.map((sitem,sindex) => {
+							if(item.status_text === sitem.title){
+								this.myOrderInfo.allMenu[sindex].count = item.order_total;
+							}
+						});
+						console.log(this.myOrderInfo);
+					});
+				});
+			});
 		}
 	}
 }

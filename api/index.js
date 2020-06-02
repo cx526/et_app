@@ -80,6 +80,9 @@ api.modAddressDefault = params => request.globalRequest('/api/address/modAddress
 // 获取订单信息接口
 api.getOrder = params => request.globalRequest('/api/order/getOrder', 'POST', params)
 
+// 获取用户所有订单状态 @param custom_id
+api.getOrderCountWithCustomID = params => request.globalRequest('/api/order/getOrderCountWithCustomID', 'POST', params)
+
 //检测订单是否存在
 api.checkExistOrder = params => request.globalRequest('/api/order/checkExistOrder', 'POST', params)
 
