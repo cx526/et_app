@@ -87,11 +87,15 @@
 					<text style="font-size: 20upx;color: #2AAEC4;">收藏</text>
 				</view>
 			</view>
-			<view class="bottom-button-position">
+			<view class="bottom-button-position cart-book-count-father">
 				<view class="bottom-button" @tap="toCartUrl('/pages/cart/cart')">
 					<image src="https://et-pic-server.oss-cn-shenzhen.aliyuncs.com/app_img/bookdetail_cart.png" class="bottom-image"></image>
 					<text style="font-size: 20upx;color: #2AAEC4;">书篮</text>
 				</view>
+				<!-- 跳转书篮按钮加上书篮书本数 -->
+				<!-- <view class="cart-book-count-style">
+					<text>{{cartBookCount}}</text>
+				</view> -->
 			</view>
 			<view v-if="bookInfo.stock.usageCount !== 0" class="bottom-button-input" @tap="insertToCart">
 				<text style="font-size: 30upx">加入书篮</text>
@@ -109,6 +113,7 @@ import etTag from '../../components/etTag.vue'
 
 const insertBook = require('@/common/carDataOption');
 const toUrlFunction = require('@/common/toUrlFunction');
+const bookListData = require('@/common/carDataOption');
 
 export default {
 	components: {
@@ -121,6 +126,7 @@ export default {
 			bookID:	0,
 			swiperCurrent: 0,
 			swiperLength: 0,
+			cartBookCount:"",
 			imgInfo: [
 				{
 					'imgUrl' : "../static/bookdetail/people.png"
@@ -146,9 +152,20 @@ export default {
 	onLoad(option) {
 		this.bookID = JSON.parse(decodeURIComponent(option.bookID));
 		this.getBookData();
+		this.cartBookCountFun();
 		
 	},
 	methods: {
+		cartBookCountFun(){
+			let bookList = bookListData.getBookListData();
+			let bookCount = '0';
+			if(bookList.length > 99){
+				bookCount = "99+";
+			}else{
+				bookCount = bookList.length;
+			}
+			this.cartBookCount = bookCount;
+		},
 		toProgressUrl(){
 			toUrlFunction.toUrl('/pages/guide/borrowExplain');
 		},
@@ -188,6 +205,7 @@ export default {
 			cartList.select = false;
 			cartList.count = 1;
 			insertBook.insertToCart(cartList);
+			this.cartBookCountFun();
 			try {
 			    let carListArr = uni.getStorageSync('carListInfo');
 			    console.log(carListArr);
@@ -343,6 +361,25 @@ export default {
 .bottom-image {
 	width: 50upx;
 	height: 50upx;
+}
+.cart-book-count-father {
+	position: relative;
+}
+.cart-book-count-style {
+	position:absolute;
+	bottom:60upx;
+	left: 130upx;
+	width: 50upx;
+	height: 50upx;
+	border-radius: 50%;
+	background-color: #C41A16;
+	color: #FFFFFF;
+	font-size: 20upx;
+	font-weight: bold;
+	display: flex;
+	flex-direction: row;
+	justify-content: center;
+	align-items: center;
 }
 
 </style>
