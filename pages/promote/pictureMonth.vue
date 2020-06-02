@@ -10,6 +10,7 @@
 </template>
 
 <script>
+const toUrlFunction = require('@/common/toUrlFunction');
 
 export default {
     data() {
@@ -26,14 +27,12 @@ export default {
 				url:'/pages/promote/pictureToHomeDetail'
 			})
 		},
-		toGiftUrl() {
-			uni.showToast({
-				title:'活动即将开放',
-				icon:"none",
-				duration:2000
-			})
-			// uni.navigateTo({
-			// 	url:'/pages/promote/pictureToHome'
+		toGiftUrl() {			
+			toUrlFunction.toUrl('/pages/promote/promoteMonthGift');
+			// uni.showToast({
+			// 	title:'活动即将开放',
+			// 	icon:"none",
+			// 	duration:2000
 			// })
 		},
 		toSignUrl() {
