@@ -1,6 +1,6 @@
 <template>
 	<view class="content">
-		<image src="https://et-pic-server.oss-cn-shenzhen.aliyuncs.com/app_img/guide_borrowExplain.png" style="width: 100%;" mode="widthFix"></image>
+		<image src="https://et-pic-server.oss-cn-shenzhen.aliyuncs.com/app_img/guide_borrowExplain1.png" style="width: 100%;" mode="widthFix"></image>
 		<!-- <view class="content-button" @tap="toUrl">
 			<text>立即借阅</text>
 		</view> -->

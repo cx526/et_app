@@ -151,6 +151,7 @@ export default {
 					this.orderList = res.data;
 					uni.hideLoading()
 				}) 
+				console.log(this.orderList);
 			});
 		},
 		reloadPages(){

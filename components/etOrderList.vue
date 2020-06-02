@@ -62,9 +62,22 @@
 		</view>
 		
 		<view class="button-text-position">
+			<view class="botton-text-style" v-if="orderList.status_text === '待收货'">
+				<text style="color: #2BAEC4; font-size: 25upx;">物流单号：待发货</text>
+			</view>
+			
+			<view class="botton-text-style" v-if="orderList.status_text === '阅读中'">
+				<text style="color: #2BAEC4; font-size: 25upx;">点击还书后,稍后将有客服联系您预约取件</text>
+			</view>
+			
 			<view class="botton-text-style" v-if="orderList.status_text === '待归还'">
 				<text style="color: #2BAEC4; font-size: 25upx;">您的归还信息已收到,稍后将有客服联系您预约取件</text>
 			</view>
+			
+			<!-- <view class="botton-text-style" v-if="orderList.status_text === '待归还'">
+				<text style="color: #2BAEC4; font-size: 25upx;">物流单号：暂无</text>
+			</view> -->
+			
 		</view>
 	</view>
 </template>

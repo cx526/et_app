@@ -1,6 +1,6 @@
 <template>
 	<view class="content">
-		<image src="https://et-pic-server.oss-cn-shenzhen.aliyuncs.com/app_img/promote_pictureToHome.png" style="width: 100%;" mode="widthFix"></image>
+		<image src="https://et-pic-server.oss-cn-shenzhen.aliyuncs.com/app_img/promote_pictureToHome1.png" style="width: 100%;" mode="widthFix"></image>
 		<view class="content-button" @tap="toUrl">
 			<text>立即体验</text>
 		</view>
