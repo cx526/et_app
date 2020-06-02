@@ -62,21 +62,28 @@
 		</view>
 		
 		<view class="button-text-position">
-			<view class="botton-text-style" v-if="orderList.status_text === '待收货'">
-				<text style="color: #2BAEC4; font-size: 25upx;">物流单号：待发货</text>
+			<view>
+				<view class="botton-text-style" v-if="orderList.status_text === '待收货' && orderList.ioInfo.express_no != ''">
+					<text style="color: #2BAEC4; font-size: 25upx;">物流单号：{{orderList.ioInfo.express_no}}</text>
+				</view>
+				<view class="botton-text-style" v-else-if="orderList.status_text === '待收货'">
+					<text style="color: #2BAEC4; font-size: 25upx;">物流单号：暂无</text>
+				</view>
 			</view>
+			
 			
 			<view class="botton-text-style" v-if="orderList.status_text === '阅读中'">
 				<text style="color: #2BAEC4; font-size: 25upx;">点击还书后,稍后将有客服联系您预约取件</text>
 			</view>
 			
-			<view class="botton-text-style" v-if="orderList.status_text === '待归还'">
-				<text style="color: #2BAEC4; font-size: 25upx;">您的归还信息已收到,稍后将有客服联系您预约取件</text>
+			<view>
+				<view class="botton-text-style" v-if="orderList.status_text === '待归还' && orderList.ioInfo.express_no_back != ''">
+					<text style="color: #2BAEC4; font-size: 25upx;">物流单号：{{orderList.ioInfo.express_no_back}}</text>
+				</view>
+				<view class="botton-text-style" v-else-if="orderList.status_text === '待归还'">
+					<text style="color: #2BAEC4; font-size: 25upx;">您的归还信息已收到,稍后将有客服联系您预约取件</text>
+				</view>
 			</view>
-			
-			<!-- <view class="botton-text-style" v-if="orderList.status_text === '待归还'">
-				<text style="color: #2BAEC4; font-size: 25upx;">物流单号：暂无</text>
-			</view> -->
 			
 		</view>
 	</view>
@@ -235,16 +242,17 @@ export default {
 	border: 1upx solid #B4B4B4;
 }
 .button-text-position {
-	width: 100%;
+	width: 90%;
 	display: flex;
 	flex-direction: row;
 	justify-content: flex-start;
+	margin-top: 20upx;
 }
 .botton-text-style {
-	width: 100%;
+	/* width: 90%; */
 	display: flex;
-	flex-direction: column;
+	flex-direction: row;
 	justify-content: flex-start;
-	align-items: center;
+	align-items: flex-start;
 }
 </style>
