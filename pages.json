@@ -11,6 +11,24 @@
 			}
 		},
 		{
+			"path": "pages/promote/promoteMonthGift",
+			"style": {
+				"navigationBarTitleText": "积分兑换",
+				"app-plus": {
+					"titleNView": false
+				}
+			}
+		},
+		{
+			"path": "pages/promote/pictureWork",
+			"style": {
+				"navigationBarTitleText": "童创手工坊",
+				"app-plus": {
+					"titleNView": false
+				}
+			}
+		},
+		{
 			"path": "pages/my/myMember",
 			"style": {
 				"navigationBarTitleText": "我的会员",
@@ -115,15 +133,7 @@
 				}
 			}
 		},
-		{
-			"path": "pages/promote/pictureWork",
-			"style": {
-				"navigationBarTitleText": "童创手工坊",
-				"app-plus": {
-					"titleNView": false
-				}
-			}
-		},
+		
 		{
 			"path": "pages/promote/picturePainting",
 			"style": {
