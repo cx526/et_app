@@ -91,7 +91,12 @@
 		</view>
 		<uni-load-more :status="loadStatus" :content-text="loadText" />
 		<view class="white-space"></view>
-				
+		
+		<uni-popup ref="popup">
+			<view @tap="goPromote">
+				<image style="width: 480upx; height: 800upx;" src="https://et-pic-server.oss-cn-shenzhen.aliyuncs.com/app_img/popOver.png"></image>
+			</view>
+		</uni-popup>
 	</view>
 </template>
 
@@ -102,6 +107,9 @@ import etTitlenavigation from '../../components/etTitlenavigation.vue'
 import etBookcat from '../../components/etBookcat.vue'
 import etImgbox from '../../components/etImgbox.vue'
 import uniLoadMore from "@/components/uni-load-more/uni-load-more.vue"
+import uniPopup from '@/components/uni-popup/uni-popup.vue'
+import uniPopupMessage from '@/components/uni-popup/uni-popup-message.vue'
+import uniPopupDialog from '@/components/uni-popup/uni-popup-dialog.vue'
 
 const toUrlFunction = require('@/common/toUrlFunction');
 
@@ -112,7 +120,10 @@ export default {
 		etHotcomcontent,
 		etTitlenavigation,
 		etBookcat,
-		etImgbox
+		etImgbox,
+		uniPopup,
+		uniPopupMessage,
+		uniPopupDialog
 	},
 	data() {
 		return {
@@ -192,6 +203,7 @@ export default {
 		this.getSwiperData()
 		this.getHotBook('init')
 		this.getGuessBook('init')
+		this.showAD()
 	},
 	// 上拉加载更多,onReachBottom上拉触底函数
 	onReachBottom : function(){
@@ -199,6 +211,19 @@ export default {
 		this.getGuessBook('push')
 	},
 	methods: {
+		goPromote() {
+			uni.switchTab({
+				url: '/pages/promote/pictureMonth'
+			})
+			this.$refs.popup.close()
+			uni.setStorageSync('et_popOver', true)
+		},
+		showAD() {
+			let popOver = uni.getStorageSync('et_popOver')
+			if (!popOver) {
+				this.$refs.popup.open()
+			}
+		},
 		clickBookCat(name){
 			this.$api.getKindsWithThreeKind({ kind_name : name }).then(res=>{
 				// console.log(res);
