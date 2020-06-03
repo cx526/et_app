@@ -44,7 +44,7 @@
 			
 			<view class="white-space"></view>
 			
-			<view class="my-box-position">
+			<view class="my-box-position" v-if="updateOrderInfo">
 				<etMyBox :myMenuInfo="myOrderInfo"></etMyBox>
 			</view>
 			
@@ -74,6 +74,7 @@ export default {
 	},
 	data() {
 		return {
+			updateOrderInfo: false,
 			test: '123456',
 			// userInfo: {
 			// 	'name':'开发者',
@@ -231,6 +232,7 @@ export default {
 						});
 						console.log(this.myOrderInfo);
 					});
+					this.updateOrderInfo = true
 				});
 			});
 		}
