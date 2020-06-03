@@ -25,7 +25,7 @@
 			</view>
 			
 			<view class="baby-content" v-if="babyInfo.childInfo.name">
-				<text>班级：{{babyInfo.gradeInfo.name ? babyInfo.gradeInfo.name : ''}} {{babyInfo.gradeInfo.level ? babyInfo.gradeInfo.level+'班' : ''}}</text>
+				<text>班级：{{babyInfo.gradeInfo.name ? babyInfo.gradeInfo.name : ''}} {{babyInfo.childInfo.class ? babyInfo.childInfo.class+'班' : ''}}</text>
 			</view>
 			
 			<view class="baby-content" v-if="babyInfo.childInfo.name">

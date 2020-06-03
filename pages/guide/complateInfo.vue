@@ -147,7 +147,7 @@ export default {
 		alterInit(objectArr){
 			console.log(objectArr);
 			// return;
-			this.teamIndex = parseInt(objectArr.class) - 1;
+			this.teamIndex = parseInt(objectArr.childInfo.class) - 1;
 			if(JSON.stringify(objectArr.schoolInfo) !== "{}"){
 				//存在学校信息就更新一下
 				this.selectedProvinceCode = objectArr.schoolInfo.province;
@@ -161,7 +161,7 @@ export default {
 				this.selectGradeId = objectArr.gradeInfo.id;
 				
 				//控制班级
-				this.teamIndex = parseInt( objectArr.gradeInfo.level) - 1;
+				this.teamIndex = parseInt( objectArr.childInfo.class) - 1;
 				
 				//控制学校展示
 				let param = {
@@ -203,7 +203,7 @@ export default {
 							this.selectGradeId = item.id;
 							
 							//设置班选中项
-							this.teamIndex = objectArr.gradeInfo.level-1;
+							this.teamIndex = objectArr.childInfo.class-1;
 						}
 						this.grade.push(item.name);
 					});
