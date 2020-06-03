@@ -93,7 +93,7 @@
 					<text style="font-size: 20upx;color: #2AAEC4;">书篮</text>
 				</view>
 				<!-- 跳转书篮按钮加上书篮书本数 -->
-				<view class="cart-book-count-style">
+				<view class="cart-book-count-style" v-if="cartBookCount != 0">
 					<text>{{cartBookCount}}</text>
 				</view>
 			</view>
