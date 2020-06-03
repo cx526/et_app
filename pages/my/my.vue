@@ -26,7 +26,7 @@
 					<view v-if="userInfo.name === 'guest'" @tap="goAuth">
 						<image src="https://et-pic-server.oss-cn-shenzhen.aliyuncs.com/app_img/avatar.png" style="border-radius: 50%; width: 120upx; height: 120upx;"></image>
 					</view>
-					<view v-else>
+					<view v-else @tap="clearSessionAction">
 						<image :src="userInfo.avatar" style="border-radius: 50%; width: 120upx; height: 120upx;"></image>
 					</view>
 				</view>
@@ -189,6 +189,22 @@ export default {
 		this.getOrderCount();
 	},
 	methods: {
+		clearSessionAction() {
+			uni.showActionSheet({
+			    itemList: ['重新登录'],
+			    success: res => {
+					if (res.tapIndex === 0) {
+						uni.removeStorageSync('userInfo')
+						uni.removeStorageSync('carListInfo')
+						uni.clearStorageSync()
+						uni.reLaunch({url: '../guide/guide'})
+					}
+			    },
+			    fail: res => {
+			        console.log(res.errMsg);
+			    }
+			});
+		},
 		goAuth() {
 			uni.removeStorageSync('userInfo')
 			uni.reLaunch({url: '../guide/guide'})
