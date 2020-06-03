@@ -65,7 +65,8 @@ export default {
 							uni.setStorageSync('userInfo', res.data)
 							// uni.reLaunch({url: '../index/index'})
 							this.phoneCheck = true
-							uni.navigateTo({ url: './register' })
+							this.checkInfo(res.data);
+							// uni.navigateTo({ url: './register' })
 						} else {
 							uni.showToast({
 								icon : 'none',
@@ -89,6 +90,19 @@ export default {
 				mobile: ''
 			});
 			uni.reLaunch({ url: '../index/index' })
+		},
+		checkInfo(userInfo) {
+			this.$api.getCustom({ filterItems: { mobile: userInfo.mobile } }).then(res=>{
+				let childInfo = res.data[0].childInfo;
+				console.log(childInfo);
+				if(JSON.stringify(childInfo) == "{}"){
+					uni.navigateTo({ url: './register' });
+				}else{
+					uni.switchTab({
+						url: '/pages/index/index'
+					});
+				}
+			});
 		}
 	}
 }

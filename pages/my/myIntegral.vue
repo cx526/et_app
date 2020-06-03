@@ -4,9 +4,9 @@
 		
 		<view class="content-position">
 			<view class="top-content-position">
-				<view class="top-content">
+				<view class="top-content" v-if='userInfoAll.id'>
 					<view class="top-left-position">
-						<image style="height: 120upx;width: 120upx;border-radius: 50%;" src="../../static/cart/test.png" class="marginStyle"></image>
+						<image style="height: 120upx;width: 120upx;border-radius: 50%;" :src="userInfoAll.avatar" class="marginStyle"></image>
 						<image style="width: 40upx;height: 40upx;" src="https://et-pic-server.oss-cn-shenzhen.aliyuncs.com/app_img/my_coin.png" class="marginStyle"></image>
 						<text class="marginStyle">当前积分</text>
 					</view> 
@@ -15,6 +15,12 @@
 						<view class="top-right-content">
 							<text>{{userInfoAll.coin}}</text>
 						</view>
+					</view>
+				</view>
+				
+				<view class="top-content" v-else @tap='toLogin'>
+					<view class="login-button-style">
+						<text>请先登录</text>
 					</view>
 				</view>
 			</view>
@@ -28,6 +34,7 @@
 
 <script>
 import etMyBox from '../../components/etMyBox.vue'
+const checkLogin = require('@/common/checkLogin');
 
 export default {
 	components: {
@@ -48,9 +55,18 @@ export default {
 	},
 	methods: {
 		async getCustomerInfo(){
+			//没登录不显示积分
+			let guestStatus = checkLogin.checkLogin(true);
+			if(guestStatus){
+				return;
+			}
 			this.userInfoAll = await this.$api.getCustom({ filterItems: { mobile: this.userInfo.mobile } }).then(res=>{
 				return res.data[0];
 			});
+			console.log(this.userInfoAll);
+		},
+		toLogin(){
+			checkLogin.checkLogin();
 		}
 	}
 }
@@ -120,5 +136,12 @@ export default {
 	padding-top: 30upx;
 	justify-content: center;
 	align-items: center;
+}
+.login-button-style {
+	background-color: #7ED1E6;
+	border-radius: 40upx;
+	color: #FFFFFF;
+	font-weight: bold;
+	padding: 10upx 50upx;
 }
 </style>
