@@ -149,14 +149,22 @@ function cartBookCount(){
 	let bookCount = '0';
 	if(bookList.length > 99){
 		bookCount = "99+";
+	}else if(bookList.length === 0){
+		bookCount = "";
 	}else{
 		bookCount = String(bookList.length);
 	}
 	
-	uni.setTabBarBadge({
-	  index: 2,
-	  text: bookCount
-	})
+	if(bookList.length === 0){
+		uni.removeTabBarBadge({
+			index:2
+		});
+	}else{
+		uni.setTabBarBadge({
+		  index: 2,
+		  text: bookCount
+		});
+	}
 	
 	return bookCount;
 }
