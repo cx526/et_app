@@ -24,6 +24,8 @@
 // 安卓在组件里面加载其他组件会有问题
 import etButton from './etButton.vue'
 
+const checkLogin = require('@/common/checkLogin');
+
 export default {
 	components: {
 		etButton
@@ -41,6 +43,10 @@ export default {
 	},
 	methods: {
 		menuUrl(toUrl){
+			let guestStatus = checkLogin.checkLogin();
+			if(guestStatus){
+				return;
+			}
 			uni.navigateTo({
 				url:toUrl
 			})

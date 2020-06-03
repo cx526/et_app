@@ -71,6 +71,7 @@ import etTag from '../../components/etTag.vue'
 
 const bookListData = require('@/common/carDataOption');
 const toUrlFunction = require('@/common/toUrlFunction');
+const checkLogin = require('@/common/checkLogin');
 
 export default {
 	components: {
@@ -104,6 +105,12 @@ export default {
 			toUrlFunction.toUrl('/pages/index/kind');
 		},
 		getCustomerInfo(){
+			//没登录不显示积分
+			let guestStatus = checkLogin.checkLogin(true);
+			if(guestStatus){
+				this.coin = 0;
+				return;
+			}
 			this.$api.getCustom({ filterItems: { mobile: this.userInfo.mobile } }).then(res=>{
 				this.coin = res.data[0].coin;
 			});
@@ -158,6 +165,20 @@ export default {
 		},
 		// 下订单
 		buySelect() {
+			if (this.userInfo.name === 'guest') {
+				//游客 发出提示
+				uni.showModal({
+					title: '请先登录',
+					confirmText: '登录',
+					success: (res) => {
+						if (res.confirm) {
+							uni.removeStorageSync('userInfo')
+							uni.reLaunch({url: '../guide/guide'})
+						}
+					}
+				})
+				return;
+			}
 			let select = [];
 			let unSelect = [];
 			let bookCount = 0;

@@ -62,6 +62,7 @@
 <script>
 import etMyBox from '../../components/etMyBox.vue'
 const toUrlFunction = require('@/common/toUrlFunction');
+const checkLogin = require('@/common/checkLogin');
 
 export default {
 	computed: {
@@ -221,6 +222,11 @@ export default {
 			toUrlFunction.toUrl('/pages/my/myMember');
 		},
 		getOrderCount(){
+			let guestStatus = checkLogin.checkLogin(true);
+			if(guestStatus){
+				this.updateOrderInfo = true
+				return;
+			}
 			this.$api.getCustom({ filterItems: { mobile: this.userInfo.mobile } }).then(res=>{
 				this.$api.getOrderCountWithCustomID({  custom_id: res.data[0].id }).then(sres=>{
 					console.log(sres);
