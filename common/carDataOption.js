@@ -143,6 +143,24 @@ function allSelectOption(option) {
 	uni.setStorageSync('carListInfo', carListArr);
 }
 
+//查看购物车书本数量
+function cartBookCount(){
+	let bookList = getBookListData();
+	let bookCount = '0';
+	if(bookList.length > 99){
+		bookCount = "99+";
+	}else{
+		bookCount = String(bookList.length);
+	}
+	
+	uni.setTabBarBadge({
+	  index: 2,
+	  text: bookCount
+	})
+	
+	return bookCount;
+}
+
 module.exports = {
 	getBookListData,
 	insertToCart,
@@ -151,5 +169,6 @@ module.exports = {
 	changSelectType,
 	countCoin,
 	countAllSelect,
-	allSelectOption
+	allSelectOption,
+	cartBookCount
 };

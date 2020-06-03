@@ -30,7 +30,7 @@
 		</view>
 		
 		<view class="content-buttom-position">
-			<et-add-book-to-cart :peopleCount="bookInfo.peopleCount" :bookInfo="bookInfo"></et-add-book-to-cart>
+			<et-add-book-to-cart :peopleCount="bookInfo.peopleCount" :bookInfo="bookInfo" @insertBookToCart='insertBookToCart'></et-add-book-to-cart>
 		</view>
 	</view>
 </template>
@@ -55,6 +55,9 @@ export default {
 	methods: {
 		toBookDetail() {
 			uni.navigateTo({ url: 'bookdetail?bookID=' + encodeURIComponent(JSON.stringify(this.$props.bookInfo.id)) })
+		},
+		insertBookToCart(){
+			this.$emit('insertBookToCart');
 		}
 	}
 }

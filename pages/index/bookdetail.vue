@@ -93,9 +93,9 @@
 					<text style="font-size: 20upx;color: #2AAEC4;">书篮</text>
 				</view>
 				<!-- 跳转书篮按钮加上书篮书本数 -->
-				<!-- <view class="cart-book-count-style">
+				<view class="cart-book-count-style">
 					<text>{{cartBookCount}}</text>
-				</view> -->
+				</view>
 			</view>
 			<view v-if="bookInfo.stock.usageCount !== 0" class="bottom-button-input" @tap="insertToCart">
 				<text style="font-size: 30upx">加入书篮</text>
@@ -152,20 +152,20 @@ export default {
 	onLoad(option) {
 		this.bookID = JSON.parse(decodeURIComponent(option.bookID));
 		this.getBookData();
-		this.cartBookCountFun();
+		// this.cartBookCountFun();
 		
 	},
 	methods: {
-		cartBookCountFun(){
-			let bookList = bookListData.getBookListData();
-			let bookCount = '0';
-			if(bookList.length > 99){
-				bookCount = "99+";
-			}else{
-				bookCount = bookList.length;
-			}
-			this.cartBookCount = bookCount;
-		},
+		// cartBookCountFun(){
+		// 	let bookList = bookListData.getBookListData();
+		// 	let bookCount = '0';
+		// 	if(bookList.length > 99){
+		// 		bookCount = "99+";
+		// 	}else{
+		// 		bookCount = bookList.length;
+		// 	}
+		// 	this.cartBookCount = bookCount;
+		// },
 		toProgressUrl(){
 			toUrlFunction.toUrl('/pages/guide/borrowExplain');
 		},
@@ -184,6 +184,7 @@ export default {
 			this.$api.getGoodsInfo({ 'NoPageing': '1', 'filterItems': {'id': this.bookID} }).then(res => {
 			   console.log(res.data.rows[0]);
 			   this.bookInfo = res.data.rows[0];
+			   this.cartBookCount = insertBook.cartBookCount();
 			   uni.hideLoading();
 			})
 		},
@@ -205,7 +206,9 @@ export default {
 			cartList.select = false;
 			cartList.count = 1;
 			insertBook.insertToCart(cartList);
-			this.cartBookCountFun();
+			// this.cartBookCountFun();
+			
+			this.cartBookCount = insertBook.cartBookCount();
 			try {
 			    let carListArr = uni.getStorageSync('carListInfo');
 			    console.log(carListArr);

@@ -63,6 +63,7 @@
 import etMyBox from '../../components/etMyBox.vue'
 const toUrlFunction = require('@/common/toUrlFunction');
 const checkLogin = require('@/common/checkLogin');
+const bookListData = require('@/common/carDataOption');
 
 export default {
 	computed: {
@@ -186,9 +187,13 @@ export default {
 	},
 	onLoad() {
 		this.getOrderCount();
+		//更新tab
+		let bookCount = bookListData.cartBookCount();
 	},
 	onShow() {
 		this.getOrderCount();
+		//更新tab
+		let bookCount = bookListData.cartBookCount();
 	},
 	methods: {
 		clearSessionAction() {

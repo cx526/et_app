@@ -95,10 +95,14 @@ export default {
 	onLoad() {
 		this.statusUpdate();
 		this.getCustomerInfo();
+		//更新tab
+		let bookCount = bookListData.cartBookCount();
 	},
 	onShow() {
 		this.statusUpdate();
 		this.getCustomerInfo();
+		//更新tab
+		let bookCount = bookListData.cartBookCount();
 	},
 	methods: {
 		toKineUrl(){

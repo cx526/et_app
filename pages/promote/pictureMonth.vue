@@ -11,6 +11,7 @@
 
 <script>
 const toUrlFunction = require('@/common/toUrlFunction');
+const bookListData = require('@/common/carDataOption');
 
 export default {
     data() {
@@ -18,8 +19,13 @@ export default {
 			
         }
     },
+	onShow() {
+		//更新tab
+		let bookCount = bookListData.cartBookCount();
+	},
     onLoad() {
-        
+        //更新tab
+        let bookCount = bookListData.cartBookCount();
     },
     methods: {
 		toPictureeUrl() {

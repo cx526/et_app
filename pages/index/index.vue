@@ -86,7 +86,7 @@
 			
 			<!-- 内容 -->
 			<view class="guess-content">
-				<et-imgbox  v-for="(item,i) in guessBookList" :key="i"  :bookInfo="item"></et-imgbox>
+				<et-imgbox  v-for="(item,i) in guessBookList" :key="i"  :bookInfo="item" @insertBookToCart='insertBookToCart'></et-imgbox>
 			</view>
 		</view>
 		<uni-load-more :status="loadStatus" :content-text="loadText" />
@@ -104,6 +104,7 @@ import etImgbox from '../../components/etImgbox.vue'
 import uniLoadMore from "@/components/uni-load-more/uni-load-more.vue"
 
 const toUrlFunction = require('@/common/toUrlFunction');
+const bookListData = require('@/common/carDataOption');
 
 export default {
 	components: {
@@ -187,11 +188,18 @@ export default {
 			
 		}
 	},
+	onShow() {
+		//更新tab
+		let bookCount = bookListData.cartBookCount();
+	},
 	onLoad() {
 		this.checkAuth()
 		this.getSwiperData()
 		this.getHotBook('init')
 		this.getGuessBook('init')
+		
+		//更新tab
+		let bookCount = bookListData.cartBookCount();
 	},
 	// 上拉加载更多,onReachBottom上拉触底函数
 	onReachBottom : function(){
@@ -199,6 +207,10 @@ export default {
 		this.getGuessBook('push')
 	},
 	methods: {
+		insertBookToCart(){
+			//更新tab
+			let bookCount = bookListData.cartBookCount();
+		},
 		clickBookCat(name){
 			this.$api.getKindsWithThreeKind({ kind_name : name }).then(res=>{
 				// console.log(res);

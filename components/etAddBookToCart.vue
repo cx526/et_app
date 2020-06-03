@@ -57,6 +57,7 @@ export default {
 			} catch (e) {
 			    console.log(carListArr);
 			}
+			this.$emit('insertBookToCart');
 		}
 	}
 }
