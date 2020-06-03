@@ -329,7 +329,7 @@ export default {
 					// if(0 < bookCount && bookCount <=3){
 					// 	payRuleType = 1
 					// }
-					if(4 <= bookCount && bookCount <=10){
+					if(0 < bookCount && bookCount <=10){
 						payRuleType = 2
 					}					
 				}else if(userType === 'commonUser'){	//游客用户
