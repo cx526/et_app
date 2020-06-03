@@ -400,7 +400,7 @@ export default {
 				case 2:
 					return {
 						userType:'学校用户',
-						discountType:'首次体验优惠',
+						discountType:'首次体验10本优惠',
 						couponType:'',
 						deposit:100,
 						orderMoney:30,
@@ -412,7 +412,7 @@ export default {
 				case 3:
 					return {
 						userType:'游客用户',
-						discountType:'首次体验优惠',
+						discountType:'首次体验10本优惠',
 						couponType:'',
 						deposit:200,
 						orderMoney:45,
