@@ -78,6 +78,9 @@ export default {
 		etCartDetail,
 		etTag
 	},
+	props: {
+		optionData: Object
+	},
 	computed: {
 		userInfo() {
 			return uni.getStorageSync('userInfo')
@@ -98,13 +101,7 @@ export default {
 		//更新tab
 		let bookCount = bookListData.cartBookCount();
 	},
-	onLoad() {
-		this.statusUpdate();
-		this.getCustomerInfo();
-		//更新tab
-		let bookCount = bookListData.cartBookCount();
-	},
-	onShow() {
+	mounted() {
 		this.statusUpdate();
 		this.getCustomerInfo();
 		//更新tab
@@ -112,7 +109,11 @@ export default {
 	},
 	methods: {
 		toKineUrl(){
-			toUrlFunction.toUrl('/pages/index/kind');
+			if(this.$props.optionData.optionType === 'kindlist'){
+				this.$emit('toKineUrl');
+			}else{
+				toUrlFunction.toUrl('/pages/index/kind');
+			}
 		},
 		getCustomerInfo(){
 			//没登录不显示积分
@@ -166,10 +167,12 @@ export default {
 			
 		},
 		deleteData() {
+			this.$emit('deleteData');
 			this.statusUpdate();
 		},
 		// 删除所有选中的记录
 		delectSelect(){
+			this.$emit('delectSelect');
 			bookListData.deleteSelect();
 			this.statusUpdate();
 		},

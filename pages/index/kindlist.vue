@@ -29,17 +29,17 @@
 				<view class="book-cart-style">
 					<image src="https://et-pic-server.oss-cn-shenzhen.aliyuncs.com/app_img/bookdetail_cart.png" class="book-cart-img-style"></image>
 				</view>
-				<view class="book-cart-count-style">
+				<view class="book-cart-count-style" v-if="cartBookCount != 0">
 					<text>{{cartBookCount}}</text>
 				</view>
 			</view>
 		</view>
 		
 		<!-- 书篮弹窗 -->
-		<uni-popup ref="popup" type="bottom">
-			<view style="height: 300px; background: #FFFFFF; overflow-y: scroll;">
+		<uni-popup ref="popup" type="bottom" @change="popupChange">
+			<view style="height: 1000upx; background: #FFFFFF; overflow-y: scroll;">
 				<!-- <view v-for="i in 10" :key="i" style="background: #007AFF; height: 100px;">{{i}}</view> -->
-				<et-book-cart-list></et-book-cart-list>
+				<et-book-cart-list v-if="popupShow" :optionData="{optionType:'kindlist'}" @toKineUrl='toKineUrl'></et-book-cart-list>
 			</view>
 		</uni-popup>
 		
@@ -86,7 +86,8 @@ export default {
 				contentrefresh: '加载中',
 				contentnomore: '没有更多'
 			},
-			cartBookCount: "",
+			cartBookCount:0,
+			popupShow:false,
 		}
 	},
 	onLoad(option) {
@@ -227,7 +228,16 @@ export default {
 		},
 		openBookCartList(){
 			this.$refs.popup.open();
+		},
+		toKineUrl(){
+			this.$refs.popup.close();
+		},
+		popupChange(e){
+			console.log(e);
+			this.popupShow = e.show;
+			this.cartBookCount = insertBook.cartBookCount();
 		}
+		
 	}
 }
 </script>
