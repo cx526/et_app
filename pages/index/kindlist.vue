@@ -36,15 +36,16 @@
 		</view>
 		
 		<!-- 书篮弹窗 -->
-		<uni-popup ref="popup" type="top">
+		<uni-popup ref="popup" type="bottom">
 			<!-- <view style="overflow-y: scroll;">
 				<et-book-cart-list></et-book-cart-list>
 			</view> -->
-			<scroll-view scroll-y="true" >
-				<view>
+			<view style="height: 300px; background: #FFFFFF; overflow-y: scroll;">
+				<!-- <view v-for="i in 10" :key="i" style="background: #007AFF; height: 100px;">{{i}}</view> -->
+				
 					<et-book-cart-list></et-book-cart-list>
-				</view>
-			</scroll-view>
+				
+			</view>
 		</uni-popup>
 		
 	</view>
