@@ -1,14 +1,21 @@
 <template>
-	<view class="btn-content" @tap="btnClick">
-		<view class="img-content">
-			<view class="count-content" v-if='count'>
-				<text>{{count}}</text>
+	<view class="father-position">
+		<view class="btn-content" @tap="btnClick">
+			<view class="img-content">
+				<view class="count-content" v-if='count'>
+					<text>{{count}}</text>
+				</view>
+				<image :src="img" class="img"></image>
 			</view>
-			<image :src="img" class="img"></image>
+			<text class="title">{{title}}</text>
+			<text class="buttom-content">{{buttomContent}}</text>
 		</view>
-		<text class="title">{{title}}</text>
-		<text class="buttom-content">{{buttomContent}}</text>
+		
+		<view class="customer-position" v-if="title === '客服'">
+			<button  class="service" style="width: 120upx; line-hegiht:200upx!important; background-color: rgba(255,255,255,0); color: rgba(255,255,255,0); border-color: rgba(255,255,255,0);">1</button>
+		</view>
 	</view>
+	
 </template>
 
 <script>
@@ -28,6 +35,20 @@ export default {
 </script>
 
 <style scoped>
+.service {
+	width: 120upx; 
+	line-hegiht:200upx !important;
+	background-color: rgba(255,255,255,0);
+	color: rgba(255,255,255,0);
+	border-color: rgba(255,255,255,0) !important;
+}
+.father-position {
+	position: relative;
+}
+.customer-position {
+	position: absolute;
+	top:0
+}
 .btn-content {
 	display: flex;
 	flex-direction: column;
