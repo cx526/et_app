@@ -12,7 +12,7 @@
 		</view>
 		
 		<view class="customer-position" v-if="title === '客服'">
-			<button  class="service" style="width: 120upx; line-hegiht:200upx!important; background-color: rgba(255,255,255,0); color: rgba(255,255,255,0); border-color: rgba(255,255,255,0);">1</button>
+			<button  class="service" style="width: 130upx;line-height:5;background-color: rgba(255,255,255,0);color: rgba(255,255,255,0);border-color: rgba(255,255,255,0);" open-type="contact">客服</button>
 		</view>
 	</view>
 	
@@ -35,9 +35,7 @@ export default {
 </script>
 
 <style scoped>
-.service {
-	width: 120upx; 
-	line-hegiht:200upx !important;
+.service::after {
 	background-color: rgba(255,255,255,0);
 	color: rgba(255,255,255,0);
 	border-color: rgba(255,255,255,0) !important;
