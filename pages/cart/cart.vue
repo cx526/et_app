@@ -1,7 +1,7 @@
 <template>
 	<view class="content">
 		<view style="width: 100%;">
-			<et-book-cart-list :optionData="{optionType:'cart'}"></et-book-cart-list>
+			<et-book-cart-list v-if="bookCatShow" :optionData="{optionType:'cart'}"></et-book-cart-list>
 		</view>
 	</view>
 </template>
@@ -13,6 +13,20 @@ export default {
 	components: {
 		etBookCartList
 	},
+	data() {
+		return {
+			bookCatShow:false,
+		}
+	},
+	onShow(){
+		this.bookCatShow = true;
+	},
+	onHide() {
+		this.bookCatShow = false;
+	},
+	onLoad(){
+		this.bookCatShow = true;
+	}
 }
 </script>
 

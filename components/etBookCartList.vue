@@ -18,6 +18,15 @@
 					</view>
 				</view>
 				
+				<view class="white-space" style="height: 20upx;"></view>
+				
+				<!-- banner -->
+				<view class="banner-position">
+					<image style="width: 100%;" src="https://et-pic-server.oss-cn-shenzhen.aliyuncs.com/app_img/bookcartlist_banner.png" mode="widthFix"></image>
+				</view>
+				
+				<view class="white-space" style="height: 20upx;"></view>
+				
 				<!-- 列表数据 -->
 				<view class="cat-detail-position">
 					<view class="cat-detail" v-if="listData.length > 0" v-for="(item,index) in listData">
@@ -253,7 +262,7 @@ export default {
 	z-index: 1;
 } */
 .backgroundStyle {
-	background-image: url(../static/cart/color.png);
+	/* background-image: url(../static/cart/color.png); */
 	background-size: 100% 250upx;
 	background-repeat:no-repeat;
 }
@@ -271,8 +280,9 @@ export default {
 	flex-direction: row;
 	justify-content: space-around;
 	align-items: center;
-	background-color: #EBF8FF;
-	border-radius: 10upx;
+	/* background-color: #EBF8FF; */
+	border-radius: 50upx;
+	border:1upx solid #E8E8E8;
 }
 .top-content-left {
 	display: flex;
@@ -296,6 +306,13 @@ export default {
 .top-content-right-img-two {
 	width: 40upx;
 	height: 40upx;
+}
+.banner-position {
+	width: 100%;
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
 }
 .cat-detail-position {
 	width: 90%;
