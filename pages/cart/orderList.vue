@@ -18,7 +18,7 @@
 				<et-order-list :orderList="item" @reloadPages = "reloadPages"></et-order-list>
 			</view>
 		</view>
-		<view class="order-list-position-null" v-else>
+		<view class="order-list-position-null" v-if='listStatus === 0'>
 			<text>列表空空如也</text>
 		</view>
 	</view>
@@ -48,62 +48,8 @@ export default {
 				'phone':'13690394900',
 				'address' : '广东省佛山市顺德区大良街道凤翔路创意产业园C栋301'
 			},
-			orderList : [
-				{
-					orderNo:'DD202005170000001',
-					status:'待发货',
-					price:'30',
-					bookList: [
-						{
-							title : '爸爸到底有什么用?',
-							image : '../static/cart/test.png',
-							count : '99'
-						},
-						{
-							title : '爸爸到底有什么用?',
-							image : '../static/cart/test.png',
-							count : '1'
-						},
-						{
-							title : '爸爸到底有什么用?',
-							image : '../static/cart/test.png',
-							count : '1'
-						},
-						{
-							title : '爸爸到底有什么用?',
-							image : '../static/cart/test.png',
-							count : '1'
-						}
-					]
-				},
-				{
-					orderNo:'DD202005170000001',
-					status:'待支付',
-					price:'30',
-					bookList: [
-						{
-							title : '爸爸到底有什么用?',
-							image : '../static/cart/test.png',
-							count : '99'
-						},
-						{
-							title : '爸爸到底有什么用?',
-							image : '../static/cart/test.png',
-							count : '1'
-						},
-						{
-							title : '爸爸到底有什么用?',
-							image : '../static/cart/test.png',
-							count : '1'
-						},
-						{
-							title : '爸爸到底有什么用?',
-							image : '../static/cart/test.png',
-							count : '1'
-						}
-					]
-				}
-			]
+			listStatus:1,	//列表状态0：没数据，1：加载中，其他：有数据
+			orderList : []
 			
 		}
 	},
@@ -149,6 +95,8 @@ export default {
 				uni.showLoading()
 				this.$api.getOrder({ filterItems }).then(res=>{
 					this.orderList = res.data;
+					//更新显示状态
+					this.listStatus = this.orderList.length;
 					uni.hideLoading()
 				}) 
 				console.log(this.orderList);

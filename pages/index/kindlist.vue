@@ -17,7 +17,7 @@
 					<view class="white-space"></view>
 					<uni-load-more :status="loadStatus" :content-text="loadText" />
 				</view>
-				<view class="empty-style" v-else>
+				<view class="empty-style" v-if='listStatus === 0'>
 					<text>列表空空如也</text>
 				</view>
 			</view>
@@ -88,6 +88,7 @@ export default {
 			},
 			cartBookCount:0,
 			popupShow:false,
+			listStatus:1,	//列表状态0：没数据，1：加载中，其他：有数据
 		}
 	},
 	onLoad(option) {
@@ -131,6 +132,9 @@ export default {
 				this.listData = listDataArr;
 			}
 			
+			//更新显示状态
+			this.listStatus = this.listData.length;
+			
 			// let objArr = [];
 			// listDataArr.map((item,index)=>{
 			// 	objArr[index] = {};
@@ -155,6 +159,8 @@ export default {
 				   objArr[index].goods_info = item
 			   });
 			   this.listData = objArr;
+			   //更新显示状态
+			   this.listStatus = this.listData.length;
 			   this.currentPage++;
 			   uni.hideLoading();
 			})
