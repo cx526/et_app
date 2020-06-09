@@ -10,11 +10,11 @@
 				<text style="color:#7D4700; font-size: 25upx; margin-top: 10upx;">可退还押金</text>
 			</view>
 		</view>
-		<!-- <view class="content-button" @tap="toUrl">
+		<view class="content-button" @tap="toRefund">
 			<view class="button-style">
-				<text>立即提现</text>
+				<text>退押金</text>
 			</view>
-		</view> -->
+		</view>
 	</view>
 </template>
 
@@ -35,10 +35,8 @@ export default {
         this.getCustomerInfo();
     },
     methods: {
-		toUrl() {
-			uni.switchTab({
-				url:'/pages/index/kind'
-			})
+		toRefund() {
+			console.log('toRefund')
 		},
 		getCustomerInfo(){
 			this.$api.getCustom({ filterItems: { mobile: this.userInfo.mobile } }).then(res=>{
@@ -81,5 +79,9 @@ export default {
 	color:#FFFFFF;
 	font-weight: bold;
 	font-size: 60upx;
+}
+.button-style {
+	position: relative;
+	bottom: 0;
 }
 </style>
