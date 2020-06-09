@@ -56,6 +56,17 @@ export default {
 				url:'/pages/promote/pictureWork'
 			})
 		},
+		// 页面分享
+		onShareAppMessage(res) {
+		    if (res.from === 'button') {// 来自页面内分享按钮
+		      console.log(res.target)
+		    }
+		    return {
+		      title: '读好书 · 赢积分 · 换好礼',
+		      path: '/pages/index/index',
+			  imageUrl:'http://et-pic-server.oss-cn-shenzhen.aliyuncs.com/1590482277709.png'
+		    }
+		}
 	}
 }
 </script>

@@ -17,7 +17,7 @@
 					<view class="white-space"></view>
 					<uni-load-more :status="loadStatus" :content-text="loadText" />
 				</view>
-				<view class="empty-style" v-else>
+				<view class="empty-style" v-if='listStatus === 0'>
 					<text>列表空空如也</text>
 				</view>
 			</view>
@@ -29,17 +29,17 @@
 				<view class="book-cart-style">
 					<image src="https://et-pic-server.oss-cn-shenzhen.aliyuncs.com/app_img/bookdetail_cart.png" class="book-cart-img-style"></image>
 				</view>
-				<view class="book-cart-count-style">
+				<view class="book-cart-count-style" v-if="cartBookCount != 0">
 					<text>{{cartBookCount}}</text>
 				</view>
 			</view>
 		</view>
 		
 		<!-- 书篮弹窗 -->
-		<uni-popup ref="popup" type="bottom">
-			<view style="height: 300px; background: #FFFFFF; overflow-y: scroll;">
+		<uni-popup ref="popup" type="bottom" @change="popupChange">
+			<view style="height: 1000upx; background: #FFFFFF; overflow-y: scroll;">
 				<!-- <view v-for="i in 10" :key="i" style="background: #007AFF; height: 100px;">{{i}}</view> -->
-				<et-book-cart-list></et-book-cart-list>
+				<et-book-cart-list v-if="popupShow" :optionData="{optionType:'kindlist'}" @toKineUrl='toKineUrl'></et-book-cart-list>
 			</view>
 		</uni-popup>
 		
@@ -84,9 +84,11 @@ export default {
 			loadText: {
 				contentdown: '上拉加载更多',
 				contentrefresh: '加载中',
-				contentnomore: '没有更多'
+				contentnomore: '已经到底了'
 			},
-			cartBookCount: "",
+			cartBookCount:0,
+			popupShow:false,
+			listStatus:1,	//列表状态0：没数据，1：加载中，其他：有数据
 		}
 	},
 	onLoad(option) {
@@ -130,6 +132,9 @@ export default {
 				this.listData = listDataArr;
 			}
 			
+			//更新显示状态
+			this.listStatus = this.listData.length;
+			
 			// let objArr = [];
 			// listDataArr.map((item,index)=>{
 			// 	objArr[index] = {};
@@ -154,6 +159,8 @@ export default {
 				   objArr[index].goods_info = item
 			   });
 			   this.listData = objArr;
+			   //更新显示状态
+			   this.listStatus = this.listData.length;
 			   this.currentPage++;
 			   uni.hideLoading();
 			})
@@ -227,7 +234,16 @@ export default {
 		},
 		openBookCartList(){
 			this.$refs.popup.open();
+		},
+		toKineUrl(){
+			this.$refs.popup.close();
+		},
+		popupChange(e){
+			console.log(e);
+			this.popupShow = e.show;
+			this.cartBookCount = insertBook.cartBookCount();
 		}
+		
 	}
 }
 </script>
