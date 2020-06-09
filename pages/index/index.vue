@@ -327,6 +327,17 @@ export default {
 			};
 			console.log(kindObject);
 			uni.navigateTo({ url: './kind?kindObject=' + encodeURIComponent(JSON.stringify(kindObject)) });
+		},
+		// 页面分享
+		onShareAppMessage(res) {
+		    if (res.from === 'button') {// 来自页面内分享按钮
+		      console.log(res.target)
+		    }
+		    return {
+		      title: '五车书，一个智能的童书借阅和阅读习惯养成的平台~',
+		      path: '/pages/index/index',
+			  imageUrl:'http://et-pic-server.oss-cn-shenzhen.aliyuncs.com/1590132916207.png'
+		    }
 		}
 	}	
 }
