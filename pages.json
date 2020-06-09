@@ -1,6 +1,15 @@
 {
 	"pages": [ //pages数组中第一项表示应用启动页，参考：https://uniapp.dcloud.io/collocation/pages		
 		
+		// {
+		// 	"path": "pages/promote/test",
+		// 	"style": {
+		// 		"navigationBarTitleText": "测试页",
+		// 		"app-plus": {
+		// 			"titleNView": false
+		// 		}
+		// 	}
+		// },
 		{
 			"path": "pages/index/index",
 			"style": {
@@ -23,6 +32,15 @@
 			"path": "pages/promote/pictureWork",
 			"style": {
 				"navigationBarTitleText": "童创手工坊",
+				"app-plus": {
+					"titleNView": false
+				}
+			}
+		},
+		{
+			"path": "pages/promote/pictureWorkUpload",
+			"style": {
+				"navigationBarTitleText": "童创手工坊作品",
 				"app-plus": {
 					"titleNView": false
 				}
@@ -96,15 +114,6 @@
 			}
 		},
 		{
-			"path": "pages/promote/promoteUpload",
-			"style": {
-				"navigationBarTitleText": "作品上传",
-				"app-plus": {
-					"titleNView": false
-				}
-			}
-		},
-		{
 			"path": "pages/cart/orderDetail",
 			"style": {
 				"navigationBarTitleText": "订单详情",
@@ -138,6 +147,15 @@
 			"path": "pages/promote/picturePainting",
 			"style": {
 				"navigationBarTitleText": "童彩小画社",
+				"app-plus": {
+					"titleNView": false
+				}
+			}
+		},
+		{
+			"path": "pages/promote/picturePaintingUpload",
+			"style": {
+				"navigationBarTitleText": "童彩小画社作品",
 				"app-plus": {
 					"titleNView": false
 				}
