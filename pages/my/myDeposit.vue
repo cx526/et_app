@@ -4,7 +4,7 @@
 			<image src="https://et-pic-server.oss-cn-shenzhen.aliyuncs.com/app_img/my_deposit.png" style="width: 500upx;" mode="widthFix"></image>
 			<view class="content-position">
 				<view class="money-style">
-					<text>¥ {{userInfoAll.deposit}}</text>
+					<text>¥ {{userInfoAll.deposit ? userInfoAll.deposit:0}}</text>
 				</view>
 				
 				<text style="color:#7D4700; font-size: 25upx; margin-top: 10upx;">可退还押金</text>

@@ -137,7 +137,7 @@ export default {
 			loadText: {
 				contentdown: '上拉加载更多',
 				contentrefresh: '加载中',
-				contentnomore: '没有更多'
+				contentnomore: '已经到底了'
 			},
 			toHotBookList: [],
 			groupList: [
