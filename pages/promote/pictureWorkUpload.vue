@@ -49,15 +49,20 @@
 					<view @tap="doSelectPic" v-if="preUploadPic === ''">
 						<image src="https://et-pic-server.oss-cn-shenzhen.aliyuncs.com/app_img/promote_add.png" style="width:160upx; height: 160upx;" mode=""></image>
 					</view>
-					<view v-if="preUploadPic !== ''" @tap="preViewPic">
-						<image :src="preUploadPic" style="width:160upx; height: 160upx;" mode=""></image>
+					<view v-if="preUploadPic !== ''" class="upload-img-position">
+						<image :src="preUploadPic" @tap="preViewPic" style="width:160upx; height: 160upx;" mode=""></image>
+						<image v-if="toAlter" class="upload-img-close" src="../../static/index/close.png" mode="widthFix" style="width: 50upx;" @tap='delUpload'></image>
 					</view>
 				</view>
 				<view style="height: 100upx;"></view>
 			</view>
 			
-			<view class="button-style" @tap="doUploadPic" v-if="!hasPromote">
+			<view class="button-style" @tap="doUploadPic" v-if="!hasPromote || toAlter">
 				<text>保存并上传</text>
+			</view>
+			
+			<view class="button-style" @tap="doAlter" v-if="hasPromote && (!toAlter)">
+				<text>修改作品</text>
 			</view>
 			
 		</view>
@@ -73,7 +78,10 @@
 				percent: 0,
 				inputText: '',
 				promoteTitle: '',
-				hasPromote: false
+				hasPromote: false,
+				toAlter:false,
+				picInfo:{},
+				isDelImg:false,	// 检查用户是否删除了图片，没保存
 	        }
 	    },
 		computed: {
@@ -85,6 +93,18 @@
 			this.promoteTitle = option.pTitle
 	        this.getCustomInfo()
 	    },
+		onUnload(){
+			if(this.toAlter && !this.preUploadPic){
+				uni.showToast({ icon: 'none', title: '请先上存图片',duration:3500 })
+				return;
+			}
+			
+			if(this.isDelImg){
+				// uni.showToast({ icon: 'none', title: '请先保存信息再离开',duration:3500 })
+				// return;
+				this.imgInfoUpload();
+			}
+		},
 	    methods: {
 			getPromote() {
 				let param = {
@@ -98,6 +118,7 @@
 						let result = res.data[0]
 						this.preUploadPic = result.promote_pic
 						this.inputText = result.promote_text
+						this.picInfo = result;
 						this.hasPromote = true
 					}
 				})
@@ -105,26 +126,8 @@
 			getCustomInfo() {
 				this.$api.getCustom({ filterItems: { mobile: this.userInfo.mobile } }).then(res=>{
 					this.allCustomInfo = res.data[0]
-					// if (this.allCustomInfo.schoolInfo && Object.keys(this.allCustomInfo.schoolInfo).length > 0 ) {
-					// 	//判断是学校用户
-						this.getPromote()	
-					// 	this.hasPromote = false
-					// } else {
-					// 	this.hasPromote = true
-					// 	this.uni.showToast({
-					// 		icon: '',
-					// 		title: '请先补充学校信息'
-					// 	});
-					// 	// uni.showModal({
-					// 	// 	title: '请先补充学校信息',
-					// 	// 	confirmText: '补充',
-					// 	// 	success: (res) => {
-					// 	// 		if (res.confirm) {
-					// 	// 			uni.reLaunch({url: '../guide/guide'})
-					// 	// 		}
-					// 	// 	}
-					// 	// })
-					// }
+					//判断是学校用户
+					this.getPromote()	
 				})
 			},
 			inputChange(e) {
@@ -137,6 +140,7 @@
 				    sourceType: ['album'],
 				    success: (res) => {
 				        this.preUploadPic = res.tempFilePaths[0]
+						this.isDelImg = true;
 				    }
 				});
 			},
@@ -151,13 +155,19 @@
 			},
 			doUploadPic() {
 				if (this.inputText === '') {
-					uni.showToast({ icon: '', title: '请完善相关信息' })	
+					uni.showToast({ icon: 'none', title: '请完善相关信息' })	
 					return 
 				}
 				if (this.preUploadPic === '') {
-					uni.showToast({ icon: '', title: '请完善相关信息' })	
+					uni.showToast({ icon: 'none', title: '请完善相关信息' })	
 					return 
 				}
+				
+				// 首次提交作品
+				this.imgInfoUpload();
+
+			},
+			imgInfoUpload(){
 				uni.showLoading()
 				uni.uploadFile({
 					// 需要上传的地址
@@ -177,20 +187,33 @@
 							mobile: this.allCustomInfo.mobile,
 						}
 						this.$api.addPromote(param)
-						this.hasPromote = true
+						// this.hasPromote = true
 					},
 					complete: res => {
 						uni.hideLoading()
-						uni.showToast({ icon: '', title: res.data.msg })
+						// uni.showToast({ icon: '', title: res.data.msg })
+						if(!this.hasPromote){
+							uni.showToast({ icon: 'none', title: '作品首次提交成功！' })
+						}
+						if(this.hasPromote){
+							uni.showToast({ icon: 'none', title: '作品修改成功！' })
+						}
 						this.hasPromote = true
+						this.toAlter = false;
+						this.isDelImg = false;
 						this.getCustomInfo()
 					}
 				})
-				// onProgressUpdate 上传对象更新的方法
-				// uper.onProgressUpdate((res) => {
-				// 	// 进度条等于 上传到的进度
-				// 	this.percent = res.progress
-				// })
+			},
+			doAlter(){
+				this.toAlter = true;
+			},
+			// 删除活动图片
+			delUpload(){
+				this.preUploadPic = '';
+				this.$api.delUploadPic({ name:this.picInfo.remark, url:this.picInfo.promote_pic  }).then(res=>{
+					console.log(res);
+				});
 			}
 		}
 	}
@@ -270,5 +293,14 @@
 	font-size: 35upx;
 	position: absolute;
 	bottom: -30upx;
+}
+.upload-img-position {
+	position: relative;
+}
+.upload-img-close {
+	z-index: 99;
+	position: absolute;
+	top: 0;
+	right: 0;
 }
 </style>

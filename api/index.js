@@ -100,4 +100,7 @@ api.addPromote = params => request.globalRequest('/api/promote/addPromote', 'POS
 
 api.getPromote = params => request.globalRequest('/api/promote/getPromote', 'POST', params)
 
+// 删除上传图片
+api.delUploadPic = params => request.globalRequest('/api/upload/delUploadPic', 'POST', params)
+
 export default api
