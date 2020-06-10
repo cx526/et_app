@@ -12,7 +12,7 @@
 		</view>
 		
 		<view class="customer-position" v-if="title === '客服'">
-			<button  class="service" style="width: 130upx;line-height:5;background-color: rgba(255,255,255,0);color: rgba(255,255,255,0);border-color: rgba(255,255,255,0);" open-type="contact">客服</button>
+			<button  class="service" style="width: 130upx;line-height:5;background-color: rgba(255,255,255,0);color: rgba(255,255,255,0);border-color: rgba(255,255,255,0);" open-type="contact" :session-from="sessionFromData">客服</button>
 		</view>
 	</view>
 	
@@ -25,6 +25,25 @@ export default {
 		img: String,
 		count: String,
 		buttomContent: String
+	},
+	computed: {
+		userInfo() {
+			return uni.getStorageSync('userInfo')
+		},
+		sessionFromData(){
+			let data = {
+				source:"五车书小程序",
+				avatarUrl:this.userInfo.avatar,
+				mobile:this.userInfo.mobile,
+				sex: String(this.userInfo.gender),
+				nickName:this.userInfo.name
+			}
+			let dataReturn = JSON.stringify(data)
+			return  dataReturn
+		}
+	},
+	created() {
+		console.log(this.sessionFromData);
 	},
 	methods: {
 		btnClick() {
