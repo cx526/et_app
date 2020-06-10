@@ -153,10 +153,13 @@ export default {
 				let url = 'addressList?custom_id='+this.address.custom_id;
 				if(this.toBackUrl) {
 					url = this.toBackUrl;
+					uni.redirectTo({
+						url:url
+					});
 				}
-				uni.navigateTo({
-					url:url
-				});
+				uni.navigateBack({
+					delta:1
+				})
 			});
 		},
 		modData() {
@@ -171,10 +174,13 @@ export default {
 				let url = 'addressList?custom_id='+this.address.custom_id;
 				if(this.toBackUrl) {
 					url = this.toBackUrl;
+					uni.redirectTo({
+						url:url
+					});
 				}
-				uni.navigateTo({
-					url:url
-				});
+				uni.navigateBack({
+					delta:1
+				})
 			});
 			this.modDefault();
 		},
