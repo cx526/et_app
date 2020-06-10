@@ -37,14 +37,28 @@ export default {
     },
     methods: {
 		toRefund() {
+			// 1 待退还 2 审批中 3已完成
 			if (this.refundInfo.status === 1) {
-				let param = { custom_id: this.userInfoAll.id }
+				let param = { custom_id: this.userInfoAll.id, deposit: this.userInfoAll.deposit }
 				this.$api.postRefund(param).then(res => {
-					console.log(res)
+					this.refundInfo = {
+						canRefund: 1,
+					    status: 2,
+					    // status_text: '审批中',
+					    // msg: '退还押金审批中，请您耐心等候！'
+					}
+					this.getRefundInfo()
+					uni.showToast({ title: res.data.msg })
 				})
 			} else {
-				uni.showModal({ title: this.refundInfo.msg, confirmText: '确定' })
+				uni.showModal({ title: this.refundInfo.msg })
 			}
+		},
+		getRefundInfo() {
+			let param = { custom_id: this.userInfoAll.id }
+			this.$api.getRefund(param).then(res => {
+				this.refundInfo = res.data
+			})
 		},
 		getCustomerInfo(){
 			this.$api.getCustom({ filterItems: { mobile: this.userInfo.mobile } }).then(res=>{
@@ -52,11 +66,7 @@ export default {
 				if(!this.userInfoAll.deposit) {
 					this.userInfoAll.deposit = 0;
 				}
-				
-				let param = { custom_id: this.userInfoAll.id }
-				this.$api.getRefund(param).then(res => {
-					this.refundInfo = res.data
-				})
+				this.getRefundInfo()
 			});
 		}
 	}
