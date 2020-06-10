@@ -10,7 +10,7 @@
 				<text style="color:#7D4700; font-size: 25upx; margin-top: 10upx;">可退还押金</text>
 			</view>
 		</view>
-		<view class="content-button" @tap="toRefund" v-if="userInfoAll.deposit > 0">
+		<view class="content-button" @tap="toRefund" v-if="canRefund > 0">
 			<view class="button-style">
 				<text>退还押金</text>
 			</view>
@@ -23,7 +23,8 @@
 export default {
     data() {
         return {
-			userInfoAll:{}
+			userInfoAll:{},
+			canRefund: 0
         }
     },
 	computed: {
@@ -37,7 +38,7 @@ export default {
     methods: {
 		toRefund() {
 			let param = { custom_id: this.userInfoAll.id }
-			this.$api.getRefund(param).then(res => {
+			this.$api.postRefund(param).then(res => {
 				console.log(res)
 			})
 		},
@@ -47,6 +48,11 @@ export default {
 				if(!this.userInfoAll.deposit) {
 					this.userInfoAll.deposit = 0;
 				}
+				
+				let param = { custom_id: this.userInfoAll.id }
+				this.$api.getRefund(param).then(res => {
+					this.canRefund = res.data.canRefund
+				})
 			});
 		}
 	}
