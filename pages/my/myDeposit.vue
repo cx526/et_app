@@ -10,9 +10,9 @@
 				<text style="color:#7D4700; font-size: 25upx; margin-top: 10upx;">可退还押金</text>
 			</view>
 		</view>
-		<view class="content-button" @tap="toRefund">
+		<view class="content-button" @tap="toRefund" v-if="userInfoAll.deposit > 0">
 			<view class="button-style">
-				<text>退押金</text>
+				<text>退还押金</text>
 			</view>
 		</view>
 	</view>
@@ -36,7 +36,10 @@ export default {
     },
     methods: {
 		toRefund() {
-			console.log('toRefund')
+			let param = { custom_id: this.userInfoAll.id }
+			this.$api.getRefund(param).then(res => {
+				console.log(res)
+			})
 		},
 		getCustomerInfo(){
 			this.$api.getCustom({ filterItems: { mobile: this.userInfo.mobile } }).then(res=>{

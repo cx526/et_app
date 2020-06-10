@@ -34,6 +34,12 @@ api.getPayment = params => request.globalRequest('/api/wxPay/payment', 'POST', p
 // 支付成功后，添加订单数据
 api.updatePayment = params => request.globalRequest('/api/wxPay/updatePayment', 'POST', params)
 
+// 获取支付退款信息
+api.getRefund = params => request.globalRequest('/api/wxPay/getRefund', 'POST', params)
+
+// post支付退款信息
+api.postRefund = params => request.globalRequest('/api/wxPay/postRefund', 'POST', params)
+
 //获取轮播图
 api.getSwiperData = params => request.globalRequest('/api/swiper/getSwiper', 'POST', params)
 
