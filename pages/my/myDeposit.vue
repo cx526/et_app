@@ -10,9 +10,9 @@
 				<text style="color:#7D4700; font-size: 25upx; margin-top: 10upx;">可退还押金</text>
 			</view>
 		</view>
-		<view class="content-button" @tap="toRefund" v-if="canRefund > 0">
+		<view class="content-button" @tap="toRefund" v-if="refundInfo.canRefund && refundInfo.canRefund > 0">
 			<view class="button-style">
-				<text>退还押金</text>
+				<text>{{refundInfo.status_text}}</text>
 			</view>
 		</view>
 	</view>
@@ -24,7 +24,7 @@ export default {
     data() {
         return {
 			userInfoAll:{},
-			canRefund: 0
+			refundInfo: {},
         }
     },
 	computed: {
@@ -37,10 +37,14 @@ export default {
     },
     methods: {
 		toRefund() {
-			let param = { custom_id: this.userInfoAll.id }
-			this.$api.postRefund(param).then(res => {
-				console.log(res)
-			})
+			if (this.refundInfo.status === 1) {
+				let param = { custom_id: this.userInfoAll.id }
+				this.$api.postRefund(param).then(res => {
+					console.log(res)
+				})
+			} else {
+				uni.showModal({ title: this.refundInfo.msg, confirmText: '确定' })
+			}
 		},
 		getCustomerInfo(){
 			this.$api.getCustom({ filterItems: { mobile: this.userInfo.mobile } }).then(res=>{
@@ -51,7 +55,7 @@ export default {
 				
 				let param = { custom_id: this.userInfoAll.id }
 				this.$api.getRefund(param).then(res => {
-					this.canRefund = res.data.canRefund
+					this.refundInfo = res.data
 				})
 			});
 		}
