@@ -44,6 +44,9 @@ export default {
     onLoad(option) {
 		this.setAddresData();		
     },
+	onShow() {
+		this.setAddresData();		
+	},
     methods: {
 		delAddressInfo() {
 			
@@ -94,6 +97,7 @@ export default {
 				return res.data;
 			});
 			
+			this.addressListData = [];
 			addressArr.forEach(item=>{
 				if(item.is_default == 1) {
 					this.defalutAddress = item;
