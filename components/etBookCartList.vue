@@ -238,10 +238,10 @@ export default {
 				goodsInfo: select
 			};
 			uni.setStorageSync('orderInfo', orderObject);
-
+			
 			//跳转到订单页面
 			uni.navigateTo({
-				url: "orderDetail"
+				url: "/pages/cart/orderDetail"
 			})
 		}
 	}
