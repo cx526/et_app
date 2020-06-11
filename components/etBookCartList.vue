@@ -3,43 +3,49 @@
 	<!-- <view :class="[listData.length < 3 ? 'content-position-one' : 'content-position-two']"> -->
 		<view class="backgroundStyle">
 			<view class="content">
-				<view class="white-space"></view>
-				<!-- 头部内容 -->
-				<view class="top-position">
-					<view class="top-content-left">
-						<image class="top-content-left-img" src="../static/cart/money.png"></image>
-						<view style="width: 20upx;"></view>
-						<text>我的积分：{{coin}}</text>
-					</view>
-					
-					<view class="top-content-right">
-						<image class="top-content-right-img-one" src="https://et-pic-server.oss-cn-shenzhen.aliyuncs.com/app_img/cart_getMore.png"></image>
-						<image class="top-content-right-img-two" src="../static/cart/sign.png" @tap="toSign"></image>
-					</view>
-				</view>
-				
-				<view class="white-space" style="height: 20upx;"></view>
-				
-				<!-- banner -->
-				<view class="banner-position">
-					<image style="width: 100%;" src="https://et-pic-server.oss-cn-shenzhen.aliyuncs.com/app_img/bookcartlist_banner.png" mode="widthFix"></image>
-				</view>
-				
-				<view class="white-space" style="height: 20upx;"></view>
-				
-				<!-- 列表数据 -->
-				<view class="cat-detail-position">
-					<view class="cat-detail" v-if="listData.length > 0" v-for="(item,index) in listData">
-						<et-cart-detail :key="index" :bookID="item.id"  :select="item.select" :imgSrc="item.forGoodsPic[0].url" :title="item.title" :status="item.status" :coin="item.coin" :count="item.count" @changSelectType="changAllSelectType" @deleteData="deleteData"></et-cart-detail>
+				 <!-- :style="{height: scrollViewHeight+'upx'}" -->
+				<scroll-view  scroll-y="true"  :style=" 'height:' + scrollViewHeight +'rpx'">
+					<view class="score-coontent-position">
 						<view class="white-space"></view>
+						<!-- 头部内容 -->
+						<view class="top-position">
+							<view class="top-content-left">
+								<image class="top-content-left-img" src="../static/cart/money.png"></image>
+								<view style="width: 20upx;"></view>
+								<text>我的积分：{{coin}}</text>
+							</view>
+							
+							<view class="top-content-right">
+								<image class="top-content-right-img-one" src="https://et-pic-server.oss-cn-shenzhen.aliyuncs.com/app_img/cart_getMore.png"></image>
+								<image class="top-content-right-img-two" src="../static/cart/sign.png" @tap="toSign"></image>
+							</view>
+						</view>
+						
+						<view class="white-space" style="height: 20upx;"></view>
+						
+						<!-- banner -->
+						<view class="banner-position">
+							<image style="width: 100%;" src="https://et-pic-server.oss-cn-shenzhen.aliyuncs.com/app_img/bookcartlist_banner.png" mode="widthFix"></image>
+						</view>
+						
+						<view class="white-space" style="height: 20upx;"></view>
+						
+						<!-- 列表数据 -->
+						<view class="cat-detail-position">
+							<view class="cat-detail" v-if="listData.length > 0" v-for="(item,index) in listData">
+								<et-cart-detail :key="index" :bookID="item.id"  :select="item.select" :imgSrc="item.forGoodsPic[0].url" :title="item.title" :status="item.status" :coin="item.coin" :count="item.count" @changSelectType="changAllSelectType" @deleteData="deleteData"></et-cart-detail>
+								<view class="white-space"></view>
+							</view>
+							<view class="cat-add-book" @tap="toKineUrl" v-if="listData.length === 0" >
+								<image src="../static/cart/add.png" style="width: 200upx; height: 200upx;"></image>
+								<text style="color:#9FB2BF; font-size: 30upx;">请先添加书本</text>
+							</view>
+						</view>
+						
+						<view class="white-space" style="height: 120upx;"></view>
 					</view>
-					<view class="cat-add-book" @tap="toKineUrl" v-if="listData.length === 0" >
-						<image src="../static/cart/add.png" style="width: 200upx; height: 200upx;"></image>
-						<text style="color:#9FB2BF; font-size: 30upx;">请先添加书本</text>
-					</view>
-				</view>
+				</scroll-view>
 				
-				<view class="white-space" style="height: 120upx;"></view>
 				
 				<!-- 底部栏目 -->
 				<view class="bottom-position">
@@ -93,6 +99,20 @@ export default {
 	computed: {
 		userInfo() {
 			return uni.getStorageSync('userInfo')
+		},
+		scrollViewHeight(){
+			let height = 1000;
+			if(this.$props.optionData.optionType === 'kindlist'){
+				height  = 800-70;
+			}else{
+				uni.getSystemInfo({
+					success(res) {
+						height  = res.screenHeight - res.navigationBarHeight - res.statusBarHeight - 70
+					}
+				});
+				
+			}
+			return height 
 		}
 	},
 	data() {
@@ -267,6 +287,21 @@ export default {
 	background-repeat:no-repeat;
 }
 .content {
+	width: 100%;
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+}
+.score-position-type{
+	width: 100%;
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+}
+.score-coontent-position {
+	width: 100%;
 	display: flex;
 	flex-direction: column;
 	justify-content: center;
