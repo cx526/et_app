@@ -342,7 +342,7 @@ export default {
 		    return {
 		      title: '五车书，一个智能的童书借阅和阅读习惯养成的平台~',
 		      path: '/pages/index/index',
-			  imageUrl:'http://et-pic-server.oss-cn-shenzhen.aliyuncs.com/1590132916207.png'
+			  imageUrl:'https://et-pic-server.oss-cn-shenzhen.aliyuncs.com/app_img/index_share.png'
 		    }
 		}
 	}	
