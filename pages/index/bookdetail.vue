@@ -63,7 +63,7 @@
 		<view class="white-space"></view>
 		
 		<view class="out-position">
-			<view class="out-content" style="position-bottom:20upx;">
+			<view class="out-content" style="position-bottom:15upx;">
 				<text class="title-content-process">商品简介</text>
 			</view>
 		</view>
@@ -297,7 +297,7 @@ export default {
 .out-position {
 	width: 90%;
 	padding-top: 100upx;
-	padding-bottom: 100upx;
+	padding-bottom: 40upx;
 }
 .out-content {
 	border-bottom: 2upx solid #E8E8E8;
@@ -328,6 +328,8 @@ export default {
 .remark-position {
 	width: 90%;
 	color: #6A6A6A;
+	font-size: 25upx;
+	line-height: 50upx;
 }
 .bottom-position {
 	width:100%;

@@ -17,6 +17,8 @@
 		<view class="menu-position">
 			<et-button v-for="(item,index) in myMenuInfo.allMenu" :key='index' :title="item.title" :img="item.imgSrc" :count="item.count" :buttomContent="item.buttomContent" class="menu-botton" @btnClick="btnClick(item.toUrl)"></et-button>
 		</view>
+		
+		<view class="white-space"></view>
 	</view>
 </template>
 
@@ -96,7 +98,7 @@ export default {
 	border: 1upx solid rgba(179,179,179,0.4);
 }
 .top-position {
-	border-bottom: 1upx dotted #8B8380;
+	/* border-bottom: 1upx dotted #8B8380; */
 	padding: 20upx;
 }
 .top-content-position {
@@ -104,6 +106,8 @@ export default {
 	flex-direction: row;
 	justify-content: space-between;
 	padding-left: 30upx;
+	padding-bottom: 20upx;
+	border-bottom: 1upx dotted #8B8380;
 }
 .top-content {
 	font-size: 28upx;

@@ -17,7 +17,7 @@
 			<view style="position: relative;">
 				<swiper class="carousel" circular autoplay @change="swiperChange">
 					<swiper-item v-for="(item, i) in carouselList" :key="i" class="carousel-item" @tap="toTargetUrl(item.target)">
-						<image :src="item.img"  />
+						<image :src="item.img"  mode="widthFix" />
 					</swiper-item>
 				</swiper>
 				<!-- 自定义swiper指示器 -->
@@ -36,14 +36,14 @@
 			<et-button v-for="(item,i) in groupList" :key="i" :title="item.name" :img="item.img" @tap="toButtonUrl(item.toUrl)"></et-button>
 		</view>
 		
-		<view class="white-space"></view>
+		<view class="white-space" style="height: 10upx;"></view>
 		
 		<!-- banner -->
 		<view class="banner" @tap="oneBannerUrl">
 			<image :src="oneBanner" class="banner-img" mode="widthFix"></image>
 		</view>
 		
-		<view class="white-space"></view>
+		<view class="white-space" style="height: 20upx;"></view>
 		
 		<!-- 热门推荐 -->
 		<view class="hot-recom">
@@ -55,7 +55,7 @@
 			</view>
 		</view>
 		
-		<view class="white-space"></view>
+		<view class="white-space" style="height: 40upx;"></view>
 		
 		<!-- 新书推荐 -->
 		<view class="new-recom">
@@ -63,21 +63,21 @@
 			<et-titlenavigation  title="新书推荐" img="../static/index/start.png" toUrl="baidu.com"  @toMoreData="toKineList"></et-titlenavigation>
 		</view>
 		
-		<view class="white-space"></view>
+		<!-- <view class="white-space" style="height: 6upx;"></view> -->
 		
 		<!-- 书籍分类 -->
 		<view class="book-cat">
 			<et-bookcat v-for="(item,i) in bookCat" :key="i" :title="item.name" :img="item.img" @clickBookCat="clickBookCat(item.name)"></et-bookcat>
 		</view>
 		
-		<view class="white-space"></view>
+		<view class="white-space" style="height: 20upx;"></view>
 		
 		<!-- banner -->
-		<view class="banner">
+		<view class="banner" @tap="twoBannerUrl">
 			<image :src="secondBanner" class="read-img" mode="widthFix"></image>
 		</view>
 		
-		<view class="white-space"></view>
+		<view class="white-space" style="height: 10upx;"></view>
 		
 		<!-- 猜你喜欢 -->
 		<view class="guess-like">
@@ -131,8 +131,8 @@ export default {
 			swiperCurrent: 0,
 			swiperLength: 0,
 			carouselList: [],
-			oneBanner: "https://et-pic-server.oss-cn-shenzhen.aliyuncs.com/app_img/index_pricture_gift.png",
-			secondBanner: "https://et-pic-server.oss-cn-shenzhen.aliyuncs.com/app_img/index_banner_tow.png",
+			oneBanner: "https://et-pic-server.oss-cn-shenzhen.aliyuncs.com/app_img/index_pricture_first.png",
+			secondBanner: "https://et-pic-server.oss-cn-shenzhen.aliyuncs.com/app_img/index_pricture_two.png",
 			loadStatus : 'loading',
 			loadText: {
 				contentdown: '上拉加载更多',
@@ -143,28 +143,29 @@ export default {
 			groupList: [
 				{
 					'name' : '选书',
-					'img'  : 'https://et-pic-server.oss-cn-shenzhen.aliyuncs.com/app_img/05.png',
+					'img'  : 'https://et-pic-server.oss-cn-shenzhen.aliyuncs.com/app_img/index_button_1.png',
 					'toUrl' : './kind',
 				},
 				{
-					'name' : '绘本',
-					'img'  : 'https://et-pic-server.oss-cn-shenzhen.aliyuncs.com/app_img/01.png',
-					'toUrl' : '/pages/promote/promotePictureBook',
+					'name' : '规则',
+					'img'  : 'https://et-pic-server.oss-cn-shenzhen.aliyuncs.com/app_img/index_button_2.png',
+					// 'toUrl' : '/pages/promote/promotePictureBook',
+					'toUrl' : '/pages/guide/borrowExplain',
 					// 'toUrl' : '/pages/index/bookdetail?bookID=900'
 				},
 				{
 					'name' : '积分',
-					'img'  : 'https://et-pic-server.oss-cn-shenzhen.aliyuncs.com/app_img/02.png',
+					'img'  : 'https://et-pic-server.oss-cn-shenzhen.aliyuncs.com/app_img/index_button_3.png',
 					'toUrl' : '/pages/my/myIntegral',
 				},
 				{
 					'name' : '签到',
-					'img'  : 'https://et-pic-server.oss-cn-shenzhen.aliyuncs.com/app_img/03.png',
+					'img'  : 'https://et-pic-server.oss-cn-shenzhen.aliyuncs.com/app_img/index_button_4.png',
 					'toUrl' : './sign',
 				},
 				{
 					'name' : '会员',
-					'img'  : 'https://et-pic-server.oss-cn-shenzhen.aliyuncs.com/app_img/04.png',
+					'img'  : 'https://et-pic-server.oss-cn-shenzhen.aliyuncs.com/app_img/index_button_5.png',
 					'toUrl' : '/pages/my/myMember',
 				}
 			],
@@ -252,6 +253,11 @@ export default {
 		oneBannerUrl(){
 			uni.navigateTo({
 				url:'/pages/promote/pictureToHome'
+			})
+		},
+		twoBannerUrl(){
+			uni.navigateTo({
+				url:'/pages/promote/promotePictureBook'
 			})
 		},
 		checkAuth() {
@@ -426,7 +432,7 @@ export default {
 	flex-direction: row;
 	align-items: center;
 	justify-content: space-around;
-	padding: 0 14upx;
+	padding: 10upx 14upx;
 }
 .banner {
 	width: 100%;

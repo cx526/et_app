@@ -24,22 +24,24 @@ export default {
 
 <style>
 .btn-content {
-	width: 150upx;
+	width: 180upx;
 	display: flex;
 	flex-direction: column;
 	align-items: center;
 	justify-content: center;
-	padding: 12upx 24upx;
+	padding: 12upx 12upx;
 	border-radius: 8upx;
 	box-shadow: 1upx 1upx 1upx 1upx rgba(179,179,179,0.4);
 	margin-top: 30upx;
+	background-color: #FFFFFF;
+	padding-bottom: 20upx;
 }
 .img-content {
 	position: relative;
 }
 .img {
-	height: 150upx;
-	width: 150upx;
+	height: 180upx;
+	width: 180upx;
 	border: 1upx solid rgba(179,179,179,0.1);
 }
 .book-count {
