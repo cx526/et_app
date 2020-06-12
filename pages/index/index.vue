@@ -325,7 +325,7 @@ export default {
 		toHotListData() {
 			console.log(this.toHotBookList);
 			let tabBars = [{'name':'热门推荐'}];
-			uni.navigateTo({ url: './kindlist?noPull=1&selectID=0&tabBars=' + encodeURIComponent(JSON.stringify(tabBars)) + '&bookList=' + encodeURIComponent(JSON.stringify(this.hotBookList))});
+			uni.navigateTo({ url: './kindlist?pagesType=hotList&noPull=1&selectID=0&tabBars=' + encodeURIComponent(JSON.stringify(tabBars)) + '&bookList=' + encodeURIComponent(JSON.stringify(this.hotBookList))});
 		},
 		toKineList(){
 			let kindObject = {

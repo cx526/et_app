@@ -11,8 +11,17 @@
 			<!-- 数据列表 -->
 			<view class="list-content-father-position">
 				<view class="list-content-father-position" v-if="listData.length > 0">
-					<view class="list-content-position">					
-						<et-imgbox  v-for="(item,i) in listData" :key="i" :bookInfo="item.goods_info" @insertBookToCart="insertBookToCart"></et-imgbox>
+					<view class="list-content-position">	
+						<view  v-for="(item,i) in listData" :key="i">
+							<!-- 搜索，热门推荐页面不做库存为0限制 -->
+							<view v-if="isHidden === 0">   
+								<et-imgbox :bookInfo="item.goods_info" @insertBookToCart="insertBookToCart"></et-imgbox>
+							</view>
+							<!-- 非搜索，热门推荐页面不做库存为0限制 -->
+							<view v-if="isHidden === 1">
+								<et-imgbox v-if="item.goods_info.stock.usageCount !== 0" :bookInfo="item.goods_info" @insertBookToCart="insertBookToCart"></et-imgbox>
+							</view>
+						</view>						
 					</view>
 					<view class="white-space"></view>
 					<uni-load-more :status="loadStatus" :content-text="loadText" />
@@ -91,9 +100,10 @@ export default {
 			cartBookCount:0,
 			popupShow:false,
 			listStatus:1,	//列表状态0：没数据，1：加载中，其他：有数据
+			isHidden:1		//是否隐藏没库存数据，0不隐藏，1隐藏  默认隐藏，如果是搜索页面与热门推荐则不隐藏
 		}
 	},
-	onLoad(option) {
+	onLoad(option) {		
 		//初始化书篮书本数量
 		this.cartBookCount = insertBook.cartBookCount();
 		
@@ -167,7 +177,14 @@ export default {
 			   uni.hideLoading();
 			})
 		}
+		console.log(this.listData);
 		// 初始化商品列表
+		
+		//如果是搜索页面与热门推荐则不隐藏0库存数据
+		if(option.pagesType === 'search' || option.pagesType === 'hotList'){
+			this.isHidden = 0
+			console.log('uuuiii');
+		}
 	},
 	// 上拉加载更多,onReachBottom上拉触底函数
 	onReachBottom : function(){

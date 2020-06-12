@@ -78,7 +78,7 @@ export default {
 			   uni.showLoading();
 			   let listData = res.data.rows;
 			   let tabBars = [{'name':'搜索结果'}];
-			   uni.navigateTo({ url: './kindlist?noPull=1&selectID=0&tabBars=' + encodeURIComponent(JSON.stringify(tabBars)) + '&bookList=' + encodeURIComponent(JSON.stringify(listData))});
+			   uni.navigateTo({ url: './kindlist?pagesType=search&noPull=1&selectID=0&tabBars=' + encodeURIComponent(JSON.stringify(tabBars)) + '&bookList=' + encodeURIComponent(JSON.stringify(listData))});
 			   uni.hideLoading();
 			})
 		},
