@@ -9,7 +9,7 @@
 			
 			<view class="address-list-position">
 				<text class="address-list-content">手机号码</text>
-				<input class="address-middle-content" :value="address.mobile"  @change="inputChangeMobile" type="number" maxlength="11" placeholder="请填写收货人手机号码" />
+				<input class="address-middle-content" :value="address.mobile"  @change="inputChangeMobile" type="number" maxlength="11" placeholder="请填写手机号码" />
 				<view style="width: 50upx;height: 50upx;"></view>
 			</view>
 			
