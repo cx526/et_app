@@ -1,6 +1,21 @@
 <template>
 	<view class="content" >
 		
+		<view class="time-position pay-style-position" style="border: 0;">
+			<text class="font-one-style">支付方式</text>
+			<view class="radio-content">
+				<!-- 先把会员支付屏蔽，后续再开放 -->
+				<!-- <label class="font-one-style"><radio style="transform: scale(0.7)" color="#2AAEC4"  value="r1" :checked="payStyleString==='memberCheck'"  @tap="payStyle('memberCheck')"/>会员支付</label> -->
+				<!-- <view class="white-space-width"></view> -->
+				<!-- 先把会员支付屏蔽，后续再开放 -->
+				<label class="font-one-style"><radio style="transform: scale(0.7)" color="#2AAEC4" value="r2" :checked="payStyleString==='wechatCheck'"  @tap="payStyle('wechatCheck')"/>微信支付</label>
+			</view>
+		</view>
+		<view class='pay-info-position'>
+			<et-order-menberpay :order='menberOrder' v-if="payStyleString==='memberCheck'"></et-order-menberpay>
+			<et-order-wechatpay :order='orderPayInfo' v-else-if="payStyleString==='wechatCheck'"></et-order-wechatpay>
+		</view>
+		
 		<view class="time-position">
 			<text class="font-one-style">借阅时间</text>
 			<view class="time-content">
@@ -16,21 +31,6 @@
 			</view>
 		</view>
 		
-		<view class="time-position pay-style-position" style="border: 0;">
-			<text class="font-one-style">支付方式</text>
-			<view class="radio-content">
-				<!-- 先把会员支付屏蔽，后续再开放 -->
-				<!-- <label class="font-one-style"><radio style="transform: scale(0.7)" color="#2AAEC4"  value="r1" :checked="payStyleString==='memberCheck'"  @tap="payStyle('memberCheck')"/>会员支付</label> -->
-				<!-- <view class="white-space-width"></view> -->
-				<!-- 先把会员支付屏蔽，后续再开放 -->
-				<label class="font-one-style"><radio style="transform: scale(0.7)" color="#2AAEC4" value="r2" :checked="payStyleString==='wechatCheck'"  @tap="payStyle('wechatCheck')"/>微信支付</label>
-			</view>
-		</view>
-		
-		<view class='pay-info-position'>
-			<et-order-menberpay :order='menberOrder' v-if="payStyleString==='memberCheck'"></et-order-menberpay>
-			<et-order-wechatpay :order='orderPayInfo' v-else-if="payStyleString==='wechatCheck'"></et-order-wechatpay>
-		</view>
 	</view>
 </template>
 
@@ -112,5 +112,9 @@ export default {
 	flex-direction: row;
 	justify-content: flex-end;
 	align-items: flex-end;
+	border-bottom: 1upx solid #E4E4E4;
+}
+.time-return-position {
+	border-bottom: 0;
 }
 </style>
