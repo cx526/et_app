@@ -135,6 +135,7 @@ export default {
 			})
 		},
 		cancleOrder(){
+			uni.showLoading();
 			this.$api.cancelOrder({ order_no : this.$props.orderList.order_no}).then(res=>{
 				uni.showToast({
 					duration:1500,
@@ -145,6 +146,7 @@ export default {
 			this.$emit('reloadPages');
 		},
 		customConfirmOrder(){
+			uni.showLoading();
 			this.$api.customConfirmOrder({ order_no : this.$props.orderList.order_no}).then(res=>{
 				uni.showToast({
 					duration:1500,
@@ -155,6 +157,7 @@ export default {
 			this.$emit('reloadPages');
 		},
 		customCloseOrder(){
+			uni.showLoading();
 			this.$api.customCloseOrder({ order_no : this.$props.orderList.order_no , type : "online" ,  custom_id : this.$props.orderList.custom_id }).then(res=>{
 				uni.showToast({
 					duration:1500,
