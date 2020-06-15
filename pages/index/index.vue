@@ -92,9 +92,15 @@
 		<uni-load-more :status="loadStatus" :content-text="loadText" />
 		<view class="white-space"></view>
 		
+		<!-- 首页弹窗 -->
 		<uni-popup ref="popup">
-			<view @tap="goPromote">
-				<image style="width: 480upx; height: 800upx;" src="https://et-pic-server.oss-cn-shenzhen.aliyuncs.com/app_img/popOver.png"></image>
+			<view style="display: flex; flex-direction: column; align-items: center;">
+				<view @tap="goPromote">
+					<image :style="'width: ' + popupData.name + 'rpx; height: ' + popupData.target + 'rpx;'" :src="popupData.img"></image>
+				</view>
+				<view @tap="closePopup">
+					<image style="width: 80upx; height: 80upx;" src="https://et-pic-server.oss-cn-shenzhen.aliyuncs.com/app_img/popuo_close.png"></image>
+				</view>
 			</view>
 		</uni-popup>
 	</view>
@@ -128,6 +134,7 @@ export default {
 	},
 	data() {
 		return {
+			popupData: {},
 			swiperCurrent: 0,
 			swiperLength: 0,
 			carouselList: [],
@@ -219,21 +226,28 @@ export default {
 		this.getGuessBook('push')
 	},
 	methods: {
+		closePopup() {
+			uni.setStorageSync('et_popOver', true)
+			this.$refs.popup.close()
+		},
 		insertBookToCart(){
 			//更新tab
 			let bookCount = bookListData.cartBookCount();
 		},
 		goPromote() {
-			uni.switchTab({
-				url: '/pages/promote/pictureMonth'
-			})
+			toUrlFunction.toUrl(this.popupData.value);
 			this.$refs.popup.close()
 			uni.setStorageSync('et_popOver', true)
 		},
 		showAD() {
 			let popOver = uni.getStorageSync('et_popOver')
 			if (!popOver) {
-				this.$refs.popup.open()
+				this.$api.getSwiperData({link_usage: 'app_popup'}).then(res => {
+					if (res.data.length > 0) {
+						this.popupData = res.data[0]
+						this.$refs.popup.open()
+					}
+				})
 			}
 		},
 		clickBookCat(name){
