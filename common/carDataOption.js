@@ -169,6 +169,28 @@ function cartBookCount(){
 	return bookCount;
 }
 
+// 计算书本量
+function countBookDetail() {
+	let carListArr = getBookListData();
+	let allBookCount = carListArr.length;
+	let selectBookCount = 0;
+	let unSelectBookCount = 0;
+	carListArr.forEach(item=>{
+		if(item.select === true) {
+			selectBookCount = selectBookCount + 1;
+		}
+		if(item.select === false){
+			unSelectBookCount = unSelectBookCount + 1;
+		}
+	});
+	let detail = {
+		allBookCount : allBookCount,
+		selectBookCount : selectBookCount,
+		unSelectBookCount : unSelectBookCount
+	};
+	return detail;
+}
+
 module.exports = {
 	getBookListData,
 	insertToCart,
@@ -178,5 +200,6 @@ module.exports = {
 	countCoin,
 	countAllSelect,
 	allSelectOption,
-	cartBookCount
+	cartBookCount,
+	countBookDetail
 };

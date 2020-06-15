@@ -83,6 +83,7 @@ import etTag from '../../components/etTag.vue'
 const wxPay = require('@/common/wxPay')
 const formatDate = require('@/common/formatDate')
 const toUrlFunction = require('@/common/toUrlFunction');
+const orderHandle = require('@/common/orderHandle');
 
 export default {
 	components: {
@@ -174,7 +175,8 @@ export default {
 					console.log(orderObject);
 					
 					//最终支付订单信息
-					this.finalPayOrderInfo = this.orderHandle();
+					// this.finalPayOrderInfo = this.orderHandle();
+					this.finalPayOrderInfo = orderHandle.orderHandle(this.customerInfo,this.bookCount,this.hestoryOrderInfo);
 					this.finalPayOrderInfo.createTime = formatDate.formatDate(new Date());
 					this.finalPayOrderInfo.returnTime = formatDate.getDateDuration(new Date(), 15);
 					this.moneyCount = this.finalPayOrderInfo.payMoney;
@@ -299,156 +301,10 @@ export default {
 			} else {
 				uni.showToast({ icon: 'none', title: '测试环境暂不能够支付' })
 			}
-		},
-		//订单规则处理
-		orderHandle(){
-			//判断学校用户，还是非学校用户
-			let userType = 'commonUser';
-			if(this.customerInfo.schoolInfo.id){
-				userType = 'schoolUser';
-			}
-			
-			//判断第一单还是第二单，还是其他单
-			let buyCount = 0;
-			let couponBuyCount = 0;
-			// buyCount = this.hestoryOrderInfo.length + 1;
-			buyCount = this.hestoryOrderInfo.normalOrder + 1;
-			couponBuyCount = this.hestoryOrderInfo.couponOrder + 1;
-			
-			
-			//判断商品数量
-			let bookCount = this.bookCount;
-			
-			//判断是否有押金
-			let deposit = this.customerInfo.deposit;  
-						
-			// 正常订单判断规则号
-			let payRuleType = 0;
-			if(buyCount === 1){   //首单
-				if(userType === 'schoolUser'){	//学校用户
-					// if(0 < bookCount && bookCount <=3){
-					// 	payRuleType = 1
-					// }
-					if(0 < bookCount && bookCount <=10){
-						payRuleType = 2
-					}					
-				}else if(userType === 'commonUser'){	//游客用户
-					if(0 < bookCount && bookCount <=10){
-						payRuleType = 3
-					}
-				}
-			}else if(buyCount > 1){  //非首单
-				if(userType === 'schoolUser'){	//学校用户
-					if(0 < bookCount && bookCount  <=10){
-						payRuleType = 4
-					}				
-				}else if(userType === 'commonUser'){	//游客用户
-					if(0 < bookCount && bookCount <=10){
-						payRuleType = 5
-					}
-				}
-			}
-			
-			//特殊订单判断
-			if(couponBuyCount === 1){   //首单
-				if(userType === 'schoolUser'){	//学校用户
-					if(0 < bookCount && bookCount <=3){
-						payRuleType = 1
-					}									
-				}
-			}
-			
-			//获取支付信息
-			let orderPayInfo = this.payRule(payRuleType);
-			console.log(orderPayInfo);
-			
-			// 非首次购买查看是否有押金，没有的话要补上
-			if(parseInt(deposit) === 0 && buyCount > 1) {
-				if(userType === 'schoolUser'){	//学校用户
-					orderPayInfo.deposit = 100;
-					orderPayInfo.payMoney = orderPayInfo.afterDiscountMoney + orderPayInfo.deposit;
-				}else if(userType === 'commonUser'){	//游客用户
-					orderPayInfo.deposit = 200;
-					orderPayInfo.payMoney = orderPayInfo.afterDiscountMoney + orderPayInfo.deposit;
-				}
-			}
-			
-			//如果有押金的情况，清空初始化押金信息
-			if(parseInt(deposit) !== 0) {
-				orderPayInfo.payMoney = orderPayInfo.payMoney - orderPayInfo.deposit;
-				orderPayInfo.deposit = 0;
-			}
-			
-			return orderPayInfo;
-			
-		},
-		// 支付规则
-		payRule(type){
-			switch (type){
-				case 1:
-					return {
-						userType:'学校用户',
-						discountType:'绘本到家',
-						couponType:'pictureBookArriver',
-						deposit:100,
-						orderMoney:30,
-						discountMoney:30,
-						afterDiscountMoney:0,
-						payMoney:100
-					}
-					break;
-				case 2:
-					return {
-						userType:'学校用户',
-						discountType:'首次体验10本优惠',
-						couponType:'',
-						deposit:100,
-						orderMoney:30,
-						discountMoney:12,
-						afterDiscountMoney:18,
-						payMoney:118
-					}
-					break;
-				case 3:
-					return {
-						userType:'游客用户',
-						discountType:'首次体验10本优惠',
-						couponType:'',
-						deposit:200,
-						orderMoney:45,
-						discountMoney:17,
-						afterDiscountMoney:28,
-						payMoney:228
-					}
-					break;
-				case 4:
-					return {
-						userType:'学校用户',
-						discountType:'无优惠',
-						couponType:'',
-						deposit:0,
-						orderMoney:30,
-						discountMoney:0,
-						afterDiscountMoney:30,
-						payMoney:30
-					}
-					break;
-				case 5:
-					return {
-						userType:'游客用户',
-						discountType:'无优惠',
-						couponType:'',
-						deposit:0,
-						orderMoney:45,
-						discountMoney:0,
-						afterDiscountMoney:45,
-						payMoney:45
-					}
-					break;
-				default :
-					return false;
-			}
 		}
+		//支付
+		
+		
 	}
 }
 </script>

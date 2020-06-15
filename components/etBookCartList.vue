@@ -55,10 +55,36 @@
 							<text>全选</text>
 						</view>
 						
-						<view class="bottom-text">
-							<text>合计：</text>
-							<text style="color: #DB3E49;">{{bookCount}}</text>
-							<text>本</text>
+						<view >
+							<view class="bottom-text" style="font-size: 25upx;">
+								<text>合计：</text>
+								<text style="color: #DB3E49;">{{bookCount}}</text>
+								<text>本</text>
+							</view>
+							
+							<view v-if="listOutShow">
+								<text style="font-size: 18upx; color: #808080;">数量不在1-10范围不能计算金额</text>
+							</view>
+							
+							<view class="price-style" v-if="!listOutShow">
+								<view class="price-text">
+									<text style="color: #808080;">价格：</text>
+									<text style="color: #DB3E49;">{{orderInfo.afterDiscountMoney}}</text>
+									<text style="color: #808080;">元</text>
+								</view>
+								
+								<view class="price-text" style="margin-left: 15upx;">
+									<text style="color: #808080;">押金：</text>
+									<text style="color: #DB3E49;">{{orderInfo.deposit}}</text>
+									<text style="color: #808080;">元</text>
+								</view>
+								
+								<view class="price-text" style="margin-left: 15upx;">
+									<text style="color: #808080;">合计：</text>
+									<text style="color: #DB3E49;">{{orderInfo.payMoney}}</text>
+									<text style="color: #808080;">元</text>
+								</view>
+							</view>
 						</view>
 						
 						<view class="bottom-tag">
@@ -69,12 +95,43 @@
 								<text>删除</text>
 							</view>
 							
-							<view class="tag-style" style="background-color: #2AA145;" @tap="buySelect">
+							<!-- <view class="tag-style" style="background-color: #2AA145;" @tap="buySelect">
+								<text>借阅</text>
+							</view> -->
+							
+							<view class="tag-style" style="background-color: #2AA145;" @tap="preBuy">
 								<text>借阅</text>
 							</view>
 						</view>
 					</view>
 				</view>
+				
+				<!-- 借阅确认弹窗 -->
+				<uni-popup ref="popup">
+					<view style="display: flex; flex-direction: column; align-items: center;">
+						<view class="popup-content-position">
+							<view class="popup-content">
+								<text>您的书籍数量为：{{selectBookCount}}，最多10本可享受优惠，是否仍要继续</text>
+							</view>
+							<view class="popup-button-position">
+								<view class="popup-button" style="background-color: #EB5A46;" @tap='buySelect'>
+									<text>确认</text>
+								</view>
+								
+								<view class="popup-button" style="background-color: #F2D600;" @tap='toKineUrl'>
+									<text>去选书</text>
+								</view>
+								
+								<view class="popup-button" style="background-color: #C377E0;" @tap='canclePop'>
+									<text>取消</text>
+								</view>
+							</view>
+						</view>
+						
+					</view>
+				</uni-popup>
+				<!-- 借阅确认弹窗 -->
+				
 			</view>
 		</view>
 	</view>
@@ -83,10 +140,12 @@
 <script>
 import etCartDetail from './etCartDetail.vue'
 import etTag from './etTag.vue'
+import uniPopup from '@/components/uni-popup/uni-popup.vue'
 
 const bookListData = require('@/common/carDataOption');
 const toUrlFunction = require('@/common/toUrlFunction');
 const checkLogin = require('@/common/checkLogin');
+const orderHandle = require('@/common/orderHandle');
 
 export default {
 	components: {
@@ -121,23 +180,23 @@ export default {
 			moneyCount:"199",
 			allSelect:"true",
 			listData: [],
-			bookCount:0
+			bookCount:0,
+			selectBookCount:0,
+			listOutShow:Boolean,
+			customerInfo:{},
+			hestoryOrderInfo:{},
+			orderInfo:{} //价格信息
 		}
 	},
 	created() {
-		this.statusUpdate();
 		this.getCustomerInfo();
-		//更新tab
-		let bookCount = bookListData.cartBookCount();
 	},
 	mounted() {
-		this.statusUpdate();
 		this.getCustomerInfo();
-		//更新tab
-		let bookCount = bookListData.cartBookCount();
 	},
 	methods: {
 		toKineUrl(){
+			console.log(this.$props.optionData.optionType);
 			if(this.$props.optionData.optionType === 'kindlist'){
 				this.$emit('toKineUrl');
 			}else{
@@ -153,6 +212,14 @@ export default {
 			}
 			this.$api.getCustom({ filterItems: { mobile: this.userInfo.mobile } }).then(res=>{
 				this.coin = res.data[0].coin;
+				this.customerInfo = res.data[0];
+				//获取历史订单信息
+				this.$api.checkExistOrder({ custom_id: this.customerInfo.id }).then(res=>{
+					this.hestoryOrderInfo = res.data;
+					
+					//更新数据状态
+					this.statusUpdate();
+				});
 			});
 		},
 		toSign(){
@@ -179,6 +246,12 @@ export default {
 				}
 			});
 			this.bookCount = bookCount;
+			
+			//超过10本书不显示价格
+			this.checkListOut();
+			
+			//计算当前价格
+			this.orderInfo = orderHandle.orderHandle(this.customerInfo,this.bookCount,this.hestoryOrderInfo);
 		},
 		changAllSelectType(){
 			this.statusUpdate();
@@ -205,6 +278,58 @@ export default {
 			bookListData.deleteSelect();
 			this.statusUpdate();
 		},
+		//检查选项是否超出限制
+		checkListOut(){
+			let dataCount = bookListData.countBookDetail();
+			if(dataCount.selectBookCount == 0){
+				this.listOutShow = true;
+			}
+			if(dataCount.selectBookCount > 0 && dataCount.selectBookCount <= 10){
+				this.listOutShow = false;
+			}
+			if(dataCount.selectBookCount > 10){
+				this.listOutShow = true;
+			}
+			
+			this.selectBookCount = dataCount.selectBookCount;
+		},
+		//检测下单书本情况
+		checkBuyBookStatus(){
+			let result = true;
+			let dataCount = bookListData.countBookDetail();
+			if(dataCount.selectBookCount === 0){
+				uni.showToast({
+					title:'请先选择好书本',
+					duration: 2000,
+					icon: 'none'
+				});
+				result = false
+			}
+			
+			if(dataCount.selectBookCount > 10){
+				uni.showToast({
+					title:'最多只能借10本书',
+					duration: 2000,
+					icon: 'none'
+				});
+				result = false
+			}
+			
+			return result;
+		},
+		//关闭弹出层
+		canclePop(){
+			this.$refs.popup.close()
+		},
+		//下单前确认数据
+		preBuy(){
+			//检测书本数量是否在范围内
+			let bookResult = this.checkBuyBookStatus();
+			if(!bookResult){
+				return;
+			}
+			this.$refs.popup.open()
+		},
 		// 下订单
 		buySelect() {
 			if (this.userInfo.name === 'guest') {
@@ -221,6 +346,13 @@ export default {
 				})
 				return;
 			}
+			
+			//检测书本数量是否在范围内
+			let bookResult = this.checkBuyBookStatus();
+			if(!bookResult){
+				return;
+			}
+			
 			let select = [];
 			let unSelect = [];
 			let bookCount = 0;
@@ -232,24 +364,6 @@ export default {
 					unSelect.push(item);
 				}
 			});
-			
-			if(select.length === 0){
-				uni.showToast({
-					title:'请先选择好书本',
-					duration: 2000,
-					icon: 'none'
-				});
-				return;
-			}
-			
-			if(select.length > 10){
-				uni.showToast({
-					title:'最多只能借10本书',
-					duration: 2000,
-					icon: 'none'
-				});
-				return;
-			}
 			
 			//插入订单缓存
 			let orderObject = {
@@ -380,7 +494,11 @@ export default {
 	background-color: #FFFFFF;
 }
 .bottom-check,.bottom-text {
-	font-size: 25upx;
+	font-size: 20upx;
+	font-weight: bold;
+}
+.price-text{
+	font-size: 18upx;
 	font-weight: bold;
 }
 .bottom-tag {
@@ -404,5 +522,42 @@ export default {
 	width: 80upx;
 	height: 45upx;
 	margin-right: 20upx;
+}
+.price-style {
+	display: flex;
+	flex-direction: row;
+	justify-content: center;
+	align-items: center;
+}
+.popup-content-position{
+	width: 80%;
+	background-color: #FFFFFF;
+	border-radius: 30upx;
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+	padding: 20upx;
+}
+.popup-content{
+	font-weight: bold;
+}
+.popup-button-position{
+	display: flex;
+	flex-direction: row;
+	justify-content: center;
+	align-items: center;
+	margin-top: 20upx;
+}
+.popup-button{
+	display: flex;
+	flex-direction: row;
+	justify-content: center;
+	align-items: center;
+	padding: 10upx 15upx;
+	border-radius: 20upx;
+	color: #FFFFFF;
+	background-color: #007AFF;
+	margin-left: 10upx;
 }
 </style>
