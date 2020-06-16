@@ -109,4 +109,7 @@ api.getPromote = params => request.globalRequest('/api/promote/getPromote', 'POS
 // 删除上传图片
 api.delUploadPic = params => request.globalRequest('/api/upload/delUploadPic', 'POST', params)
 
+// 获取所有商品库存状态 @param goodsIDs Array, goodsType String online
+api.preOrderCheckStock = params => request.globalRequest('/api/order/preOrderCheckStock', 'POST', params)
+
 export default api

@@ -1,4 +1,33 @@
-// 获取书篮缓存数据
+import api from '../api/index.js'
+//插入剩余数量缓存
+async function getBookListStockToData() {
+	let carListArr = [];
+	try {
+	    carListArr = uni.getStorageSync('carListInfo');
+	    if (carListArr) {
+	    }else{
+			carListArr = [];
+		}
+	} catch (e) {
+	    carListArr = [];
+	}
+	let goodsIDs = [];
+	carListArr.forEach(item=>{
+		goodsIDs.push(item.id);    //组合商品ID去获取库存
+	});
+	await api.preOrderCheckStock({ goodsIDs : goodsIDs, goodsType : 'online'}).then(res=>{
+		res.data.map((item,index)=>{
+			carListArr.map((sitem,sindex)=>{
+				if(item.goods_id === sitem.id){
+					carListArr[sindex].usageCount = item.usageCount;
+				}
+			})
+		})
+	}) 
+	// 数据插入
+	uni.setStorageSync('carListInfo', carListArr);
+}
+
 function getBookListData() {
 	let carListArr = [];
 	try {
@@ -192,6 +221,7 @@ function countBookDetail() {
 }
 
 module.exports = {
+	getBookListStockToData,
 	getBookListData,
 	insertToCart,
 	deleteToCart,

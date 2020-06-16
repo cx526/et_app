@@ -4,9 +4,9 @@
 		<view @tap="toBookDetail()">
 			<view class="img-content">
 				<image :src="bookInfo.forGoodsPic[0].url" class="img"></image>
-				<view class="book-count-style" v-if="bookInfo.stock.usageCount > 0">
+				<!-- <view class="book-count-style" v-if="bookInfo.stock.usageCount > 0">
 					<text>{{bookInfo.stock.usageCount}}本</text>
-				</view>
+				</view> -->
 				<view class="book-zero-count-style" v-if="bookInfo.stock.usageCount === 0">
 					<view class="book-zero-content-style">
 						<text>暂时</text>

@@ -32,10 +32,13 @@
 						
 						<!-- 列表数据 -->
 						<view class="cat-detail-position">
-							<view class="cat-detail" v-if="listData.length > 0" v-for="(item,index) in listData">
-								<et-cart-detail :key="index" :bookID="item.id"  :select="item.select" :imgSrc="item.forGoodsPic[0].url" :title="item.title" :status="item.status" :coin="item.coin" :count="item.count" @changSelectType="changAllSelectType" @deleteData="deleteData"></et-cart-detail>
-								<view class="white-space"></view>
+							<view v-if="listData.length > 0">
+								<view class="cat-detail" v-for="(item,index) in listData">
+									<et-cart-detail :key="index" :bookID="item.id"  :select="item.select" :imgSrc="item.forGoodsPic[0].url" :title="item.title" :status="item.status" :coin="item.coin" :count="item.count" :usageCount="item.usageCount" @changSelectType="changAllSelectType" @deleteData="deleteData"></et-cart-detail>
+									<view class="white-space"></view>
+								</view>
 							</view>
+							
 							<view class="cat-add-book" @tap="toKineUrl" v-if="listData.length === 0" >
 								<image src="../static/cart/add.png" style="width: 200upx; height: 200upx;"></image>
 								<text style="color:#9FB2BF; font-size: 30upx;">请先添加书本</text>
@@ -94,11 +97,7 @@
 							<view class="tag-style" style="background-color: #808080;" @tap="delectSelect">
 								<text>删除</text>
 							</view>
-							
-							<!-- <view class="tag-style" style="background-color: #2AA145;" @tap="buySelect">
-								<text>借阅</text>
-							</view> -->
-							
+		
 							<view class="tag-style" style="background-color: #2AA145;" @tap="preBuy">
 								<text>借阅</text>
 							</view>
@@ -188,11 +187,17 @@ export default {
 			orderInfo:{} //价格信息
 		}
 	},
-	created() {
+	async created() {
+		//更新书本库存缓存
+		await bookListData.getBookListStockToData();
 		this.getCustomerInfo();
+		// this.countUsageCount();
 	},
-	mounted() {
+	async mounted() {
+		//更新书本库存缓存
+		await bookListData.getBookListStockToData();
 		this.getCustomerInfo();
+		// this.countUsageCount();
 	},
 	methods: {
 		toKineUrl(){
@@ -239,11 +244,13 @@ export default {
 			// 获取全选状态
 			this.allSelect = bookListData.countAllSelect();
 			
+			let goodsIDs = [];
 			let bookCount = 0;
 			this.listData.forEach(item=>{
 				if(item.select) {
 					bookCount = bookCount + 1;					
 				}
+				goodsIDs.push(item.id);    //组合商品ID去获取库存
 			});
 			this.bookCount = bookCount;
 			
@@ -252,6 +259,25 @@ export default {
 			
 			//计算当前价格
 			this.orderInfo = orderHandle.orderHandle(this.customerInfo,this.bookCount,this.hestoryOrderInfo);
+			
+		},
+		//读取库存信息
+		countUsageCount(){
+			//获取库存信息,写进列表数据
+			let goodsIDs = [];
+			this.listData.forEach(item=>{
+				goodsIDs.push(item.id);    //组合商品ID去获取库存
+			});
+			this.$api.preOrderCheckStock({ goodsIDs : goodsIDs, goodsType : 'online'}).then(res=>{
+				res.data.map((item,index)=>{
+					this.listData.map((sitem,sindex)=>{
+						if(item.goods_id === sitem.id){
+							this.listData[sindex].usageCount = item.usageCount;
+						}
+					})
+				})
+				this.listShow = true;
+			}) 
 		},
 		changAllSelectType(){
 			this.statusUpdate();
@@ -310,6 +336,22 @@ export default {
 				uni.showToast({
 					title:'最多只能借10本书',
 					duration: 2000,
+					icon: 'none'
+				});
+				result = false
+			}
+			
+			let noBook = false;
+			this.listData.map((item,index)=>{
+				if(item.select && item.usageCount === 0){
+					noBook = true;
+					return;
+				}
+			});
+			if(noBook){
+				uni.showToast({
+					title:'请先剔除没库存书籍再下单',
+					duration: 3000,
 					icon: 'none'
 				});
 				result = false

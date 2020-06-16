@@ -6,6 +6,12 @@
 		
 		<view class="img-position">
 			<image :src="imgSrc" class="img-content"></image>
+			<view class="book-zero-count-style"  v-if="!usageCount">
+				<view class="book-zero-content-style">
+					<text>暂时</text>
+					<text>借完</text>
+				</view>
+			</view>
 		</view>
 		
 		<view class="content-position">
@@ -51,12 +57,14 @@ export default {
 		coin: String,
 		count: String,
 		select: Boolean,
-		bookID: String
+		bookID: String,
+		usageCount: Number
 	},
 	methods: {
 		changeSelect(){
 			// 变更状态
 			bookListData.changSelectType(this.bookID);
+			console.log(this.$props.usageCount);
 			this.$emit('changSelectType');
 		},
 		deleteData(){
@@ -131,5 +139,32 @@ export default {
 	padding-left: 30upx;
 	padding-bottom: 30upx;
 	background-color: #FFFFFF;
+}
+.img-position {
+	position: relative;
+}
+.book-zero-count-style {
+	background-color: rgba(157,160,174,.6);
+	width: 250upx;
+	height: 250upx;
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+	position: absolute;
+	bottom:10upx;
+}
+.book-zero-content-style {
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+	background-color: rgba(110,116,125,.8);
+	color: #FFFFFF;
+	width: 80upx;
+	height: 80upx;
+	border-radius: 50%;
+	font-size: 30upx;
+	padding: 30upx;
 }
 </style>

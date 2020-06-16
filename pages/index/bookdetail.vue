@@ -17,7 +17,7 @@
 				<view class="detail-title-position">
 					<text>{{bookInfo.title}}</text>
 					<view class="book-count-style">
-						<text style="font-size: 30upx;">{{bookInfo.stock.usageCount}} 本</text>
+						<text style="font-size: 30upx;">剩余： {{bookInfo.stock.usageCount}} 本</text>
 					</view>
 				</view>
 				
