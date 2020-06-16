@@ -191,13 +191,11 @@ export default {
 		//更新书本库存缓存
 		await bookListData.getBookListStockToData();
 		this.getCustomerInfo();
-		// this.countUsageCount();
 	},
 	async mounted() {
 		//更新书本库存缓存
 		await bookListData.getBookListStockToData();
 		this.getCustomerInfo();
-		// this.countUsageCount();
 	},
 	methods: {
 		toKineUrl(){
@@ -260,24 +258,6 @@ export default {
 			//计算当前价格
 			this.orderInfo = orderHandle.orderHandle(this.customerInfo,this.bookCount,this.hestoryOrderInfo);
 			
-		},
-		//读取库存信息
-		countUsageCount(){
-			//获取库存信息,写进列表数据
-			let goodsIDs = [];
-			this.listData.forEach(item=>{
-				goodsIDs.push(item.id);    //组合商品ID去获取库存
-			});
-			this.$api.preOrderCheckStock({ goodsIDs : goodsIDs, goodsType : 'online'}).then(res=>{
-				res.data.map((item,index)=>{
-					this.listData.map((sitem,sindex)=>{
-						if(item.goods_id === sitem.id){
-							this.listData[sindex].usageCount = item.usageCount;
-						}
-					})
-				})
-				this.listShow = true;
-			}) 
 		},
 		changAllSelectType(){
 			this.statusUpdate();
@@ -351,6 +331,16 @@ export default {
 			if(noBook){
 				uni.showToast({
 					title:'请先剔除没库存书籍再下单',
+					duration: 3000,
+					icon: 'none'
+				});
+				result = false
+			}
+			
+			//如果订单数量大于等于2不可以下单操作
+			if(this.hestoryOrderInfo.limitResult >= 2){
+				uni.showToast({
+					title:'每个客户只能同时借阅两单，请完成之前订单再来借阅',
 					duration: 3000,
 					icon: 'none'
 				});
