@@ -303,11 +303,14 @@
 
 <style lang="scss" scoped>
 .tabs{
-	width: 750rpx;
+	// width: 750rpx;
+	width: 100%;
 	display: flex;
 	flex-direction: row;
 	padding: 0 0;
 	align-items: center;
+	background-color: #2AAEC4;
+	border-radius: 40upx;
 }
 .tab{
 	display: flex;
@@ -319,6 +322,7 @@
 	padding: 0 30rpx;
 	font-size: 16px;
 	z-index: 99;
+	margin: 0 10upx;
 }
 .title{
 	text-align: center;
@@ -343,8 +347,9 @@
 .fill{
 	position: absolute;
 	
-	height: 25px;
-	border-radius: 20rpx;
+	height: 30px;
+	align-items: center;
+	border-radius: 40rpx;
 }
 .hang{
 	bottom: 3px;

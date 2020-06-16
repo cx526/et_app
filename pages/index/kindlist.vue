@@ -3,8 +3,8 @@
 		<view class="content-position">
 			<!-- 顶部导航栏 -->
 			<view class="tabs-content">
-				<cl-tabs class="tabs" :tab-bars="tabBars" :tab-index="tabCurrentIndex" @tabChange="tabChange" :sliderMargin="15"
-						:scale="1.3" sliderColor="#faff72" type="float" ref="tabs0" aniType="extend">
+				<cl-tabs class="tabs" :tab-bars="tabBars" :tab-index="tabCurrentIndex" @tabChange="tabChange" :sliderMargin="30"
+						 sliderColor="#FFFFFF" type="fill" selectColor="#2AAEC4" textColor="#FFFFFF" ref="tabs0" aniType="extend">
 				</cl-tabs>
 			</view>
 			
