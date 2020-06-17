@@ -24,8 +24,6 @@
 				</view>
 			</view>
 		</view>
-		
-		<view style="margin: 10upx 0; width: 95%; border-bottom: 1px dashed #A0A0A0;"></view>
 	</view>
 </template>
 

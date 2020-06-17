@@ -1,8 +1,8 @@
 <template>
 	<view class="content">
 		<view class="content-style white-border" >
-			<view>
-				<et-gift-detail style="width: 100%;" v-for="(item,index) in listData.rows" :showData='item' ></et-gift-detail>
+			<view v-for="(item,index) in listData.rows" class="cell">
+				<et-gift-detail :showData='item'></et-gift-detail>
 			</view>	
 					
 			<view class="tag-sort-position">
@@ -59,5 +59,10 @@ export default {
 	position: absolute;
 	right: 0;
 	top:40upx;
+}
+.cell + .cell {
+	margin: 10upx 0; 
+	width: 95%; 
+	border-top: 1px dashed #A0A0A0;
 }
 </style>

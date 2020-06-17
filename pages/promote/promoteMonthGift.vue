@@ -77,6 +77,18 @@ export default {
 							img : 'https://et-pic-server.oss-cn-shenzhen.aliyuncs.com/app_img/popOver.png',
 							img_url : 'https://et-pic-server.oss-cn-shenzhen.aliyuncs.com/app_img/popOver.png',
 							remark : '测试室'
+						},
+						{
+							id : 1,
+							name : 'test',
+							type : 'A',
+							status : '1',
+							point : '3000',
+							exchange_time : '1',
+							combo : '12,32',
+							img : 'https://et-pic-server.oss-cn-shenzhen.aliyuncs.com/app_img/popOver.png',
+							img_url : 'https://et-pic-server.oss-cn-shenzhen.aliyuncs.com/app_img/popOver.png',
+							remark : '测试室'
 						}
 					] 
 				},
