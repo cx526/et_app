@@ -2,7 +2,7 @@
 	<view class='content'>
 		<view class="content-position">
 			<view class="left-content">
-				<image :src="showData.img" style="width: 300upx; height: 300upx;"></image>
+				<image :src="showData.img_url" style="width: 300upx; height: 300upx;"></image>
 			</view>
 			<view class="right-content">
 				<view class="title-style margin-style">

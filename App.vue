@@ -50,4 +50,15 @@
 	position: absolute;
 	bottom: -30upx;
 }
+.button-style2 {
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+	background-color: #00B7CC;
+	border-radius: 40upx;
+	padding: 20upx 100upx;
+	color: #FFFFFF;
+	font-size: 35upx;
+}
 </style>
