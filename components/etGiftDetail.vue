@@ -5,20 +5,20 @@
 				<image :src="showData.img_url" style="width: 300upx; height: 300upx;"></image>
 			</view>
 			<view class="right-content">
-				<view class="title-style margin-style">
+				<view class="title-style margin-style" v-if="showData.name.length > 0">
 					<text>{{showData.name}}</text>
 				</view>
-				<view class="score-style margin-style" style="font-size: 25upx; font-weight: bold;">
+				<view class="score-style margin-style" style="font-size: 25upx; font-weight: bold;" v-if="showData.point.length > 0">
 					<text>兑换积分:{{showData.point}}</text>
 				</view>
-				<view class="time-style margin-style" style="font-size: 25upx; font-weight: bold;">
+				<view class="time-style margin-style" style="font-size: 25upx; font-weight: bold;" v-if="showData.exchange_time.length > 0">
 					<text>兑换次数:{{showData.exchange_time}}</text>
 				</view>
-				<view class="remark-style margin-style" style="font-size: 25upx; color: #2CAFC4;">
+				<view class="remark-style margin-style" style="font-size: 25upx; color: #2CAFC4;" v-if="showData.remark.length > 0">
 					<text>	{{showData.remark}}</text>
 				</view>
 				<view>
-					<view class="button-positon">
+					<view class="button-positon" @tap='exchangeOpt'>
 						<text>我要兑换</text>
 					</view>
 				</view>
@@ -30,10 +30,25 @@
 <script>
 export default {
 	props: {
-		showData:Object
+		showData:Object,
+		userInfo:Object
 	},
 	methods: {
-	
+		exchangeOpt(){
+			if(!this.$props.userInfo.id){
+				uni.showModal({
+					title: '请先登录',
+					confirmText: '登录',
+					success: (res) => {
+						if (res.confirm) {
+							uni.removeStorageSync('userInfo')
+							uni.reLaunch({url: '../guide/guide'})
+						}
+					}
+				})
+				return;
+			}
+		}
 	}
 }
 </script>

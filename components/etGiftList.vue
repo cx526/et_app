@@ -2,18 +2,19 @@
 	<view class="content">
 		<view class="content-style white-border" >
 			<view v-for="(item,index) in listData.rows" class="cell">
-				<et-gift-detail :showData='item'></et-gift-detail>
+				<et-gift-detail :showData='item' :userInfo='userInfo'></et-gift-detail>
 			</view>	
 			
-			<view class="bottom-banner-position">
+			<view class="bottom-banner-position" v-if="listData.summary.length > 0">
 				<view class="bottom-banner-content">
 					<text>{{listData.summary}}</text>
 				</view>
 			</view>
 					
 			<view class="tag-sort-position">
-				<view class="tag-sort-style" style="background-color: #00B4C9;">
-					<text style="color: #FFFFFF;">{{listData.type}}类</text>
+				<!-- <view class="tag-sort-style" style="background-color: #00B4C9;"> -->
+				<view class="tag-sort-style" :style="{backgroundColor: listData.color}">
+					<text style="color: #FFFFFF;">{{listData.rule}}类</text>
 				</view>
 			</view>
 		</view>
@@ -28,7 +29,8 @@ export default {
 		etGiftDetail
 	},
 	props: {
-		listData:Object
+		listData:Object,
+		userInfo:Object
 	},
 	methods: {
 	

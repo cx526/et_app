@@ -14,6 +14,11 @@ const toUrlFunction = require('@/common/toUrlFunction');
 const bookListData = require('@/common/carDataOption');
 
 export default {
+	computed: {
+		userInfo() {
+			return uni.getStorageSync('userInfo')
+		}
+	},
     data() {
         return {
 			
@@ -33,7 +38,7 @@ export default {
 				url:'/pages/promote/pictureToHomeDetail'
 			})
 		},
-		toGiftUrl() {			
+		toGiftUrl() {
 			toUrlFunction.toUrl('/pages/promote/promoteMonthGift');
 			// uni.showToast({
 			// 	title:'活动即将开放',

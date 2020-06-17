@@ -14,10 +14,10 @@
 		</view>
 		
 		<view class="white-space" style="height: 40upx;"></view>
-		<view class="point-position">
+		<view class="point-position" v-if='userInfoAll.id'>
 			<view class="point-style">
 				<view class="point-left-content">
-					<text style="font-weight: bold; font-size: 25upx;">我的积分：5000</text>
+					<text style="font-weight: bold; font-size: 25upx;">我的积分：{{userInfoAll.coin}}</text>
 					<text style="font-size: 20upx; color: #848484;">礼品兑换后请到“我的礼品”查看兑换码</text>
 				</view>
 				<view class="point-right-content">
@@ -27,11 +27,16 @@
 				</view>
 			</view>
 		</view>
+		<view class="top-content" v-else @tap='toLogin'>
+			<view class="login-button-style">
+				<text>请先登录</text>
+			</view>
+		</view>
 		
 		<!-- 礼品列表 -->
 		<view class="list-position">
 			<view v-for="(item,index) in listData" style="width: 100%;">
-				<et-gift-list :listData='item' style="width: 100%;"></et-gift-list>
+				<et-gift-list :listData='item' :userInfo='userInfoAll' style="width: 100%;"></et-gift-list>
 			</view>
 		</view>
 		
@@ -50,116 +55,50 @@
 import etGiftList from '../../components/etGiftList.vue'
 
 const toUrlFunction = require('@/common/toUrlFunction');
+const checkLogin = require('@/common/checkLogin');
 
 export default {
 	components: {
 		etGiftList
 	},
+	computed: {
+		userInfo() {
+			return uni.getStorageSync('userInfo')
+		}
+	},
     data() {
         return {
-			listData : [
-				{ 
-					type : 'A', 
-					color : '#B793EA',
-					summary : 'A类礼品二选一，每位注册用户兑换一次',
-					rows : [
-						{
-							id : 1,
-							name : 'test',
-							type : 'A',
-							status : '1',
-							point : '3000',
-							exchange_time : '1',
-							combo : '12,32',
-							img : 'https://et-pic-server.oss-cn-shenzhen.aliyuncs.com/app_img/popOver.png',
-							img_url : 'https://et-pic-server.oss-cn-shenzhen.aliyuncs.com/app_img/popOver.png',
-							remark : '测试室'
-						},
-						{
-							id : 1,
-							name : 'test',
-							type : 'A',
-							status : '1',
-							point : '3000',
-							exchange_time : '1',
-							combo : '12,32',
-							img : 'https://et-pic-server.oss-cn-shenzhen.aliyuncs.com/app_img/popOver.png',
-							img_url : 'https://et-pic-server.oss-cn-shenzhen.aliyuncs.com/app_img/popOver.png',
-							remark : '测试室'
-						},
-						{
-							id : 1,
-							name : 'test',
-							type : 'A',
-							status : '1',
-							point : '3000',
-							exchange_time : '1',
-							combo : '12,32',
-							img : 'https://et-pic-server.oss-cn-shenzhen.aliyuncs.com/app_img/popOver.png',
-							img_url : 'https://et-pic-server.oss-cn-shenzhen.aliyuncs.com/app_img/popOver.png',
-							remark : '测试室'
-						}
-					] 
-				},
-				{
-					type : 'B', 
-					color : '#B793EA',
-					summary : 'A类礼品二选一，每位注册用户兑换一次',
-					rows : [
-						{
-							id : 1,
-							name : 'test',
-							type : 'B',
-							status : '1',
-							point : '3000',
-							exchange_time : '1',
-							combo : '12,32',
-							img : 'https://et-pic-server.oss-cn-shenzhen.aliyuncs.com/app_img/popOver.png',
-							img_url : 'https://et-pic-server.oss-cn-shenzhen.aliyuncs.com/app_img/popOver.png',
-							remark : '测试室'
-						}
-					]
-				},
-				{
-					type : 'C', 
-					color : '#B793EA',
-					summary : 'A类礼品二选一，每位注册用户兑换一次',
-					rows : [
-						{
-							id : 1,
-							name : 'test',
-							type : 'C',
-							status : '1',
-							point : '3000',
-							exchange_time : '1',
-							combo : '12,32',
-							img : 'https://et-pic-server.oss-cn-shenzhen.aliyuncs.com/app_img/popOver.png',
-							img_url : 'https://et-pic-server.oss-cn-shenzhen.aliyuncs.com/app_img/popOver.png',
-							remark : '测试室'
-						},
-						{
-							id : 1,
-							name : 'test',
-							type : 'C',
-							status : '1',
-							point : '3000',
-							exchange_time : '1',
-							combo : '12,32',
-							img : 'https://et-pic-server.oss-cn-shenzhen.aliyuncs.com/app_img/popOver.png',
-							img_url : 'https://et-pic-server.oss-cn-shenzhen.aliyuncs.com/app_img/popOver.png',
-							remark : '测试室'
-						}
-					]
-				}
-			]
+			listData : [],
+			userInfoAll : {}
         }
     },
     onLoad() {
-        
+		this.getCustomerInfo();
+        this.getGiftList();
     },
     methods: {
 		toScoreUrl(){
 			toUrlFunction.toUrl('/pages/promote/pictureMonth');
+		},
+		getGiftList(){
+			this.$api.getGiftList().then(res=>{
+				console.log(res);
+				this.listData = res.data;
+			})
+		},
+		async getCustomerInfo(){
+			//没登录不显示积分
+			let guestStatus = checkLogin.checkLogin(true);
+			if(guestStatus){
+				return;
+			}
+			this.userInfoAll = await this.$api.getCustom({ filterItems: { mobile: this.userInfo.mobile } }).then(res=>{
+				return res.data[0];
+			});
+			console.log(this.userInfoAll);
+		},
+		toLogin(){
+			checkLogin.checkLogin();
 		}
 	}
 }
@@ -203,5 +142,12 @@ export default {
 }
 .list-position{
 	width: 90%;
+}
+.login-button-style {
+	background-color: #7ED1E6;
+	border-radius: 40upx;
+	color: #FFFFFF;
+	font-weight: bold;
+	padding: 10upx 50upx;
 }
 </style>

@@ -112,4 +112,7 @@ api.delUploadPic = params => request.globalRequest('/api/upload/delUploadPic', '
 // 获取所有商品库存状态 @param goodsIDs Array, goodsType String online
 api.preOrderCheckStock = params => request.globalRequest('/api/order/preOrderCheckStock', 'POST', params)
 
+// 礼品
+api.getGiftList = params => request.globalRequest('/api/gift/getGiftList', 'POST', params)
+
 export default api
