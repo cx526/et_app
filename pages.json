@@ -11,18 +11,18 @@
 			}
 		},
 		{
-			"path": "pages/promote/promoteMonthGiftUserDetail",
+			"path": "pages/promote/promoteMonthGiftDetail",
 			"style": {
-				"navigationBarTitleText": "我的礼品",
+				"navigationBarTitleText": "礼品兑换详情",
 				"app-plus": {
 					"titleNView": false
 				}
 			}
 		},	
 		{
-			"path": "pages/promote/promoteMonthGiftDetail",
+			"path": "pages/promote/promoteMonthGiftUserDetail",
 			"style": {
-				"navigationBarTitleText": "礼品兑换详情",
+				"navigationBarTitleText": "我的礼品",
 				"app-plus": {
 					"titleNView": false
 				}

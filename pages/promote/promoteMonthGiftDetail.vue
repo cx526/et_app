@@ -28,6 +28,14 @@
 						<text class="detail-content-text">加2000积分，再获A类礼品一份</text>
 						<switch checked="false" color='#2AAEC4' style="transform:scale(0.5);" />
 					</view>
+					<view class="detail-content-title">
+						<text>选择礼物：</text>
+						<view class="uni-list-cell-db detail-content-text">
+							<picker @change="bindPickerChange" :value="giftDataIndex" :range="giftData">
+								<view class="uni-input">{{giftData[giftDataIndex]}}</view>
+							</picker>
+						</view>
+					</view>
 				</view>
 				
 				<view class="score-content-position">
@@ -78,7 +86,9 @@ export default {
 				img : 'https://et-pic-server.oss-cn-shenzhen.aliyuncs.com/app_img/popOver.png',
 				img_url : 'https://et-pic-server.oss-cn-shenzhen.aliyuncs.com/app_img/popOver.png',
 				remark : '测试室'
-			}
+			},
+			giftData:['布袋','塑料管'],
+			giftDataIndex:0
         }
     },
     onLoad() {
