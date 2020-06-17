@@ -15,7 +15,7 @@
 					<text>兑换次数:{{showData.exchange_time}}</text>
 				</view>
 				<view class="remark-style margin-style" style="font-size: 25upx; color: #2CAFC4;">
-					<text>兑换次数:{{showData.remark}}</text>
+					<text>	{{showData.remark}}</text>
 				</view>
 				<view>
 					<view class="button-positon">

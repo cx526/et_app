@@ -35,6 +35,14 @@
 			</view>
 		</view>
 		
+		<view class="white-space" style="height: 30upx;"></view>
+		<view class="button-content">
+			<view class="button-style2" @tap='toScoreUrl'>
+				<text style="font-weight: bold;">我要积分</text>
+			</view>
+		</view>
+		
+		<view class="white-space" style="height: 60upx;"></view>
 	</view>
 </template>
 
@@ -53,6 +61,7 @@ export default {
 				{ 
 					type : 'A', 
 					color : '#B793EA',
+					summary : 'A类礼品二选一，每位注册用户兑换一次',
 					rows : [
 						{
 							id : 1,
@@ -95,6 +104,7 @@ export default {
 				{
 					type : 'B', 
 					color : '#B793EA',
+					summary : 'A类礼品二选一，每位注册用户兑换一次',
 					rows : [
 						{
 							id : 1,
@@ -113,6 +123,7 @@ export default {
 				{
 					type : 'C', 
 					color : '#B793EA',
+					summary : 'A类礼品二选一，每位注册用户兑换一次',
 					rows : [
 						{
 							id : 1,
@@ -147,14 +158,6 @@ export default {
         
     },
     methods: {
-		toGiftUrl() {
-			uni.showToast({
-				title:"暂未开放，敬请期待",
-				duration: 2000,
-				icon:"none"
-			})
-			// toUrlFunction.toUrl('/pages/promote/pictureMonth');
-		},
 		toScoreUrl(){
 			toUrlFunction.toUrl('/pages/promote/pictureMonth');
 		}
