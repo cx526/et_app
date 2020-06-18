@@ -21,7 +21,7 @@
 					<text style="font-size: 20upx; color: #848484;">礼品兑换后请到“我的礼品”查看兑换码</text>
 				</view>
 				<view class="point-right-content">
-					<view class="point-button">
+					<view class="point-button" @tap="toUserDetail">
 						<image src="https://et-pic-server.oss-cn-shenzhen.aliyuncs.com/app_img/promote_month_check_gift.png" mode="widthFix" style="width: 237upx;"></image>
 					</view>
 				</view>
@@ -99,6 +99,9 @@ export default {
 		},
 		toLogin(){
 			checkLogin.checkLogin();
+		},
+		toUserDetail(){
+			toUrlFunction.toUrl('/pages/promote/promoteMonthGiftUserDetail');
 		}
 	}
 }

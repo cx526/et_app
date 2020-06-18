@@ -116,5 +116,6 @@ api.preOrderCheckStock = params => request.globalRequest('/api/order/preOrderChe
 api.getGiftList = params => request.globalRequest('/api/gift/getGiftList', 'POST', params)
 api.getGift = params => request.globalRequest('/api/gift/getGift', 'POST', params)
 api.addGiftExchange = params => request.globalRequest('/api/gift/addGiftExchange', 'POST', params)
+api.getGiftExchange = params => request.globalRequest('/api/gift/getGiftExchange', 'POST', params)
 
 export default api

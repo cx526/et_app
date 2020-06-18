@@ -7,7 +7,7 @@
 		</view>
 		
 		<view class="button-position margin-style">
-			<view class="button-style2 margin-style" style="padding: 20upx 150upx;">
+			<view @tap='giftUrl' class="button-style2 margin-style" style="padding: 20upx 150upx;">
 				<text>查看礼品</text>
 			</view>
 			
@@ -33,9 +33,14 @@ export default {
     },
     methods: {
 		returnUrl(){
+			uni.navigateBack({
+			    delta: 2
+			});
+		},
+		giftUrl(){
 			uni.redirectTo({
-				url:'/pages/promote/promoteMonthGift'
-			})
+			    url: '/pages/promote/promoteMonthGiftUserDetail'
+			});
 		}
 	}
 }

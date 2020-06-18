@@ -6,11 +6,16 @@
 			</cl-tabs>
 		</view>
 		
-		<view class="data-list" >
-			<view v-for="(item,index) in listData" class="data-list">
-				<view class="gift-detail white-border">
-					<et-gift-detail-title :showData="item" type='userDetail'></et-gift-detail-title>
+		<view v-if="showDataStatus">
+			<view class="data-list" v-if="listData.length>0">
+				<view v-for="(item,index) in listData" :key='index' class="data-list">
+					<view class="gift-detail white-border">
+						<et-gift-detail-title :showData="item" type='userDetail' :tabIndex='parseInt(this.tabCurrentIndex) + 1'></et-gift-detail-title>
+					</view>
 				</view>
+			</view>
+			<view class="data-list" style="padding-top:300upx;"  v-if="listData.length <= 0">
+				<text style='color:#9E9E9E;font-size: 45upx;'>列表空空如也</text>
 			</view>
 		</view>
 	</view>
@@ -25,41 +30,23 @@ export default {
 		clTabs,
 		etGiftDetailTitle
 	},
+	computed: {
+		userInfo() {
+			return uni.getStorageSync('userInfo')
+		}
+	},
     data() {
         return {
-			tabBars:['可兑换','已兑换','已失效'],
+			tabBars:['可兑换','已失效','已兑换'],
 			tabBarID:0,  //初始化标签数据库ID
 			tabCurrentIndex:-1,
-			listData : [
-				{
-					id : 1,
-					name : 'test',
-					type : 'A',
-					status : '1',
-					point : '3000',
-					exchange_time : '1',
-					combo : '12,32',
-					img : 'https://et-pic-server.oss-cn-shenzhen.aliyuncs.com/app_img/popOver.png',
-					img_url : 'https://et-pic-server.oss-cn-shenzhen.aliyuncs.com/app_img/popOver.png',
-					remark : '测试室'
-				},
-				{
-					id : 1,
-					name : 'test',
-					type : 'A',
-					status : '1',
-					point : '3000',
-					exchange_time : '1',
-					combo : '12,32',
-					img : 'https://et-pic-server.oss-cn-shenzhen.aliyuncs.com/app_img/popOver.png',
-					img_url : 'https://et-pic-server.oss-cn-shenzhen.aliyuncs.com/app_img/popOver.png',
-					remark : '测试室'
-				}
-			]
+			listData : [],
+			showDataStatus:false
         }
     },
     onLoad() {
         this.tabCurrentIndex = 0;
+		this.getData();
     },
     methods: {
 		toScoreUrl(){
@@ -69,6 +56,41 @@ export default {
 			this.tabCurrentIndex = e;		// 更新标签序号
 			const status_text = this.tabBars[this.tabCurrentIndex];
 			// this.getData(status_text);
+			//修改状态码
+			let statusStr = parseInt(this.tabCurrentIndex) + 1;
+			this.showDataStatus = false;
+			this.$api.getGiftExchange({filterItems:{mobile:this.userInfo.mobile, status:statusStr}}).then(res=>{
+				this.listData = this.changeDataType(res.data.rows);
+				this.showDataStatus = true;
+			});
+		},
+		getData(){
+			this.showDataStatus = false;
+			this.$api.getGiftExchange({filterItems:{mobile:this.userInfo.mobile, status:'1'}}).then(res=>{
+				this.listData = this.changeDataType(res.data.rows);
+				this.showDataStatus = true;
+				console.log(this.listData);
+			});
+		},
+		//转换数据结构
+		changeDataType(data){
+			let arr = [];
+			data.map((item,index)=>{
+				let obj = {};
+				obj = item.giftInfo;
+				obj.exchange = {
+					create_date:item.create_date,
+					exchange_code:item.exchange_code,
+					expire_date:item.expire_date,
+					gift_combo_id:item.gift_combo_id,
+					gift_id:item.gift_id,
+					gift_rule:item.gift_rule,
+					status:item.status,
+					total_point:item.total_point
+				};
+				arr.push(obj);
+			})
+			return arr;
 		}
 	}
 }
