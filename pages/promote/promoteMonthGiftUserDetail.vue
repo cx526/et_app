@@ -81,8 +81,10 @@ export default {
 				obj = item.giftInfo;
 				obj.exchange = {
 					create_date:item.create_date,
-					exchange_code:item.exchange_code,
 					expire_date:item.expire_date,
+					formatCreateDate:item.formatCreateDate,
+					formatExpireDate:item.formatExpireDate,
+					exchange_code:item.exchange_code,
 					gift_combo_id:item.gift_combo_id,
 					gift_id:item.gift_id,
 					gift_rule:item.gift_rule,

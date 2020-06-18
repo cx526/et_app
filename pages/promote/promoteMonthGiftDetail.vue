@@ -115,8 +115,6 @@ export default {
 				//如果存在礼品组合的话加上礼品组合
 				this.giftData = [];
 				if(this.showData.comboInfo){
-					//设置选中comboid
-					this.showData.finalComboID = this.showData.comboInfo[0].id;
 					//设置comboPoint
 					this.showData.comboPoint = this.showData.comboInfo[0].combo_point;
 					//设置combo项
@@ -131,7 +129,11 @@ export default {
 			if(this.showData.combo_switch === true){
 				this.giftDataIndex = 0;
 				this.showData.finalPoint  = parseInt(this.showData.point) + parseInt(this.showData.comboInfo[0].combo_point);
+				// 设置选中comboid
+				this.showData.finalComboID = this.showData.comboInfo[0].id;
 			}else{
+				// 设置选中comboid
+				this.showData.finalComboID = '';
 				this.showData.finalPoint  = this.showData.point;
 			}
 			console.log(this.showData.finalPoint);

@@ -76,6 +76,10 @@ export default {
 		this.getCustomerInfo();
         this.getGiftList();
     },
+	onShow() {
+		this.getCustomerInfo();
+	    this.getGiftList();
+	},
     methods: {
 		toScoreUrl(){
 			toUrlFunction.toUrl('/pages/promote/pictureMonth');

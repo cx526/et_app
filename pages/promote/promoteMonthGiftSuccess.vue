@@ -34,7 +34,7 @@ export default {
     methods: {
 		returnUrl(){
 			uni.navigateBack({
-			    delta: 2
+			    delta: 1
 			});
 		},
 		giftUrl(){
