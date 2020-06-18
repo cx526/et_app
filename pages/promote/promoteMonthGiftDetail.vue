@@ -41,7 +41,7 @@
 				</view>
 				
 				<view class="score-content-position">
-					<view class="detail-content-title score-content-style">
+					<view class="detail-content-title score-content-style" style="padding: 0 20upx;">
 						<text>实付积分：</text>
 						<text style='color:#44B8CB'>{{showData.finalPoint}}积分</text>
 					</view>
@@ -57,7 +57,7 @@
 			</view>
 			
 			<view class="bottom-button-position">
-				<view class="button-style2" style="padding: 10upx 40upx; font-size: 25upx;">
+				<view class="button-style2" style="padding: 10upx 40upx; font-size: 25upx;" @tap='exchangeGift'>
 					<text>确认兑换</text>
 				</view>
 			</view>
@@ -75,17 +75,29 @@ export default {
 	components: {
 		etGiftDetailTitle
 	},
+	computed: {
+		userInfo() {
+			return uni.getStorageSync('userInfo')
+		}
+	},
     data() {
         return {
+			userInfoAll:{},
 			showData :{},
 			giftData:[],
 			giftDataIndex:0
         }
     },
     onLoad(option) {
+		this.getCustomerInfo();
         this.getData(option.id);
     },
     methods: {
+		getCustomerInfo(){
+			this.$api.getCustom({ filterItems: { mobile: this.userInfo.mobile } }).then(res=>{
+				this.userInfoAll = res.data[0];
+			});
+		},
 		toScoreUrl(){
 			toUrlFunction.toUrl('/pages/promote/pictureMonth');
 		},
@@ -97,6 +109,8 @@ export default {
 				this.showData.finalPoint = this.showData.point ;
 				//设置combo不选中，默认不选combo
 				this.showData.combo_switch = false;
+				//初始化comboID
+				this.showData.finalComboID = '';
 				
 				//如果存在礼品组合的话加上礼品组合
 				this.giftData = [];
@@ -134,6 +148,32 @@ export default {
 			//设置最终积分
 			this.showData.finalPoint  = parseInt(this.showData.point) + parseInt(this.showData.comboInfo[indexStr].combo_point);
 			
+		},
+		exchangeGift(){
+			// console.log(this.userInfoAll);
+			// console.log(this.showData);
+			let param = {
+				custom_id:this.userInfoAll.id,
+				mobile:this.userInfoAll.mobile,
+				gift_id:this.showData.id,
+				gift_combo_id:this.showData.finalComboID,
+				gift_rule:this.showData.rule,
+				total_point:this.showData.finalPoint
+			};
+			this.$api.addGiftExchange(param).then(res=>{
+				if(res.data.status === 'OK'){
+					uni.redirectTo({
+						url:'/pages/promote/promoteMonthGiftSuccess'
+					})
+				}else{
+					uni.showToast({
+						duration:3000,
+						title:res.data.msg,
+						icon:"none"
+					})
+				}
+			})
+			
 		}
 	}
 }
@@ -166,6 +206,7 @@ export default {
 }
 .detail-content{
 	border-bottom: 1px solid #F0F0F0;
+	padding: 0 20upx;
 	padding-bottom: 10upx;
 }
 .detail-content-title {
@@ -207,6 +248,6 @@ export default {
 	color: #858585;
 }
 .picker-view-style{
-	width: 500upx;
+	width: 450upx;
 }
 </style>

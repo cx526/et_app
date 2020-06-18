@@ -11,7 +11,7 @@
 				<text>查看礼品</text>
 			</view>
 			
-			<view class="button-style2  white-border margin-style" style="background-color: #FFFFFF; color: #00B7CC; padding: 20upx 150upx;">
+			<view @tap='returnUrl' class="button-style2 white-border margin-style" style="background-color: #FFFFFF; color: #00B7CC; padding: 20upx 150upx;">
 				<text>返回</text>
 			</view>
 		</view>
@@ -32,7 +32,11 @@ export default {
         
     },
     methods: {
-		
+		returnUrl(){
+			uni.redirectTo({
+				url:'/pages/promote/promoteMonthGift'
+			})
+		}
 	}
 }
 </script>
