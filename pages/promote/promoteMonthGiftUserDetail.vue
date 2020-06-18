@@ -13,6 +13,7 @@
 						<et-gift-detail-title :showData="item" type='userDetail' :tabIndex='parseInt(this.tabCurrentIndex) + 1'></et-gift-detail-title>
 					</view>
 				</view>
+				<view class="white-space" style="height: 50upx;"></view>
 			</view>
 			<view class="data-list" style="padding-top:300upx;"  v-if="listData.length <= 0">
 				<text style='color:#9E9E9E;font-size: 45upx;'>列表空空如也</text>
