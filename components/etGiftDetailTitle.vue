@@ -40,7 +40,7 @@
 					<image src="https://et-pic-server.oss-cn-shenzhen.aliyuncs.com/app_img/promote_month_gift_error.png" style="width: 120upx;" mode="widthFix"></image>
 				</view>
 				
-				<view v-if="tabIndex === 1" style="width: 120upx;"></view>
+				<!-- <view v-if="tabIndex === 1" style="width: 120upx;"></view> -->
 				
 			</view>
 		</view>
