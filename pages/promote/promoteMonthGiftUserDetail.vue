@@ -108,15 +108,15 @@ export default {
 	background-color: rgba(235,248,255,1);
 	min-height: 100vh;
 }
-.data-list{
+.data-list {
 	width: 100%;
 	display: flex;
 	flex-direction: column;
 	justify-content: center;
 	align-items: center;
 }
-.gift-detail{
-	width: 90%;
+.gift-detail {
+	width: 90vw;
 	padding: 10upx;
 	margin-top: 20upx;
 }
