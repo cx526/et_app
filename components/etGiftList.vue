@@ -1,7 +1,7 @@
 <template>
 	<view class="content">
 		<view class="content-style white-border" >
-			<view v-for="(item,index) in listData.rows" class="cell">
+			<view v-for="(item,index) in listData.rows" :key='index' class="cell">
 				<et-gift-detail :showData='item' :userInfo='userInfo'></et-gift-detail>
 			</view>	
 			

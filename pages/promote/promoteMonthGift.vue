@@ -35,7 +35,7 @@
 		
 		<!-- 礼品列表 -->
 		<view class="list-position">
-			<view v-for="(item,index) in listData" style="width: 100%;">
+			<view v-for="(item,index) in listData" :key='index' style="width: 100%;">
 				<et-gift-list :listData='item' :userInfo='userInfoAll' style="width: 100%;"></et-gift-list>
 			</view>
 		</view>

@@ -25,14 +25,16 @@
 					</view>
 					<view class="detail-content-title" v-if="showData.rule === 'C'" >
 						<text>附加兑换：</text>
-						<text class="detail-content-text">加{{showData.comboInfo[0].combo_point}}积分，再获A类礼品一份</text>
+						<text class="detail-content-text">加{{showData.comboPoint}}积分，再获A类礼品一份</text>
 						<switch :checked="showData.combo_switch" @change='switchChange' color='#2AAEC4' style="transform:scale(0.5);" />
 					</view>
 					<view class="detail-content-title" v-if="showData.combo_switch">
 						<text>选择礼物：</text>
 						<view class="uni-list-cell-db detail-content-text">
-							<picker @change="bindPickerChange" :value="giftDataIndex" :range="giftData">
-								<view class="uni-input">{{giftData[giftDataIndex]}}</view>
+							<picker @change="comboGiftChange" :value="giftDataIndex" :range="giftData">
+								<view class="picker-view-style">
+									<view class="uni-input">{{giftData[giftDataIndex]}}</view>
+								</view>
 							</picker>
 						</view>
 					</view>
@@ -101,6 +103,8 @@ export default {
 				if(this.showData.comboInfo){
 					//设置选中comboid
 					this.showData.finalComboID = this.showData.comboInfo[0].id;
+					//设置comboPoint
+					this.showData.comboPoint = this.showData.comboInfo[0].combo_point;
 					//设置combo项
 					this.showData.comboInfo.map((item,index)=>{
 						this.giftData.push(item.name);
@@ -109,13 +113,27 @@ export default {
 			});
 		},
 		switchChange(){
-			// if(this.showData.combo_switch === false){
-			// 	this.showData.combo_switch = true;
-			// }else if(this.showData.combo_switch === true){
-			// 	this.showData.combo_switch = false;
-			// }
-			this.showData.combo_switch = !this.showData.combo_switch
-			console.log(this.showData);
+			this.showData.combo_switch = !this.showData.combo_switch;
+			if(this.showData.combo_switch === true){
+				this.giftDataIndex = 0;
+				this.showData.finalPoint  = parseInt(this.showData.point) + parseInt(this.showData.comboInfo[0].combo_point);
+			}else{
+				this.showData.finalPoint  = this.showData.point;
+			}
+			console.log(this.showData.finalPoint);
+			//强制刷新视图
+			this.$forceUpdate();
+		},
+		comboGiftChange(e){
+			let indexStr = e.detail.value;
+			this.giftDataIndex = indexStr;
+			//设置选中comboid
+			this.showData.finalComboID = this.showData.comboInfo[indexStr].id;
+			//设置comboPoint
+			this.showData.comboPoint = this.showData.comboInfo[indexStr].combo_point;
+			//设置最终积分
+			this.showData.finalPoint  = parseInt(this.showData.point) + parseInt(this.showData.comboInfo[indexStr].combo_point);
+			
 		}
 	}
 }
@@ -187,5 +205,8 @@ export default {
 }
 .bottom-content-style{
 	color: #858585;
+}
+.picker-view-style{
+	width: 500upx;
 }
 </style>
