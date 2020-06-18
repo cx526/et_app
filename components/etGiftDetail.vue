@@ -28,6 +28,8 @@
 </template>
 
 <script>
+const toUrlFunction = require('@/common/toUrlFunction');
+	
 export default {
 	props: {
 		showData:Object,
@@ -48,6 +50,9 @@ export default {
 				})
 				return;
 			}
+			toUrlFunction.toUrl('/pages/promote/promoteMonthGiftDetail?id='+this.showData.id);
+			// console.log(this.showData.id);
+			
 		}
 	}
 }

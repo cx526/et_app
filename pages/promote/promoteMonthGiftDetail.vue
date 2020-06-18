@@ -2,33 +2,33 @@
 	<view class="content">
 		<view class="content-style">
 			<view class="detail-position white-border">
-				<et-gift-detail-title :showData="showData"></et-gift-detail-title>
+				<et-gift-detail-title :showData="showData" type='giftDetail'></et-gift-detail-title>
 			</view>
 			
 			<view class="detail-position white-border" style="padding: 30upx 10upx;">
 				<view class="detail-content">
 					<view class="detail-content-title">
 						<text>兑换日期：</text>
-						<text class="detail-content-text">2020-08-31 24:00:00</text>
+						<text class="detail-content-text">{{showData.dateTime}}</text>
 					</view>
 					<view class="detail-content-title">
 						<text>有效期至：</text>
-						<text class="detail-content-text">2020-08-31 24:00:00</text>
+						<text class="detail-content-text">{{showData.outDateTime}}</text>
 					</view>
 					<view class="detail-content-title">
 						<text>所需积分：</text>
-						<text class="detail-content-text">1000积分</text>
+						<text class="detail-content-text">{{showData.point}}积分</text>
 					</view>
-					<view class="detail-content-title">
+					<view class="detail-content-title" v-if="showData.rule === 'A' || showData.rule === 'B'">
 						<text>温馨提示：</text>
-						<text class="detail-content-text">于所属幼儿园领取</text>
+						<text class="detail-content-text">实物礼品凭兑换码，于所属幼儿园领取</text>
 					</view>
-					<view class="detail-content-title">
+					<view class="detail-content-title" v-if="showData.rule === 'C'" >
 						<text>附加兑换：</text>
-						<text class="detail-content-text">加2000积分，再获A类礼品一份</text>
-						<switch checked="false" color='#2AAEC4' style="transform:scale(0.5);" />
+						<text class="detail-content-text">加{{showData.comboInfo[0].combo_point}}积分，再获A类礼品一份</text>
+						<switch :checked="showData.combo_switch" @change='switchChange' color='#2AAEC4' style="transform:scale(0.5);" />
 					</view>
-					<view class="detail-content-title">
+					<view class="detail-content-title" v-if="showData.combo_switch">
 						<text>选择礼物：</text>
 						<view class="uni-list-cell-db detail-content-text">
 							<picker @change="bindPickerChange" :value="giftDataIndex" :range="giftData">
@@ -41,7 +41,7 @@
 				<view class="score-content-position">
 					<view class="detail-content-title score-content-style">
 						<text>实付积分：</text>
-						<text style='color:#44B8CB'>3000积分</text>
+						<text style='color:#44B8CB'>{{showData.finalPoint}}积分</text>
 					</view>
 				</view>
 			</view>
@@ -50,7 +50,7 @@
 		<view class="bottom-content-position">
 			<view class="bottom-content-style">
 				<text>合计:</text>
-				<text style="color: #36B3C7;">3000</text>
+				<text style="color: #36B3C7;">{{showData.finalPoint}}</text>
 				<text>积分</text>
 			</view>
 			
@@ -67,6 +67,7 @@
 import etGiftDetailTitle from '../../components/etGiftDetailTitle.vue'
 
 const toUrlFunction = require('@/common/toUrlFunction');
+const formatDate = require('@/common/formatDate');
 
 export default {
 	components: {
@@ -74,29 +75,47 @@ export default {
 	},
     data() {
         return {
-			showData :
-			{
-				id : 1,
-				name : 'test',
-				type : 'A',
-				status : '1',
-				point : '3000',
-				exchange_time : '1',
-				combo : '12,32',
-				img : 'https://et-pic-server.oss-cn-shenzhen.aliyuncs.com/app_img/popOver.png',
-				img_url : 'https://et-pic-server.oss-cn-shenzhen.aliyuncs.com/app_img/popOver.png',
-				remark : '测试室'
-			},
-			giftData:['布袋','塑料管'],
+			showData :{},
+			giftData:[],
 			giftDataIndex:0
         }
     },
-    onLoad() {
-        
+    onLoad(option) {
+        this.getData(option.id);
     },
     methods: {
 		toScoreUrl(){
 			toUrlFunction.toUrl('/pages/promote/pictureMonth');
+		},
+		getData(id){
+			this.$api.getGift({filterItems : {id : id}}).then(res=>{
+				this.showData = res.data.rows[0];
+				this.showData.dateTime = formatDate.getDateDuration(new Date(),0);
+				this.showData.outDateTime = formatDate.getDateDuration(new Date(),90);
+				this.showData.finalPoint = this.showData.point ;
+				//设置combo不选中，默认不选combo
+				this.showData.combo_switch = false;
+				
+				//如果存在礼品组合的话加上礼品组合
+				this.giftData = [];
+				if(this.showData.comboInfo){
+					//设置选中comboid
+					this.showData.finalComboID = this.showData.comboInfo[0].id;
+					//设置combo项
+					this.showData.comboInfo.map((item,index)=>{
+						this.giftData.push(item.name);
+					});
+				}
+			});
+		},
+		switchChange(){
+			// if(this.showData.combo_switch === false){
+			// 	this.showData.combo_switch = true;
+			// }else if(this.showData.combo_switch === true){
+			// 	this.showData.combo_switch = false;
+			// }
+			this.showData.combo_switch = !this.showData.combo_switch
+			console.log(this.showData);
 		}
 	}
 }

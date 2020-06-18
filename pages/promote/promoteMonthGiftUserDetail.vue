@@ -9,7 +9,7 @@
 		<view class="data-list" >
 			<view v-for="(item,index) in listData" class="data-list">
 				<view class="gift-detail white-border">
-					<et-gift-detail-title :showData="item"></et-gift-detail-title>
+					<et-gift-detail-title :showData="item" type='userDetail'></et-gift-detail-title>
 				</view>
 			</view>
 		</view>

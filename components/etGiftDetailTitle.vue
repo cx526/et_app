@@ -9,13 +9,13 @@
 					<text style="font-size: 30upx;">x 1</text>
 				</view>
 				
-				<view class="detail_content_position" >
+				<view class="detail_content_position" v-if="type === 'userDetail'">
 					<text>兑换规则：会员卡咔咔咔咔咔咔</text>
 					<text>兑换码：****</text>
 				</view>
 			</view>
 			
-			<view class="status-img-position">
+			<view class="status-img-position" v-if="type === 'userDetail'">
 				<image src="https://et-pic-server.oss-cn-shenzhen.aliyuncs.com/app_img/promote_month_gift_success.png" style="width: 120upx;" mode="widthFix"></image>
 			</view>
 		</view>
@@ -25,6 +25,7 @@
 <script>
 export default {
 	props: {
+		type:String,
 		showData: Object
 	},
 	methods: {
