@@ -48,6 +48,6 @@ export default {
 	height: 110upx;
 	position: absolute;
 	bottom: 90upx;
-	background-color: #007AFF;
+	/* background-color: #007AFF; */
 }
 </style>
