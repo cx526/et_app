@@ -65,11 +65,11 @@
 								<text>本</text>
 							</view>
 							
-							<view v-if="listOutShow">
+							<view v-if="listOutShow &&  Object.keys(customerInfo).length!=0">
 								<text style="font-size: 18upx; color: #808080;">数量不在1-10范围不能计算金额</text>
 							</view>
 							
-							<view class="price-style" v-if="!listOutShow">
+							<view class="price-style" v-if="!listOutShow && Object.keys(customerInfo).length!=0">
 								<view class="price-text">
 									<text style="color: #808080;">价格：</text>
 									<text style="color: #DB3E49;">{{orderInfo.afterDiscountMoney}}</text>
@@ -191,11 +191,15 @@ export default {
 		//更新书本库存缓存
 		await bookListData.getBookListStockToData();
 		this.getCustomerInfo();
+		//更新数据状态
+		this.statusUpdate();
 	},
 	async mounted() {
 		//更新书本库存缓存
 		await bookListData.getBookListStockToData();
 		this.getCustomerInfo();
+		//更新数据状态
+		this.statusUpdate();
 	},
 	methods: {
 		toKineUrl(){
@@ -255,8 +259,10 @@ export default {
 			//超过10本书不显示价格
 			this.checkListOut();
 			
-			//计算当前价格
-			this.orderInfo = orderHandle.orderHandle(this.customerInfo,this.bookCount,this.hestoryOrderInfo);
+			//计算当前价格,有用户信息才能计算价格
+			if(JSON.stringify(this.customerInfo)!='{}'){
+				this.orderInfo = orderHandle.orderHandle(this.customerInfo,this.bookCount,this.hestoryOrderInfo);
+			}
 			
 		},
 		changAllSelectType(){
