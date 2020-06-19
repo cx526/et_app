@@ -2,7 +2,7 @@
 	<view class='content'>
 		<view class="content-position">
 			<view class="left-content">
-				<image :src="showData.img_url" style="width: 300upx; height: 300upx;"></image>
+				<image :src="showData.img_url" style="width: 260upx; height: 260upx;"></image>
 			</view>
 			<view class="right-content">
 				<view class="title-style margin-style" v-if="showData.name.length > 0">
@@ -71,7 +71,7 @@ export default {
 	display: flex;
 	flex-direction: row;
 	justify-content: flex-start;
-	align-items: center;
+	align-items: flex-start;
 	padding: 10upx;
 }
 .right-content{
@@ -79,16 +79,16 @@ export default {
 	height: 300upx;
 	display: flex;
 	flex-direction: column;
-	justify-content: flex-end;
+	justify-content: flex-start;
 	align-items: flex-start;
-	margin-left: 10upx;
+	margin-left: 30upx;
 }
 .title-style{
 	color: #2CAFC4;
 	padding: 8upx;
 	border-top: 1px solid #2CAFC4;
 	border-bottom: 1px solid #2CAFC4;
-	font-size: 40upx;
+	font-size: 30upx;
 	font-weight: bold;
 }
 .button-positon{

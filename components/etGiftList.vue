@@ -1,6 +1,6 @@
 <template>
 	<view class="content">
-		<view class="content-style white-border" >
+		<view class="white-border content-style" >
 			<view v-for="(item,index) in listData.rows" :key='index' class="cell">
 				<et-gift-detail :showData='item' :userInfo='userInfo'></et-gift-detail>
 			</view>	
@@ -11,10 +11,16 @@
 				</view>
 			</view>
 					
-			<view class="tag-sort-position">
-				<!-- <view class="tag-sort-style" style="background-color: #00B4C9;"> -->
+			<!-- <view class="tag-sort-position">
 				<view class="tag-sort-style" :style="{backgroundColor: listData.color}">
 					<text style="color: #FFFFFF;">{{listData.rule}}类</text>
+				</view>
+			</view> -->
+			
+			<view class="tag-sort-position">
+				<view style="height: 100%;width: 100%; position: relative;">
+					<text style="color: #FFFFFF;position: absolute;top:0;left: 20upx;font-size: 45upx;">{{listData.rule}}</text>
+					<view class="triangle-topleft" :style="'border-top: 60px solid ' + listData.color +';'"></view>
 				</view>
 			</view>
 		</view>
@@ -56,20 +62,27 @@ export default {
 	align-items: center;
 	margin: 20upx 0;
 	position: relative;
+	overflow: hidden;
 }
 .tag-sort-style{
 	padding: 10upx 30upx;
 	border-top-left-radius: 40upx;
 	border-bottom-left-radius: 40upx;
 }
+.triangle-topleft{
+	width: 0;
+	height: 0;
+	border-top: 60px solid red;
+	border-right: 60px solid transparent;
+}
 .tag-sort-position{
 	position: absolute;
-	right: 0;
-	top:40upx;
+	left: 0;
+	top:0;
 }
 .cell + .cell {
 	margin: 10upx 0; 
-	width: 95%; 
+	/* width: 95%; */
 	border-top: 1px dashed #A0A0A0;
 }
 .bottom-banner-position{
@@ -79,7 +92,8 @@ export default {
 	border-radius: 30upx;
 	background-color: #E6E6E6;
 	color: #9A9A9A;
-	font-size: 25upx;
-	padding: 20upx 60upx;
+	font-size: 20upx;
+	padding: 10upx 20upx;
+	text-align: center;
 }
 </style>
