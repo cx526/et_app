@@ -65,9 +65,9 @@
 								<text>本</text>
 							</view>
 							
-							<view v-if="listOutShow &&  Object.keys(customerInfo).length!=0">
+							<!-- <view v-if="listOutShow &&  Object.keys(customerInfo).length!=0">
 								<text style="font-size: 18upx; color: #808080;">数量不在1-10范围不能计算金额</text>
-							</view>
+							</view> -->
 							
 							<view class="price-style" v-if="!listOutShow && Object.keys(customerInfo).length!=0">
 								<view class="price-text">
@@ -428,6 +428,8 @@ export default {
 <style scoped>
 .content-position{
 	z-index: 1;
+	background-color: rgba(249,249,249,1);
+	min-height: 100vh;
 }	
 /* .content-position-one {
 	height: 100vh;
