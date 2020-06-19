@@ -360,7 +360,12 @@ export default {
 			if(!bookResult){
 				return;
 			}
-			this.$refs.popup.open()
+			let dataCount = bookListData.countBookDetail();
+			if(dataCount.selectBookCount < 10){
+				this.$refs.popup.open();
+			}else{
+				this.buySelect();
+			}
 		},
 		// 下订单
 		buySelect() {
