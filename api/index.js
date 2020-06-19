@@ -113,6 +113,7 @@ api.delUploadPic = params => request.globalRequest('/api/upload/delUploadPic', '
 api.preOrderCheckStock = params => request.globalRequest('/api/order/preOrderCheckStock', 'POST', params)
 
 // 礼品
+api.giftSwitch = params => request.globalRequest('/api/gift/giftSwitch', 'POST', params)
 api.getGiftList = params => request.globalRequest('/api/gift/getGiftList', 'POST', params)
 api.getGift = params => request.globalRequest('/api/gift/getGift', 'POST', params)
 api.addGiftExchange = params => request.globalRequest('/api/gift/addGiftExchange', 'POST', params)

@@ -21,30 +21,39 @@ export default {
 	},
     data() {
         return {
-			
+			giftSwitch: '0'
         }
     },
 	onShow() {
 		//更新tab
 		let bookCount = bookListData.cartBookCount();
+		this.getGiftSwitch()
 	},
     onLoad() {
         //更新tab
         let bookCount = bookListData.cartBookCount();
     },
     methods: {
+		getGiftSwitch() {
+			this.$api.giftSwitch().then(res => {
+				this.giftSwitch = res.data
+			})
+		},
 		toPictureeUrl() {
 			uni.navigateTo({
 				url:'/pages/promote/pictureToHomeDetail'
 			})
 		},
 		toGiftUrl() {
-			toUrlFunction.toUrl('/pages/promote/promoteMonthGift');
-			// uni.showToast({
-			// 	title:'活动即将开放',
-			// 	icon:"none",
-			// 	duration:2000
-			// })
+			if (String(this.giftSwitch) === '1') {
+				toUrlFunction.toUrl('/pages/promote/promoteMonthGift');
+			} else {
+				uni.showToast({
+					title:'活动即将开放, 敬请期待!',
+					icon:"none",
+					duration:2000
+				})
+			}
 		},
 		toSignUrl() {
 			uni.navigateTo({
