@@ -18,8 +18,11 @@
 					<text>	{{showData.remark}}</text>
 				</view>
 				<view>
-					<view class="button-positon" @tap='exchangeOpt'>
+					<view class="button-positon" @tap='exchangeOpt' v-if="showData.status == '1'">
 						<text>我要兑换</text>
+					</view>
+					<view class="button-positon2" v-else>
+						<text>已下架</text>
 					</view>
 				</view>
 			</view>
@@ -100,6 +103,18 @@ export default {
 	font-weight: bold;
 	color: #FFFFFF;
 	background-color: #2AAEC4;
+	border-radius: 40upx;
+	font-size: 25upx;
+}
+.button-positon2{
+	padding: 8upx 50upx;
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+	font-weight: bold;
+	color: #FFFFFF;
+	background-color: #E6E6E6;
 	border-radius: 40upx;
 	font-size: 25upx;
 }

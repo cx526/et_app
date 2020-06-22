@@ -155,13 +155,15 @@ export default {
 		exchangeGift(){
 			// console.log(this.userInfoAll);
 			// console.log(this.showData);
+			// return;
 			let param = {
 				custom_id:this.userInfoAll.id,
 				mobile:this.userInfoAll.mobile,
 				gift_id:this.showData.id,
 				gift_combo_id:this.showData.finalComboID,
 				gift_rule:this.showData.rule,
-				total_point:this.showData.finalPoint
+				total_point:this.showData.finalPoint,
+				status:this.showData.status
 			};
 			this.$api.addGiftExchange(param).then(res=>{
 				if(res.data.status === 'OK'){
