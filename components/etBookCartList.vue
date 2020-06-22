@@ -108,27 +108,36 @@
 				<!-- 借阅确认弹窗 -->
 				<uni-popup ref="popup">
 					<view style="display: flex; flex-direction: column; align-items: center;">
-						<view class="popup-content-position">
+						<view class="popup-content-position white-border">
+							<view class='popup-img-position'>
+								<image src="https://et-pic-server.oss-cn-shenzhen.aliyuncs.com/app_img/cart_child.png" style="width: 250upx" mode="widthFix"></image>	
+							</view>
 							<view class="popup-content">
-								<text>您的书籍数量为：{{selectBookCount}}，最多10本可享受优惠，是否仍要继续</text>
+								<text>单次可借阅最多10本</text>
+								<view style="display: flex;flex-direction: row;justify-content: center;align-items: center;">
+									<text>你当前所选数量为:</text>
+									<text style="color: #2AAEC4;">{{selectBookCount}}</text>
+									<text>本</text>
+								</view>
+								<text>再去选书吧</text>
 							</view>
 							<view class="popup-button-position">
-								<view class="popup-button" style="background-color: #EB5A46;" @tap='buySelect'>
-									<text>确认</text>
+								<view class="button-style2"  @tap='buySelect' style="background-color: #F9F9F9; color:#B2B2B2;font-weight: bold; font-size: 25upx; padding: 10upx 30upx;margin-right: 10upx;">
+									<text>仍要继续</text>
 								</view>
-								
-								<view class="popup-button" style="background-color: #F2D600;" @tap='toKineUrl'>
+								<view class="button-style2" @tap='toKineUrl' style="font-weight: bold; font-size: 25upx; padding: 10upx 20upx;margin-left: 10upx;">
 									<text>去选书</text>
-								</view>
-								
-								<view class="popup-button" style="background-color: #C377E0;" @tap='canclePop'>
-									<text>取消</text>
 								</view>
 							</view>
 						</view>
 						
+						<view @tap="canclePop">
+							<image style="width: 80upx; height: 80upx;" src="https://et-pic-server.oss-cn-shenzhen.aliyuncs.com/app_img/popuo_close.png"></image>
+						</view>
 					</view>
 				</uni-popup>
+				
+				
 				<!-- 借阅确认弹窗 -->
 				
 			</view>
@@ -575,7 +584,8 @@ export default {
 	align-items: center;
 }
 .popup-content-position{
-	width: 80%;
+	width: 409upx;
+	height: 428upx;
 	background-color: #FFFFFF;
 	border-radius: 30upx;
 	display: flex;
@@ -583,9 +593,19 @@ export default {
 	justify-content: center;
 	align-items: center;
 	padding: 20upx;
+	position: relative;
+}
+.popup-img-position{
+	position: absolute;
+	top:-100upx;
 }
 .popup-content{
 	font-weight: bold;
+	font-size: 25upx;
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
 }
 .popup-button-position{
 	display: flex;
