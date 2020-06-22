@@ -38,7 +38,7 @@ export default {
 	},
     data() {
         return {
-			tabBars:['可兑换','已失效','已兑换'],
+			tabBars:['已兑换','已领取','已失效'],
 			tabBarID:0,  //初始化标签数据库ID
 			tabCurrentIndex:-1,
 			listData : [],
@@ -56,9 +56,8 @@ export default {
 		tabChange(e){
 			this.tabCurrentIndex = e;		// 更新标签序号
 			const status_text = this.tabBars[this.tabCurrentIndex];
-			// this.getData(status_text);
 			//修改状态码
-			let statusStr = parseInt(this.tabCurrentIndex) + 1;
+			let statusStr = this.statusChange(this.tabBars[this.tabCurrentIndex]);
 			this.showDataStatus = false;
 			this.$api.getGiftExchange({filterItems:{mobile:this.userInfo.mobile, status:statusStr}}).then(res=>{
 				this.listData = this.changeDataType(res.data.rows);
@@ -72,6 +71,17 @@ export default {
 				this.showDataStatus = true;
 				console.log(this.listData);
 			});
+		},
+		statusChange(str){
+			if(str === '已兑换'){
+				return 1;
+			}
+			if(str === '已失效'){
+				return 2;
+			}
+			if(str === '已领取'){
+				return 3;
+			}
 		},
 		//转换数据结构
 		changeDataType(data){
