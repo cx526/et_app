@@ -10,7 +10,7 @@
 			<view class="data-list" v-if="listData.length>0">
 				<view v-for="(item,index) in listData" :key='index' class="data-list">
 					<view class="gift-detail white-border">
-						<et-gift-detail-title :showData="item" type='userDetail' :tabIndex='parseInt(this.tabCurrentIndex) + 1'></et-gift-detail-title>
+						<et-gift-detail-title :showData="item" type='userDetail' :tabIndex='statusIndex'></et-gift-detail-title>
 					</view>
 				</view>
 				<view class="white-space" style="height: 50upx;"></view>
@@ -42,7 +42,8 @@ export default {
 			tabBarID:0,  //初始化标签数据库ID
 			tabCurrentIndex:-1,
 			listData : [],
-			showDataStatus:false
+			showDataStatus:false,
+			statusIndex:0,
         }
     },
     onLoad() {
@@ -58,6 +59,7 @@ export default {
 			const status_text = this.tabBars[this.tabCurrentIndex];
 			//修改状态码
 			let statusStr = this.statusChange(this.tabBars[this.tabCurrentIndex]);
+			this.statusIndex = statusStr;
 			this.showDataStatus = false;
 			this.$api.getGiftExchange({filterItems:{mobile:this.userInfo.mobile, status:statusStr}}).then(res=>{
 				this.listData = this.changeDataType(res.data.rows);
