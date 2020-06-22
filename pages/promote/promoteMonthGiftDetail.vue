@@ -32,8 +32,9 @@
 						<text>选择礼物：</text>
 						<view class="uni-list-cell-db detail-content-text">
 							<picker @change="comboGiftChange" :value="giftDataIndex" :range="giftData">
-								<view class="picker-view-style">
+								<view class="picker-view-style" style="display: flex;flex-direction: row;">
 									<view class="uni-input">{{giftData[giftDataIndex]}}</view>
+									<image src="https://et-pic-server.oss-cn-shenzhen.aliyuncs.com/app_img/option_pull.png" style="width: 30upx; margin-left: 20upx;" mode="widthFix"></image>
 								</view>
 							</picker>
 						</view>
@@ -209,7 +210,7 @@ export default {
 .detail-content{
 	border-bottom: 1px solid #F0F0F0;
 	padding: 0 20upx;
-	padding-bottom: 10upx;
+	padding-bottom: 40upx;
 }
 .detail-content-title {
 	display: flex;
