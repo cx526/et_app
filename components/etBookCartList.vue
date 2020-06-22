@@ -584,8 +584,6 @@ export default {
 	align-items: center;
 }
 .popup-content-position{
-	width: 409upx;
-	height: 428upx;
 	background-color: #FFFFFF;
 	border-radius: 30upx;
 	display: flex;
@@ -606,6 +604,11 @@ export default {
 	flex-direction: column;
 	justify-content: center;
 	align-items: center;
+	padding-top: 125upx;
+	padding-bottom: 30upx;
+	padding-left: 60upx;
+	padding-right: 60upx;
+
 }
 .popup-button-position{
 	display: flex;

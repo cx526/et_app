@@ -138,7 +138,7 @@ export default {
 			swiperCurrent: 0,
 			swiperLength: 0,
 			carouselList: [],
-			oneBanner: "https://et-pic-server.oss-cn-shenzhen.aliyuncs.com/app_img/index_pricture_first.png",
+			oneBanner: "https://et-pic-server.oss-cn-shenzhen.aliyuncs.com/app_img/index_pricture_first2.png",
 			secondBanner: "https://et-pic-server.oss-cn-shenzhen.aliyuncs.com/app_img/index_pricture_two.png",
 			loadStatus : 'loading',
 			loadText: {
@@ -266,7 +266,8 @@ export default {
 		},
 		oneBannerUrl(){
 			uni.navigateTo({
-				url:'/pages/promote/pictureToHome'
+				// url:'/pages/promote/pictureToHome',
+				url:'/pages/promote/promoteMonthGift'
 			})
 		},
 		twoBannerUrl(){

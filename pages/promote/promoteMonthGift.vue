@@ -7,10 +7,12 @@
 		<view class="top-img-position">
 			<image src="https://et-pic-server.oss-cn-shenzhen.aliyuncs.com/app_img/promote_month_gift_banner.png" mode="widthFix"></image>
 		</view>
-		
+		  
 		<view class="white-space" style="height: 20upx;"></view>
 		<view class="top-text-position">
-			<text style="font-weight: bold; font-size: 25upx;">礼品兑换时间：6月23日至7月5日</text>
+			<text style="font-weight: bold; font-size: 25upx;">礼品兑换时间：6月23日至7月10日</text>
+			<text style="font-weight: bold; font-size: 25upx;">领取时间：7月17日</text>
+			<text style="font-weight: bold; font-size: 25upx;">领取方式：于所属班级领取</text>
 		</view>
 		
 		<view class="white-space" style="height: 40upx;"></view>
@@ -156,5 +158,10 @@ export default {
 	color: #FFFFFF;
 	font-weight: bold;
 	padding: 10upx 50upx;
+}
+.top-text-position {
+	display:flex;
+	flex-direction:column;
+	align-items:center;
 }
 </style>
