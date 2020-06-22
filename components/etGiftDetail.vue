@@ -76,7 +76,7 @@ export default {
 }
 .right-content{
 	width: 300upx;
-	height: 300upx;
+	/* height: 300upx; */
 	display: flex;
 	flex-direction: column;
 	justify-content: flex-start;
