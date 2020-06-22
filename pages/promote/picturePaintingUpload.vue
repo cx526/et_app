@@ -124,6 +124,24 @@
 				})
 			},
 			getCustomInfo() {
+				if (this.userInfo.name === 'guest' || !this.userInfo) {
+					//游客 发出提示
+					uni.showModal({
+						title: '请先登录',
+						confirmText: '登录',
+						success: (res) => {
+							if (res.confirm) {
+								uni.removeStorageSync('userInfo')
+								uni.reLaunch({url: '../guide/guide'})
+							}else if (res.cancel) {
+								uni.removeStorageSync('userInfo')
+								uni.reLaunch({url: '../guide/guide'})
+							}
+						}
+					})
+					return true;
+				}
+				
 				this.$api.getCustom({ filterItems: { mobile: this.userInfo.mobile } }).then(res=>{
 					this.allCustomInfo = res.data[0]
 					//判断是学校用户
