@@ -11,6 +11,15 @@
 			}
 		},
 		{
+			"path": "pages/my/myIntegralList",
+			"style": {
+				"navigationBarTitleText": "积分明细",
+				"app-plus": {
+					"titleNView": false
+				}
+			}
+		},
+		{
 			"path": "pages/promote/promoteMonthGiftSuccess",
 			"style": {
 				"navigationBarTitleText": "礼品兑换情况",
