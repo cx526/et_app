@@ -17,7 +17,7 @@
 				<view class="detail-title-position">
 					<text>{{bookInfo.title}}</text>
 					<view class="book-count-style">
-						<text style="font-size: 30upx;">剩余： {{bookInfo.stock.usageCount}} 本</text>
+						<text style="font-size: 30upx;">剩余: {{bookInfo.stock.usageCount}} 本</text>
 					</view>
 				</view>
 				
@@ -26,12 +26,14 @@
 				</view>
 				
 				<view class="detail-writer-position">
-					<text style="font-weight: bold;">作者:</text>
+					<text style="font-weight: bold;">作者：</text>
 					<text>{{bookInfo.author}}</text>
 				</view>
 				
+				<view class="white-space" style="height: 15upx;"></view>
+				
 				<view class="detail-publisher-position">
-					<text style="font-weight: bold;">出版社:</text>
+					<text style="font-weight: bold;">出版社：</text>
 					<text>{{bookInfo.publisher}}</text>
 				</view>
 				
@@ -51,16 +53,30 @@
 		<view class="out-position">
 			<view class="out-content" style="position-bottom:20upx;">
 				<text class="title-content-process">借阅流程</text>
-				<text class="link-content"  @tap='toProgressUrl'>详情></text>
+				<text class="link-content"  @tap='toProgressUrl'>详情 ></text>
 			</view>
 		</view>
 		
 		<view class="process-position">
-			<image class="out-img" src="https://et-pic-server.oss-cn-shenzhen.aliyuncs.com/app_img/index_bookdetail_progress.png" mode="widthFix"></image>
+			<image class="out-img" src="https://et-pic-server.oss-cn-shenzhen.aliyuncs.com/app_img/index_bookdetail_progress_borrow.png" style="width: 750upx;" mode="widthFix"></image>
 		</view>
 	
 		
-		<view class="white-space"></view>
+		<!-- <view class="white-space"></view> -->
+		
+		<view class="out-position">
+			<view class="out-content" style="position-bottom:20upx;">
+				<text class="title-content-process">归还流程</text>
+				<!-- <text class="link-content"  @tap='toProgressUrl'>详情></text> -->
+			</view>
+		</view>
+		
+		<view class="process-position">
+			<image class="out-img" src="https://et-pic-server.oss-cn-shenzhen.aliyuncs.com/app_img/index_bookdetail_progress_return.png" style="width: 750upx;" mode="widthFix"></image>
+		</view>
+			
+		
+		<!-- <view class="white-space"></view> -->
 		
 		<view class="out-position">
 			<view class="out-content" style="position-bottom:15upx;">
@@ -69,7 +85,7 @@
 		</view>
 		
 		<view class="remark-position">
-			<text>{{bookInfo.summary}}</text>
+			<text style="line-height: 10upx;">{{bookInfo.summary}}</text>
 		</view>
 		
 		<view class="white-space"></view>
@@ -251,8 +267,8 @@ export default {
 }
 .detail-content-father-position {
 	width: 90%;
-	padding-top: 100upx;
-	padding-bottom: 100upx;
+	padding-top: 60upx;
+	padding-bottom: 60upx;
 	display: flex;
 	align-items: center;
 }
@@ -262,9 +278,9 @@ export default {
 	align-items: flex-start;
 }
 .detail-title-position {
-	font-size: 40upx;
+	font-size: 35upx;
 	font-weight: bold;
-	padding-bottom: 10upx;
+	/* padding-bottom: 10upx; */
 	display: flex;
 	flex-direction: row;
 	justify-content: space-between;
@@ -283,20 +299,21 @@ export default {
 	display: flex;
 	flex-direction: row;
 	flex-wrap: wrap;
-	padding: 40upx 0;
+	padding: 18upx 0;
 }
 .detail-tag-content {
 	width: 150upx;
 	margin-top: 15upx;
-	margin-right: 20upx;
+	margin-right: 13upx;
 }
 .detail-writer-position,.detail-publisher-position {
 	color: #B4B4B4;
-	font-size: 30upx;
+	font-size: 25upx;
+	
 }
 .out-position {
 	width: 90%;
-	padding-top: 100upx;
+	padding-top: 60upx;
 	padding-bottom: 40upx;
 }
 .out-content {
@@ -307,12 +324,12 @@ export default {
 	align-items: flex-end;
 }
 .title-content-process {
-	font-size: 40upx;
+	font-size: 35upx;
 	font-weight: bold;
 }
 .link-content {
 	color: #B4B4B4;
-	font-size: 30upx;
+	font-size: 25upx;
 }
 .process-position {
 	width: 100%;

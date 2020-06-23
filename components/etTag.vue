@@ -27,7 +27,7 @@ export default {
 	padding: 5upx ;
 }
 .title-content {
-	font-size: 25upx;
+	font-size: 23upx;
 	margin: 0 auto;
 }
 </style>
