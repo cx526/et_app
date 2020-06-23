@@ -27,7 +27,7 @@
 			
 			<view class="content-title-position">
 				<!-- 标题留位 -->
-				<image src="../../static/test/myIntegral_line.png" style="width: 400upx;" mode="widthFix"></image>
+				<image src="https://et-pic-server.oss-cn-shenzhen.aliyuncs.com/app_img/myIntegral_line.png" style="width: 400upx;" mode="widthFix"></image>
 				<text style="font-weight: bold; z-index: 99; position: absolute;left: 140upx;">积分明细</text>
 			</view>
 			
