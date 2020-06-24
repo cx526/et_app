@@ -378,7 +378,7 @@ export default {
 	background-repeat: no-repeat;
 }
 .search-box {
-	padding: 8upx 30upx;
+	padding: 8upx 20upx;
 	width:85%;
 	display: flex;
 	flex-direction: row;
@@ -466,6 +466,7 @@ export default {
 	flex-direction: row;
 	flex-wrap: wrap;
 	justify-content:space-around;
+	padding: 0 40rpx;
 }
 
 /* 书籍分类 */
@@ -487,6 +488,7 @@ export default {
 	flex-direction: row;
 	flex-wrap: wrap;
 	justify-content:space-around;
+	padding: 0 40upx;
 }
 .sign-button {
 	position: fixed;

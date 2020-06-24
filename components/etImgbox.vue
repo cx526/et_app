@@ -65,7 +65,7 @@ export default {
 
 <style scoped>
 .btn-content {
-	width: 300upx;
+	width: 265upx;
 	display: flex;
 	flex-direction: column;
 	align-items: center;
@@ -73,7 +73,7 @@ export default {
 	padding: 20upx 24upx;
 	border-radius: 8px;
 	box-shadow: 2upx 2upx 2upx 2upx rgba(179,179,179,0.2);
-	margin-top: 30upx;
+	margin-top: 22upx;
 	background-color: #FFFFFF;
 }
 .img-content {

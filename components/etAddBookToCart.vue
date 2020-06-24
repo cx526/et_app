@@ -66,7 +66,7 @@ export default {
 <style scoped>
 .content {
 	display: flex;
-	width: 300upx;
+	width: 270upx;
 	flex-direction: row;
 	justify-content: space-between;
 	align-content: center;

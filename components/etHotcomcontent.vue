@@ -24,15 +24,15 @@ export default {
 
 <style>
 .btn-content {
-	width: 180upx;
+	width: 205upx;
 	display: flex;
 	flex-direction: column;
 	align-items: center;
 	justify-content: center;
-	padding: 12upx 12upx;
+	padding: 12upx 0;
 	border-radius: 8upx;
 	box-shadow: 1upx 1upx 1upx 1upx rgba(179,179,179,0.4);
-	margin-top: 30upx;
+	margin-top: 20upx;
 	background-color: #FFFFFF;
 	padding-bottom: 20upx;
 }
