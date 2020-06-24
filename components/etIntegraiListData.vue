@@ -2,10 +2,10 @@
 	<view class="content">
 		<view class="bottom-content">
 			<view class='titile-position'>
-				<image :src="dataObj.imgInfo" style="width: 100upx;" mode="widthFix"></image>
+				<image :src="dataObj.event_img" style="width: 100upx;" mode="widthFix"></image>
 				<view class="content-title-position">
 					<text style="font-weight: bold; font-size: 30upx;">{{dataObj.name}}</text>
-					<text style="color:#808080; font-size: 25upx;">{{dataObj.create_date}}</text>
+					<text style="color:#808080; font-size: 25upx;">{{dataObj.formatDate}}</text>
 				</view>
 			</view>
 			<view>

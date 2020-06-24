@@ -14,6 +14,8 @@ api.getAuthData = params => request.globalRequest('/api/auth/getAuthData', 'POST
 
 // 获取客户信息
 api.getCustom = params => request.globalRequest('/api/custom/getCustom', 'POST', params)
+// 获取客户积分明细
+api.getCoinDetail = params => request.globalRequest('/api/custom/getCoinDetail', 'POST', params)
 
 // 新增幼儿信息
 api.postChildInfo = params => request.globalRequest('/api/auth/postChildInfo', 'POST', params)

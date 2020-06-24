@@ -1,6 +1,6 @@
 function checkLogin(type) {
    let userInfo = uni.getStorageSync('userInfo')
-   if (userInfo.name === 'guest') {
+   if (userInfo.name === 'guest' || !userInfo) {
 	   if (!type) {
 			//游客 发出提示
 			uni.showModal({

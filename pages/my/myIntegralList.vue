@@ -38,6 +38,8 @@
 					</view>
 				</view>
 			</view>
+			
+			<view class="white-space" style="height: 60upx;"></view>
 		</view>
 	</view>
 </template>
@@ -57,24 +59,13 @@ export default {
 	},
 	onLoad() {
 		this.getCustomerInfo();
-		this.getListData();
 	},
 	data() {
 		return {
 			userInfoAll: {},
-			listData: [
-				{
-					name:'sign',
-					create_date:'2020.06.09 12:30:25',
-					coin:'+200'
-				},
-				{
-					name:'旧人注册',
-					create_date:'2020.06.09 12:30:25',
-					coin:'+200'
-				}
-			],
-			showData: []
+			showData: [],
+			currentPage: 1,	//页码
+			pageSize: 5		//数据长度
 		}
 	},
 	methods: {
@@ -82,29 +73,40 @@ export default {
 			//没登录不显示积分
 			let guestStatus = checkLogin.checkLogin(true);
 			if(guestStatus){
+				//游客 发出提示
+				uni.showModal({
+					title: '请先登录',
+					confirmText: '登录',
+					success: (res) => {
+						if (res.confirm) {
+							uni.removeStorageSync('userInfo')
+							uni.reLaunch({url: '../guide/guide'})
+						}else if (res.cancel) {
+							uni.removeStorageSync('userInfo')
+							uni.reLaunch({url: '../guide/guide'})
+						}
+					}
+				});
 				return;
 			}
 			this.userInfoAll = await this.$api.getCustom({ filterItems: { mobile: this.userInfo.mobile } }).then(res=>{
 				return res.data[0];
 			});
-			console.log(this.userInfoAll);
+			// 初始化数据
+			this.$api.getCoinDetail({custom_id:this.userInfoAll.id,currentPage:this.currentPage,pageSize:this.pageSize}).then(res=>{
+				this.currentPage = this.currentPage + 1;
+				this.showData = res.data;
+			});
+			this.$forceUpdate();
+		},
+		toLogin(){
+			checkLogin.checkLogin();
 		},
 		getListData(){
-			this.listData.map((item,index) =>{
-				let dataObj = this.changeListData(item.name);
-				item.imgInfo = dataObj.imgInfo;
-				this.showData.push(item);
-			})
-			// this.$forceupdate();
-		},
-		changeListData(name){
-			switch(name){
-				case 'sign':
-					return {name:'注册',imgInfo:'https://et-pic-server.oss-cn-shenzhen.aliyuncs.com/app_img/auth_logo.png'}
-					break;
-				default:
-					return {name:'未知',imgInfo:'https://et-pic-server.oss-cn-shenzhen.aliyuncs.com/app_img/avatar.png'}
-			}
+			// this.showData = 
+			this.$api.getCoinDetail({custom_id:this.userInfoAll.id,currentPage:this.currentPage,pageSize:this.pageSize}).then(res=>{
+				this.currentPage = this.currentPage + 1;
+			});
 		}
 	}
 }
