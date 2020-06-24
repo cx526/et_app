@@ -4,12 +4,13 @@
 			<view class='titile-position'>
 				<image :src="dataObj.event_img" style="width: 100upx;" mode="widthFix"></image>
 				<view class="content-title-position">
-					<text style="font-weight: bold; font-size: 30upx;">{{dataObj.name}}</text>
+					<text style="font-weight: bold; font-size: 30upx;">{{dataObj.event_name}}</text>
 					<text style="color:#808080; font-size: 25upx;">{{dataObj.formatDate}}</text>
 				</view>
 			</view>
 			<view>
-				<text style="font-weight: bold; font-size: 35upx;">{{dataObj.coin}}</text>
+				<text style="font-weight: bold; font-size: 35upx;" v-if="dataObj.coin > 0">{{dataObj.coin}}</text>
+				<text style="font-weight: bold; font-size: 35upx;color:#2AAEC4" v-else>{{dataObj.coin}}</text>
 			</view>
 		</view>
 	</view>

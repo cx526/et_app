@@ -19,7 +19,7 @@
 				</view>
 				
 				<view class="top-content" v-else @tap='toLogin'>
-					<view class="login-button-style">
+					<view class="login-butt·on-style">
 						<text>请先登录</text>
 					</view>
 				</view>
@@ -38,6 +38,8 @@
 					</view>
 				</view>
 			</view>
+			
+			<uni-load-more :status="loadStatus" :content-text="loadText" />
 			
 			<view class="white-space" style="height: 60upx;"></view>
 		</view>
@@ -60,12 +62,37 @@ export default {
 	onLoad() {
 		this.getCustomerInfo();
 	},
+	// 上拉加载更多,onReachBottom上拉触底函数
+	onReachBottom : function(){
+		// this.showData =
+		// this.loadStatus = 'loading';
+		// this.$api.getCoinDetail({custom_id:this.userInfoAll.id,currentPage:this.currentPage,pageSize:this.pageSize}).then(res=>{
+		// 	if(res.data.length === 0){
+		// 		this.loadStatus = 'nomore';
+		// 		return;
+		// 	}
+		// 	res.data.map((item,index)=>{
+		// 		this.showData.push(item);
+		// 	})
+		// 	this.loadStatus = 'more';
+		// 	this.currentPage = this.currentPage + 1;
+		// });
+		
+		this.getListData();
+	},
 	data() {
 		return {
 			userInfoAll: {},
 			showData: [],
 			currentPage: 1,	//页码
-			pageSize: 5		//数据长度
+			pageSize: 10,//数据长度
+			noPull:'',		//如果为1不允许上拉更新数据
+			loadStatus : 'loading',
+			loadText: {
+				contentdown: '上拉加载更多',
+				contentrefresh: '加载中',
+				contentnomore: '已经到底了'
+			}
 		}
 	},
 	methods: {
@@ -96,6 +123,7 @@ export default {
 			this.$api.getCoinDetail({custom_id:this.userInfoAll.id,currentPage:this.currentPage,pageSize:this.pageSize}).then(res=>{
 				this.currentPage = this.currentPage + 1;
 				this.showData = res.data;
+				this.loadStatus = 'more';
 			});
 			this.$forceUpdate();
 		},
@@ -104,7 +132,16 @@ export default {
 		},
 		getListData(){
 			// this.showData = 
+			this.loadStatus = 'loading';
 			this.$api.getCoinDetail({custom_id:this.userInfoAll.id,currentPage:this.currentPage,pageSize:this.pageSize}).then(res=>{
+				if(res.data.length === 0){
+					this.loadStatus = 'nomore';
+					return;
+				}
+				res.data.map((item,index)=>{
+					this.showData.push(item);
+				})
+				this.loadStatus = 'more';
 				this.currentPage = this.currentPage + 1;
 			});
 		}
