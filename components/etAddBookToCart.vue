@@ -84,7 +84,7 @@ export default {
 	padding-left: 10upx;
 }
 .right-content {
-	font-size: 25upx;
+	font-size: 22upx;
 	font-weight: bold;
 	color: #FFFFFF;
 	background-color: #2AAEC4;
