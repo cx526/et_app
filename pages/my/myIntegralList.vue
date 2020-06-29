@@ -122,7 +122,7 @@ export default {
 			// 初始化数据
 			this.$api.getCoinDetail({custom_id:this.userInfoAll.id,currentPage:this.currentPage,pageSize:this.pageSize}).then(res=>{
 				this.currentPage = this.currentPage + 1;
-				this.showData = res.data;
+				this.showData = res.data.rows;
 				this.loadStatus = 'more';
 			});
 			this.$forceUpdate();
@@ -134,11 +134,11 @@ export default {
 			// this.showData = 
 			this.loadStatus = 'loading';
 			this.$api.getCoinDetail({custom_id:this.userInfoAll.id,currentPage:this.currentPage,pageSize:this.pageSize}).then(res=>{
-				if(res.data.length === 0){
+				if(res.data.rows.length === 0){
 					this.loadStatus = 'nomore';
 					return;
 				}
-				res.data.map((item,index)=>{
+				res.data.rows.map((item,index)=>{
 					this.showData.push(item);
 				})
 				this.loadStatus = 'more';
