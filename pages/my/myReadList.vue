@@ -7,7 +7,7 @@
 			<view style="font-size: 30upx; font-weight: 500; position: absolute; left: 120upx; top: 200upx;">
 				<view style="display: flex;flex-direction: row;justify-content: center;align-items: center;">
 					<text>累计借阅</text>
-					<text style="color: #2AAEC4;"> 21 </text>
+					<text style="color: #2AAEC4;"> {{readData.readCount}} </text>
 					<text>本</text>
 				</view>
 			</view>
@@ -39,6 +39,7 @@ export default {
 	},
     data() {
         return {
+			readData:{},
 			showData:[],
 			userInfoAll: {},
 			pageSize:3,
@@ -90,9 +91,14 @@ export default {
 		initData() {
 			this.$api.getHistoryOrder({custom_id:this.userInfoAll.id,pageSize:this.pageSize,currentPage:this.currentPage}).then(res=>{
 				this.showData = res.data;
-				console.log(this.showData);
 				this.currentPage++;
 				this.loadStatus = 'more';
+			})
+			this.getReadCount();
+		},
+		getReadCount(){
+			this.$api.getHistoryOrderCount({custom_id:this.userInfoAll.id}).then(res=>{
+				this.readData = res.data;
 			})
 		},
 		getListData(){

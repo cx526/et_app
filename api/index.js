@@ -91,6 +91,9 @@ api.getOrder = params => request.globalRequest('/api/order/getOrder', 'POST', pa
 //获取历史订单
 api.getHistoryOrder = params => request.globalRequest('/api/order/getHistoryOrder', 'POST', params)
 
+//获取历史订单统计
+api.getHistoryOrderCount = params => request.globalRequest('/api/order/getHistoryOrderCount', 'POST', params)
+
 // 获取用户所有订单状态 @param custom_id
 api.getOrderCountWithCustomID = params => request.globalRequest('/api/order/getOrderCountWithCustomID', 'POST', params)
 
