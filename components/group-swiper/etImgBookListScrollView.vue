@@ -10,7 +10,7 @@
 		
 		<!-- 滑动的书本 -->
 		<view style="width: 100%; margin-top: 20upx; display: flex; flex-direction: column; justify-content: center; align-items: center; padding-bottom: 20upx;">
-			<swiper class="carousel" circular @change="swiperChange" >
+			<swiper class="carousel" @change="swiperChange" >
 				<swiper-item v-for="(item,index) in showData.goodsInfoSplit" :key="index">
 					<et-img-book-list :showData="item"></et-img-book-list>
 				</swiper-item>

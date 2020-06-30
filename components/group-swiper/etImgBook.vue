@@ -23,7 +23,7 @@ export default {
 
 <style scoped>
 .btn-content {
-	width: 160upx;
+	width: 150upx;
 	display: flex;
 	flex-direction: column;
 	align-items: center;
