@@ -1,10 +1,20 @@
 {
 	"pages": [ //pages数组中第一项表示应用启动页，参考：https://uniapp.dcloud.io/collocation/pages		
 		
+		
 		{
 			"path": "pages/index/index",
 			"style": {
 				"navigationBarTitleText": "五车书",
+				"app-plus": {
+					"titleNView": false
+				}
+			}
+		},
+		{
+			"path": "pages/my/myReadList",
+			"style": {
+				"navigationBarTitleText": "借阅明细",
 				"app-plus": {
 					"titleNView": false
 				}
