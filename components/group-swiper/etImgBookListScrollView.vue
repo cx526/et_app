@@ -9,12 +9,17 @@
 		</view>
 		
 		<!-- 滑动的书本 -->
-		<view style="width: 100%; margin-top: 20upx;">
-			<swiper class="carousel" circular>
-				<swiper-item v-for="(item,index) in showData.goodsInfoSplit" :key="index" >
+		<view style="width: 100%; margin-top: 20upx; display: flex; flex-direction: column; justify-content: center; align-items: center; padding-bottom: 20upx;">
+			<swiper class="carousel" circular @change="swiperChange" >
+				<swiper-item v-for="(item,index) in showData.goodsInfoSplit" :key="index">
 					<et-img-book-list :showData="item"></et-img-book-list>
 				</swiper-item>
 			</swiper>
+			
+			<!-- 自定义导航按钮 -->
+			<view v-if="showData.goodsInfoSplit.length > 1" style="border-radius: 200upx;" :style="'width: ' + 30*showData.goodsInfoSplit.length + 'px; position: relative; height: 8px; background: #E6E6E6'">
+				<view style="border-radius: 200upx; position: absolute; top: 0; bottom:0; width: 30px; height: 8px; background: #B3B3B3;" :style="'left: '+ 30 * selectIndex +'px;'"></view>
+			</view>
 		</view>
 	</view>
 </template>
@@ -31,19 +36,15 @@ export default {
 	},
 	data() {
 		return {
-			scrollTop: 0,
-			old: {
-				scrollTop: 0
-			}
+			selectIndex:0
 		}
 	},
 	methods: {
 		showInfo(res) {
 			console.log(res);
 		},
-		scroll(e) {
-			console.log(e)
-			this.old.scrollTop = e.detail.scrollTop
+		swiperChange(e) {
+			this.selectIndex = e.detail.current;
 		}
 	}
 }
