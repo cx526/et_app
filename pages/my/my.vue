@@ -94,43 +94,51 @@ export default {
 						'imgSrc' : this.$aliImage + 'my1_1.png',
 						'title'	: '待支付',
 						'toUrl'	: '/pages/cart/orderList?status_text=待支付',
+						'status' : '1'
 						// 'count'	: '99+'
 					},
 					{
 						'imgSrc' : this.$aliImage + 'my1_2.png',
 						'title'	: '待发货',
-						'toUrl'	: '/pages/cart/orderList?status_text=待发货'
+						'toUrl'	: '/pages/cart/orderList?status_text=待发货',
+						'status' : '2'
 					},
 					{
 						'imgSrc' : this.$aliImage + 'my1_3.png',
 						'title'	: '待收货',
-						'toUrl'	: '/pages/cart/orderList?status_text=待收货'
+						'toUrl'	: '/pages/cart/orderList?status_text=待收货',
+						'status' : '3'
 					},
 					{
 						'imgSrc' : this.$aliImage + 'my1_4.png',
-						'title'	: '阅读中',
-						'toUrl'	: '/pages/cart/orderList?status_text=阅读中',
+						'title'	: '待还书',
+						'toUrl'	: '/pages/cart/orderList?status_text=待还书',
 						// 'count'	: '2'
+						'status' : '4'
 					},
 					{
 						'imgSrc' : this.$aliImage + 'my1_5.png',
-						'title'	: '待归还',
-						'toUrl'	: '/pages/cart/orderList?status_text=待归还'
+						'title'	: '待取件',
+						'toUrl'	: '/pages/cart/orderList?status_text=待取件',
+						'status' : '5'
 					},
 					{
 						'imgSrc' : this.$aliImage + 'my1_6.png',
 						'title'	: '待评价',
-						'toUrl'	: '/pages/cart/orderList?status_text=待评价'
+						'toUrl'	: '/pages/cart/orderList?status_text=待评价',
+						'status' : '6'
 					},
 					{
 						'imgSrc' : this.$aliImage + 'my1_7.png',
 						'title'	: '退款',
-						'toUrl'	: '/pages/cart/orderList?status_text=退款'
+						'toUrl'	: '/pages/cart/orderList?status_text=退款',
+						'status' : '7'
 					},
 					{
 						'imgSrc' : this.$aliImage + 'my1_8.png',
 						'title'	: '逾期',
-						'toUrl'	: '/pages/cart/orderList?status_text=逾期'
+						'toUrl'	: '/pages/cart/orderList?status_text=逾期',
+						'status' : '8'
 					}
 				]
 			},
@@ -234,10 +242,9 @@ export default {
 			}
 			this.$api.getCustom({ filterItems: { mobile: this.userInfo.mobile } }).then(res=>{
 				this.$api.getOrderCountWithCustomID({  custom_id: res.data[0].id }).then(sres=>{
-					console.log(sres);
 					sres.data.map((item,index) => {
 						this.myOrderInfo.allMenu.map((sitem,sindex) => {
-							if(item.status_text === sitem.title){
+							if(item.status == sitem.status){
 								this.myOrderInfo.allMenu[sindex].count = item.order_total;
 							}
 						});

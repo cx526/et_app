@@ -38,7 +38,7 @@ export default {
 	},
 	data() {
 		return {
-			tabBars:['全部','待支付','待发货','待收货','阅读中','待归还','待评价','逾期','退款'],	//订单tab
+			tabBars:['全部','待支付','待发货','待收货','待还书','待取件','待评价','逾期','退款'],	//订单tab
 			tabBarID:0,  //初始化标签数据库ID
 			tabCurrentIndex:-1,
 			money:"30",
@@ -90,7 +90,8 @@ export default {
 					custom_id:this.customerInfo.id
 				};
 				if(type !== '全部'){
-					filterItems.status_text = type;
+					let status = this.selectTypeCode(type);
+					filterItems.status = status;
 				}
 				uni.showLoading()
 				this.$api.getOrder({ filterItems }).then(res=>{
@@ -105,6 +106,39 @@ export default {
 		reloadPages(){
 			const status_text = this.tabBars[this.tabCurrentIndex];
 			this.statusTextInit(status_text);
+		},
+		selectTypeCode(type){
+			switch(type){
+				case '待支付':
+					return '1';
+					break;
+				case '待发货':
+					return '2';
+					break;
+				case '待收货':
+					return '3';
+					break;
+				case '待还书':
+					return '4';
+					break;
+				case '待取件':
+					return '5';
+					break;
+				case '待评价':
+					return '6';
+					break;
+				case '逾期':
+					return '7';
+					break;
+				case '退款':
+					return '8';
+					break;
+				case '取消支付':
+					return '9';
+					break;
+				default:
+					return false;
+			}
 		}
 	}
 }

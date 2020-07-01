@@ -62,25 +62,27 @@
 		</view>
 		
 		<view class="button-text-position">
+			<!-- 待收货 -->
 			<view>
-				<view class="botton-text-style" v-if="orderList.status_text === '待收货' && orderList.ioInfo.express_no != ''">
+				<view class="botton-text-style" v-if="orderList.status === '2' && orderList.ioInfo.express_no != ''">
 					<text style="color: #2BAEC4; font-size: 25upx;">物流单号：{{orderList.ioInfo.express_no}}</text>
 				</view>
-				<view class="botton-text-style" v-else-if="orderList.status_text === '待收货'">
+				<view class="botton-text-style" v-else-if="orderList.status === '2'">
 					<text style="color: #2BAEC4; font-size: 25upx;">物流单号：暂无</text>
 				</view>
 			</view>
 			
-			
-			<view class="botton-text-style" v-if="orderList.status_text === '阅读中'">
+			<!-- 待还书 -->
+			<view class="botton-text-style" v-if="orderList.status === '4'">
 				<text style="color: #2BAEC4; font-size: 25upx;">点击还书后,稍后将有客服联系您预约取件</text>
 			</view>
 			
+			<!-- 待取件 -->
 			<view>
-				<view class="botton-text-style" v-if="orderList.status_text === '待归还' && orderList.ioInfo.express_no_back != ''">
+				<view class="botton-text-style" v-if="orderList.status === '5' && orderList.ioInfo.express_no_back != ''">
 					<text style="color: #2BAEC4; font-size: 25upx;">物流单号：{{orderList.ioInfo.express_no_back}}</text>
 				</view>
-				<view class="botton-text-style" v-else-if="orderList.status_text === '待归还'">
+				<view class="botton-text-style" v-else-if="orderList.status === '5'">
 					<text style="color: #2BAEC4; font-size: 25upx;">您的归还信息已收到,稍后将有客服联系您预约取件</text>
 				</view>
 			</view>
