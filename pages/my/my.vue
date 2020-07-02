@@ -55,12 +55,19 @@
 			</view>
 			
 			<view class="white-space"></view>
+			
+			<view class="my-box-position">
+				<et-my-read-book-data :myMenuInfo="myReadInfo"></et-my-read-book-data>
+			</view>
+			
+			<view class="white-space"></view>
 		</view>
 	</view>
 </template>
 
 <script>
 import etMyBox from '../../components/etMyBox.vue'
+import etMyReadBookData from '../../components/etMyReadBookData.vue'
 const toUrlFunction = require('@/common/toUrlFunction');
 const checkLogin = require('@/common/checkLogin');
 const bookListData = require('@/common/carDataOption');
@@ -72,7 +79,8 @@ export default {
 		}
 	},
 	components: {
-		etMyBox
+		etMyBox,
+		etMyReadBookData
 	},
 	data() {
 		return {
@@ -190,6 +198,21 @@ export default {
 						'toUrl'	: '/pages/cart/addressList'
 					}
 				]
+			},
+			myReadInfo: {
+				'menuTitle' : '我的借阅',
+				'moreMenu' : '更多 >',
+				'moreMenuUrl':'/pages/my/myReadList',
+				'allMenu': [
+					{
+						'title'	: '累计已读',
+						'count'	: '0'
+					},
+					{
+						'title'	: '在读',
+						'count'	: '0'
+					}
+				]
 			}
 		}
 	},
@@ -197,11 +220,13 @@ export default {
 		this.getOrderCount();
 		//更新tab
 		let bookCount = bookListData.cartBookCount();
+		this.getReadCount();
 	},
 	onShow() {
 		this.getOrderCount();
 		//更新tab
 		let bookCount = bookListData.cartBookCount();
+		this.getReadCount();
 	},
 	methods: {
 		clearSessionAction() {
@@ -251,6 +276,21 @@ export default {
 						console.log(this.myOrderInfo);
 					});
 					this.updateOrderInfo = true
+				});
+			});
+		},
+		getReadCount(){
+			this.$api.getCustom({ filterItems: { mobile: this.userInfo.mobile } }).then(res=>{
+				this.$api.getHistoryOrderCount({custom_id: res.data[0].id}).then(sres=>{
+					console.log(sres);
+					this.myReadInfo.allMenu.map((item,index)=>{
+						if(item.title === '累计已读'){
+							this.myReadInfo.allMenu[index].count = sres.data.readCount;
+						}else if(item.title === '在读'){
+							this.myReadInfo.allMenu[index].count = sres.data.currentReading;
+						}
+						
+					})
 				});
 			});
 		}

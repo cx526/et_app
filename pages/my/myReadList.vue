@@ -92,7 +92,12 @@ export default {
 			this.$api.getHistoryOrder({custom_id:this.userInfoAll.id,pageSize:this.pageSize,currentPage:this.currentPage}).then(res=>{
 				this.showData = res.data;
 				this.currentPage++;
-				this.loadStatus = 'more';
+				
+				if(res.data.length < 3){
+					this.loadStatus = 'nomore';
+				}else{
+					this.loadStatus = 'more';
+				}
 			})
 			this.getReadCount();
 		},
