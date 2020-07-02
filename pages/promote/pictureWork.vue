@@ -39,6 +39,13 @@ export default {
 			})
 		},
 		toUrl() {
+			uni.showToast({
+				duration:4000,
+				title:'活动已经结束',
+				icon:'none',
+			})
+			return;
+			
 			if (this.userInfo.name === 'guest') {
 				//游客 发出提示
 				uni.showModal({

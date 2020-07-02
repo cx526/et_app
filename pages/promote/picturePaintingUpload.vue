@@ -90,6 +90,12 @@
 			}
 		},
 	    onLoad(option) {
+			uni.showToast({
+				duration:4000,
+				title:'活动已经结束',
+				icon:'none',
+			})
+			return;
 			this.promoteTitle = option.pTitle
 	        this.getCustomInfo()
 	    },
