@@ -211,8 +211,8 @@ export default {
 .defalut-position {
 	width: 95%;
 	border-radius: 20upx;
-	box-shadow: 2upx 2upx 2upx 2upx rgba(179,179,179,0.4);
-	border: 1upx solid rgba(179,179,179,0.4);
+	box-shadow: 0upx 0upx 20upx rgba(179,179,179,0.3);
+	/* border: 1upx solid rgba(179,179,179,0.4); */
 	padding: 40upx 0;
 	background-color: #FFFFFF;
 }

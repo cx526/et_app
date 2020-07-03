@@ -40,7 +40,7 @@ export default {
 	justify-content: center;
 	padding: 20upx 24upx;
 	border-radius: 8px;
-	box-shadow: 2upx 2upx 2upx 2upx rgba(179,179,179,0.4);
+	box-shadow: 0upx 0upx 20upx rgba(179,179,179,0.3);
 	margin-top: 30upx;
 }
 .img-content {

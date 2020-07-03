@@ -32,7 +32,7 @@ export default {
 	padding: 12upx 24upx;
 	border: 1upx solid rgba(233,233,233,1);
 	border-radius: 40upx;
-	box-shadow: 1upx 1upx 1upx 1upx rgba(179,179,179,0.4);
+	box-shadow: 0upx 0upx 20upx rgba(179,179,179,0.4);
 }
 .img {
 	height: 50upx;

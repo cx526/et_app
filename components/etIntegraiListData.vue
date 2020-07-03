@@ -48,6 +48,8 @@ export default {
 	flex-direction: row;
 	justify-content: space-between;
 	align-items: center;
+	
+	padding-right: 20upx;
 }
 .titile-position {
 	display: flex;

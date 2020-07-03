@@ -52,7 +52,7 @@ export default {
 	display: flex;
 	align-items: center;
 	border: 1upx solid #71BBEC;
-	box-shadow: 1upx 1upx 1upx 1upx rgba(179,179,179,0.5);
+	box-shadow: 0upx 0upx 20upx rgba(179,179,179,0.3);
 	background-color: #FFFFFF;
 	font-size: 25upx;
 	font-weight: bold;

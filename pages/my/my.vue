@@ -48,13 +48,13 @@
 				<etMyBox :myMenuInfo="myOrderInfo"></etMyBox>
 			</view>
 			
-			<view class="white-space"></view>
+			<view class="white-space" style="height: 25upx;"></view>
 			
 			<view class="my-box-position">
 				<etMyBox :myMenuInfo="myAppInfo"></etMyBox>
 			</view>
 			
-			<view class="white-space"></view>
+			<view class="white-space" style="height: 25upx;"></view>
 			
 			<view class="my-box-position">
 				<et-my-read-book-data :myMenuInfo="myReadInfo"></et-my-read-book-data>
@@ -360,6 +360,6 @@ export default {
 	align-items: center;
 }
 .my-box-position {
-	width: 90%;
+	width: 94%;
 }
 </style>

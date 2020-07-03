@@ -32,10 +32,10 @@
 						
 						<!-- 列表数据 -->
 						<view class="cat-detail-position">
-							<view v-if="listData.length > 0">
+							<view v-if="listData.length > 0" style="width: 100%; display: flex; flex-direction: column; justify-content: center;align-items: center;">
 								<view class="cat-detail" v-for="(item,index) in listData">
 									<et-cart-detail :key="index" :bookID="item.id"  :select="item.select" :imgSrc="item.forGoodsPic[0].url" :title="item.title" :status="item.status" :coin="item.coin" :count="item.count" :usageCount="item.usageCount" @changSelectType="changAllSelectType" @deleteData="deleteData"></et-cart-detail>
-									<view class="white-space"></view>
+									<view class="white-space" style="height: 25upx;"></view>
 								</view>
 							</view>
 							
@@ -54,7 +54,7 @@
 				<view class="bottom-position">
 					<view class="bottom-content">
 						<view class="bottom-check">
-							<checkbox value="cb" :checked="allSelect" @tap="allSelectOrNot" />
+							<checkbox value="cb" :checked="allSelect" @tap="allSelectOrNot" style="transform:scale(0.7)" />
 							<text>全选</text>
 						</view>
 						
@@ -476,8 +476,8 @@ export default {
 	align-items: center;
 }
 .top-position {
-	width: 90%;
-	padding:20upx 0;
+	width: 94%;
+	padding:10upx 0;
 	margin-bottom: 20upx;
 	display: flex;
 	flex-direction: row;
@@ -502,13 +502,20 @@ export default {
 	display: flex;
 	flex-direction: row;
 }
+.top-content-right {
+	display: flex;
+	flex-direction: row;
+	justify-content: center;
+	align-items: center;
+	
+}
 .top-content-right-img-one {
 	width: 150upx;
 	height: 40upx;
 }
 .top-content-right-img-two {
-	width: 40upx;
-	height: 40upx;
+	width: 60upx;
+	height: 60upx;
 }
 .banner-position {
 	width: 100%;
@@ -518,10 +525,15 @@ export default {
 	align-items: center;
 }
 .cat-detail-position {
-	width: 90%;
+	width: 94%;
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
 }
 .cat-detail {
-
+	width: 100%;
+	padding: 0upx 20upx;
 }
 .cat-add-book {
 	display: flex;

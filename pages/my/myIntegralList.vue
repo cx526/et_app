@@ -6,8 +6,8 @@
 			<view class="top-content-position">
 				<view class="top-content" v-if='userInfoAll.id'>
 					<view class="top-left-position">
-						<image style="height: 120upx;width: 120upx;border-radius: 50%;" :src="userInfoAll.avatar" class="marginStyle"></image>
-						<image style="width: 40upx;height: 40upx;" src="https://et-pic-server.oss-cn-shenzhen.aliyuncs.com/app_img/my_coin.png" class="marginStyle"></image>
+						<image style="height: 120upx;width: 120upx;border-radius: 50%;" :src="userInfoAll.avatar" ></image>
+						<image style="width: 40upx;height: 40upx;margin-left: 15upx;" src="https://et-pic-server.oss-cn-shenzhen.aliyuncs.com/app_img/my_coin.png" ></image>
 						<text class="marginStyle">当前积分</text>
 					</view> 
 					 
@@ -38,6 +38,8 @@
 					</view>
 				</view>
 			</view>
+			
+			<view class="white-space" style="height: 36upx;"></view>
 			
 			<uni-load-more :status="loadStatus" :content-text="loadText" />
 			
@@ -193,8 +195,10 @@ export default {
 .top-left-position {
 	display: flex;
 	flex-direction: row;
-	justify-content: center;
+	justify-content: flex-start;
 	align-items: center;
+	
+	width: 350upx;
 }
 .top-right-content {
 	background-color: #C89E60;
@@ -223,17 +227,22 @@ export default {
 }
 .bottom-content-position {
 	width: 100%;
-	margin-top: 40upx;
+	margin-top: 35upx;
+	
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
 }
 .bottom-content {
 	width: 96%;
-	padding: 20upx 20upx;
+	padding: 8upx 20upx;
 }
 .cell {
 	padding: 30upx 5upx;
 }
 .cell + .cell {
-	border-top: 1px dashed #A0A0A0;
+	border-top: 1px dashed rgba(160,160,160,.4);
 
 }
 .content-title-position {

@@ -1,7 +1,7 @@
 <template>
 	<view class="content" >
 		<view class="check-position">
-			<checkbox value="cb" :checked="select" @click="changeSelect"/>
+			<checkbox value="cb" :checked="select" @click="changeSelect" style="transform:scale(0.7)"/>
 		</view>
 		
 		<view class="img-position">
@@ -75,7 +75,7 @@ export default {
 }
 </script>
 
-<style>
+<style scoped>
 .content {
 	width: 100%;
 	display: flex;
@@ -83,32 +83,37 @@ export default {
 	justify-items: space-around;
 	align-items: center;
 	text-align: center;
-	border-radius: 50upx;
-	border: 1upx solid rgba(179,179,179,0.3);
-	box-shadow: 1upx 1upx 1upx 1upx rgba(179,179,179,0.5);
+	border-radius: 15upx;
+	/* border: 1upx solid rgba(179,179,179,0.3); */
+	box-shadow: 0upx 0upx 20upx rgba(179,179,179,0.5);
 	background-color: #FFFFFF;
 	overflow: hidden;
+	padding: 0upx 30upx;
+	box-sizing: border-box;
+	height: 250upx;
 }
 .check-position {
 	background-color: #FFFFFF;
 }
 .img-content {
-	width: 250upx;
-	height: 250upx;
+	width: 230upx;
+	height: 230upx;
 }
 .content-position {
 	display: flex;
 	flex-direction: column;
-	justify-items: space-between;
+	justify-content: space-between;
 	align-items: flex-start;
-	height: 250upx;
-	padding-top: 50upx;
+	/* height: 250upx; */
+	/* padding-top: 50upx; */
 	background-color: #FFFFFF;
+	height: 190upx;
 }
 .title-position {
 	width: 250upx;
 	font-size: 30upx;
 	font-weight: bold;
+	text-align: left;
 }
 .status-position {
 	font-size: 20upx;
@@ -118,10 +123,11 @@ export default {
 	font-size: 24upx;
 	color: #549EAB;
 	font-weight: bold;
+	text-align: left;
 }
 .rubbish-img {
-	width: 30upx;
-	height: 30upx;
+	width: 35upx;
+	height: 35upx;
 }
 .count-position {
 	background-color: #E6E6E6;
@@ -131,7 +137,6 @@ export default {
 	font-size: 20upx;
 }
 .last-position {
-	height: 250upx;
 	display: flex;
 	flex-direction: column;
 	justify-content: space-between;
@@ -139,6 +144,8 @@ export default {
 	padding-left: 30upx;
 	padding-bottom: 30upx;
 	background-color: #FFFFFF;
+	margin-left: 30rpx;
+	height: 72%;
 }
 .img-position {
 	position: relative;

@@ -31,7 +31,7 @@ export default {
 	justify-content: center;
 	padding: 12upx 0;
 	border-radius: 8upx;
-	box-shadow: 1upx 1upx 1upx 1upx rgba(179,179,179,0.4);
+	box-shadow: 0upx 0upx 20upx rgba(179,179,179,0.3);
 	margin-top: 20upx;
 	background-color: #FFFFFF;
 	padding-bottom: 20upx;

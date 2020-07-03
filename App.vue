@@ -13,6 +13,17 @@
 </script>
 
 <style>
+/* 控制uni-app checkbox样式 */
+checkbox .wx-checkbox-input {
+	border-radius: 50% !important;
+	/* color: #ffffff !important; */
+}
+
+checkbox .wx-checkbox-input.wx-checkbox-input-checked {
+	color: #fff;
+	background: #09C2C9;
+}
+	
 /*每个页面公共css */
 .white-space {
 	height: 30upx;
@@ -32,8 +43,8 @@
 }
 .white-border{
 	border-radius: 20upx;
-	box-shadow: 2upx 2upx 2upx 2upx rgba(179,179,179,0.4);
-	border: 1upx solid rgba(179,179,179,0.4);
+	box-shadow: 0upx 0upx 20upx rgba(179,179,179,0.4);
+	/* border: 1upx solid rgba(179,179,179,0.4); */
 	padding: 30upx 0;
 	background-color: #FFFFFF;
 }

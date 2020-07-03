@@ -140,7 +140,7 @@
 		background-color: #FFFFFF;
 		border-radius: 25upx;
 		padding: 10upx;
-		box-shadow: 2upx 2upx 2upx 2upx rgba(179,179,179,0.4);
+		box-shadow: 0upx 0upx 20upx rgba(179,179,179,0.3);
 		margin-top: 20upx;
 	}
 	.item-img-img {
