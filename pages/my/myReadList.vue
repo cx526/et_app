@@ -4,21 +4,32 @@
 			<image src="https://et-pic-server.oss-cn-shenzhen.aliyuncs.com/app_img/myReadList_book_top_group.png" style="width: 100%;" mode="widthFix"></image>
 			
 			<!-- 文字部分内容 -->
-			<view style="font-size: 30upx; font-weight: 500; position: absolute; left: 120upx; top: 200upx;">
+			<view style="font-size: 30upx; font-weight: 500; position: absolute; left: 110upx; top: 170upx;">
 				<view style="display: flex;flex-direction: row;justify-content: center;align-items: center;">
 					<text>累计借阅</text>
 					<text style="color: #2AAEC4;"> {{readData.readCount}} </text>
 					<text>本</text>
 				</view>
+				
+				<view style="margin-top: 10upx;  display: flex;flex-direction: row;justify-content: center;align-items: center;">
+					<text style="color:#2AAEC4">宝贝,您太棒啦</text>
+				</view>
 			</view>
 		</view>
 		
-		<view style="width: 88%; padding-bottom: 80upx;">
+		<view style="width: 92%; padding-bottom: 80upx;"  v-if='showData.length > 0'>
 			<view class='white-border' style="margin-top: 20upx; padding: 0upx 20upx;" v-for="(item,index) in showData">
 				<et-img-book-list-scroll-view :showData="item"></et-img-book-list-scroll-view>
 			</view>
 			
 			<uni-load-more :status="loadStatus" :content-text="loadText" />
+		</view>
+		
+		<view class="white-border" style="width: 92%; height: 720upx; padding: 50upx 0; margin-top: 20upx; display: flex;flex-direction: column;justify-content: flex-start;align-items: center;" v-else>
+			<view style="margin-top: 50upx; display: flex;flex-direction: column;justify-content: flex-start;align-items: center;">
+				<image src="https://et-pic-server.oss-cn-shenzhen.aliyuncs.com/app_img/myReadList_noData.png" style="width: 300upx;" mode="widthFix"></image>
+				<text style="color: #929292;">您还没有借阅记录~</text>
+			</view>			
 		</view>
 	</view>
 </template>
@@ -89,6 +100,7 @@ export default {
 			this.$forceUpdate();
 		},
 		initData() {
+			// this.$api.getHistoryOrder({custom_id:this.userInfoAll.id,pageSize:this.pageSize,currentPage:this.currentPage}).then(res=>{
 			this.$api.getHistoryOrder({custom_id:this.userInfoAll.id,pageSize:this.pageSize,currentPage:this.currentPage}).then(res=>{
 				this.showData = res.data;
 				this.currentPage++;
@@ -129,7 +141,7 @@ export default {
 	width: 100%;
 	display: flex;
 	flex-direction: column;
-	justify-content: center;
+	justify-content: flex-start;
 	align-items: center;
 	background-color: #9EE0F0;
 	min-height: 100VH;

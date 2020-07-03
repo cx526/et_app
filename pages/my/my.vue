@@ -280,6 +280,9 @@ export default {
 			});
 		},
 		getReadCount(){
+			if(this.userInfo.name === 'guest' || !this.userInfo.name){
+				return;
+			}
 			this.$api.getCustom({ filterItems: { mobile: this.userInfo.mobile } }).then(res=>{
 				this.$api.getHistoryOrderCount({custom_id: res.data[0].id}).then(sres=>{
 					console.log(sres);
