@@ -50,6 +50,12 @@
 		</view>
 		
 		<view class="white-space" style="height: 60upx;"></view>
+		
+		<uni-popup ref="overPopup" :maskClick="false" >
+			<view style="color: #ccc; font-size: 28upx; background: #fff; padding: 80upx 60upx; border-radius: 10upx;">
+				<text >活动已经结束咯~!</text>
+			</view>
+		</uni-popup>
 	</view>
 </template>
 
@@ -75,14 +81,23 @@ export default {
         }
     },
     onLoad() {
+		this.checkActionOver();
 		this.getCustomerInfo();
         this.getGiftList();
     },
 	onShow() {
+		this.checkActionOver();
 		this.getCustomerInfo();
 	    this.getGiftList();
 	},
     methods: {
+		checkActionOver(){
+			this.$api.giftSwitch().then(res => {
+				if (String(res.data) !== '1') {
+					this.$refs.overPopup.open()
+				}
+			})
+		},
 		toScoreUrl(){
 			toUrlFunction.toUrl('/pages/promote/pictureMonth');
 		},
