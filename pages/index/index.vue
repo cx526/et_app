@@ -17,7 +17,7 @@
 			<view style="position: relative;">
 				<swiper class="carousel" circular autoplay @change="swiperChange">
 					<swiper-item v-for="(item, i) in carouselList" :key="i" class="carousel-item" @tap="toTargetUrl(item.target)">
-						<image :src="item.img"  mode="widthFix" />
+						<image :src="item.img" />
 					</swiper-item>
 				</swiper>
 				<!-- 自定义swiper指示器 -->
@@ -29,7 +29,7 @@
 			</view>
 		</view>
 		
-		<view class="white-space"></view>
+		<!-- <view class="white-space"></view> -->
 		
 		<!-- 按钮组合栏 -->
 		<view class="btn-group">
