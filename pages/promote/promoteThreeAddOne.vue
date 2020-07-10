@@ -1,6 +1,6 @@
 <template>
 	<view class="content">
-		<image src="https://et-pic-server.oss-cn-shenzhen.aliyuncs.com/app_img/promote_threeAddOne.png" style="width: 100%;" mode="widthFix"></image>
+		<image src="https://et-pic-server.oss-cn-shenzhen.aliyuncs.com/app_img/promote_threeAddOne2.png" style="width: 100%;" mode="widthFix"></image>
 		<!-- <view class="content-kan" @tap="toKanUrl"></view> -->
 		<view class="content-button" @tap="toUrl"></view>
 	</view>
