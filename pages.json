@@ -11,6 +11,16 @@
 				}
 			}
 		},
+		
+		{
+			"path": "pages/promote/promoteSummeryBook",
+			"style": {
+				"navigationBarTitleText": "暑假上新",
+				"app-plus": {
+					"titleNView": false
+				}
+			}
+		},
 		{
 			"path": "pages/my/myReadList",
 			"style": {
@@ -426,7 +436,7 @@
 				"text": "首页"
 			},
 			{
-				"pagePath": "pages/promote/pictureMonth",
+				"pagePath": "pages/promote/promoteSummeryBook",
 				"iconPath": "static/tab-cate.png",
 				"selectedIconPath": "static/tab-cate-current.png",
 				"text": "暑假上新"
