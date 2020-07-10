@@ -136,9 +136,34 @@
 						</view>
 					</view>
 				</uni-popup>
-				
-				
 				<!-- 借阅确认弹窗 -->
+				
+				<!-- 绘本到家提示弹窗 -->
+				<uni-popup ref="bookToHome">
+					<view style="display: flex; flex-direction: column; align-items: center;width: 80%;margin: 0 auto;">
+						<view class="popup-content-position white-border">
+							<view class='popup-img-position'>
+								<image src="https://et-pic-server.oss-cn-shenzhen.aliyuncs.com/app_img/cart_child.png" style="width: 250upx" mode="widthFix"></image>	
+							</view>
+							<view class="popup-content">
+								<text>您有一次免费借书邮到家服务,请勾选3本绘本并提交订单</text>
+							</view>
+							<view class="popup-button-position">
+								<view class="button-style2"  @tap='buySelect' style="background-color: #F9F9F9; color:#B2B2B2;font-weight: bold; font-size: 25upx; padding: 10upx 30upx;margin-right: 10upx;">
+									<text>仍要继续</text>
+								</view>
+								<view class="button-style2" @tap='cancleBookToHome' style="font-weight: bold; font-size: 25upx; padding: 10upx 20upx;margin-left: 10upx;">
+									<text>选3本</text>
+								</view>
+							</view>
+						</view>
+						
+						<view @tap="cancleBookToHome">
+							<image style="width: 80upx; height: 80upx;" src="https://et-pic-server.oss-cn-shenzhen.aliyuncs.com/app_img/popuo_close.png"></image>
+						</view>
+					</view>
+				</uni-popup>
+				<!-- 绘本到家提示弹窗 -->
 				
 			</view>
 		</view>
@@ -368,6 +393,9 @@ export default {
 		canclePop(){
 			this.$refs.popup.close()
 		},
+		cancleBookToHome(){
+			this.$refs.bookToHome.close()
+		},
 		//下单前确认数据
 		preBuy(){
 			//检测书本数量是否在范围内
@@ -375,9 +403,21 @@ export default {
 			if(!bookResult){
 				return;
 			}
+			
 			let dataCount = bookListData.countBookDetail();
+			// 如果是幼儿园用户并且未使用过绘本到家优惠的则返回true
+			const checkOrder =  this.checkOrderInfo();
 			if(dataCount.selectBookCount < 10){
-				this.$refs.popup.open();
+				if(checkOrder){
+					// 如果是幼儿园用户并且未使用过绘本到家优惠的则走当前逻辑
+					if(dataCount.selectBookCount !== 3){   // 如果书本不是三本则提示绘本到家
+						this.$refs.bookToHome.open();
+					}else{		 // 书本刚好三本时候就直接跳到订单详情
+						this.buySelect();
+					}
+				}else{
+					this.$refs.popup.open();
+				}
 			}else{
 				this.buySelect();
 			}
@@ -429,6 +469,14 @@ export default {
 			uni.navigateTo({
 				url: "/pages/cart/orderDetail"
 			})
+		},
+		checkOrderInfo(){			
+			// 检查用户是否是幼儿园注册用户,是否已经使用过绘本到家优惠，如果是幼儿园用户并且未使用过绘本到家优惠的则返回true
+			if(this.customerInfo.schoolInfo.id && this.hestoryOrderInfo.couponOrder === 0){
+				return true;
+			}else{
+				return false;
+			}
 		}
 	}
 }
