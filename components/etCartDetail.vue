@@ -152,8 +152,8 @@ export default {
 }
 .book-zero-count-style {
 	background-color: rgba(157,160,174,.6);
-	width: 250upx;
-	height: 250upx;
+	width: 220upx;
+	height: 220upx;
 	display: flex;
 	flex-direction: column;
 	justify-content: center;
