@@ -11,18 +11,20 @@
 			<!-- 数据列表 -->
 			<view class="list-content-father-position">
 				<view class="list-content-father-position" v-if="listData.length > 0">
-					<view class="list-content-position">	
+					<!-- 搜索，热门推荐页面不做库存为0限制 -->
+					<view class="list-content-position" v-if="isHidden === 0">
 						<view  v-for="(item,i) in listData" :key="i">
-							<!-- 搜索，热门推荐页面不做库存为0限制 -->
-							<view v-if="isHidden === 0">   
-								<et-imgbox :bookInfo="item.goods_info" @insertBookToCart="insertBookToCart"></et-imgbox>
-							</view>
-							<!-- 非搜索，热门推荐页面不做库存为0限制 -->
-							<view v-if="isHidden === 1">
-								<et-imgbox v-if="item.goods_info.stock.usageCount !== 0" :bookInfo="item.goods_info" @insertBookToCart="insertBookToCart"></et-imgbox>
-							</view>
+							<et-imgbox :bookInfo="item.goods_info" @insertBookToCart="insertBookToCart"></et-imgbox>
 						</view>						
 					</view>
+					
+					<!-- 非搜索，热门推荐页面要做库存为0限制 -->
+					<view class="list-content-position" v-if="isHidden === 1">
+						<view  v-for="(item,i) in listData" :key="i" v-if="item.goods_info.stock.usageCount !== 0">
+							<et-imgbox :bookInfo="item.goods_info" @insertBookToCart="insertBookToCart"></et-imgbox>
+						</view>						
+					</view>
+					
 					<view class="white-space"></view>
 					<uni-load-more :status="loadStatus" :content-text="loadText" />
 				</view>
