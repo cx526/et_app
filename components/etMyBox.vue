@@ -78,7 +78,7 @@ export default {
 				}
 				
 				uni.navigateTo({url: toUrl});
-				if (toUrl === '/pages/promote/pictureMonth'){
+				if (toUrl === '/pages/promote/promoteSummeryBook'){
 					uni.switchTab({
 						url:toUrl
 					})

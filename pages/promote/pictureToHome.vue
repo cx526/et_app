@@ -1,9 +1,10 @@
 <template>
 	<view class="content">
-		<image src="https://et-pic-server.oss-cn-shenzhen.aliyuncs.com/app_img/promote_pictureToHome1.png" style="width: 100%;" mode="widthFix"></image>
-		<view class="content-button" @tap="toUrl">
+		<image src="https://et-pic-server.oss-cn-shenzhen.aliyuncs.com/app_img/promote_pictureToHome2.png" style="width: 100%;" mode="widthFix"></image>
+		<view class="button-class"  @tap="toUrl"></view>
+		<!-- <view class="content-button" @tap="toUrl">
 			<text>立即体验</text>
-		</view>
+		</view> -->
 	</view>
 </template>
 
@@ -34,6 +35,7 @@ export default {
 	flex-direction: column;
 	justify-content: center;
 	align-items: center;
+	position: relative;
 }
 .content-button {
 	margin-top: 30UPX;
@@ -47,5 +49,12 @@ export default {
 	flex-direction: column;
 	justify-content: center;
 	align-items: center;
+}
+.button-class {
+	width: 400UPX;
+	height: 100upx;
+	position: absolute;
+	bottom: 115upx;
+	/* background-color: #007AFF; */
 }
 </style>

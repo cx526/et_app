@@ -174,7 +174,7 @@ export default {
 					{
 						'imgSrc' : this.$aliImage + 'my2_4.png',
 						'title'	: '活动',
-						'toUrl' : '/pages/promote/pictureMonth',
+						'toUrl' : '/pages/promote/promoteSummeryBook',
 						// 'count'	: '2'
 					},
 					{

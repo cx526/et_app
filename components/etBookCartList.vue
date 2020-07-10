@@ -24,9 +24,10 @@
 						<view class="white-space" style="height: 20upx;"></view>
 						
 						<!-- banner -->
-						<view class="banner-position">
+						<!-- 阿敏要求删除该banner  -2020年7月10日 -->
+						<!-- <view class="banner-position">
 							<image style="width: 100%;" src="https://et-pic-server.oss-cn-shenzhen.aliyuncs.com/app_img/bookcartlist_banner.png" mode="widthFix"></image>
-						</view>
+						</view> -->
 						
 						<view class="white-space" style="height: 20upx;"></view>
 						

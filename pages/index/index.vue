@@ -399,7 +399,7 @@ export default {
 }
 .carousel {
 	width: 100%;
-	height: 420upx;
+	height: 450upx;
 }
 .carousel .carousel-item {
 	/* width: 98%!important; */
