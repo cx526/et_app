@@ -272,9 +272,11 @@ export default {
 <style scoped>
 .content {
 	display: flex;
+	width: 100%;
 }
 .content-position {
 	display: flex;
+	width: 100%;
 }
 .tabs-content {
 	z-index: 99;
