@@ -147,7 +147,9 @@
 								<image src="https://et-pic-server.oss-cn-shenzhen.aliyuncs.com/app_img/cart_child.png" style="width: 250upx" mode="widthFix"></image>	
 							</view>
 							<view class="popup-content">
-								<text>您有一次免费借书邮到家服务,请勾选3本绘本并提交订单</text>
+								<text>您有一次免费借书邮到家服务,请勾选3本绘本并提交订单。</text>
+								<text>享受服务（免费借3本）</text>
+								<text>正常借阅（可借10本）</text>
 							</view>
 							<view class="popup-button-position">
 								<view class="button-style2"  @tap='buySelect' style="background-color: #F9F9F9; color:#B2B2B2;font-weight: bold; font-size: 25upx; padding: 10upx 30upx;margin-right: 10upx;">
