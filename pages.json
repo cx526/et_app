@@ -78,7 +78,7 @@
 		{
 			"path": "pages/promote/promoteThreeAddOne",
 			"style": {
-				"navigationBarTitleText": "3+1绘本",
+				"navigationBarTitleText": "绘本到家",
 				"app-plus": {
 					"titleNView": false
 				}
