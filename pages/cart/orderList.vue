@@ -17,6 +17,7 @@
 			<view class="white-border" style="margin: 20upx 0;" v-for="(item,index) in orderList" :key="index">
 				<et-order-list :orderList="item" @reloadPages = "reloadPages"></et-order-list>
 			</view>
+			<uni-load-more :status="loadStatus" :content-text="loadText" />
 		</view>
 		<view class="order-list-position-null" v-if='listStatus === 0'>
 			<text>列表空空如也</text>
@@ -49,7 +50,15 @@ export default {
 				'address' : '广东省佛山市顺德区大良街道凤翔路创意产业园C栋301'
 			},
 			listStatus:1,	//列表状态0：没数据，1：加载中，其他：有数据
-			orderList : []
+			orderList : [],
+			pageSize: 3,
+			currentPage: 1,
+			loadStatus : 'loading',
+			loadText: {
+				contentdown: '上拉加载更多',
+				contentrefresh: '加载中',
+				contentnomore: '已经到底了'
+			},
 			
 		}
 	},
@@ -62,6 +71,10 @@ export default {
 			this.dataInit();
 		}
 	},
+	onReachBottom : function(){
+		const status_text = this.tabBars[this.tabCurrentIndex];
+		this.getData(status_text);
+	},
 	methods: {
 		btnClick() {
 			console.log(this.defalutAddress);
@@ -69,6 +82,10 @@ export default {
 		tabChange(e){
 			this.tabCurrentIndex = e;		// 更新标签序号
 			const status_text = this.tabBars[this.tabCurrentIndex];
+			//切换标签清理数据
+			this.orderList = [];
+			this.listStatus = 0;
+			this.currentPage = 1;
 			this.getData(status_text);
 		},
 		dataInit(){
@@ -94,11 +111,35 @@ export default {
 					filterItems.status = status;
 				}
 				uni.showLoading()
-				this.$api.getOrder({ filterItems }).then(res=>{
-					this.orderList = res.data;
+				let param = {
+			        pageSize:this.pageSize,
+					currentPage: this.currentPage,
+			        filterItems: filterItems
+		       	};
+				this.$api.getOrder(param).then(res=>{
+					uni.hideLoading()
+					
+					if(res.data.rows.length === 0){
+						this.loadStatus = 'noMore';  //没有数据时显示‘没有更多’
+						return;
+					}
+					
+					
+					res.data.rows.map((item,index) =>{
+						this.orderList.push(item);
+					});
+					this.currentPage++;
+					this.loadStatus = 'more';
+					// this.orderList = res.data.rows;
+					
+					if(res.data.rows.length < this.pageSize){
+						this.loadStatus = 'noMore';  //没有数据时显示‘没有更多’
+					}
+					
 					//更新显示状态
 					this.listStatus = this.orderList.length;
-					uni.hideLoading()
+					// uni.hideLoading()
+					
 				}) 
 				console.log(this.orderList);
 			});
