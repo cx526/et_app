@@ -140,13 +140,13 @@ export default {
 						'imgSrc' : this.$aliImage + 'my1_7.png',
 						'title'	: '退款',
 						'toUrl'	: '/pages/cart/orderList?status_text=退款',
-						'status' : '7'
+						'status' : '8'
 					},
 					{
 						'imgSrc' : this.$aliImage + 'my1_8.png',
 						'title'	: '逾期',
 						'toUrl'	: '/pages/cart/orderList?status_text=逾期',
-						'status' : '8'
+						'status' : '7'
 					}
 				]
 			},

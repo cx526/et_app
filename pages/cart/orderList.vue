@@ -49,7 +49,7 @@ export default {
 				'phone':'13690394900',
 				'address' : '广东省佛山市顺德区大良街道凤翔路创意产业园C栋301'
 			},
-			listStatus:1,	//列表状态0：没数据，1：加载中，其他：有数据
+			listStatus:-1,	//列表状态0：没数据，1：加载中，其他：有数据
 			orderList : [],
 			pageSize: 3,
 			currentPage: 1,
@@ -121,6 +121,9 @@ export default {
 					
 					if(res.data.rows.length === 0){
 						this.loadStatus = 'noMore';  //没有数据时显示‘没有更多’
+						
+						//更新显示状态
+						this.listStatus = this.orderList.length;
 						return;
 					}
 					
