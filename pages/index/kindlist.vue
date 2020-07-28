@@ -297,15 +297,24 @@ export default {
 }
 .list-content-father-position {
 	width: 100%;
-	
 }
-.list-content-position{
+/* .list-content-position{
 	width: 96%;
 	margin: 0 auto;
 	display: flex;
 	flex-direction: row;
 	flex-wrap: wrap;
 	justify-content:space-between;
+} */
+.list-content-position{
+	width: 100%;
+	/* margin: 0 auto; */
+	display: flex;
+	flex-direction: row;
+	flex-wrap: wrap;
+	justify-content:space-around;
+	box-sizing: border-box;
+	padding: 0 40rpx;
 }
 .list-content {
 	width: 45%;
