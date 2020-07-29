@@ -167,6 +167,7 @@ export default {
 	},
 	onLoad(option) {
 		this.bookID = JSON.parse(decodeURIComponent(option.bookID));
+		console.log(this.bookID);
 		this.getBookData();
 		// this.cartBookCountFun();
 		

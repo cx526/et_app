@@ -24,6 +24,7 @@ export default {
 		peopleCount: String,
 		bookInfo:Object
 	},
+	
 	methods: {
 		insertToCart() {
 			if(this.$props.bookInfo.stock.usageCount === 0){

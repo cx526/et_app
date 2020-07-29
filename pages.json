@@ -266,18 +266,6 @@
 				}
 			}
 		},
-		
-				
-		
-		// {
-		// 	"path": "pages/cart/orderDetail",
-		// 	"style": {
-		// 		"navigationBarTitleText": "订单详情",
-		// 		"app-plus": {
-		// 			"titleNView": false
-		// 		}
-		// 	}
-		// },
 		{
 			"path": "pages/index/search",
 			"style": {
@@ -399,25 +387,17 @@
 					"titleNView": false
 				}
 			}
+		},
+		{
+			"path": "pages/library/library",
+			"style": {
+				"navigationBarTitleText": "智慧童书馆",
+				"app-plus": {
+					"titleNView": false
+				}
+			}
 		}
-		// {
-		// 	"path": "pages/index/index",
-		// 	"style": {
-		// 		"navigationBarTitleText": "五车书",
-		// 		"app-plus": {
-		// 			"titleNView": false
-		// 		}
-		// 	}
-		// },
-		// {
-		// 	"path": "pages/my/my",
-		// 	"style": {
-		// 		"navigationBarTitleText": "我的信息",
-		// 		"app-plus": {
-		// 			"titleNView": false
-		// 		}
-		// 	}
-		// }
+		
 	],
 	"globalStyle": {
 		"navigationBarTextStyle": "black",
@@ -429,7 +409,8 @@
 		"selectedColor": "#00B7CC",
 		"borderStyle": "black",
 		"backgroundColor": "#ffffff",
-		"list": [{
+		"list": [
+			{
 				"pagePath": "pages/index/index",
 				"iconPath": "static/tab-home.png",
 				"selectedIconPath": "static/tab-home-current.png",
@@ -440,6 +421,12 @@
 				"iconPath": "static/tab-cate.png",
 				"selectedIconPath": "static/tab-cate-current.png",
 				"text": "暑假上新"
+			},
+			{
+				"pagePath": "pages/library/library",
+				"iconPath": "static/tab-home.png",
+				"selectedIconPath": "static/tab-home-current.png",
+				"text": "智慧童书馆"
 			},
 			{
 				"pagePath": "pages/cart/cart",
