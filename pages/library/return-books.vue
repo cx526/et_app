@@ -13,7 +13,7 @@
 				</view>
 			</block>
 		</view>
-		<!-- 取书订单 -->
+		<!-- 待归还书单 -->
 		<block v-if="tabList.currentIndex == 0">
 			<view class="order-list">
 				<view class="item">
@@ -21,13 +21,66 @@
 						<view>订单号：23123123123342</view>
 						<view class="status">
 							<view>
+								<text style="color: rgb(0,128,0)">待归还</text>
+							</view>
+							<view>
 								<text>剩余：</text>
-								<text style="color: rgb(0,128,0)">15:00</text>
+								<text style="color: rgb(0,128,0)">2天</text>
 							</view>
 						</view>
 					</view>
 					<view class="book-list">
-						<block v-for="n in 4" :key="n">
+						<block v-for="n in 2" :key="n">
+							<view class="book-item">
+								<image src="http://et-pic-server.oss-cn-shenzhen.aliyuncs.com/1589783780428.jpg"></image>
+								<view class="title">
+									不要告状，除非是大事
+								</view>
+								<view class="number">
+									x1
+								</view>
+							</view>
+						</block>
+					</view>
+					<view class="order-info">
+						<view class="left">
+							<view class="text">
+								<text>创建时间：2020-07-19 16：00：00</text>
+							</view>
+							<view class="text">
+								<text>借阅币：30</text>
+							</view>
+							<view class="text">
+								<text>实付：20</text>
+							</view>
+							<view class="text">
+								<text style="color: #f00;">优惠10借书币</text>
+							</view>
+							<view class="text">
+								<text>积分：-100</text>
+							</view>
+						</view>
+						<view class="right">
+							<button type="default" @tap="open">订单凭证</button>
+						</view>
+					</view>
+				</view>
+				
+				<view class="item">
+					<view class="topic">
+						<view>订单号：23123123123342</view>
+						<view class="status">
+							<view>
+								<text style="color: #f00">逾期</text>
+							</view>
+							<view>
+								<text>剩余：</text>
+								<text style="color: #f00">-1天</text>
+							</view>
+						</view>
+					</view>
+					<view class="book-list">
+						<block v-for="n in 2" :key="n">
 							<view class="book-item">
 								<image src="http://et-pic-server.oss-cn-shenzhen.aliyuncs.com/1589783780428.jpg"></image>
 								<view class="title">
@@ -64,7 +117,7 @@
 				</view>
 			</view>
 		</block>
-		<!-- 已失效订单 -->
+		<!-- 已归还书单 -->
 		<block v-else>
 			<view class="order-list">
 				<view class="item">
@@ -72,12 +125,12 @@
 						<view>订单号：23123123123342</view>
 						<view class="status">
 							<view>
-								<text style="color: #999;">已失效</text>
+								<text style="color: rgb(0,128,0);">提前还书</text>
 							</view>
 						</view>
 					</view>
 					<view class="book-list">
-						<block v-for="n in 4" :key="n">
+						<block v-for="n in 2" :key="n">
 							<view class="book-item">
 								<image src="http://et-pic-server.oss-cn-shenzhen.aliyuncs.com/1589783780428.jpg"></image>
 								<view class="title">
@@ -112,6 +165,55 @@
 						</view>
 					</view>
 				</view>
+				<view class="item">
+					<view class="topic">
+						<view>订单号：23123123123342</view>
+						<view class="status">
+							<view>
+								<text style="color:	#f00;">逾期</text>
+							</view>
+							<view>
+								<text style="color: #f00;">逾期1天</text>
+							</view>
+						</view>
+					</view>
+					<view class="book-list">
+						<block v-for="n in 2" :key="n">
+							<view class="book-item">
+								<image src="http://et-pic-server.oss-cn-shenzhen.aliyuncs.com/1589783780428.jpg"></image>
+								<view class="title">
+									不要告状，除非是大事
+								</view>
+								<view class="number">
+									x1
+								</view>
+							</view>
+						</block>
+					</view>
+					<view class="order-info">
+						<view class="left">
+							<view class="text">
+								<text>创建时间：2020-07-19 16：00：00</text>
+							</view>
+							<view class="text">
+								<text>借阅币：30</text>
+							</view>
+							<view class="text">
+								<text>实付：20</text>
+							</view>
+							<view class="text">
+								<text style="color: #f00;">优惠10借书币</text>
+							</view>
+							<view class="text">
+								<text>积分：-100</text>
+							</view>
+						</view>
+						<view class="right">
+							<button type="default">删除</button>
+						</view>
+					</view>
+				</view>
+			
 			</view>
 		</block>
 		<!-- 订单凭证弹窗 -->
@@ -146,10 +248,10 @@
 					currentIndex: 0,
 					list: [
 						{
-							title: '待取书单'
+							title: '待归还书单'
 						},
 						{
-							title: '失效书单',
+							title: '已归还书单',
 						}
 					]
 				},
@@ -216,6 +318,7 @@
 		background: #fff;
 		padding: 20rpx 0;
 		border-radius: 20rpx;
+		margin-bottom: 20rpx;
 	}
 	.order-list .topic {
 		display: flex;

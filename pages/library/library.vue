@@ -148,15 +148,17 @@ export default {
 			.exec();
 	},
 	onReachBottom() {
-		if (this.productList.length >= 20) {
-			this.loadStatus = 'noMore';
-			return;
-		}
-		this.$api.getGuess().then(res => {
-			res.data.map(item => {
-				this.productList.push(item);
+		if(this.searchText == '') {
+			if (this.productList.length >= 20) {
+				this.loadStatus = 'noMore';
+				return;
+			}
+			this.$api.getGuess().then(res => {
+				res.data.map(item => {
+					this.productList.push(item);
+				});
 			});
-		});
+		}
 	},
 	methods: {
 		// 获取书籍列表
@@ -252,7 +254,8 @@ export default {
 			this.$api.getGoodsInfo(param).then(res => {
 				uni.hideLoading();
 				this.productList = res.data.rows;
-				(this.searchText = ''), (this.loadStatus = 'noMore');
+				// this.searchText = '';
+				this.loadStatus = 'noMore';
 			});
 		}
 	}
