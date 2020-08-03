@@ -323,8 +323,8 @@ export default {
 		},
 		// 删除所有选中的记录
 		delectSelect(){
-			this.$emit('delectSelect');
 			bookListData.deleteSelect();
+			this.$emit('delectSelect');
 			this.statusUpdate();
 		},
 		//检查选项是否超出限制

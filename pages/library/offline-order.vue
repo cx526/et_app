@@ -1,174 +1,183 @@
 <template>
-	<view style="box-sizing: border-box;padding-bottom: 110rpx;">
-		<!-- 自提人信息 -->
-		<view class="user-info">
-			<view>
-				<text class="label">提取方式：</text>
-				<text>自提</text>
+	<view>
+		<uni-nav-bar 
+		left-icon="back"  
+		title="订单详情" 
+		status-bar
+		@clickLeft="clickLeft"></uni-nav-bar>
+		<view style="box-sizing: border-box;padding:24rpx 24rpx 110rpx 24rpx;">
+			<!-- 自提人信息 -->
+			<view class="user-info">
+				<view>
+					<text class="label">提取方式：</text>
+					<text>自提</text>
+				</view>
+				<view>
+					<text class="label">学校：</text>
+					<text>林头幼儿园</text>
+				</view>
+				<view>
+					<text class="label">用户：</text>
+					<text>小A</text>
+				</view>
+				<view>
+					<text class="label">电话：</text>
+					<text>134****1922</text>
+				</view>
 			</view>
-			<view>
-				<text class="label">学校：</text>
-				<text>林头幼儿园</text>
-			</view>
-			<view>
-				<text class="label">用户：</text>
-				<text>小A</text>
-			</view>
-			<view>
-				<text class="label">电话：</text>
-				<text>134****1922</text>
-			</view>
-		</view>
-		<!-- 订单 -->
-		<view class="order-info">
-			<view class="topic">
-				<view class="line"></view>
-				<text>书单</text>
-			</view>
-			<view class="list">
-				<block v-for="n in 5" :key="n">
-					<view class="item">
-						<image src="http://et-pic-server.oss-cn-shenzhen.aliyuncs.com/1589783780428.jpg"></image>
-						<view class="title">不要告状，除非是大事</view>
-						<view class="price">
-							<view>x1</view>
-							<view>39.99</view>
+			<!-- 订单 -->
+			<view class="order-info">
+				<view class="topic">
+					<view class="line"></view>
+					<text>书单</text>
+				</view>
+				<view class="list">
+					<block v-for="n in 5" :key="n">
+						<view class="item">
+							<image src="http://et-pic-server.oss-cn-shenzhen.aliyuncs.com/1589783780428.jpg"></image>
+							<view class="title">不要告状，除非是大事</view>
+							<view class="price">
+								<view>x1</view>
+								<view>39.99</view>
+							</view>
 						</view>
+					</block>
+					
+				</view>
+			</view>
+			<!-- 借阅时间 -->
+			<view class="borrow-time">
+				<view class="label">借阅时间</view>
+				<view class="time">2020-07-19 16：00：00</view>
+			</view>
+			<!-- 预计归还时间 -->
+			<view class="borrow-time">
+				<view class="label">预计归还时间</view>
+				<view class="time back">
+					<text>2020-07-19 16：00：00</text>
+					<text style="color: #f00;">借阅时间：5天</text>
+				</view>
+			</view>
+			<!-- 支付方式 -->
+			<view class="way-info">
+				<view class="left">
+					支付方式
+				</view>
+				<view class="right">
+					<!-- 当前用户有免费借阅次数时显示 -->
+					<view class="item">
+						<radio-group class="radio"
+						@change="radioChange"
+						>
+							<view 
+							v-for="(item, index) in wayList" 
+							:key="index"
+							>
+								<radio 
+								:value="item.value" 
+								style="transform: scale(0.6);"
+								color="#00B7CC"
+								:checked="item.value == way"></radio>
+								<text>{{ item.title }}</text>
+							</view>
+						</radio-group>
+						<!-- 没有免费借阅次数默认选中借阅币支付 -->
+						<!-- <view v-else>
+							<radio 
+							value="1" 
+							style="transform: scale(0.6);" 
+							checked color="#00B7CC"></radio>
+							<text>借阅币</text>
+						</view> -->
 					</view>
-				</block>
+					<!-- 选择借书币时显示 -->
+					<block v-if="way == 1">
+						<view class="item">
+							<view>我的借阅币：</view>
+							<view style="color: rgb(0,128,0);font-weight: bold;">100</view>
+						</view>
+						<view class="item">
+							<view>支付借阅币：</view>
+							<view>100</view>
+						</view>
+						<view class="item">
+							<view>押金(可退)：</view>
+							<view>60元</view>
+						</view>
+						<view class="item">
+							<switch checked color="#00B7CC" style="transform: scale(0.6);"></switch>
+							<view>积分：-100</view>
+						</view>
+						<view class="item" style="color: #999;">
+							<view>借阅币：</view>
+							<view>-20.00</view>
+						</view>
+					</block>
+					<!-- 选择免费借阅时显示 -->
+					<block v-if="way == 0">
+						<view class="item">
+							<view>我的借阅币：</view>
+							<view style="color: rgb(0,128,0);font-weight: bold;">100</view>
+						</view>
+						<view class="item">
+							<view>支付借阅币：</view>
+							<view>100</view>
+						</view>
+						<view class="item">
+							<view>积分：-100</view>
+						</view>
+						<view class="item">
+							<view>押金(可退)：</view>
+							<view>60元</view>
+						</view>
+					</block>
+				
+				</view>
 				
 			</view>
-		</view>
-		<!-- 借阅时间 -->
-		<view class="borrow-time">
-			<view class="label">借阅时间</view>
-			<view class="time">2020-07-19 16：00：00</view>
-		</view>
-		<!-- 预计归还时间 -->
-		<view class="borrow-time">
-			<view class="label">预计归还时间</view>
-			<view class="time back">
-				<text>2020-07-19 16：00：00</text>
-				<text style="color: #f00;">借阅时间：5天</text>
+			<!-- 底部 -->
+			<view class="bottom-box">
+				<view class="left">
+					<view>
+						<text style="margin-right: 12rpx;">借书币：54.00</text>
+						<text style="color: #f00;">优惠24.00</text>
+					</view>
+					<view>
+						<text style="color: #999;">押金：60元(可退)</text>
+					</view>
+				</view>
+				<view class="right">
+					<button type="default" @tap="borrow">确认借阅</button>
+				</view>
 			</view>
-		</view>
-		<!-- 支付方式 -->
-		<view class="way-info">
-			<view class="left">
-				支付方式
-			</view>
-			<view class="right">
-				<!-- 当前用户有免费借阅次数时显示 -->
-				<view class="item">
-					<radio-group class="radio"
-					@change="radioChange"
-					>
-						<view 
-						v-for="(item, index) in wayList" 
-						:key="index"
-						>
-							<radio 
-							:value="item.value" 
-							style="transform: scale(0.6);"
-							color="#00B7CC"
-							:checked="item.value == way"></radio>
-							<text>{{ item.title }}</text>
+			<!-- 确认支付弹窗 -->
+			<uni-popup ref="popup">
+				<view class="balance-box" :style="{ width: popUpWidth }">
+					<view class="title"><text>订单确认</text></view>
+					<view class="notice">
+						<view>
+							<text>本次需要借书币：</text>
+							<text style="color: #f00;font-weight: blod;">79.90</text>
 						</view>
-					</radio-group>
-					<!-- 没有免费借阅次数默认选中借阅币支付 -->
-					<!-- <view v-else>
-						<radio 
-						value="1" 
-						style="transform: scale(0.6);" 
-						checked color="#00B7CC"></radio>
-						<text>借阅币</text>
-					</view> -->
+						<view>
+							<text>您的借阅书籍量：</text>
+							<text style="color: #f00;font-weight: blod;">5</text>
+						</view>
+					</view>
+					<view class="btn">
+						<button @tap="cancel">取消</button>
+						<button @tap="payment">确认支付</button>
+					</view>
 				</view>
-				<!-- 选择借书币时显示 -->
-				<block v-if="way == 1">
-					<view class="item">
-						<view>我的借阅币：</view>
-						<view style="color: rgb(0,128,0);font-weight: bold;">100</view>
-					</view>
-					<view class="item">
-						<view>支付借阅币：</view>
-						<view>100</view>
-					</view>
-					<view class="item">
-						<view>押金(可退)：</view>
-						<view>60元</view>
-					</view>
-					<view class="item">
-						<switch checked color="#00B7CC" style="transform: scale(0.6);"></switch>
-						<view>积分：-100</view>
-					</view>
-					<view class="item" style="color: #999;">
-						<view>借阅币：</view>
-						<view>-20.00</view>
-					</view>
-				</block>
-				<!-- 选择免费借阅时显示 -->
-				<block v-if="way == 0">
-					<view class="item">
-						<view>我的借阅币：</view>
-						<view style="color: rgb(0,128,0);font-weight: bold;">100</view>
-					</view>
-					<view class="item">
-						<view>支付借阅币：</view>
-						<view>100</view>
-					</view>
-					<view class="item">
-						<view>积分：-100</view>
-					</view>
-					<view class="item">
-						<view>押金(可退)：</view>
-						<view>60元</view>
-					</view>
-				</block>
-			
-			</view>
-			
+			</uni-popup>
 		</view>
-		<!-- 底部 -->
-		<view class="bottom-box">
-			<view class="left">
-				<view>
-					<text style="margin-right: 12rpx;">借书币：54.00</text>
-					<text style="color: #f00;">优惠24.00</text>
-				</view>
-				<view>
-					<text style="color: #999;">押金：60元(可退)</text>
-				</view>
-			</view>
-			<view class="right">
-				<button type="default" @tap="borrow">确认借阅</button>
-			</view>
-		</view>
-		<!-- 确认支付弹窗 -->
-		<uni-popup ref="popup">
-			<view class="balance-box" :style="{ width: popUpWidth }">
-				<view class="title"><text>订单确认</text></view>
-				<view class="notice">
-					<view>
-						<text>本次需要借书币：</text>
-						<text style="color: #f00;font-weight: blod;">79.90</text>
-					</view>
-					<view>
-						<text>您的借阅书籍量：</text>
-						<text style="color: #f00;font-weight: blod;">5</text>
-					</view>
-				</view>
-				<view class="btn">
-					<button @tap="cancel">取消</button>
-					<button @tap="payment">确认支付</button>
-				</view>
-			</view>
-		</uni-popup>
 	</view>
+	
 </template>
 
 <script>
 	import uniPopup from '@/components/uni-popup/uni-popup.vue';
+	import uniNavBar from "@/components/uni-nav-bar/uni-nav-bar.vue"
 	export default {
 		data() {
 			return {
@@ -187,7 +196,8 @@
 			}
 		},
 		components: {
-			uniPopup
+			uniPopup,
+			uniNavBar
 		},
 		onLoad() {
 			uni.getSystemInfo({
@@ -202,19 +212,26 @@
 				console.log(e.detail.value);
 				this.way = e.detail.value
 			},
+			// 点击自定义导航栏左侧按钮事件
+			clickLeft() {
+				uni.reLaunch({
+					url: '../cart/cart?flag=true'
+				})
+			},
 			// 确认借阅
 			borrow() {
 				this.$refs.popup.open()
 			},
 			// 取消订单
 			cancel() {
-				uni.redirectTo({
+				uni.navigateTo({
 					url: './no-payment'
 				})
+		
 			},
 			// 确认支付
 			payment() {
-				uni.redirectTo({
+				uni.navigateTo({
 					url: './take-books'
 				})
 			}
@@ -225,7 +242,7 @@
 <style >
 	page {
 		background: rgb(245,245,245);
-		padding: 24rpx;
+		/* padding: 24rpx; */
 		box-sizing: border-box;
 	}
 	/* 自提人信息 */

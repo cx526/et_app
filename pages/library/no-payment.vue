@@ -116,8 +116,7 @@
 			// 	this.countDown()
 			// }, 1000)
 		},
-		onHide() {
-			console.log('onHide')
+		onUnload() {
 			// clearInterval(this.timer)
 		},
 		methods:{

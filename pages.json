@@ -1,6 +1,14 @@
 {
 	"pages": [
-
+		{
+		    "path" : "pages/library/pay",
+		    "style" : {
+					"navigationBarTitleText": "借书币充值",
+					"app-plus": {
+						"titleNView": false
+					}
+				}
+		},
 		{
 			"path": "pages/index/index",
 			"style": {
@@ -360,6 +368,7 @@
 				}
 			}
 		},
+
 		{
 			"path": "pages/index/bookdetail",
 			"style": {
@@ -400,10 +409,11 @@
 		, {
 			"path": "pages/library/offline-order",
 			"style": {
-				"navigationBarTitleText": "订单详情",
-				"app-plus": {
+				"navigationStyle":"custom",
+				"app-plus":{
 					"titleNView": false
 				}
+				
 			}
 		}, {
 			"path": "pages/library/no-payment",
@@ -450,7 +460,17 @@
 				}
 			}
 		}
-	],
+	    ,{
+            "path" : "pages/library/virtual",
+            "style" : {
+							"navigationBarTitleText": "借书币",
+							"app-plus": {
+								"titleNView": false
+							}
+						}
+        }
+        
+    ],
 	"globalStyle": {
 		"navigationBarTextStyle": "black",
 		"navigationBarBackgroundColor": "#FFFFFF",

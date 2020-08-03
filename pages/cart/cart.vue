@@ -8,14 +8,18 @@
 			@click="changeTab(index)"
 			:class="currentIndex == index ? 'active' : ''">
 				<text>{{ item.title }}</text>
-				<text>({{ item.number }})</text>
+				<text v-if="item.number > 0">({{ item.number }})</text>
 			</view>
 		</view>
 		<view class="content">
 			
 			<!-- 线上部分 -->
 			<view style="width: 100%;" v-if="isStatus">
-				<et-book-cart-list v-if="bookCatShow" :optionData="{optionType:'cart'}"></et-book-cart-list>
+				<et-book-cart-list 
+				v-if="bookCatShow" 
+				:optionData="{optionType:'cart'}"
+				@deleteData="deleteData"
+				@delectSelect="delectSelect"></et-book-cart-list>
 			</view>
 			<!-- 线下部分 -->
 			<view class="offline-box" 
@@ -28,7 +32,6 @@
 				:minHeight="minHeight"
 				:popUpWidth="popUpWidth"
 				@countChange="countChange"></offline-cart-list>
-
 			</view>
 		</view>
 	</view>
@@ -125,6 +128,14 @@ export default {
 					this.isStatus = true
 			}
 		},
+		// 监听线上点击删除图标,更新数据
+		deleteData() {
+			this.tabList[1].number = uni.getStorageSync("carListInfo").length
+		},
+		// 监听线上点击批量删除按钮,更新数据
+		delectSelect() {
+			this.tabList[1].number = uni.getStorageSync("carListInfo").length
+		},
 		// 更新页面数据
 		countChange() {
 			this.tabList[0].number = uni.getStorageSync("offlineCartList").length
@@ -141,6 +152,7 @@ export default {
 						// 动态添加isSelect属性用于判定是否选中
 						sitem.isSelect = false;
 						if (item.goods_id === sitem.id) {
+							// 同步更新本地缓存书籍数量
 							this.offlineBooksList[sindex].usageCount = item.usageCount;
 						}
 					});

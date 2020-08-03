@@ -105,10 +105,6 @@ export default {
 		});
 	},
 	methods: {
-		// tab切换
-		changTab(index) {
-			this.tabList.currentIndex = index;
-		},
 		// 打开订单凭证弹窗
 		open() {
 			this.$refs.orderPopUp.open();
@@ -125,23 +121,7 @@ export default {
 page {
 	background: rgb(245, 245, 245);
 }
-.tab-box {
-	box-sizing: border-box;
-	display: flex;
-	font-size: 28rpx;
-	background: #fff;
-}
-.tab-box .item {
-	line-height: 80rpx;
-	color: #333;
-	flex: 1;
-	text-align: center;
-}
-.tab-box .item.active {
-	border-bottom: 6rpx;
-	background: #00f;
-	color: #fff;
-}
+
 /* 订单 */
 .order-list {
 	box-sizing: border-box;

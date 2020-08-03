@@ -4,7 +4,7 @@
 		<view class="notice-box">
 			<text>我的借书币：</text>
 			<text>100</text>
-			<text>剩余免费本书：</text>
+			<text>剩余免费书本：</text>
 			<text>0</text>
 		</view>
 		<!-- 没有书籍时显示 -->
@@ -64,7 +64,7 @@
 			</view>
 		</view>
 		<!-- 借书币不足显示弹窗 -->
-		<uni-popup ref="popup">
+		<uni-popup ref="popup" :maskClick="false">
 			<view class="balance-box" :style="{ width: popUpWidth }">
 				<view class="title"><text>借书币不足！</text></view>
 				<view class="notice">
@@ -78,8 +78,8 @@
 					</view>
 				</view>
 				<view class="btn">
-					<button type="default">取消</button>
-					<button type="default">去充值</button>
+					<button type="default" @tap="cancel">取消</button>
+					<button type="default" @tap="goPay">去充值</button>
 				</view>
 			</view>
 		</uni-popup>
@@ -101,15 +101,13 @@ export default {
 		popUpWidth: String
 	},
 	created() {
+		// 储存书籍数据
 		this.bookList = this.offlineBooksList;
-		console.log(this.bookList);
 		this.booksNumber = this.count
-		console.log(this.booksNumber)
 	},
 	data() {
 		return {
 			offlineAllSelect: false,
-			
 			bookList: [],
 			booksNumber: 0
 		}
@@ -205,11 +203,36 @@ export default {
 		},
 		// 借阅
 		borrow() {
-			// this.$refs.popup.open();
-			uni.redirectTo({
-				url: '../../pages/library/offline-order'
+			// 获取用户选中的书籍列表
+			let chooseBookList = this.bookList.filter(item => {
+				return item.isSelect === true;
 			})
-		}
+			// 用户没有选中书籍
+			if(chooseBookList.length === 0) {
+				uni.showToast({
+					title: '请先选择需要借阅的书籍',
+					duration: 2000,
+					icon: 'none'
+				})
+				return
+			}
+			// 借书币不足时显示弹窗
+			this.$refs.popup.open();
+			// 同时满足以上两个条件时直接跳转到订单页
+			// uni.navigateTo({
+			// 	url: '../../pages/library/offline-order'
+			// })
+		},
+		// 点击弹窗取消
+		cancel() {
+			this.$refs.popup.close()
+		},
+		// 跳转借书币页面
+		goPay() {
+			uni.navigateTo({
+				url: '../../pages/library/virtual'
+			})
+		},
 	}
 };
 </script>
