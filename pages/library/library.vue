@@ -31,7 +31,10 @@
 			<!-- 列表 -->
 			<view class="list" id="list">
 				<template v-if="productList && productList.length > 0">
-					<view class="item" v-for="(item, index) in productList" :key="index">
+					<view class="item" 
+					v-for="(item, index) in productList" 
+					:key="index"
+					@tap="goDetail(item.id)">
 						<image :src="item.forGoodsPic[0].url" mode="" class="show"></image>
 						<!-- 无库存显示 -->
 						<view class="none-stock" v-if="item.stock.usageCount === 0">
@@ -52,7 +55,7 @@
 								<image src="https://et-pic-server.oss-cn-shenzhen.aliyuncs.com/app_img/index_zan.png" mode=""></image>
 								<text>{{ item.peopleCount }}人推荐</text>
 							</view>
-							<view class="right" v-if="item.stock.usageCount" @tap="push(item)"><text>加入书篮</text></view>
+							<view class="right" v-if="item.stock.usageCount" @tap.stop="push(item)"><text>加入书篮</text></view>
 							<view class="right" v-if="item.stock.usageCount == 0" style="background: #ccc;"><text>加入书篮</text></view>
 						</view>
 					</view>
@@ -131,7 +134,7 @@ export default {
 		this.len = uni.getStorageSync('offlineCartList').length;
 	},
 	onShow() {
-		
+		this.len = uni.getStorageSync('offlineCartList').length;
 	},
 	onReady() {
 		// 设置分类弹窗的高度
@@ -170,7 +173,6 @@ export default {
 			this.$api.getGuess().then(res => {
 				uni.hideLoading();
 				this.productList = res.data;
-				console.log(this.productList);
 			});
 		},
 		// 监听弹窗发生改变事件
@@ -257,6 +259,12 @@ export default {
 				// this.searchText = '';
 				this.loadStatus = 'noMore';
 			});
+		},
+		// 跳转至商品详情页
+		goDetail(id) {
+			uni.navigateTo({
+				url: './offline-bookdetail?bookID='+id
+			})
 		}
 	}
 };

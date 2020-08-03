@@ -1,6 +1,6 @@
 {
-	"pages": [ 
-		
+	"pages": [
+
 		{
 			"path": "pages/index/index",
 			"style": {
@@ -413,7 +413,7 @@
 					"titleNView": false
 				}
 			}
-		},{
+		}, {
 			"path": "pages/library/take-books",
 			"style": {
 				"navigationBarTitleText": "快速取书",
@@ -421,18 +421,36 @@
 					"titleNView": false
 				}
 			}
-		},{
-		      "path" : "pages/library/return-books",
-		      "style": {
-		      	"navigationBarTitleText": "快速还书",
-		      	"app-plus": {
-		      		"titleNView": false
-		      	}
-		      }
-		  }
+		}, {
+			"path": "pages/library/return-books",
+			"style": {
+				"navigationBarTitleText": "快速还书",
+				"app-plus": {
+					"titleNView": false
+				}
+			}
+		}, {
+			"path": "pages/library/exprie",
+			"style": {
+				"navigationBarTitleText": "逾期",
+				"app-plus": {
+					"titleNView": false
+				}
+			}
+		}
 
-	    
-    ],
+
+
+		, {
+			"path": "pages/library/offline-bookdetail",
+			"style": {
+				"navigationBarTitleText": "商品详情",
+				"app-plus": {
+					"titleNView": false
+				}
+			}
+		}
+	],
 	"globalStyle": {
 		"navigationBarTextStyle": "black",
 		"navigationBarBackgroundColor": "#FFFFFF",

@@ -9,7 +9,7 @@
 						<view style="color: rgb(0,128,0);">待支付</view>
 						<view>
 							<text>剩余：</text>
-							<text style="color: rgb(0,128,0)">15:00</text>
+							<text style="color: rgb(0,128,0)">{{ msg }}</text>
 						</view>
 					</view>
 				</view>
@@ -104,12 +104,45 @@
 	export default {
 		data() {
 			return {
-				
+				maxtime: 80,
+				minutes: 0,
+				seconds: 0,
+				msg: '',
+				timer: null
 			}
 		},
-		methods: {
-			
-		}
+		onShow() {
+			// this.timer = setInterval(() => {
+			// 	this.countDown()
+			// }, 1000)
+		},
+		onHide() {
+			console.log('onHide')
+			// clearInterval(this.timer)
+		},
+		methods:{
+			countDown() {
+				// maxtime = 当前时间 - 订单创建时间 >= 0开启定时器
+				if (this.maxtime >= 0) {
+					this.maxtime -- ;
+					this.minutes = Math.floor(this.maxtime / 60) >= 10 ?
+					Math.floor(this.maxtime / 60)
+					:
+					'0' + (Math.floor(this.maxtime / 60))
+					this.seconds = Math.floor(this.maxtime % 60) >= 10 ? 
+					Math.floor(this.maxtime % 60) 
+					: 
+					'0' + (Math.floor(this.maxtime % 60))
+					this.msg = this.minutes + "：" + this.seconds;
+					
+					console.log(this.msg)
+				}else {
+					clearInterval(this.timer)
+				}
+			}
+		},
+		
+		
 	}
 </script>
 
