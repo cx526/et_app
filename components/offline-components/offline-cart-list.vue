@@ -46,7 +46,7 @@
 								v-else>已借完</text>
 								<view class="price-box">
 									<view class="price">
-										<text>借书币：39.00</text>
+										<text>借书币：{{ item.price }}</text>
 									</view>
 									<text>x1</text>
 								</view>
@@ -69,9 +69,9 @@
 				</view>
 				<view class="center">
 					<!-- 没选中书籍显示 -->
-					<view v-if="true">
+					<view v-if="price">
 						<text style="color: #666;">借书币：</text>
-						<text style="color: #039EB9;">30</text>
+						<text style="color: #039EB9;">{{ price }}</text>
 					</view>
 					<!-- 选中书籍显示 -->
 					<view v-else style="color: #666;">
@@ -86,8 +86,6 @@
 			</view>
 
 			<view class="right">
-				<!-- <view class="tag-style" style="background-color: #808080;"><text @tap="delBooksList">删除</text></view>
-				<view class="tag-style" style="background-color: #2AA145;" @tap="borrow"><text>借阅</text></view> -->
 				<view class="del" @tap="delBooksList">
 					<text>删除</text>
 				</view>
@@ -103,16 +101,19 @@
 				<view class="notice">
 					<view>
 						<text>本次需要借书币：</text>
-						<text style="color: #f00;font-weight: blod;">79.90</text>
+						<text style="color: #12A4BD;">79.90</text>
 					</view>
 					<view>
 						<text>您的借书币：</text>
-						<text style="color: #f00;font-weight: blod;">0</text>
+						<text style="color: #12A4BD;">0</text>
 					</view>
 				</view>
+				<view class="show">
+					<image src="../../static/library/popup-banner.png" mode="widthFix"></image>
+				</view>
 				<view class="btn">
-					<button type="default" @tap="cancel">取消</button>
-					<button type="default" @tap="goPay">去充值</button>
+					<view @tap="cancel">取消</view>
+					<view @tap="goPay">去充值</view>
 				</view>
 			</view>
 		</uni-popup>
@@ -133,7 +134,7 @@ export default {
 		minHeight: String,
 		popUpWidth: String
 	},
-	created() {
+	mounted() {
 		// 储存书籍数据
 		this.bookList = this.offlineBooksList;
 		this.booksNumber = this.count
@@ -142,7 +143,8 @@ export default {
 		return {
 			offlineAllSelect: false,
 			bookList: [],
-			booksNumber: 0
+			booksNumber: 0,
+			price: 0
 		}
 	},
 	methods: {	
@@ -152,16 +154,28 @@ export default {
 				url: '../library/library'
 			});
 		},
+		// 计算借书币
+		coungPrice() {
+			this.price = 0;
+			this.bookList.map(item => {
+				if(item.isSelect) {
+					this.price = ((+this.price) + (+item.price)).toFixed(2)
+				}
+			})
+		},
 		// 选择书本(点击复选框)
 		selechBook(item) {
+			// 判断全选复选框是否选中
 			let flag = true;
 			item.isSelect = !item.isSelect;
-			this.offlineBooksList.map(list => {
+			this.bookList.map(list => {
 				if (!list.isSelect) {
 					flag = false;
 				}
 			});
 			this.offlineAllSelect = flag;
+			// 实时计算借书币
+			this.coungPrice()
 		},
 		// 全选/全不选
 		selectAllBooks() {
@@ -172,6 +186,7 @@ export default {
 					item.isSelect = this.offlineAllSelect;
 				}
 			});
+			this.coungPrice()
 		},
 		// 删除书籍(单独)
 		delBook(id) {
@@ -188,9 +203,17 @@ export default {
 						this.bookList = dataList;
 						// 更新缓存
 						uni.setStorageSync('offlineCartList', this.bookList);
+						
 						// 提示父组件刷新当前书籍数目
 						this.$emit('countChange');
-						this.booksNumber = uni.getStorageSync('offlineCartList').length
+						this.booksNumber = uni.getStorageSync('offlineCartList').length;
+						this.bookList = uni.getStorageSync('offlineCartList');
+						// 重新计算借书币
+						this.coungPrice();
+						// 如果当前没有书籍，全选复选框默认为false
+						if(this.booksNumber === 0) {
+							this.offlineAllSelect = false
+						}
 					}
 				}
 			});
@@ -226,9 +249,16 @@ export default {
 							this.bookList = dataList;
 							// 更新缓存
 							uni.setStorageSync('offlineCartList', this.bookList);
-							this.booksNumber = uni.getStorageSync('offlineCartList').length
 							// 提示父组件刷新当前书籍数目
 							this.$emit('countChange')
+							this.booksNumber = uni.getStorageSync('offlineCartList').length
+							this.bookList = uni.getStorageSync('offlineCartList');
+							// 重新计算借书币
+							this.coungPrice()
+							// 如果当前没有书籍，全选复选框默认为false
+							if(this.booksNumber === 0) {
+								this.offlineAllSelect = false
+							}
 						}
 					}
 				});
@@ -485,22 +515,21 @@ export default {
 /* 借书币不够时显示弹窗 */
 .balance-box {
 	box-sizing: border-box;
-	
 	background: #fff;
 	margin: 0 auto;
 	padding-top: 36rpx;
 	border-radius: 12rpx;
+	padding-bottom: 36rpx;
 }
 .balance-box .title {
 	font-size: blod;
 	font-size: 32rpx;
 	text-align: center;
 	margin-bottom: 36rpx;
+	color: #12A4BD;
 }
 .balance-box .notice {
 	font-size: 26rpx;
-	text-align: center;
-
 	box-sizing: border-box;
 	padding: 0 60rpx;
 	text-align: left;
@@ -508,15 +537,40 @@ export default {
 .balance-box .notice view {
 	box-sizing: border-box;
 	margin-bottom: 24rpx;
+	text-align: center;
+}
+.balance-box .show {
+	text-align: center;
+	box-sizing: border-box;
+	padding: 24rpx 0;
+}
+.balance-box .show image {
+	width: 200rpx;
 }
 .balance-box .btn {
 	display: flex;
+	box-sizing: border-box;
+	padding: 0 24rpx;
 }
-.balance-box .btn button {
+.balance-box .btn view {
 	flex: 1;
 	font-size: 28rpx;
-	line-height: 100rpx;
+	line-height: 70rpx;
 	background: #fff;
+	border-radius: 40rpx;
+	box-sizing: border-box;
+	text-align: center;
+}
+.balance-box .btn view:nth-child(1) {
+	margin-right: 12rpx;;
+	background: #F9F9F9;
+	border: 1px solid #EEEEEF;
+	color: #ADADAD;
+}
+.balance-box .btn view:nth-child(2) {
+	margin-left: 12rpx;
+	background-image: linear-gradient(180deg, #40AED1, #69D9E4);
+	color: #fff;
 }
 /* 线上部分 */
 .content {

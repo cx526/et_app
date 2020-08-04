@@ -101,7 +101,8 @@ export default {
 	},
 	onLoad(option){
 		this.bookCatShow = true;
-		
+		// 实时更新线下缓存书籍的库存
+		this.upDateStock()
 		// 线下逻辑
 		this.flag = option.flag;
 		// 获取屏幕高度
