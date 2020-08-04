@@ -312,9 +312,9 @@ export default {
 	display: flex;
 	flex-direction: row;
 	flex-wrap: wrap;
-	justify-content:space-around;
+	justify-content:space-between;
 	box-sizing: border-box;
-	padding: 0 40rpx;
+	padding: 0 30rpx;
 }
 .list-content {
 	width: 45%;

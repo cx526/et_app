@@ -19,7 +19,13 @@
 			<scroll-view scroll-y :style="'height:' + scrollHeight">
 				<view class="item" v-for="(item, index) in bookList" :key="index">
 					<view class="goods-info">
-						<view class="left"><checkbox :checked="item.isSelect" style="transform: scale(0.7);" :disabled="item.stock.usageCount === 0" @tap="selechBook(item)" /></view>
+						<view class="left">
+							<checkbox 
+							:checked="item.isSelect" 
+							style="transform: scale(0.7);" 
+							:disabled="item.stock.usageCount === 0" 
+							@tap="selechBook(item)" />
+						</view>
 						<view class="main">
 							<!-- 库存为零时显示 -->
 							<view class="none-stock" v-if="item.stock.usageCount === 0">
@@ -28,20 +34,29 @@
 									<text>借完</text>
 								</view>
 							</view>
-							<image :src="item.forGoodsPic[0].url" mode=""></image>
+							<view class="show">
+								<image :src="item.forGoodsPic[0].url" mode=""></image>
+							</view>
 							<view class="topic">
-								<text>{{ item.title }}</text>
+								<text class="title">{{ item.title }}</text>
+								<text class="condition" 
+								v-if="item.stock.usageCount !== 0">可借阅</text>
+								<text 
+								style="font-size: 28rpx; color: #f00;"
+								v-else>已借完</text>
+								<view class="price-box">
+									<view class="price">
+										<text>借书币：39.00</text>
+									</view>
+									<text>x1</text>
+								</view>
 							</view>
 						</view>
-						<view class="right"><view style="color: #549EAB;font-size: 24rpx;margin-top: 8rpx;">X1</view></view>
-					</view>
-					<view class="price-box">
-						<view class="price">
-							<text>借书币：</text>
-							<text style="color: #f00;font-weight: blod;">39.00</text>
+						<view class="right">
+							<image src="../../static/cart/rubbish.png" mode="" @tap="delBook(item.id)"></image>
 						</view>
-						<image src="../../static/cart/rubbish.png" mode="" @tap="delBook(item.id)"></image>
 					</view>
+					
 				</view>
 			</scroll-view>
 		</view>
@@ -53,14 +68,32 @@
 					<text>全选</text>
 				</view>
 				<view class="center">
-					<view><text>借书币：30</text></view>
-					<view><text style="color: #999;">押金：40(可退)</text></view>
+					<!-- 没选中书籍显示 -->
+					<view v-if="true">
+						<text style="color: #666;">借书币：</text>
+						<text style="color: #039EB9;">30</text>
+					</view>
+					<!-- 选中书籍显示 -->
+					<view v-else style="color: #666;">
+						<text>合共：</text>
+						<text style="color: #039EB9;">10</text>
+						<text>本</text>
+					</view>
+					<view>
+						<text style="color: #999;font-size: 22rpx;">押金：40(可退)</text>
+					</view>
 				</view>
 			</view>
 
 			<view class="right">
-				<view class="tag-style" style="background-color: #808080;"><text @tap="delBooksList">删除</text></view>
-				<view class="tag-style" style="background-color: #2AA145;" @tap="borrow"><text>借阅</text></view>
+				<!-- <view class="tag-style" style="background-color: #808080;"><text @tap="delBooksList">删除</text></view>
+				<view class="tag-style" style="background-color: #2AA145;" @tap="borrow"><text>借阅</text></view> -->
+				<view class="del" @tap="delBooksList">
+					<text>删除</text>
+				</view>
+				<view class="borrow" @tap="borrow">
+					<text>借阅</text>
+				</view>
 			</view>
 		</view>
 		<!-- 借书币不足显示弹窗 -->
@@ -291,27 +324,33 @@ export default {
 	box-shadow: 0rpx 0rpx 20rpx rgba(179, 179, 179, 0.3);
 	border-radius: 16rpx;
 	margin-top: 24rpx;
-	padding: 0 20rpx 20rpx 20rpx;
+	padding: 20rpx 20rpx 20rpx 12rpx;
 	width: 98%;
 	margin-left: 1%;
 	box-sizing: border-box;
+	position: relative;
 }
 .offline-box scroll-view .goods-info {
 	box-sizing: border-box;
 	display: flex;
+	overflow: hidden;
+}
+.offline-box scroll-view .left {
+	display: flex;
+	justify-content: center;
 	align-items: center;
 }
 .offline-box scroll-view .main {
 	font-size: 30rpx;
 	display: flex;
 	box-sizing: border-box;
-	margin: 0 52rpx 0 24rpx;
-	align-items: center;
+	flex: 1;
 	position: relative;
+	overflow: hidden;
 }
 .offline-box .main .none-stock {
-	width: 230rpx;
-	height: 230rpx;
+	width: 180rpx;
+	height: 180rpx;
 	background: rgba(157, 160, 174, 0.6);
 	position: absolute;
 	left: 0;
@@ -333,35 +372,63 @@ export default {
 	font-size: 28rpx;
 	border-radius: 50%;
 }
-.offline-box scroll-view .main image {
-	width: 230rpx;
-	height: 230rpx;
+.offline-box scroll-view .main .show {
+	box-sizing: border-box;
+	border: 1px solid #EEEEEF;
+	padding: 12rpx;
 	margin-right: 12rpx;
 }
+.offline-box scroll-view .main image {
+	width: 180rpx;
+	height: 180rpx;
+}
+.offline-box scroll-view .main .title {
+	margin-top: 12rpx;
+	box-sizing: border-box;
+	padding-right: 30rpx;
+	overflow: hidden;
+	white-space: nowrap;
+	text-overflow: ellipsis;
+}
+.offline-box scroll-view .main .condition {
+	margin-top: 12rpx;
+	color: #999;
+	font-size: 26rpx;
+}
 .offline-box scroll-view .main .topic {
-	width: 250rpx;
+	flex: 1;
 	text-align: left;
+	display: flex;
+	flex-direction: column;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: normal;
 }
 .offline-box scroll-view .title {
 	font-weight: bold;
 }
 .offline-box scroll-view .right {
-	display: flex;
+	position: absolute;
+	right: 20rpx;
+	top: 32rpx;
 }
 .offline-box scroll-view .right image {
-	width: 35rpx;
-	height: 35rpx;
+	width: 30rpx;
+	height: 30rpx;
 }
 .offline-box .item .price-box {
 	box-sizing: border-box;
 	display: flex;
-	padding: 10rpx 20rpx 0 80rpx;
 	align-items: center;
+	margin-top: 60rpx;
 }
 
 .offline-box .item .price {
 	flex: 1;
-	font-size: 24rpx;
+}
+.offline-box .item .price-box text {
+	color: #039EB9;
+	font-size: 28rpx;
 }
 .offline-box .item .price-box image {
 	width: 30rpx;
@@ -396,23 +463,29 @@ export default {
 .bottom-box .right {
 	display: flex;
 }
-.bottom-box .right .tag-style {
+.bottom-box .right view {
+	box-sizing: border-box;
+	padding: 0 30rpx;
+	border: 1px solid #EEEEEF;
+	border-radius: 40rpx;
+	font-size: 26rpx;
 	display: flex;
-	flex-direction: row;
 	justify-content: center;
 	align-items: center;
-	border-radius: 20rpx;
-	color: #ffffff;
-	padding: 10rpx 20rpx;
-	width: 80rpx;
-	height: 45rpx;
-	margin-right: 20rpx;
-	font-size: 30rpx;
+	color: #039EB9;
+}
+.bottom-box .right .del {
+	background: #fff;
+	margin-right: 12rpx;
+}
+.bottom-box .right .borrow {
+	background-image: linear-gradient(180deg, #40AED1, #69D9E4);
+	color: #fff;
 }
 /* 借书币不够时显示弹窗 */
 .balance-box {
 	box-sizing: border-box;
-
+	
 	background: #fff;
 	margin: 0 auto;
 	padding-top: 36rpx;

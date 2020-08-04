@@ -42,14 +42,17 @@
 			}
 		},
 		onLoad(option) {
+			console.log(option)
 			// 获取分类数据
 			uni.showLoading();
 			this.$api.getKinds().then(res =>{
+				console.log(res)
 				res.data.forEach(item=>{
 					console.log(item);
 					if(this.oneKind === item.name) {
 						this.secondKind = item.children;
 						this.thirdKind = this.secondKind[0].children;
+						console.log(this.thirdKind)
 					}
 				})
 				

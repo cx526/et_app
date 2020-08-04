@@ -58,11 +58,11 @@ export default {
 			currentIndex: 0,
 			tabList: [
 				{
-					title: '智慧图书馆',
+					title: '书柜取还',
 					number: 2
 				},
 				{
-					title: '线上书馆',
+					title: '快递取还',
 					number: 3
 				}
 			],
@@ -182,14 +182,17 @@ export default {
 		line-height: 80rpx;
 		color: #333;
 		font-size: 28rpx;
+		background: #E1EDF4;
 	}
 	.tab-box view {
 		flex: 1;
 		text-align: center;
+		border-bottom: 6px solid #BDEBF5;
+		
 	}
 	.tab-box view.active {
-		color: #fff;
-		background: #007AFF;
+		border-color: #30AAC3;
+		color: #3FB0C8;
 	}
 	.offline-box {
 		height: 100%;

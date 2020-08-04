@@ -193,6 +193,7 @@ function cartBookCount(){
 		  index: 3,
 		  text: bookCount
 		});
+		
 	}
 	
 	return bookCount;

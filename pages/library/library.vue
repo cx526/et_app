@@ -70,7 +70,7 @@
 		</view>
 		<!-- 书篮 -->
 		<view class="library-box" v-if="len" @tap="goCart">
-			<image src="../../static/tab-cart-current.png" mode=""></image>
+			<image src="https://et-pic-server.oss-cn-shenzhen.aliyuncs.com/app_img/bookdetail_cart.png" mode=""></image>
 			<text>{{ len }}</text>
 		</view>
 		<!-- 加载组件 -->
@@ -365,11 +365,11 @@ export default {
 .type-box .list .item {
 	text-align: center;
 	box-sizing: border-box;
-	width: 47%;
+	width: 48.5%;
 	margin-top: 20rpx;
 	box-shadow: 0rpx 0rpx 20rpx rgba(179, 179, 179, 0.3);
 	border-radius: 8rpx;
-	padding: 20rpx 24rpx;
+	padding: 20rpx 30rpx;
 	display: flex;
 	justify-content: center;
 	flex-direction: column;
@@ -437,8 +437,8 @@ export default {
 	color: #aa6428;
 	margin-right: 10rpx;
 	box-sizing: border-box;
-	padding: 2rpx 4rpx;
-	border-radius: 16rpx;
+	padding: 5rpx 10rpx;
+	border-radius: 20rpx;
 }
 .type-box .list .recommend {
 	display: flex;
@@ -461,9 +461,9 @@ export default {
 	background-color: #2aaec4;
 	border-top-left-radius: 20rpx;
 	border-bottom-left-radius: 20rpx;
-	padding: 5rpx 10rpx;
+	padding: 5rpx 14rpx;
 	position: relative;
-	left: 24rpx;
+	left: 30rpx;
 }
 /* 禁止滚动 */
 .scroll-disabled {
