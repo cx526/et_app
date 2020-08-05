@@ -3,7 +3,7 @@
 	:style="{'min-height': minHeight}">
 		<view class="notice-box">
 			<text>我的借书币：</text>
-			<text>100</text>
+			<text style="margin-right: 16rpx;">100</text>
 			<text>剩余免费书本：</text>
 			<text>0</text>
 		</view>
@@ -68,18 +68,19 @@
 					<text>全选</text>
 				</view>
 				<view class="center">
-					<!-- 没选中书籍显示 -->
+					<!-- 选中书籍显示 -->
 					<view v-if="price">
-						<text style="color: #666;">借书币：</text>
+						<text >合共：</text>
+						<text style="color: #039EB9;">{{ len }}</text>
+						<text style="margin-right: 10rpx;">本</text>
+						<text >借书币：</text>
 						<text style="color: #039EB9;">{{ price }}</text>
 					</view>
-					<!-- 选中书籍显示 -->
-					<view v-else style="color: #666;">
-						<text>合共：</text>
-						<text style="color: #039EB9;">10</text>
-						<text>本</text>
+					<!-- 没选中时显示 -->
+					<view v-else>
+						<text>合计：0本</text>
 					</view>
-					<view>
+					<view v-if="price">
 						<text style="color: #999;font-size: 22rpx;">押金：40(可退)</text>
 					</view>
 				</view>
@@ -134,18 +135,26 @@ export default {
 		minHeight: String,
 		popUpWidth: String
 	},
-	mounted() {
-		// 储存书籍数据
-		this.bookList = this.offlineBooksList;
-		this.booksNumber = this.count
-	},
+
 	data() {
 		return {
-			offlineAllSelect: false,
-			bookList: [],
-			booksNumber: 0,
-			price: 0
+			offlineAllSelect: false, //全选/反选
+			bookList: [], //储存书篮书籍
+			booksNumber: 0, // 书篮书籍数目(用于判断书篮是否存在)
+			price: 0, // 选中书籍需支付的借书币
+			len: 0, // 选中书籍的本书
+			chooseBookList: [], //储存选中书籍
+			integrate: 200, // 用户当前积分(接口拿)
+			free: 3 //免费借阅次数(接口拿)
 		}
+	},
+	// 在mounted调用确保此时获取的本地缓存数据库存数量已经更新过
+	mounted() {
+		// 储存书籍数据
+		this.bookList = uni.getStorageSync("offlineCartList");
+		this.booksNumber = this.count;
+		// 若有选中计算价格
+		this.coungPrice()
 	},
 	methods: {	
 		// 选取书籍
@@ -157,12 +166,26 @@ export default {
 		// 计算借书币
 		coungPrice() {
 			this.price = 0;
+			this.len = 0;
+			let flag = true;
 			this.bookList.map(item => {
 				if(item.isSelect) {
-					this.price = ((+this.price) + (+item.price)).toFixed(2)
+					// 选中书籍的价格
+					this.price = ((+this.price) + (+item.price)).toFixed(2);
+					// 选中书籍的本数
+					this.len = this.len + 1;
+				}else {
+					flag = false
 				}
-			})
+			});
+			// 判断全选复选框是否选中
+			this.offlineAllSelect = flag
+			// 同步缓存数据
+			uni.setStorageSync("offlineCartList", this.bookList)
 		},
+		
+		
+		
 		// 选择书本(点击复选框)
 		selechBook(item) {
 			// 判断全选复选框是否选中
@@ -264,14 +287,31 @@ export default {
 				});
 			}
 		},
+		// 价格排序
+		compare(property){
+			return (a,b) => {
+				var value1 = a[property];
+				var value2 = b[property];
+				return value1 - value2;
+			}
+		},
 		// 借阅
 		borrow() {
 			// 获取用户选中的书籍列表
-			let chooseBookList = this.bookList.filter(item => {
+			this.chooseBookList = this.bookList.filter(item => {
 				return item.isSelect === true;
-			})
+			});
+			// 价格升序
+			let result = this.chooseBookList.sort(this.compare('price'));
+			// console.log(result);
+			// 实际免费借阅次数
+			let reality = this.integrate / 50; //(积分/50)
+			// 实际所需支付借书币
+			let amount = 0;
+			// 选中书籍的本书
+			let len = this.chooseBookList.length;
 			// 用户没有选中书籍
-			if(chooseBookList.length === 0) {
+			if(this.chooseBookList.length === 0) {
 				uni.showToast({
 					title: '请先选择需要借阅的书籍',
 					duration: 2000,
@@ -279,8 +319,77 @@ export default {
 				})
 				return
 			}
+			// 每单借阅小于10本
+			else if(this.chooseBookList.length >= 10) {
+				uni.showToast({
+					title: '每单借阅本书不能超过10本',
+					duration:2000,
+					icon: 'none'
+				})
+				return
+			}
+			
+			// 1.用户没有免费借阅次数或者积分/50小于1时(直接计算所选书籍累加的借书币)
+			else if(this.free === 0 || this.integrate/50 < 1) {
+				result.map(item => {
+					amount = ((+amount) + (+item.price)).toFixed(2)
+				})
+				console.log(amount)
+			}
+			// 2.用户有免费借阅次数且所选书籍小于/等于免费借阅次数且积分/50大于所选本数(免费)
+			else if(this.free && len <= this.free && reality >= len) {
+				amount = 0;
+				console.log(amount)
+			}
+			// 3.用户有免费借阅次数且所选书籍小于/等于免费借阅次数且积分/50小于所选本数(借书币=所选本书-积分/50)
+			else if(this.free && len <= this.free && reality < len) {
+				// 需要支付借书币的本书
+				let need = len - reality; //4-3=1
+				console.log(need);
+				let arr = [];
+				for(let i = 1; i <= need; i++) {
+					console.log(result[result.length - i])
+					arr.push(result[result.length - i])
+				};
+				console.log(arr);
+				arr.map(item => {
+					amount = ((+amount) + (+item.price)).toFixed(2)
+				})
+				console.log(amount)
+			}
+			// 4.用户有免费借阅次数且所选书籍大于免费借阅次数且积分/50大于当前免费借阅次数(借书币=所选本书-免费借阅次数，此情况无关积分)
+			else if(this.free && len > this.free && reality >= this.free) {
+				// 需要支付的本书
+				let need = len - this.free;
+				console.log(need);
+				let arr = [];
+				for(let i = 1; i <= need; i++) {
+					console.log(result[result.length - i])
+					arr.push(result[result.length - i])
+				};
+				console.log(arr);
+				arr.map(item => {
+					amount = ((+amount) + (+item.price)).toFixed(2)
+				})
+				console.log(amount)
+			}
+			// 5.用户有免费借阅次数且所选书籍大于免费借阅次数且积分/50小于当前免费借阅次数(借书币=所选本书-积分/50)
+			else if(this.free && len > this.free && reality < this.free) {
+				let need = len - reality
+				console.log(need);
+				let arr = [];
+				for(let i = 1; i <= need; i++) {
+					console.log(result[result.length - i])
+					arr.push(result[result.length - i])
+				};
+				console.log(arr);
+				arr.map(item => {
+					amount = ((+amount) + (+item.price)).toFixed(2)
+				})
+				console.log(amount)
+			}
 			// 借书币不足时显示弹窗
-			this.$refs.popup.open();
+			// this.$refs.popup.open();
 			// 同时满足以上两个条件时直接跳转到订单页
 			// uni.navigateTo({
 			// 	url: '../../pages/library/offline-order'
@@ -406,7 +515,7 @@ export default {
 	box-sizing: border-box;
 	border: 1px solid #EEEEEF;
 	padding: 12rpx;
-	margin-right: 12rpx;
+	margin-right: 16rpx;
 }
 .offline-box scroll-view .main image {
 	width: 180rpx;
@@ -488,7 +597,8 @@ export default {
 }
 .bottom-box .center {
 	box-sizing: border-box;
-	margin-right: 80rpx;
+	font-size: 22rpx;
+	/* margin-right: 80rpx; */
 }
 .bottom-box .right {
 	display: flex;
@@ -503,6 +613,7 @@ export default {
 	justify-content: center;
 	align-items: center;
 	color: #039EB9;
+	height: 60rpx;
 }
 .bottom-box .right .del {
 	background: #fff;
@@ -522,7 +633,7 @@ export default {
 	padding-bottom: 36rpx;
 }
 .balance-box .title {
-	font-size: blod;
+	font-weight: 700;
 	font-size: 32rpx;
 	text-align: center;
 	margin-bottom: 36rpx;
@@ -536,7 +647,7 @@ export default {
 }
 .balance-box .notice view {
 	box-sizing: border-box;
-	margin-bottom: 24rpx;
+	margin-bottom: 12rpx;
 	text-align: center;
 }
 .balance-box .show {

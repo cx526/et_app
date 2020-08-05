@@ -148,10 +148,15 @@ export default {
 				goodsIDs.push(item.id);
 			});
 			this.$api.preOrderCheckStock({ goodsIDs: goodsIDs, goodsType: 'online' }).then(res => {
+				console.log(res)
 				res.data.map((item, index) => {
 					this.offlineBooksList.map((sitem, sindex) => {
 						// 动态添加isSelect属性用于判定是否选中
-						sitem.isSelect = false;
+						if(sitem.isSelect) {
+							sitem.isSelect = sitem.isSelect
+						}else {
+							sitem.isSelect = false
+						}
 						if (item.goods_id === sitem.id) {
 							// 同步更新本地缓存书籍数量
 							this.offlineBooksList[sindex].usageCount = item.usageCount;
@@ -183,7 +188,7 @@ export default {
 		line-height: 80rpx;
 		color: #333;
 		font-size: 28rpx;
-		background: #E1EDF4;
+		background: #EBF8FF;
 	}
 	.tab-box view {
 		flex: 1;

@@ -1,6 +1,7 @@
 {
 	"pages": [
-
+		
+		
 		{
 			"path": "pages/index/index",
 			"style": {
@@ -398,16 +399,7 @@
 			}
 		}
 
-		, {
-			"path": "pages/library/offline-order",
-			"style": {
-				"navigationStyle": "custom",
-				"app-plus": {
-					"titleNView": false
-				}
-
-			}
-		}, {
+		,  {
 			"path": "pages/library/no-payment",
 			"style": {
 				"navigationBarTitleText": "待支付",
@@ -458,6 +450,16 @@
 				"app-plus": {
 					"titleNView": false
 				}
+			}
+		},
+		{
+			"path": "pages/library/offline-order",
+			"style": {
+				"navigationStyle": "custom",
+				"app-plus": {
+					"titleNView": false
+				}
+		
 			}
 		},
 		{

@@ -1,12 +1,9 @@
 <template>
 	<view>
-		<!-- <button @click="remove">1111</button> -->
 		<!-- 头部 -->
 		<view class="header-box">
-			<view class="topic"><text>林头幼儿园智慧童书馆欢迎您！</text></view>
-			<view class="user-info">
-				<text>我的积分：10000</text>
-				<text>我的借书币：300</text>
+			<view class="user">
+				<image src="../../static/library/user-default.png" mode=""></image>
 			</view>
 		</view>
 		<!-- 搜索框 -->
@@ -56,7 +53,12 @@
 								<text>{{ item.peopleCount }}人推荐</text>
 							</view>
 							<view class="right" v-if="item.stock.usageCount" @tap.stop="push(item)"><text>加入书篮</text></view>
-							<view class="right" v-if="item.stock.usageCount == 0" style="background: #ccc;"><text>加入书篮</text></view>
+							<view class="right" 
+							v-if="item.stock.usageCount == 0" 
+							style="background: #ccc;"
+							@tap.stop="notice">
+								<text>加入书篮</text>
+							</view>
 						</view>
 					</view>
 				</template>
@@ -75,6 +77,25 @@
 		</view>
 		<!-- 加载组件 -->
 		<uni-load-more :status="loadStatus" :content-text="loadText" />
+		<!-- 权限弹窗 -->
+		<uni-popup ref="powerPopUp" :maskClick="false">
+			<view class="power-box" :style="{ 'width': popUpWidth }">
+				<image src="../../static/library/power-banner.png" 
+				mode="widthFix"></image>
+				<view class="context">
+					<view class="title">
+						<text>请绑定童书卡</text>
+					</view>
+					<view class="notice">
+						<text>幼儿园合作用户请先绑定童书卡</text>
+					</view>
+					<view class="btn">
+						<view @tap="goIndex">取消</view>
+						<view>去绑卡</view>
+					</view>
+				</view>
+			</view>
+		</uni-popup>
 	</view>
 </template>
 
@@ -95,6 +116,7 @@ export default {
 				contentnomore: '已经到底了'
 			},
 			currentIndex: 0,
+			popUpWidth: 0,
 			typeList: [
 				{
 					title: '全部'
@@ -129,9 +151,15 @@ export default {
 		uniLoadMore
 	},
 	onLoad() {
+		// this.$refs.powerPopUp.open()
 		// 获取书籍列表
 		this.getBooksList();
 		this.len = uni.getStorageSync('offlineCartList').length;
+		uni.getSystemInfo({
+			success: res => {
+				this.popUpWidth = res.windowWidth * 0.8 + 'px'
+			}
+		})
 	},
 	onShow() {
 		this.len = uni.getStorageSync('offlineCartList').length;
@@ -260,10 +288,24 @@ export default {
 				this.loadStatus = 'noMore';
 			});
 		},
+		// 提示书籍已借完
+		notice() {
+			uni.showToast({
+				title: '此类书籍已借完，请选择其他书籍',
+				icon: 'none',
+				duration:2000
+			})
+		},
 		// 跳转至商品详情页
 		goDetail(id) {
 			uni.navigateTo({
 				url: './offline-bookdetail?bookID='+id
+			})
+		},
+		// 点击权限弹窗取消那妞
+		goIndex() {
+			uni.switchTab({
+				url: '../index/index'
 			})
 		}
 	}
@@ -273,16 +315,22 @@ export default {
 <style scoped>
 /* header */
 .header-box {
+	height: 120rpx;
+	background-image: linear-gradient(180deg, #6BD3EE, #A6F3F8);
+	display: flex;
+	align-items: center;
 	box-sizing: border-box;
-	padding: 32rpx 20rpx;
-	color: #333;
-	font-size: 30rpx;
+	padding-left: 40rpx;
+	justify-content: space-between;
 }
-.header-box .user-info {
-	margin-top: 40rpx;
+.header-box .user {
+	width: 80rpx;
+	height: 80rpx;
 }
-.header-box .user-info text {
-	margin-right: 24rpx;
+.header-box .user image {
+	width: 100%;
+	height: 100%;
+	display: block;
 }
 /* search */
 .search-box {
@@ -465,11 +513,6 @@ export default {
 	position: relative;
 	left: 30rpx;
 }
-/* 禁止滚动 */
-.scroll-disabled {
-	height: 100%;
-	overflow-y: hidden !important;
-}
 /* 分类弹窗 */
 .popup-box {
 	box-sizing: border-box;
@@ -531,5 +574,59 @@ export default {
 	display: flex;
 	justify-content: center;
 	align-items: center;
+}
+/* 权限弹窗 */
+.power-box {
+	box-sizing: border-box;
+	position: relative;
+}
+.power-box image {
+	width: 100%;
+}
+.power-box .context {
+	position: absolute;
+	left: 0;
+	top: 360rpx;
+	width: 100%;
+}
+.power-box .context .title {
+	font-weight: 700;
+	font-size: 32rpx;
+	text-align: center;
+	margin-bottom: 24rpx;
+	color: #12A4BD;
+}
+.power-box .context .notice {
+	font-size: 28rpx;
+	text-align: center;
+	color: #333;
+}
+.power-box .btn {
+	display: flex;
+	box-sizing: border-box;
+	padding: 0 36rpx;
+	box-sizing: border-box;
+	margin-top: 80rpx;
+
+}
+.power-box .btn view {
+	flex: 1;
+	font-size: 28rpx;
+	line-height: 70rpx;
+	background: #fff;
+	border-radius: 40rpx;
+	box-sizing: border-box;
+	text-align: center;
+}
+.power-box .btn view:nth-child(1) {
+	margin-right: 12rpx;;
+	background: #F9F9F9;
+	border: 1px solid #EEEEEF;
+	color: #ADADAD;
+}
+.power-box .btn view:nth-child(2) {
+	margin-left: 12rpx;
+	background-image: linear-gradient(180deg, #40AED1, #69D9E4);
+	color: #fff;
 }
 </style>

@@ -1,153 +1,131 @@
 <template>
-	<view>
+	<view style="box-sizing: border-box;padding-bottom: 120rpx;">
 		<uni-nav-bar 
 		left-icon="back"  
 		title="订单详情" 
 		status-bar
 		@clickLeft="clickLeft"></uni-nav-bar>
 		<view style="box-sizing: border-box;padding:24rpx 24rpx 110rpx 24rpx;">
-			<!-- 自提人信息 -->
-			<view class="user-info">
-				<view>
-					<text class="label">提取方式：</text>
-					<text>自提</text>
-				</view>
-				<view>
-					<text class="label">学校：</text>
-					<text>林头幼儿园</text>
-				</view>
-				<view>
-					<text class="label">用户：</text>
-					<text>小A</text>
-				</view>
-				<view>
-					<text class="label">电话：</text>
-					<text>134****1922</text>
-				</view>
-			</view>
 			<!-- 订单 -->
 			<view class="order-info">
-				<view class="topic">
-					<view class="line"></view>
-					<text>书单</text>
-				</view>
 				<view class="list">
 					<block v-for="n in 5" :key="n">
 						<view class="item">
 							<image src="http://et-pic-server.oss-cn-shenzhen.aliyuncs.com/1589783780428.jpg"></image>
-							<view class="title">不要告状，除非是大事</view>
-							<view class="price">
-								<view>x1</view>
-								<view>39.99</view>
+							<view class="context">
+								<view class="title">
+									<text>不要告状，除非是大事</text>
+									<text>x1</text>
+								</view>
+								<view class="price">
+									<view>借阅币：39.99</view>
+								</view>
 							</view>
+							
 						</view>
 					</block>
 					
 				</view>
 			</view>
-			<!-- 借阅时间 -->
-			<view class="borrow-time">
-				<view class="label">借阅时间</view>
-				<view class="time">2020-07-19 16：00：00</view>
-			</view>
-			<!-- 预计归还时间 -->
-			<view class="borrow-time">
-				<view class="label">预计归还时间</view>
-				<view class="time back">
-					<text>2020-07-19 16：00：00</text>
-					<text style="color: #f00;">借阅时间：5天</text>
+			<view class="main">
+				<view class="borrow-time">
+					<view class="label">提取方式</view>
+					<view class="time">书柜自提</view>
 				</view>
-			</view>
-			<!-- 支付方式 -->
-			<view class="way-info">
-				<view class="left">
-					支付方式
-				</view>
-				<view class="right">
-					<!-- 当前用户有免费借阅次数时显示 -->
-					<view class="item">
-						<radio-group class="radio"
-						@change="radioChange"
-						>
-							<view 
-							v-for="(item, index) in wayList" 
-							:key="index"
-							>
-								<radio 
-								:value="item.value" 
-								style="transform: scale(0.6);"
-								color="#00B7CC"
-								:checked="item.value == way"></radio>
-								<text>{{ item.title }}</text>
-							</view>
-						</radio-group>
-						<!-- 没有免费借阅次数默认选中借阅币支付 -->
-						<!-- <view v-else>
-							<radio 
-							value="1" 
-							style="transform: scale(0.6);" 
-							checked color="#00B7CC"></radio>
-							<text>借阅币</text>
-						</view> -->
+				<view class="borrow-time">
+					<view class="label">学校</view>
+					<view class="time">林头幼儿园</view>
+				</view>		
+				<view class="borrow-time">
+					<view class="label">借阅时间</view>
+					<view class="time back">
+						<text>2020-07-19 16：00：00</text>
+						<text style="color: #f00;">借阅期为5天，请按时归还哦</text>
 					</view>
-					<!-- 选择借书币时显示 -->
-					<block v-if="way == 1">
-						<view class="item">
-							<view>我的借阅币：</view>
-							<view style="color: rgb(0,128,0);font-weight: bold;">100</view>
-						</view>
-						<view class="item">
-							<view>支付借阅币：</view>
-							<view>100</view>
-						</view>
-						<view class="item">
-							<view>押金(可退)：</view>
-							<view>60元</view>
-						</view>
-						<view class="item">
-							<switch checked color="#00B7CC" style="transform: scale(0.6);"></switch>
-							<view>积分：-100</view>
-						</view>
-						<view class="item" style="color: #999;">
-							<view>借阅币：</view>
-							<view>-20.00</view>
-						</view>
-					</block>
-					<!-- 选择免费借阅时显示 -->
-					<block v-if="way == 0">
-						<view class="item">
-							<view>我的借阅币：</view>
-							<view style="color: rgb(0,128,0);font-weight: bold;">100</view>
-						</view>
-						<view class="item">
-							<view>支付借阅币：</view>
-							<view>100</view>
-						</view>
-						<view class="item">
-							<view>积分：-100</view>
-						</view>
-						<view class="item">
-							<view>押金(可退)：</view>
-							<view>60元</view>
-						</view>
-					</block>
-				
 				</view>
-				
+				<view class="borrow-time">
+					<view class="label">预计归还时间</view>
+					<view class="time">2020-07-24 16：00：00</view>
+				</view>
+				<!-- 支付方式 -->
+				<view class="way-info">
+					<view class="left">
+						支付方式
+					</view>
+					<view class="right">
+						<!-- 当前用户有免费借阅次数时显示 -->
+						<view class="item">
+							<radio-group class="radio"
+							@change="radioChange"
+							>
+								<view 
+								v-for="(item, index) in wayList" 
+								:key="index"
+								>
+									<radio 
+									:value="item.value" 
+									style="transform: scale(0.6);"
+									color="#00B7CC"
+									:checked="item.value == way"></radio>
+									<text style="color: #000;font-weight: 700;">{{ item.title }}</text>
+								</view>
+							</radio-group>
+							<!-- 没有免费借阅次数默认选中借阅币支付 -->
+						</view>
+						<!-- 选择借书币时显示 -->
+						<block v-if="way == 1">
+							<view class="item">
+								<view>我的借阅币：</view>
+								<view style="color: #72C5D7;font-weight: bold;">100</view>
+							</view>
+							<view class="item">
+								<view>支付借阅币：</view>
+								<view>100</view>
+							</view>
+							<view class="item">
+								<view>押金(可退)：</view>
+								<view>60元</view>
+							</view>
+							<view class="item" style="color: #999;">
+								<view>借阅币：</view>
+								<view>-20.00</view>
+							</view>
+						</block>
+						<!-- 选择免费借阅时显示 -->
+						<block v-if="way == 0">
+							<view class="item">
+								<view>我的借阅币：</view>
+								<view style="color: #72C5D7;font-weight: bold;">100</view>
+							</view>
+							<view class="item">
+								<view>支付借阅币：</view>
+								<view>100</view>
+							</view>
+							<view class="item">
+								<view>积分：-100</view>
+							</view>
+							<view class="item">
+								<view>押金(可退)：</view>
+								<view>60元</view>
+							</view>
+						</block>
+					</view>	
+				</view>
 			</view>
 			<!-- 底部 -->
 			<view class="bottom-box">
 				<view class="left">
-					<view>
-						<text style="margin-right: 12rpx;">借书币：54.00</text>
-						<text style="color: #f00;">优惠24.00</text>
+					<view style="font-size: 28rpx;margin-right: 24rpx;">
+						<text 
+						style="color: #838383;font-weight: 700;">借阅币：</text>
+						<text style="color: #30AAC3;">54.00</text>
 					</view>
-					<view>
-						<text style="color: #999;">押金：60元(可退)</text>
+					<view style="font-size: 24rpx;color: #B7B7B7;">
+						<text>押金：29元</text>
 					</view>
 				</view>
-				<view class="right">
-					<button type="default" @tap="borrow">确认借阅</button>
+				<view class="right" @tap="borrow">
+					<text>确认借阅</text>
 				</view>
 			</view>
 			<!-- 确认支付弹窗 -->
@@ -242,62 +220,24 @@
 <style >
 	page {
 		background: rgb(245,245,245);
-		/* padding: 24rpx; */
 		box-sizing: border-box;
-	}
-	/* 自提人信息 */
-	.user-info {
-		box-sizing: border-box;
-		padding: 24rpx 20rpx;
-		border: 1px dashed #333;
-		background: #fff;
-		font-size: 28rpx;
-		border-radius: 12rpx;
-	}
-	.user-info view {
-		box-sizing: border-box;
-		margin-bottom: 16rpx;
-		color: #333;
-	}
-	.user-info view:last-child {
-		margin-bottom: 0;
-	}
-	.user-info .label {
-		font-weight: bold;
-		color: #000;
 	}
 	/* 订单 */
 	.order-info {
 		box-sizing: border-box;
 		background: #fff;
-		padding: 24rpx 20rpx;
 		border-radius: 12rpx;
 		font-size: 28rpx;
 		margin-top: 24rpx;
 	}
-	.order-info .topic {
-		box-sizing: border-box;
-		display: flex;
-		line-height: 60rpx;
-	}
-	.order-info .line {
-		background: rgb(0,128,0);
-		height: 60rpx;
-		width: 8rpx;
-		margin-right: 40rpx;
-	}
-	.order-info .topic text {
-		color: rgb(0,128,0);
-	}
 	.order-info .list {
 		box-sizing: border-box;
-		padding-top: 20rpx;
 	}
 	.order-info .list .item {
 		box-sizing: border-box;
 		padding: 20rpx;
 		display: flex;
-		align-items: center;
+		/* align-items: center; */
 		box-shadow: 0rpx 0rpx 20rpx rgba(179, 179, 179, 0.3);
 		margin-bottom: 24rpx;
 		border-radius: 8rpx;
@@ -311,36 +251,52 @@
 		flex-shrink: 0;
 		margin-right: 16rpx;
 	}
-	.order-info .list .item .title {
-		font-size: 26rpx;
+	.order-info .list .item .context {
 		flex: 1;
-	}
-	.order-info .list .item .price {
-		flex-shrink: 0;
 		display: flex;
 		flex-direction: column;
-		font-size: 26rpx;
+	}
+	.order-info .list .item .title {
+		font-size: 30rpx;
+		font-weight: bold;
+		margin-top: 26rpx;
+		flex: 1;
+		display: flex;
+		justify-content: space-between;
+	}
+	.order-info .list .item .price {
+		font-size: 28rpx;
 		margin-left: 20rpx;
 		text-align: right;
+		color: #72C5D7;
+	}
+	.main {
+		background: #fff;
+		box-sizing: border-box;
+		padding: 20rpx;
+		margin-top: 20rpx;
+		box-shadow: 0rpx 0rpx 20rpx rgba(179, 179, 179, 0.3);
+		border-radius: 20rpx;
 	}
 	/* 借阅时间 */
 	.borrow-time {
 		box-sizing: border-box;
 		display: flex;
-		padding: 20rpx;
+		padding: 24rpx 0;
 		background: #fff;
 		border-radius: 8rpx;
-		margin-top: 20rpx;
 		justify-content: space-between;
+		border-bottom: 1px solid #E8E8E8;
 	}
 	.borrow-time .label {
 		font-size: 28rpx;
 		font-weight: bold;
 	}
-	.borrow-time .time {
+	 .borrow-time .time {
 		font-size: 26rpx;
 		color: #333;
 		text-align: right;
+		color: #939393;
 	}
 	.borrow-time .time.back {
 		display: flex;
@@ -349,7 +305,6 @@
 	/* 支付方式 */
 	.way-info {
 		box-sizing: border-box;
-		padding: 0 20rpx;
 		margin-top: 20rpx;
 		display: flex;
 		justify-content: space-between;
@@ -376,9 +331,7 @@
 	}
 	.way-info .right .item {
 		box-sizing: border-box;
-		/* display: flex; */
 		align-items: center;
-		/* justify-content: space-between; */
 		margin-bottom: 16rpx;
 		text-align: right;
 	}
@@ -402,21 +355,28 @@
 		justify-content: space-between;
 		align-items: center;
 		background: #fff;
+		line-height: 80rpx;
 	}
 	.bottom-box .left {
 		box-sizing: border-box;
+		flex: 1;
 		display: flex;
-		flex-direction: column;
 	}
-	.bottom-box .right button {
-		font-size: 30rpx;
-		background: rgb(0,128,0);
+	.bottom-box .right  {
+		flex-shrink: 0;
+		line-height: 60rpx;
+		font-weight: blod;
+		font-size: 28rpx;
+		background-image: linear-gradient(180deg, #40AED1, #69D9E4);
 		color: #fff;
+		border-radius: 32rpx;
+		box-sizing: border-box;
+		padding: 4rpx 40rpx;
 	}
+
 	/* 确认支付弹窗 */
 	.balance-box {
 		box-sizing: border-box;
-	
 		background: #fff;
 		margin: 0 auto;
 		padding-top: 36rpx;
@@ -431,7 +391,6 @@
 	.balance-box .notice {
 		font-size: 26rpx;
 		text-align: center;
-	
 		box-sizing: border-box;
 		padding: 0 60rpx;
 		text-align: left;
@@ -447,8 +406,8 @@
 		flex: 1;
 		font-size: 28rpx;
 		line-height: 100rpx;
-		background: #fff;
 		border: 1px solid #EEEEEF;
+		background: #fff;
 	}
 	
 	.balance-box .btn button::after {
