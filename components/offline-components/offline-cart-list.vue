@@ -110,7 +110,7 @@
 					</view>
 				</view>
 				<view class="show">
-					<image src="../../static/library/popup-banner.png" mode="widthFix"></image>
+					<image src="https://et-pic-server.oss-cn-shenzhen.aliyuncs.com/app_img/popup-banner.png" mode="widthFix"></image>
 				</view>
 				<view class="btn">
 					<view @tap="cancel">取消</view>
@@ -183,9 +183,6 @@ export default {
 			// 同步缓存数据
 			uni.setStorageSync("offlineCartList", this.bookList)
 		},
-		
-		
-		
 		// 选择书本(点击复选框)
 		selechBook(item) {
 			// 判断全选复选框是否选中
@@ -330,19 +327,19 @@ export default {
 			}
 			
 			// 1.用户没有免费借阅次数或者积分/50小于1时(直接计算所选书籍累加的借书币)
-			else if(this.free === 0 || this.integrate/50 < 1) {
+			else if(this.free === 0 || this.integrate/50 < 1 || len >= 2) {
 				result.map(item => {
 					amount = ((+amount) + (+item.price)).toFixed(2)
 				})
 				console.log(amount)
 			}
-			// 2.用户有免费借阅次数且所选书籍小于/等于免费借阅次数且积分/50大于所选本数(免费)
-			else if(this.free && len <= this.free && reality >= len) {
+			// 2.用户有免费借阅次数且所选书籍小于2且积分/50大于等于1(免费)
+			else if(this.free && len < 2 && reality >= 1) {
 				amount = 0;
 				console.log(amount)
 			}
-			// 3.用户有免费借阅次数且所选书籍小于/等于免费借阅次数且积分/50小于所选本数(借书币=所选本书-积分/50)
-			else if(this.free && len <= this.free && reality < len) {
+			// 3.用户有免费借阅次数且所选书籍小于2且积分/50小于1(借书币支付)
+			else if(this.free && len < 2 && reality < 1) {
 				// 需要支付借书币的本书
 				let need = len - reality; //4-3=1
 				console.log(need);
@@ -357,37 +354,10 @@ export default {
 				})
 				console.log(amount)
 			}
-			// 4.用户有免费借阅次数且所选书籍大于免费借阅次数且积分/50大于当前免费借阅次数(借书币=所选本书-免费借阅次数，此情况无关积分)
-			else if(this.free && len > this.free && reality >= this.free) {
-				// 需要支付的本书
-				let need = len - this.free;
-				console.log(need);
-				let arr = [];
-				for(let i = 1; i <= need; i++) {
-					console.log(result[result.length - i])
-					arr.push(result[result.length - i])
-				};
-				console.log(arr);
-				arr.map(item => {
-					amount = ((+amount) + (+item.price)).toFixed(2)
-				})
-				console.log(amount)
-			}
-			// 5.用户有免费借阅次数且所选书籍大于免费借阅次数且积分/50小于当前免费借阅次数(借书币=所选本书-积分/50)
-			else if(this.free && len > this.free && reality < this.free) {
-				let need = len - reality
-				console.log(need);
-				let arr = [];
-				for(let i = 1; i <= need; i++) {
-					console.log(result[result.length - i])
-					arr.push(result[result.length - i])
-				};
-				console.log(arr);
-				arr.map(item => {
-					amount = ((+amount) + (+item.price)).toFixed(2)
-				})
-				console.log(amount)
-			}
+			
+			
+
+			
 			// 借书币不足时显示弹窗
 			// this.$refs.popup.open();
 			// 同时满足以上两个条件时直接跳转到订单页
@@ -395,6 +365,108 @@ export default {
 			// 	url: '../../pages/library/offline-order'
 			// })
 		},
+		
+		
+		
+		// borrow() {
+		// 	// 获取用户选中的书籍列表
+		// 	this.chooseBookList = this.bookList.filter(item => {
+		// 		return item.isSelect === true;
+		// 	});
+		// 	// 价格升序
+		// 	let result = this.chooseBookList.sort(this.compare('price'));
+		// 	// console.log(result);
+		// 	// 实际免费借阅次数
+		// 	let reality = this.integrate / 50; //(积分/50)
+		// 	// 实际所需支付借书币
+		// 	let amount = 0;
+		// 	// 选中书籍的本书
+		// 	let len = this.chooseBookList.length;
+		// 	// 用户没有选中书籍
+		// 	if(this.chooseBookList.length === 0) {
+		// 		uni.showToast({
+		// 			title: '请先选择需要借阅的书籍',
+		// 			duration: 2000,
+		// 			icon: 'none'
+		// 		})
+		// 		return
+		// 	}
+		// 	// 每单借阅小于10本
+		// 	else if(this.chooseBookList.length >= 10) {
+		// 		uni.showToast({
+		// 			title: '每单借阅本书不能超过10本',
+		// 			duration:2000,
+		// 			icon: 'none'
+		// 		})
+		// 		return
+		// 	}
+			
+		// 	// 1.用户没有免费借阅次数或者积分/50小于1时(直接计算所选书籍累加的借书币)
+		// 	else if(this.free === 0 || this.integrate/50 < 1) {
+		// 		result.map(item => {
+		// 			amount = ((+amount) + (+item.price)).toFixed(2)
+		// 		})
+		// 		console.log(amount)
+		// 	}
+		// 	// 2.用户有免费借阅次数且所选书籍小于/等于免费借阅次数且积分/50大于所选本数(免费)
+		// 	else if(this.free && len <= this.free && reality >= len) {
+		// 		amount = 0;
+		// 		console.log(amount)
+		// 	}
+		// 	// 3.用户有免费借阅次数且所选书籍小于/等于免费借阅次数且积分/50小于所选本数(借书币=所选本书-积分/50)
+		// 	else if(this.free && len <= this.free && reality < len) {
+		// 		// 需要支付借书币的本书
+		// 		let need = len - reality; //4-3=1
+		// 		console.log(need);
+		// 		let arr = [];
+		// 		for(let i = 1; i <= need; i++) {
+		// 			console.log(result[result.length - i])
+		// 			arr.push(result[result.length - i])
+		// 		};
+		// 		console.log(arr);
+		// 		arr.map(item => {
+		// 			amount = ((+amount) + (+item.price)).toFixed(2)
+		// 		})
+		// 		console.log(amount)
+		// 	}
+		// 	// 4.用户有免费借阅次数且所选书籍大于免费借阅次数且积分/50大于当前免费借阅次数(借书币=所选本书-免费借阅次数，此情况无关积分)
+		// 	else if(this.free && len > this.free && reality >= this.free) {
+		// 		// 需要支付的本书
+		// 		let need = len - this.free;
+		// 		console.log(need);
+		// 		let arr = [];
+		// 		for(let i = 1; i <= need; i++) {
+		// 			console.log(result[result.length - i])
+		// 			arr.push(result[result.length - i])
+		// 		};
+		// 		console.log(arr);
+		// 		arr.map(item => {
+		// 			amount = ((+amount) + (+item.price)).toFixed(2)
+		// 		})
+		// 		console.log(amount)
+		// 	}
+		// 	// 5.用户有免费借阅次数且所选书籍大于免费借阅次数且积分/50小于当前免费借阅次数(借书币=所选本书-积分/50)
+		// 	else if(this.free && len > this.free && reality < this.free) {
+		// 		let need = len - reality
+		// 		console.log(need);
+		// 		let arr = [];
+		// 		for(let i = 1; i <= need; i++) {
+		// 			console.log(result[result.length - i])
+		// 			arr.push(result[result.length - i])
+		// 		};
+		// 		console.log(arr);
+		// 		arr.map(item => {
+		// 			amount = ((+amount) + (+item.price)).toFixed(2)
+		// 		})
+		// 		console.log(amount)
+		// 	}
+		// 	// 借书币不足时显示弹窗
+		// 	// this.$refs.popup.open();
+		// 	// 同时满足以上两个条件时直接跳转到订单页
+		// 	// uni.navigateTo({
+		// 	// 	url: '../../pages/library/offline-order'
+		// 	// })
+		// },
 		// 点击弹窗取消
 		cancel() {
 			this.$refs.popup.close()
