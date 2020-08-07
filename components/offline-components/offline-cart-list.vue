@@ -298,72 +298,117 @@ export default {
 			this.chooseBookList = this.bookList.filter(item => {
 				return item.isSelect === true;
 			});
-			// 价格升序
-			let result = this.chooseBookList.sort(this.compare('price'));
-			// console.log(result);
-			// 实际免费借阅次数
-			let reality = this.integrate / 50; //(积分/50)
-			// 实际所需支付借书币
-			let amount = 0;
-			// 选中书籍的本书
-			let len = this.chooseBookList.length;
-			// 用户没有选中书籍
-			if(this.chooseBookList.length === 0) {
-				uni.showToast({
-					title: '请先选择需要借阅的书籍',
-					duration: 2000,
-					icon: 'none'
+			// 更新所选商品本地缓存的库存数据
+			let goodsIDs = [];
+			this.chooseBookList.forEach(item => {
+				goodsIDs.push(item.id);
+			});
+			this.$api.preOrderCheckStock({ goodsIDs: goodsIDs, goodsType: 'online' }).then(res => {
+				res.data.map((item, index) => {
+					this.chooseBookList.map((sitem, sindex) => {
+						if (item.goods_id === sitem.id) {
+							// 同步更新本地缓存书籍数量
+							this.chooseBookList[sindex].usageCount = item.usageCount;
+						}
+					});
+				});
+				// 价格升序
+				let result = this.chooseBookList.sort(this.compare('price'));
+				// 实际免费借阅次数
+				let reality = this.integrate / 50; //(积分/50)
+				// 实际所需支付借书币
+				let amount = 0;
+				// 选中书籍的本书
+				let len = this.chooseBookList.length;
+				// 筛选选中书籍是否存在库存为零的情况
+				let noStockList = [];
+				this.chooseBookList.filter(item => {
+					if(item.sitem === 0) {
+						noStockList.push(item)
+					}
+				});
+				// 用户没有选中书籍
+				if(this.chooseBookList.length === 0) {
+					uni.showToast({
+						title: '请先选择需要借阅的书籍',
+						duration: 2000,
+						icon: 'none'
+					})
+					return
+				}
+				// 每单借阅小于10本
+				else if(this.chooseBookList.length >= 10) {
+					uni.showToast({
+						title: '每单借阅本书不能超过10本',
+						duration:2000,
+						icon: 'none'
+					})
+					return
+				}
+				// 所选书籍中存在没有库存的情况
+				else if(noStockList && noStockList.length > 0) {
+					uni.showToast({
+						title: '所选书籍存在库存不足的情况，请重新选择',
+						icon: 'none',
+						duration: 2000
+					})
+					return
+				}
+				// 1.用户没有免费借阅次数或者积分/50小于1时(直接计算所选书籍累加的借书币)
+				else if(this.free === 0 || this.integrate/50 < 1 || len >= 2) {
+					result.map(item => {
+						amount = ((+amount) + (+item.price)).toFixed(2)
+					})
+					console.log(amount)
+				}
+				// 2.用户有免费借阅次数且所选书籍小于2且积分/50大于等于1(免费)
+				else if(this.free && len < 2 && reality >= 1) {
+					amount = 0;
+					console.log(amount)
+				}
+				// 3.用户有免费借阅次数且所选书籍小于2且积分/50小于1(借书币支付)
+				else if(this.free && len < 2 && reality < 1) {
+					// 需要支付借书币的本书
+					let need = len - reality; //4-3=1
+					console.log(need);
+					let arr = [];
+					for(let i = 1; i <= need; i++) {
+						console.log(result[result.length - i])
+						arr.push(result[result.length - i])
+					};
+					console.log(arr);
+					arr.map(item => {
+						amount = ((+amount) + (+item.price)).toFixed(2)
+					})
+					console.log(amount)
+				}
+				// 借书币不足时显示弹窗
+				// this.$refs.popup.open();
+				// 同时满足以上两个条件时直接跳转到订单页
+				uni.navigateTo({
+					url: '../../pages/library/offline-order'
 				})
-				return
-			}
-			// 每单借阅小于10本
-			else if(this.chooseBookList.length >= 10) {
-				uni.showToast({
-					title: '每单借阅本书不能超过10本',
-					duration:2000,
-					icon: 'none'
-				})
-				return
-			}
+			});
 			
-			// 1.用户没有免费借阅次数或者积分/50小于1时(直接计算所选书籍累加的借书币)
-			else if(this.free === 0 || this.integrate/50 < 1 || len >= 2) {
-				result.map(item => {
-					amount = ((+amount) + (+item.price)).toFixed(2)
-				})
-				console.log(amount)
-			}
-			// 2.用户有免费借阅次数且所选书籍小于2且积分/50大于等于1(免费)
-			else if(this.free && len < 2 && reality >= 1) {
-				amount = 0;
-				console.log(amount)
-			}
-			// 3.用户有免费借阅次数且所选书籍小于2且积分/50小于1(借书币支付)
-			else if(this.free && len < 2 && reality < 1) {
-				// 需要支付借书币的本书
-				let need = len - reality; //4-3=1
-				console.log(need);
-				let arr = [];
-				for(let i = 1; i <= need; i++) {
-					console.log(result[result.length - i])
-					arr.push(result[result.length - i])
-				};
-				console.log(arr);
-				arr.map(item => {
-					amount = ((+amount) + (+item.price)).toFixed(2)
-				})
-				console.log(amount)
-			}
+			
+			
+			
+			
+			
+			
+			
+		
+
+
+			
+
+
+
 			
 			
 
 			
-			// 借书币不足时显示弹窗
-			// this.$refs.popup.open();
-			// 同时满足以上两个条件时直接跳转到订单页
-			// uni.navigateTo({
-			// 	url: '../../pages/library/offline-order'
-			// })
+
 		},
 		
 		
@@ -690,6 +735,7 @@ export default {
 .bottom-box .right .del {
 	background: #fff;
 	margin-right: 12rpx;
+	color: #666;
 }
 .bottom-box .right .borrow {
 	background-image: linear-gradient(180deg, #40AED1, #69D9E4);

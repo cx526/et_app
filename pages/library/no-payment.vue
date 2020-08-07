@@ -4,24 +4,25 @@
 		<view class="order-list">
 			<view class="item">
 				<view class="topic">
-					<view>订单号：23123123123342</view>
+					<view style="font-weight: bold;">订单号：23123123123342</view>
 					<view class="status">
-						<view style="color: rgb(0,128,0);">待支付</view>
-						<view>
-							<text>剩余：</text>
-							<text style="color: rgb(0,128,0)">{{ msg }}</text>
-						</view>
+							<text style="margin-right: 16rpx;">待支付</text>
+							<text>15：00</text>
 					</view>
 				</view>
 				<view class="book-list">
 					<block v-for="n in 4" :key="n">
 						<view class="book-item">
-							<image src="http://et-pic-server.oss-cn-shenzhen.aliyuncs.com/1589783780428.jpg"></image>
+							<view class="show">
+								<image src="http://et-pic-server.oss-cn-shenzhen.aliyuncs.com/1589783780428.jpg"></image>
+							</view>
+							
 							<view class="title">
 								不要告状，除非是大事
 							</view>
 							<view class="number">
-								x1
+								<text style="margin-bottom: 20rpx;">39.99贝</text>
+								<tetx>x1</tetx>
 							</view>
 						</view>
 					</block>
@@ -29,24 +30,32 @@
 				<view class="order-info">
 					<view class="left">
 						<view class="text">
-							<text>创建时间：2020-07-19 16：00：00</text>
+							<text>创建时间：2020-07-19 16：00</text>
 						</view>
-						<view class="text">
-							<text>借阅币：30</text>
+						<view class="text spcial">
+							<view>
+								<text>积分：-100</text>
+								<text style="color: #f00;">（优惠10贝）</text>
+							</view>
+							<view style="font-weight: bold; color: #000;">
+								<text>实付：20</text>
+							</view>
 						</view>
-						<view class="text">
-							<text>实付：20</text>
-						</view>
-						<view class="text">
-							<text style="color: #f00;">优惠10借书币</text>
-						</view>
-						<view class="text">
-							<text>积分：-100</text>
-						</view>
+						
+						
+						
 					</view>
-					<view class="right">
-						<button type="default" style="margin-right: 24rpx;">支付</button>
-						<button type="default">取消</button>
+					<view class="btn">
+						<view style="flex: 1;"></view>
+						<view class="btn-box">
+							<view class="del">
+								<text>删除</text>
+							</view>
+							<view class="borrow">
+								<text>借阅</text>
+							</view>
+						</view>
+							
 					</view>
 				</view>
 			</view>
@@ -55,20 +64,24 @@
 		<view class="order-list">
 			<view class="item">
 				<view class="topic">
-					<view>订单号：23123123123342</view>
-					<view class="status">
-						<text style="color: #999;">取消支付</text>
+					<view style="font-weight: bold;">订单号：23123123123342</view>
+					<view class="status active">
+							<text>订单已取消</text>
 					</view>
 				</view>
 				<view class="book-list">
-					<block v-for="n in 2" :key="n">
+					<block v-for="n in 4" :key="n">
 						<view class="book-item">
-							<image src="http://et-pic-server.oss-cn-shenzhen.aliyuncs.com/1589783780428.jpg"></image>
+							<view class="show">
+								<image src="http://et-pic-server.oss-cn-shenzhen.aliyuncs.com/1589783780428.jpg"></image>
+							</view>
+							
 							<view class="title">
 								不要告状，除非是大事
 							</view>
 							<view class="number">
-								x1
+								<text style="margin-bottom: 20rpx;">39.99贝</text>
+								<tetx>x1</tetx>
 							</view>
 						</view>
 					</block>
@@ -76,23 +89,29 @@
 				<view class="order-info">
 					<view class="left">
 						<view class="text">
-							<text>创建时间：2020-07-19 16：00：00</text>
+							<text>创建时间：2020-07-19 16：00</text>
 						</view>
-						<view class="text">
-							<text>借阅币：30</text>
+						<view class="text spcial">
+							<view>
+								<text>积分：-100</text>
+								<text style="color: #f00;">（优惠10贝）</text>
+							</view>
+							<view style="font-weight: bold; color: #000;">
+								<text>实付：20</text>
+							</view>
 						</view>
-						<view class="text">
-							<text>实付：20</text>
-						</view>
-						<view class="text">
-							<text style="color: #f00;">优惠10借书币</text>
-						</view>
-						<view class="text">
-							<text>积分：-100</text>
-						</view>
+						
+						
+						
 					</view>
-					<view class="right">
-						<button type="default">删除</button>
+					<view class="btn">
+						<view style="flex: 1;"></view>
+						<view class="btn-box">
+							<view class="del">
+								<text>删除</text>
+							</view>
+						</view>
+							
 					</view>
 				</view>
 			</view>
@@ -147,71 +166,84 @@
 
 <style>
 	page {
-		background: rgb(245,245,245);
+		background: #F9F9F9;
 		box-sizing: border-box;
-		padding: 0 20rpx 20rpx 20rpx;
+		padding: 10rpx 30rpx 30rpx 30rpx;
 	}
 	.order-list {
 		box-sizing: border-box;
-		
+		box-shadow: 0rpx 0rpx 20rpx rgba(179, 179, 179, 0.3);
+		border-radius: 16rpx;
 		margin-top: 20rpx;
 	}
+
 	.order-list .item {
 		box-sizing: border-box;
 		background: #fff;
-		padding: 20rpx 0;
+		padding: 20rpx;
 		border-radius: 20rpx;
 	}
 	.order-list .topic {
 		display: flex;
 		padding: 0 24rpx;
-		border-bottom: 1px solid #EEEEEF;
+		border-bottom: 1px solid #EAEAEA;
 		justify-content: space-between;
 		font-size: 28rpx;
 		align-items: center;
-		padding-bottom: 10rpx;
+		line-height: 60rpx;
+		
 	}
 	.order-list .topic .status {
-		display: flex;
-		flex-direction: column;
-		font-size: 24rpx;
+		color: #68C1D4;
 		text-align: right;
+	}
+	.order-list .topic .status.active {
+		color: #868686;
 	}
 	.order-list .book-list {
 		box-sizing: border-box;
-		padding: 0 20rpx;
+		padding: 20rpx;
 		border-bottom: 1px solid #EEEEEF;
 	}
 	.order-list .book-item {
 		box-sizing: border-box;
 		display: flex;
-		align-items: center;
 		margin-bottom: 20rpx;
 	}
 	.order-list .book-item:last-child {
 		margin-bottom: 0;
 	}
-	.order-list .book-item image {
-		width: 160rpx;
-		height: 140rpx;
-		flex-shrink: 0;
+	.order-list .book-item .show {
+		box-sizing: border-box;
+		border: 1px solid #EBEBEB;
 		margin-right: 20rpx;
+	}
+	.order-list .book-item image {
+		width: 120rpx;
+		height: 120rpx;
+		flex-shrink: 0;
 	}
 	.order-list .book-item .title {
 		font-size: 28rpx;
 		flex: 1;
+		font-weight: bold;
+		box-sizing: border-box;
+		margin-top: 28rpx;
 	}
 	.order-list .book-item .number {
 		flex-shrink: 0;
 		margin-left: 80rpx;
 		font-size: 26rpx;
+		display: flex;
+		flex-direction: column;
+		box-sizing: border-box;
+		margin-top: 28rpx;
+		color: #868686;
+		text-align: right;
 	}
 	.order-list .order-info {
 		box-sizing: border-box;
 		padding: 0 20rpx;
-		display: flex;
-		justify-content: space-between;
-		align-items: center;
 		margin-top: 20rpx;
 	}
 	.order-list .order-info .left {
@@ -221,10 +253,42 @@
 	.order-list .order-info .left .text {
 		line-height: 36rpx;
 	}
-	.order-list .order-info .right {
+	.order-list .order-info .left .spcial {
+		box-sizing: border-box;
+		display: flex;
+		justify-content: space-between;
+		margin-top: 24rpx;
+	}
+	.order-list .btn {
+		display: flex;
+		padding: 20rpx 0;
+		box-sizing: border-box;
+	}
+	.order-list .btn .btn-box {
 		display: flex;
 	}
-	.order-list .order-info .right button {
+	.order-list .btn .del,
+	.order-list .btn .borrow{
+		box-sizing: border-box;
+		padding: 0 30rpx;
+		border: 1px solid #EEEEEF;
+		border-radius: 40rpx;
 		font-size: 26rpx;
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		color: #039EB9;
+		height: 60rpx;
+		
 	}
+	.order-list .btn .del {
+		background: #fff;
+		margin-right: 12rpx;
+		color: #666;
+	}
+	.order-list .btn .borrow {
+		background-image: linear-gradient(180deg, #40AED1, #69D9E4);
+		color: #fff;
+	}
+	
 </style>

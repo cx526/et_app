@@ -1,6 +1,5 @@
 <template>
-	<view :style="{height: (isShow ? windowHeight: '')}"
-	:class="isShow ? 'overflow' : '' ">
+	<view :style="{ height: showModel ? windowHeight : '' }" :class="showModel ? 'overflow' : ''">
 		<!-- 头部 -->
 		<view class="header-box">
 			<view class="user"><image src="https://et-pic-server.oss-cn-shenzhen.aliyuncs.com/app_img/user-default.png"></image></view>
@@ -30,7 +29,7 @@
 		<view class="search-box" id="search">
 			<view class="search">
 				<image src="https://et-pic-server.oss-cn-shenzhen.aliyuncs.com/app_img/search.png" class="icon-search"></image>
-				<input type="text" disabled placeholder="请输入书名/作者/关键词..." placeholder-style="font-size: 30rpx;color: #C5C5C5" />
+				<input type="text" disabled placeholder="请输入书名/作者/关键词..." placeholder-style="font-size: 30rpx;color: #C5C5C5" @tap="goSearch" />
 				<view class="right" @tap="open">
 					<image src="https://et-pic-server.oss-cn-shenzhen.aliyuncs.com/app_img/classify.png"></image>
 					<text>分类</text>
@@ -54,7 +53,7 @@
 						<view class="title">
 							<text>{{ item.title }}</text>
 						</view>
-						<view class="price"><text>借书币：30</text></view>
+						<view class="price"><text>借书币：{{ item.price }}</text></view>
 						<view class="label">
 							<text v-for="(label, labelIndex) in item.tagInfo" :key="labelIndex" v-if="labelIndex < 2">{{ label.tag_name }}</text>
 						</view>
@@ -69,17 +68,13 @@
 					</view>
 				</template>
 				<!-- 分类弹窗 -->
-				<lee-popup 
-				ref="typepopup" 
-				type="bottom" 
-				padding="0" 
-				@change="typePopUp">
-					<view :style="{ height: height }" class="popUp">
+				<popup v-model="showModel" position="bottom">
+					<view :style="{ height: height, position: absolute, left: 0, bottom: 0 }" class="popUp">
 						<view class="search-box active">
 							<view class="search active">
 								<image src="https://et-pic-server.oss-cn-shenzhen.aliyuncs.com/app_img/search.png" class="icon-search"></image>
-								<input type="text" disabled placeholder="请输入书名/作者/关键词..." placeholder-style="font-size: 30rpx;color: #C5C5C5" />
-								<view class="right" @tap="getAllProductList">
+								<input type="text" disabled placeholder="请输入书名/作者/关键词..." placeholder-style="font-size: 30rpx;color: #C5C5C5" @tap="goSearch" />
+								<view class="right" @tap="getAllProductList" style="top: -1px;">
 									<image src="https://et-pic-server.oss-cn-shenzhen.aliyuncs.com/app_img/classify.png"></image>
 									<text>全部</text>
 								</view>
@@ -102,7 +97,7 @@
 							</view>
 						</view>
 					</view>
-				</lee-popup>
+				</popup>
 			</view>
 		</view>
 		<!-- 书篮 -->
@@ -111,10 +106,8 @@
 			<text>{{ len }}</text>
 		</view>
 		<!-- 加载组件 -->
-		<view style="background: #EBF7FF;">
-			<uni-load-more :status="loadStatus" :content-text="loadText" />
-		</view>
-		
+		<view style="background: #EBF7FF;"><uni-load-more :status="loadStatus" :content-text="loadText" /></view>
+
 		<!-- 权限弹窗 -->
 		<uni-popup ref="powerPopUp" :maskClick="false">
 			<view class="power-box" :style="{ width: popUpWidth }">
@@ -136,11 +129,11 @@
 import uniPopup from '@/components/uni-popup/uni-popup.vue';
 import uniLoadMore from '@/components/uni-load-more/uni-load-more.vue';
 import uniNoticeBar from '@/components/uni-notice-bar/uni-notice-bar.vue';
-import LeePopup from '@/components/lee-popup/lee-popup.vue';
+import Popup from '@/components/lvv-popup/lvv-popup.vue';
 export default {
 	data() {
 		return {
-			isShow: false,
+			showModel: false, //控制分类弹窗的显示/隐藏
 			height: 0, //定义分类弹窗的高度
 			productList: [],
 			len: 0,
@@ -148,33 +141,39 @@ export default {
 			loadText: {
 				contentdown: '上拉加载更多',
 				contentrefresh: '加载中',
-				contentnomore: '已经到底了'
+				contentnomore: '暂无更多数据'
 			},
 			popUpWidth: 0,
 			typeList: [],
 			currentPage: 1, // 请求接口的当前页码
 			pageSize: 20, //接口每次返回几条数据
 			isType: true, //区别是全部上拉加载更多还是单个分类上拉加载更多
-			id: '' ,//请求分类的id
-			windowHeight: 0,
+			id: '', //请求分类的id
+			windowHeight: 0
 		};
 	},
 	components: {
 		uniPopup,
 		uniLoadMore,
 		uniNoticeBar,
-		LeePopup
+		Popup
 	},
-	onLoad() {
-		// 获取书籍列表
-		this.getBooksList();
+	onLoad(option) {
+		if (option.isSearch) {
+			this.productList = JSON.parse(option.productList);
+			this.loadStatus = 'noMore';
+		} else {
+			// 获取书籍列表
+			this.getBooksList();
+		}
+
 		// 获取书籍分类
 		this.getBooksType();
 		this.len = uni.getStorageSync('offlineCartList').length;
 		uni.getSystemInfo({
 			success: res => {
 				this.popUpWidth = res.windowWidth * 0.8 + 'px';
-				this.windowHeight = res.windowHeight + 'px'
+				this.windowHeight = res.windowHeight + 'px';
 			}
 		});
 	},
@@ -200,14 +199,14 @@ export default {
 		if (this.loadStatus !== 'noMore' && !this.isType) {
 			this.currentPage = this.currentPage + 1;
 			this.getMoreList(this.id, this.currentPage);
-		}else {
-			if(this.loadStatus !== 'noMore') {
+		} else {
+			if (this.loadStatus !== 'noMore') {
 				this.$api.getGuess().then(res => {
-					this.productList = [...this.productList, ...res.data]
-					if(res.data.length < 10) {
-						this.loadStatus === "noMore"
+					this.productList = [...this.productList, ...res.data];
+					if (res.data.length < 10) {
+						this.loadStatus === 'noMore';
 					}
-				})
+				});
 			}
 		}
 	},
@@ -223,8 +222,8 @@ export default {
 			this.$api.getGuess().then(res => {
 				uni.hideLoading();
 				this.productList = res.data;
-				if(res.data.length < 10) {
-					this.loadStatus === "noMore"
+				if (res.data.length < 10) {
+					this.loadStatus === 'noMore';
 				}
 			});
 		},
@@ -243,7 +242,8 @@ export default {
 		getAllProductList() {
 			this.getBooksList();
 			this.isType = true;
-			this.$refs.typepopup.close();
+			this.showModel = false;
+			// this.$refs.typepopup.close();
 		},
 		// 改变分类
 		changeType(id, index, listIndex) {
@@ -276,15 +276,14 @@ export default {
 			this.$api.getGoodsInfo(param).then(res => {
 				uni.hideLoading();
 				this.productList = [];
-				
-		
+
 				this.productList = res.data.rows;
 				// 返回数据小于20时默认不启动上拉加载更多
 				if (this.productList.length < 20) {
 					this.loadStatus = 'noMore';
 				}
 				// 手动关闭弹窗
-				this.$refs.typepopup.close();
+				this.showModel = false;
 			});
 		},
 		// 分类上拉加载更多数据
@@ -307,16 +306,7 @@ export default {
 		},
 		// 打开分类弹窗
 		open() {
-			this.$refs.typepopup.open();
-		},
-		// 监听分类弹窗事件
-		typePopUp(event) {
-			if(event == 'open' || event == 'opened') {
-				this.isShow = true
-			}else {
-				this.isShow = false
-			}
-			
+			this.showModel = true;
 		},
 		// 加入书篮
 		push(add) {
@@ -363,27 +353,10 @@ export default {
 				url: '../cart/cart?flag=true'
 			});
 		},
-		
-		// 监听搜索框改变
-		search(event) {
-			this.searchText = event.detail.value;
-		},
-		// 确认搜索
-		confirmSearch() {
-			uni.showLoading({
-				title: '加载中',
-				mask: true
-			});
-			let param = {
-				filterItems: {
-					search: this.searchText
-				}
-			};
-			this.$api.getGoodsInfo(param).then(res => {
-				uni.hideLoading();
-				this.productList = res.data.rows;
-				// this.searchText = '';
-				this.loadStatus = 'noMore';
+		// 跳转到搜索页
+		goSearch() {
+			uni.navigateTo({
+				url: './offline-search'
 			});
 		},
 		// 提示书籍已借完
@@ -400,7 +373,7 @@ export default {
 				url: './offline-bookdetail?bookID=' + id
 			});
 		},
-		// 点击权限弹窗取消那妞
+		// 点击权限弹窗取消按钮
 		goIndex() {
 			uni.switchTab({
 				url: '../index/index'
@@ -409,7 +382,11 @@ export default {
 	}
 };
 </script>
-
+<style>
+page {
+	background: #ebf7ff;
+}
+</style>
 <style scoped>
 .overflow {
 	overflow: hidden;
@@ -664,6 +641,10 @@ export default {
 .popUp {
 	background: #fff;
 	overflow: scroll;
+	position: absolute;
+	left: 0;
+	border: 0;
+	width: 100%;
 }
 .popup-box {
 	box-sizing: border-box;

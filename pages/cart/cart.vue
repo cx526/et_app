@@ -148,7 +148,6 @@ export default {
 				goodsIDs.push(item.id);
 			});
 			this.$api.preOrderCheckStock({ goodsIDs: goodsIDs, goodsType: 'online' }).then(res => {
-				console.log(res)
 				res.data.map((item, index) => {
 					this.offlineBooksList.map((sitem, sindex) => {
 						// 动态添加isSelect属性用于判定是否选中

@@ -393,44 +393,25 @@
 		{
 			"path": "pages/library/library",
 			"style": {
-				"navigationBarTitleText": "智慧童书馆",
-				"app-plus": {
-					"titleNView": false
-				}
+				"navigationBarTitleText": "智慧童书馆"
 			}
 		},
 
 		  {
 			"path": "pages/library/no-payment",
 			"style": {
-				"navigationBarTitleText": "待支付",
-				"app-plus": {
-					"titleNView": false
-				}
+				"navigationBarTitleText": "待支付"
 			}
-		}, {
-			"path": "pages/library/take-books",
-			"style": {
-				"navigationBarTitleText": "快速取书",
-				"app-plus": {
-					"titleNView": false
-				}
-			}
-		}, {
+		},
+		{
 			"path": "pages/library/return-books",
 			"style": {
-				"navigationBarTitleText": "快速还书",
-				"app-plus": {
-					"titleNView": false
-				}
+				"navigationBarTitleText": "快速还书"
 			}
 		}, {
 			"path": "pages/library/exprie",
 			"style": {
-				"navigationBarTitleText": "逾期",
-				"app-plus": {
-					"titleNView": false
-				}
+				"navigationBarTitleText": "逾期"
 			}
 		}
 
@@ -439,18 +420,12 @@
 		, {
 			"path": "pages/library/offline-bookdetail",
 			"style": {
-				"navigationBarTitleText": "商品详情",
-				"app-plus": {
-					"titleNView": false
-				}
+				"navigationBarTitleText": "商品详情"
 			}
 		}, {
 			"path": "pages/library/virtual",
 			"style": {
-				"navigationBarTitleText": "借书币",
-				"app-plus": {
-					"titleNView": false
-				}
+				"navigationBarTitleText": "借书币"
 			}
 		},
 		{
@@ -466,23 +441,23 @@
 		{
 			"path": "pages/library/pay",
 			"style": {
-				"navigationBarTitleText": "借书币充值",
-				"app-plus": {
-					"titleNView": false
-				}
+				"navigationBarTitleText": "借书币充值"
 			}
 		},
 		{
 			"path": "pages/library/pay-record",
 			"style": {
-				"navigationBarTitleText": "借书币记录",
-				"app-plus": {
-					"titleNView": false
-				}
+				"navigationBarTitleText": "借书币记录"
 			}
 		}
 
-	],
+	    ,{
+            "path" : "pages/library/offline-search",
+            "style" : {
+							"navigationBarTitleText": "书籍搜索"
+						}
+        }
+    ],
 	"globalStyle": {
 		"navigationBarTextStyle": "black",
 		"navigationBarBackgroundColor": "#FFFFFF",
