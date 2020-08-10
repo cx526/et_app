@@ -7,7 +7,8 @@
 				</view>
 				<view class="ipt">
 					<input type="text" :value="value" 
-					:disabled="flag" />
+					:disabled="flag" 
+					@input="customMoney"/>
 				</view>
 			</view>
 			<view class="item">
@@ -37,10 +38,23 @@
 				v-for="(item, index) in moneyList.list"
 				:key="index"
 				@tap="changeMoney(index)">
-					<text style="font-size: 30rpx;">100贝</text>
-					<text style="color: #4F5355;font-size: 26rpx;">售价10元</text>
+					<text 
+					style="font-size: 30rpx;"
+					v-if="index < 5">{{ item.value }}贝</text>
+					<text 
+					style="color: #4F5355;font-size: 26rpx;"
+					v-if="index < 5">
+						售价{{ item.money }}元</text>
+					<text
+					style="font-size: 30rpx;"
+					v-if="index == 5">{{ item.value }}</text>
+					<text
+					style="color: #4F5355;font-size: 26rpx;"
+					v-if="index == 5">
+						{{ item.money }}</text>
 					<view class="img-bottom">
-						<image src="https://et-pic-server.oss-cn-shenzhen.aliyuncs.com/app_img/library-pay-number.png" mode="widthFix"></image>
+						<image src="https://et-pic-server.oss-cn-shenzhen.aliyuncs.com/app_img/library-pay-number.png" mode="widthFix"
+						v-if="moneyList.currentIndex === index"></image>
 					</view>
 				</view>
 				
@@ -80,28 +94,28 @@
 					currentIndex: 0,
 					list: [
 						{
-							value: 10,
-							text: 10,
-						},
-						{
-							value: 20,
-							text: 20,
-						},
-						{
-							value: 30,
-							text: 30,
-						},
-						{
-							value: 50,
-							text: 50,
-						},
-						{
 							value: 100,
-							text: 100,
+							money: 10
 						},
 						{
-							value: '',
-							text: '其他',
+							value: 200,
+							money: 20
+						},
+						{
+							value: 300,
+							money: 30
+						},
+						{
+							value: 500,
+							money: 50
+						},
+						{
+							value: 1000,
+							money: 100
+						},
+						{
+							value: '其他',
+							money: '自定义金额'
 						}
 					]
 					
@@ -110,11 +124,15 @@
 			}
 		},
 		methods: {
+			// 自定义输入金额
+			customMoney(event) {
+				this.value = (+event.detail.value);
+			},
 			// 改变充值金额
 			changeMoney(index) {
 				this.moneyList.currentIndex = index;
 				if(index !== 5) {
-					this.value = this.moneyList.list[index].value;
+					this.value = this.moneyList.list[index].money;
 					this.flag = true
 				}else {
 					this.flag = false;
@@ -124,7 +142,17 @@
 			
 			// 充值
 			goPay() {
-				
+				if(this.value < 10) {
+					uni.showToast({
+						title: '充值金额不能小于10元',
+						icon: 'none'
+					})
+					return
+				}
+				uni.showLoading({
+					title: '发起支付中',
+					mask: true
+				})
 				let mobile = uni.getStorageSync("userInfo").mobile;
 				console.log(mobile);
 				// 获取用户的id
@@ -148,32 +176,38 @@
 							// 获取微信签名
 							let { paySign, time, APPID, nonceStr } = wxPay.wxReSign(resData.prepay_id[0])
 							// 调起微信支付
-							wxPay.wxPay(time, nonceStr, resData.prepay_id[0], paySign,res => {
-								if(res.errMsg === "requestPayment:ok") {
-									this.$api.offlineUpdatePayMent({
-										userInfo: userInfo,//个人信息
-										event: "recharge",//充值类型
-										order_no: order_no,//订单号
-										shell:  "0.01",//充值金额
-									}).then(res => {
-										console.log(res)
-									})
+							wxPay.wxPay(time, nonceStr, resData.prepay_id[0], paySign,
+								// 支付成功回调事件
+								res => {
+									uni.hideLoading();
+									if(res.errMsg === "requestPayment:ok") {
+										this.$api.offlineUpdatePayMent({
+											userInfo: userInfo,//个人信息
+											event: "recharge",//充值类型
+											order_no: order_no,//订单号
+											shell:  "0.01",//充值金额
+										}).then(res => {
+											console.log(res)
+										})
+									}
+								},
+								// 支付失败回调事件
+								err => {
+									uni.hideLoading();
 								}
-							})
+							)
 						}
 					})
 				})
-				
-				
-				// this.$api.getCustom(param).then(res => {
-					
-				// })
-				// this.$api.getPayment(param).then(res => {
-				// 	console.log(res)
-				// })
 			}
 		}
+	
+	
+	
 	}
+	
+	
+	
 </script>
 <style>
 	page {
@@ -250,6 +284,10 @@
 		left: 0;
 		width: 200rpx;
 		z-index: 10;
+	}
+	.money .item .img-bottom image {
+		width: 100%;
+		display: block;
 	}
 	.money .item:nth-child(3n) {
 		margin-right: 0;
