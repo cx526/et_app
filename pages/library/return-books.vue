@@ -185,7 +185,7 @@
 				<view class="title">
 					<text class="line" style="margin-right: 16rpx;"></text>
 					<text class="circle" style="margin-right: 20rpx;"></text>
-					<text>取书二维码</text>
+					<text>还书二维码</text>
 					<text class="circle" style="margin-left: 20rpx;"></text>
 					<text class="line" style="margin-left: 16rpx;"></text>
 				</view>

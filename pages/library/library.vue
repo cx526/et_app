@@ -270,7 +270,8 @@ export default {
 				currentPage: this.currentPage,
 				filterItems: {
 					kind: id,
-					tagCount: 2
+					tagCount: 2,
+					state: 1
 				}
 			};
 			this.$api.getGoodsInfo(param).then(res => {

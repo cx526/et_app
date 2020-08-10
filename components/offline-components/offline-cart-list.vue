@@ -1,6 +1,5 @@
 <template>
-	<view class="offline-box"
-	:style="{'min-height': minHeight}">
+	<view class="offline-box" :style="{ 'min-height': minHeight }">
 		<view class="notice-box">
 			<text>我的借书币：</text>
 			<text style="margin-right: 16rpx;">100</text>
@@ -19,13 +18,7 @@
 			<scroll-view scroll-y :style="'height:' + scrollHeight">
 				<view class="item" v-for="(item, index) in bookList" :key="index">
 					<view class="goods-info">
-						<view class="left">
-							<checkbox 
-							:checked="item.isSelect" 
-							style="transform: scale(0.7);" 
-							:disabled="item.stock.usageCount === 0" 
-							@tap="selechBook(item)" />
-						</view>
+						<view class="left"><checkbox :checked="item.isSelect" style="transform: scale(0.7);" :disabled="item.stock.usageCount === 0" @tap="selechBook(item)" /></view>
 						<view class="main">
 							<!-- 库存为零时显示 -->
 							<view class="none-stock" v-if="item.stock.usageCount === 0">
@@ -34,16 +27,11 @@
 									<text>借完</text>
 								</view>
 							</view>
-							<view class="show">
-								<image :src="item.forGoodsPic[0].url" mode=""></image>
-							</view>
+							<view class="show"><image :src="item.forGoodsPic[0].url" mode=""></image></view>
 							<view class="topic">
 								<text class="title">{{ item.title }}</text>
-								<text class="condition" 
-								v-if="item.stock.usageCount !== 0">可借阅</text>
-								<text 
-								style="font-size: 28rpx; color: #f00;"
-								v-else>已借完</text>
+								<text class="condition" v-if="item.stock.usageCount !== 0">可借阅</text>
+								<text style="font-size: 28rpx; color: #f00;" v-else>已借完</text>
 								<view class="price-box">
 									<view class="price">
 										<text>借书币：{{ item.price }}</text>
@@ -52,11 +40,8 @@
 								</view>
 							</view>
 						</view>
-						<view class="right">
-							<image src="../../static/cart/rubbish.png" mode="" @tap="delBook(item.id)"></image>
-						</view>
+						<view class="right"><image src="../../static/cart/rubbish.png" mode="" @tap="delBook(item.id)"></image></view>
 					</view>
-					
 				</view>
 			</scroll-view>
 		</view>
@@ -69,30 +54,22 @@
 				</view>
 				<view class="center">
 					<!-- 选中书籍显示 -->
-					<view v-if="price">
-						<text >合共：</text>
+					<view v-if="len">
+						<text>合共：</text>
 						<text style="color: #039EB9;">{{ len }}</text>
 						<text style="margin-right: 10rpx;">本</text>
-						<text >借书币：</text>
+						<text>借书币：</text>
 						<text style="color: #039EB9;">{{ price }}</text>
 					</view>
 					<!-- 没选中时显示 -->
-					<view v-else>
-						<text>合计：0本</text>
-					</view>
-					<view v-if="price">
-						<text style="color: #999;font-size: 22rpx;">押金：40(可退)</text>
-					</view>
+					<view v-else><text>合计：0本</text></view>
+					<view v-if="len"><text style="color: #999;font-size: 22rpx;">押金：40(可退)</text></view>
 				</view>
 			</view>
 
 			<view class="right">
-				<view class="del" @tap="delBooksList">
-					<text>删除</text>
-				</view>
-				<view class="borrow" @tap="borrow">
-					<text>借阅</text>
-				</view>
+				<view class="del" @tap="delBooksList"><text>删除</text></view>
+				<view class="borrow" @tap="borrow"><text>借阅</text></view>
 			</view>
 		</view>
 		<!-- 借书币不足显示弹窗 -->
@@ -145,18 +122,26 @@ export default {
 			len: 0, // 选中书籍的本书
 			chooseBookList: [], //储存选中书籍
 			integrate: 200, // 用户当前积分(接口拿)
-			free: 3 //免费借阅次数(接口拿)
-		}
+			free: 3, //免费借阅次数(接口拿)
+			userInfo: '' //储存用户账号个人信息
+		};
+	},
+	created() {
+		// // 获取用户的个人账号信息
+		// this.userInfo = uni.getStorageSync("userInfo");
+		// this.$api.getCustom({ filterItems: { mobile: this.userInfo.mobile } }).then(res=>{
+		// 	console.log(res)
+		// });
 	},
 	// 在mounted调用确保此时获取的本地缓存数据库存数量已经更新过
 	mounted() {
 		// 储存书籍数据
-		this.bookList = uni.getStorageSync("offlineCartList");
+		this.bookList = uni.getStorageSync('offlineCartList');
 		this.booksNumber = this.count;
 		// 若有选中计算价格
-		this.coungPrice()
+		this.coungPrice();
 	},
-	methods: {	
+	methods: {
 		// 选取书籍
 		chooseBooks() {
 			uni.switchTab({
@@ -169,20 +154,33 @@ export default {
 			this.len = 0;
 			let flag = true;
 			this.bookList.map(item => {
-				if(item.isSelect) {
+				if (item.isSelect) {
 					// 选中书籍的价格
-					this.price = ((+this.price) + (+item.price)).toFixed(2);
+					this.price = (+this.price + +item.price).toFixed(2);
 					// 选中书籍的本数
 					this.len = this.len + 1;
-				}else {
-					flag = false
+					// 实时计算借书币
+					// 1.用户没有免费借阅次数或者积分/50小于1时(直接计算所选书籍累加的借书币)
+					if (this.free === 0 || this.integrate / 50 < 1 
+					|| this.len >= 2) {
+						this.price = (+this.price + +item.price).toFixed(2);
+					}
+					// 2.用户有免费借阅次数且所选书籍小于2且积分/50大于等于1(免费)
+					else if (this.free && this.len < 2 
+					&& this.integrate / 50 >= 1) {
+						this.price = 0
+					}
+				} else {
+					flag = false;
 				}
 			});
+			
 			// 判断全选复选框是否选中
-			this.offlineAllSelect = flag
+			this.offlineAllSelect = flag;
 			// 同步缓存数据
-			uni.setStorageSync("offlineCartList", this.bookList)
+			uni.setStorageSync('offlineCartList', this.bookList);
 		},
+		
 		// 选择书本(点击复选框)
 		selechBook(item) {
 			// 判断全选复选框是否选中
@@ -195,7 +193,7 @@ export default {
 			});
 			this.offlineAllSelect = flag;
 			// 实时计算借书币
-			this.coungPrice()
+			this.coungPrice();
 		},
 		// 全选/全不选
 		selectAllBooks() {
@@ -206,7 +204,7 @@ export default {
 					item.isSelect = this.offlineAllSelect;
 				}
 			});
-			this.coungPrice()
+			this.coungPrice();
 		},
 		// 删除书籍(单独)
 		delBook(id) {
@@ -223,7 +221,7 @@ export default {
 						this.bookList = dataList;
 						// 更新缓存
 						uni.setStorageSync('offlineCartList', this.bookList);
-						
+
 						// 提示父组件刷新当前书籍数目
 						this.$emit('countChange');
 						this.booksNumber = uni.getStorageSync('offlineCartList').length;
@@ -231,8 +229,8 @@ export default {
 						// 重新计算借书币
 						this.coungPrice();
 						// 如果当前没有书籍，全选复选框默认为false
-						if(this.booksNumber === 0) {
-							this.offlineAllSelect = false
+						if (this.booksNumber === 0) {
+							this.offlineAllSelect = false;
 						}
 					}
 				}
@@ -270,14 +268,14 @@ export default {
 							// 更新缓存
 							uni.setStorageSync('offlineCartList', this.bookList);
 							// 提示父组件刷新当前书籍数目
-							this.$emit('countChange')
-							this.booksNumber = uni.getStorageSync('offlineCartList').length
+							this.$emit('countChange');
+							this.booksNumber = uni.getStorageSync('offlineCartList').length;
 							this.bookList = uni.getStorageSync('offlineCartList');
 							// 重新计算借书币
-							this.coungPrice()
+							this.coungPrice();
 							// 如果当前没有书籍，全选复选框默认为false
-							if(this.booksNumber === 0) {
-								this.offlineAllSelect = false
+							if (this.booksNumber === 0) {
+								this.offlineAllSelect = false;
 							}
 						}
 					}
@@ -285,12 +283,12 @@ export default {
 			}
 		},
 		// 价格排序
-		compare(property){
-			return (a,b) => {
+		compare(property) {
+			return (a, b) => {
 				var value1 = a[property];
 				var value2 = b[property];
 				return value1 - value2;
-			}
+			};
 		},
 		// 借阅
 		borrow() {
@@ -323,96 +321,62 @@ export default {
 				// 筛选选中书籍是否存在库存为零的情况
 				let noStockList = [];
 				this.chooseBookList.filter(item => {
-					if(item.sitem === 0) {
-						noStockList.push(item)
+					if (item.sitem === 0) {
+						noStockList.push(item);
 					}
 				});
 				// 用户没有选中书籍
-				if(this.chooseBookList.length === 0) {
+				if (this.chooseBookList.length === 0) {
 					uni.showToast({
 						title: '请先选择需要借阅的书籍',
 						duration: 2000,
 						icon: 'none'
-					})
-					return
+					});
+					return;
 				}
 				// 每单借阅小于10本
-				else if(this.chooseBookList.length >= 10) {
+				else if (this.chooseBookList.length >= 10) {
 					uni.showToast({
 						title: '每单借阅本书不能超过10本',
-						duration:2000,
+						duration: 2000,
 						icon: 'none'
-					})
-					return
+					});
+					return;
 				}
 				// 所选书籍中存在没有库存的情况
-				else if(noStockList && noStockList.length > 0) {
+				else if (noStockList && noStockList.length > 0) {
 					uni.showToast({
 						title: '所选书籍存在库存不足的情况，请重新选择',
 						icon: 'none',
 						duration: 2000
-					})
-					return
+					});
+					return;
 				}
 				// 1.用户没有免费借阅次数或者积分/50小于1时(直接计算所选书籍累加的借书币)
-				else if(this.free === 0 || this.integrate/50 < 1 || len >= 2) {
+				else if (this.free === 0 || this.integrate / 50 < 1 || len >= 2) {
 					result.map(item => {
-						amount = ((+amount) + (+item.price)).toFixed(2)
-					})
-					console.log(amount)
+						amount = (+amount + +item.price).toFixed(2);
+					});
+					console.log(amount);
+					this.price = amount
 				}
 				// 2.用户有免费借阅次数且所选书籍小于2且积分/50大于等于1(免费)
-				else if(this.free && len < 2 && reality >= 1) {
+				else if (this.free && len < 2 && reality >= 1) {
 					amount = 0;
-					console.log(amount)
+					console.log(amount);
+					this.price = amount
 				}
-				// 3.用户有免费借阅次数且所选书籍小于2且积分/50小于1(借书币支付)
-				else if(this.free && len < 2 && reality < 1) {
-					// 需要支付借书币的本书
-					let need = len - reality; //4-3=1
-					console.log(need);
-					let arr = [];
-					for(let i = 1; i <= need; i++) {
-						console.log(result[result.length - i])
-						arr.push(result[result.length - i])
-					};
-					console.log(arr);
-					arr.map(item => {
-						amount = ((+amount) + (+item.price)).toFixed(2)
-					})
-					console.log(amount)
-				}
+				
+				
 				// 借书币不足时显示弹窗
 				// this.$refs.popup.open();
 				// 同时满足以上两个条件时直接跳转到订单页
 				uni.navigateTo({
 					url: '../../pages/library/offline-order'
-				})
+				});
 			});
-			
-			
-			
-			
-			
-			
-			
-			
-		
-
-
-			
-
-
-
-			
-			
-
-			
-
 		},
-		
-		
-		
+
 		// borrow() {
 		// 	// 获取用户选中的书籍列表
 		// 	this.chooseBookList = this.bookList.filter(item => {
@@ -445,7 +409,7 @@ export default {
 		// 		})
 		// 		return
 		// 	}
-			
+
 		// 	// 1.用户没有免费借阅次数或者积分/50小于1时(直接计算所选书籍累加的借书币)
 		// 	else if(this.free === 0 || this.integrate/50 < 1) {
 		// 		result.map(item => {
@@ -514,14 +478,14 @@ export default {
 		// },
 		// 点击弹窗取消
 		cancel() {
-			this.$refs.popup.close()
+			this.$refs.popup.close();
 		},
 		// 跳转借书币页面
 		goPay() {
 			uni.navigateTo({
 				url: '../../pages/library/virtual'
-			})
-		},
+			});
+		}
 	}
 };
 </script>
@@ -630,7 +594,7 @@ export default {
 }
 .offline-box scroll-view .main .show {
 	box-sizing: border-box;
-	border: 1px solid #EEEEEF;
+	border: 1px solid #eeeeef;
 	padding: 12rpx;
 	margin-right: 16rpx;
 }
@@ -683,7 +647,7 @@ export default {
 	flex: 1;
 }
 .offline-box .item .price-box text {
-	color: #039EB9;
+	color: #039eb9;
 	font-size: 28rpx;
 }
 .offline-box .item .price-box image {
@@ -723,13 +687,13 @@ export default {
 .bottom-box .right view {
 	box-sizing: border-box;
 	padding: 0 30rpx;
-	border: 1px solid #EEEEEF;
+	border: 1px solid #eeeeef;
 	border-radius: 40rpx;
 	font-size: 26rpx;
 	display: flex;
 	justify-content: center;
 	align-items: center;
-	color: #039EB9;
+	color: #039eb9;
 	height: 60rpx;
 }
 .bottom-box .right .del {
@@ -738,7 +702,7 @@ export default {
 	color: #666;
 }
 .bottom-box .right .borrow {
-	background-image: linear-gradient(180deg, #40AED1, #69D9E4);
+	background-image: linear-gradient(180deg, #40aed1, #69d9e4);
 	color: #fff;
 }
 /* 借书币不够时显示弹窗 */
@@ -755,7 +719,7 @@ export default {
 	font-size: 32rpx;
 	text-align: center;
 	margin-bottom: 36rpx;
-	color: #12A4BD;
+	color: #12a4bd;
 }
 .balance-box .notice {
 	font-size: 26rpx;
@@ -791,14 +755,14 @@ export default {
 	text-align: center;
 }
 .balance-box .btn view:nth-child(1) {
-	margin-right: 12rpx;;
-	background: #F9F9F9;
-	border: 1px solid #EEEEEF;
-	color: #ADADAD;
+	margin-right: 12rpx;
+	background: #f9f9f9;
+	border: 1px solid #eeeeef;
+	color: #adadad;
 }
 .balance-box .btn view:nth-child(2) {
 	margin-left: 12rpx;
-	background-image: linear-gradient(180deg, #40AED1, #69D9E4);
+	background-image: linear-gradient(180deg, #40aed1, #69d9e4);
 	color: #fff;
 }
 /* 线上部分 */

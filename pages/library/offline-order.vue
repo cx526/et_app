@@ -135,16 +135,20 @@
 					<view class="notice">
 						<view>
 							<text>本次需要借书币：</text>
-							<text style="color: #f00;font-weight: blod;">79.90</text>
+							<text style="color: #12a4bd;font-weight: blod;">79.90</text>
 						</view>
 						<view>
 							<text>您的借阅书籍量：</text>
-							<text style="color: #f00;font-weight: blod;">5</text>
+							<text style="color: #12a4bd;font-weight: blod;">5</text>
 						</view>
 					</view>
+					<view class="show">
+						<image src="https://et-pic-server.oss-cn-shenzhen.aliyuncs.com/app_img/library-pop-banner.png" mode="widthFix"></image>
+					</view>
 					<view class="btn">
-						<button @tap="cancel">取消</button>
-						<button @tap="payment">确认支付</button>
+				
+						<view @tap="cancel">取消</view>
+						<view @tap="payment">确认支付</view>
 					</view>
 				</view>
 			</uni-popup>
@@ -207,7 +211,7 @@
 				})
 		
 			},
-			// 确认支付
+			// 确认支付(若无押金需要调起微信支付,若有需要扣除借书币)
 			payment() {
 				uni.navigateTo({
 					url: './take-books'
@@ -240,7 +244,7 @@
 		/* align-items: center; */
 		box-shadow: 0rpx 0rpx 20rpx rgba(179, 179, 179, 0.3);
 		margin-bottom: 24rpx;
-		border-radius: 8rpx;
+		border-radius: 20rpx;
 	}
 	.order-info .list .item:last-child {
 		margin-bottom: 0;
@@ -379,39 +383,59 @@
 		box-sizing: border-box;
 		background: #fff;
 		margin: 0 auto;
-		padding-top: 36rpx;
+		padding-top: 50rpx;
 		border-radius: 12rpx;
+		padding-bottom: 36rpx;
 	}
 	.balance-box .title {
-		font-size: blod;
+		font-weight: 700;
 		font-size: 32rpx;
 		text-align: center;
 		margin-bottom: 36rpx;
+		color: #12a4bd;
 	}
 	.balance-box .notice {
 		font-size: 26rpx;
-		text-align: center;
 		box-sizing: border-box;
 		padding: 0 60rpx;
 		text-align: left;
 	}
 	.balance-box .notice view {
 		box-sizing: border-box;
-		margin-bottom: 24rpx;
+		margin-bottom: 12rpx;
+		text-align: center;
+	}
+	.balance-box .show {
+		text-align: center;
+		box-sizing: border-box;
+		padding: 24rpx 0;
+	}
+	.balance-box .show image {
+		width: 328rpx;
 	}
 	.balance-box .btn {
 		display: flex;
+		box-sizing: border-box;
+		padding: 0 24rpx;
 	}
-	.balance-box .btn button {
+	.balance-box .btn view {
 		flex: 1;
 		font-size: 28rpx;
-		line-height: 100rpx;
-		border: 1px solid #EEEEEF;
+		line-height: 70rpx;
 		background: #fff;
+		border-radius: 40rpx;
+		box-sizing: border-box;
+		text-align: center;
 	}
-	
-	.balance-box .btn button::after {
-		border: 0;
-		border-radius: 0;
+	.balance-box .btn view:nth-child(1) {
+		margin-right: 12rpx;
+		background: #f9f9f9;
+		border: 1px solid #eeeeef;
+		color: #adadad;
+	}
+	.balance-box .btn view:nth-child(2) {
+		margin-left: 12rpx;
+		background-image: linear-gradient(180deg, #40aed1, #69d9e4);
+		color: #fff;
 	}
 </style>

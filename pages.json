@@ -1,8 +1,13 @@
 {
 
 	"pages": [
-		
-		
+		{
+			"path": "pages/library/pay",
+			"style": {
+				"navigationBarTitleText": "借书币充值"
+			}
+		},
+	
 		{
 			"path": "pages/index/index",
 			"style": {
@@ -12,7 +17,13 @@
 				}
 			}
 		},
-
+	{
+			"path": "pages/library/virtual",
+			"style": {
+				"navigationBarTitleText": "我的钱包"
+			}
+		},
+	
 		{
 			"path": "pages/promote/promoteSummeryBook",
 			"style": {
@@ -404,6 +415,12 @@
 			}
 		},
 		{
+			"path": "pages/library/take-books",
+			"style": {
+				"navigationBarTitleText": "快速取书"
+			}
+		},
+		{
 			"path": "pages/library/return-books",
 			"style": {
 				"navigationBarTitleText": "快速还书"
@@ -422,12 +439,7 @@
 			"style": {
 				"navigationBarTitleText": "商品详情"
 			}
-		}, {
-			"path": "pages/library/virtual",
-			"style": {
-				"navigationBarTitleText": "借书币"
-			}
-		},
+		}, 
 		{
 			"path": "pages/library/offline-order",
 			"style": {
@@ -438,12 +450,7 @@
 		
 			}
 		},
-		{
-			"path": "pages/library/pay",
-			"style": {
-				"navigationBarTitleText": "借书币充值"
-			}
-		},
+	
 		{
 			"path": "pages/library/pay-record",
 			"style": {

@@ -159,13 +159,14 @@ export default {
 		}else{
 			uni.showLoading();
 			let param = {
-		        pageSize:this.pageSize,
+        pageSize:this.pageSize,
 				currentPage: this.currentPage,
-		        filterItems: {
-		           kind: this.tabBarID,
-		           tagCount: 2
-		         }
-	       	};
+        filterItems: {
+           kind: this.tabBarID,
+           tagCount: 2,
+					 state: 1
+         }
+       };
 			this.$api.getGoodsInfo(param).then(res => {
 			   let objArr = [];
 			   res.data.rows.map((item,index)=>{
@@ -231,7 +232,8 @@ export default {
 				currentPage: this.currentPage,
 		        filterItems: {
 		           kind: this.tabBarID,
-		           tagCount: 2
+		           tagCount: 2,
+							 state: 1
 		         }
 	       	};
 			this.$api.getGoodsInfo(param).then(res => {
