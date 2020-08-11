@@ -24,18 +24,17 @@ const bookListData = require('@/common/carDataOption');
 export default {
 	computed: {
 		userInfo() {
-			return uni.getStorageSync('userInfo')
+			return uni.getStorageSync('userInfo');
 		}
 	},
-    methods: {
+	methods: {
 		toBookDetail(id) {
 			uni.navigateTo({
-				url:'/pages/index/bookdetail?bookID=' + id
-			})
-			
+				url: '/pages/index/bookdetail?bookID=' + id
+			});
 		}
 	}
-}
+};
 </script>
 
 <style scoped>
@@ -44,11 +43,11 @@ export default {
 	flex-direction: column;
 	justify-content: center;
 	align-items: center;
-	background-color: #CAE6CE;
+	background-color: #cae6ce;
 	position: relative;
 }
 .to-picture-button {
-	width: 400UPX;
+	width: 400upx;
 	height: 100upx;
 	position: absolute;
 	bottom: 1915upx;
@@ -56,7 +55,7 @@ export default {
 	/* background-color: #FFFFFF; */
 }
 .to-gift-button {
-	width: 400UPX;
+	width: 400upx;
 	height: 100upx;
 	position: absolute;
 	bottom: 1600upx;

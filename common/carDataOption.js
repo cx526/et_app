@@ -186,13 +186,14 @@ function cartBookCount(){
 	
 	if(bookList.length === 0){
 		uni.removeTabBarBadge({
-			index:2
+			index:3
 		});
 	}else{
 		uni.setTabBarBadge({
-		  index: 2,
+		  index: 3,
 		  text: bookCount
 		});
+		
 	}
 	
 	return bookCount;

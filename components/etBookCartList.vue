@@ -240,7 +240,7 @@ export default {
 	},
 	methods: {
 		toKineUrl(){
-			console.log(this.$props.optionData.optionType);
+			// console.log(this.$props.optionData.optionType);
 			if(this.$props.optionData.optionType === 'kindlist'){
 				this.$emit('toKineUrl');
 			}else{
@@ -275,7 +275,7 @@ export default {
 		statusUpdate(){
 			// 获取书篮列表数据
 			this.listData = bookListData.getBookListData();
-			console.log(this.listData);
+			// console.log(this.listData);
 			
 			// 获取合计金额
 			this.moneyCount = bookListData.countCoin();
@@ -323,8 +323,8 @@ export default {
 		},
 		// 删除所有选中的记录
 		delectSelect(){
-			this.$emit('delectSelect');
 			bookListData.deleteSelect();
+			this.$emit('delectSelect');
 			this.statusUpdate();
 		},
 		//检查选项是否超出限制

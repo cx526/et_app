@@ -32,15 +32,15 @@
 				</view>
 			</view>
 			
-			<view class="vip-button-position"  @tap="vipButton">
+			<!-- <view class="vip-button-position"  @tap="vipButton">
 				<image style="width: 640upx; height: 145upx;" src="https://et-pic-server.oss-cn-shenzhen.aliyuncs.com/app_img/vip_button.png"></image>
-			</view>
+			</view> -->
 			
-			<view class="white-space"></view>
+			<!-- <view class="white-space"></view> -->
 			
-			<view class="vip-button-position" @tap="vipBanner">
+			<!-- <view class="vip-button-position" @tap="vipBanner">
 				<image style="width: 660upx; height: 200upx;" src="https://et-pic-server.oss-cn-shenzhen.aliyuncs.com/app_img/vip_banner.png"></image>
-			</view>
+			</view> -->
 			
 			<view class="white-space"></view>
 			

@@ -1,7 +1,7 @@
 <template>
 	<view class="content" >
 		<view class="left-position">
-			<image src= "https://et-pic-server.oss-cn-shenzhen.aliyuncs.com/app_img/index_zan.png" style="width: 30upx; height: 30upx;" ></image>	
+			<image src= "https://et-pic-server.oss-cn-shenzhen.aliyuncs.com/app_img/index_zan.png" style="width: 30upx; height: 30upx;margin-right: 10rpx;" ></image>	
 			<text>{{peopleCount}}人推荐</text>
 		</view>
 		
@@ -20,9 +20,21 @@
 const insertBook = require('@/common/carDataOption');
 
 export default {
+	data() {
+		return {
+			width: 0
+		}
+	},
 	props: {
 		peopleCount: String,
 		bookInfo:Object
+	},
+	created() {
+		uni.getSystemInfo({
+			success: res => {
+				this.width = (res.windowWidth - 30 - 12)/2 + 'px'
+			}
+		})
 	},
 	methods: {
 		insertToCart() {
@@ -66,22 +78,25 @@ export default {
 <style scoped>
 .content {
 	display: flex;
-	width: 270upx;
+	/* width: 270upx; */
 	flex-direction: row;
 	justify-content: space-between;
-	align-content: center;
-	padding-left: 20upx;
+	/* align-content: center; */
+	align-items: center;
+	/* padding-left: 20upx; */
 }
 .left-position {
 	display: flex;
 	flex-direction: row;
-	justify-content: space-between;
-	align-content: center;
+	/* justify-content: space-between; */
+	/* align-content: center; */
+	/* align-items: center; */
 	color: #BABABA;
 	font-size: 25upx;
 }
 .right-position {
 	padding-left: 10upx;
+
 }
 .right-content {
 	font-size: 22upx;
@@ -91,5 +106,8 @@ export default {
 	border-top-left-radius: 20upx;
 	border-bottom-left-radius: 20upx;
 	padding:5upx 10upx;
+	box-sizing: border-box;
+/* 	position: relative;
+	right: -20rpx; */
 }
 </style>

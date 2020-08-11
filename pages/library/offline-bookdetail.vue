@@ -97,26 +97,32 @@
 		<view class="white-space"></view>
 		
 		<view class="bottom-position">
+			<!-- 收藏 -->
 			<view class="bottom-button-position">
 				<view class="bottom-button" @tap="collection">
 					<image src="https://et-pic-server.oss-cn-shenzhen.aliyuncs.com/app_img/bookdetail_add.png" class="bottom-image"></image>
 					<text style="font-size: 20upx;color: #2AAEC4;">收藏</text>
 				</view>
 			</view>
-			<view class="bottom-button-position cart-book-count-father">
-				<view class="bottom-button" @tap="toCartUrl('/pages/cart/cart')">
+			<!-- 书篮 -->
+			<view 
+			class="bottom-button-position cart-book-count-father" 
+			@tap="goCart">
+				<view class="bottom-button">
 					<image src="https://et-pic-server.oss-cn-shenzhen.aliyuncs.com/app_img/bookdetail_cart.png" class="bottom-image"></image>
-					<text style="font-size: 20upx;color: #2AAEC4;">书篮</text>
+					<text 
+					style="font-size: 20upx;color: #2AAEC4;"
+					>书篮</text>
 				</view>
 				<!-- 跳转书篮按钮加上书篮书本数 -->
-				<view class="cart-book-count-style" v-if="cartBookCount != 0">
-					<text>{{cartBookCount}}</text>
+				<view class="cart-book-count-style" v-if="len !== 0">
+					<text>{{ len }}</text>
 				</view>
 			</view>
-			<view v-if="bookInfo.stock.usageCount !== 0" class="bottom-button-input" @tap="insertToCart">
+			<view v-if="bookInfo.stock.usageCount !== 0" class="bottom-button-input" @tap="push">
 				<text style="font-size: 30upx">加入书篮</text>
 			</view>
-			<view v-else class="bottom-button-input"  style="background-color:#ccc; color: #fff;" @tap="insertToCart">
+			<view v-else class="bottom-button-input"  style="background-color:#ccc; color: #fff;" @tap="push">
 				<text style="font-size: 30upx">加入书篮</text>
 			</view>
 		</view>
@@ -124,20 +130,14 @@
 </template>
 
 <script>
-import etPeoplelist from '../../components/etPeoplelist.vue'
 import etTag from '../../components/etTag.vue'
-
-const insertBook = require('@/common/carDataOption');
-const toUrlFunction = require('@/common/toUrlFunction');
-const bookListData = require('@/common/carDataOption');
-
 export default {
 	components: {
-		etPeoplelist,
 		etTag
 	},
 	data() {
 		return {
+			len: '',
 			bookInfo:{},
 			bookID:	0,
 			swiperCurrent: 0,
@@ -167,25 +167,15 @@ export default {
 	},
 	onLoad(option) {
 		this.bookID = JSON.parse(decodeURIComponent(option.bookID));
-		console.log(this.bookID);
+		// 获取书籍详情
 		this.getBookData();
-		// this.cartBookCountFun();
-		
+	},
+	onShow() {
+		// 获取书籍列表的数目
+		this.len = uni.getStorageSync("offlineCartList").length;
 	},
 	methods: {
-		// cartBookCountFun(){
-		// 	let bookList = bookListData.getBookListData();
-		// 	let bookCount = '0';
-		// 	if(bookList.length > 99){
-		// 		bookCount = "99+";
-		// 	}else{
-		// 		bookCount = bookList.length;
-		// 	}
-		// 	this.cartBookCount = bookCount;
-		// },
-		toProgressUrl(){
-			toUrlFunction.toUrl('/pages/guide/borrowExplain');
-		},
+		// 收藏功能
 		collection(){
 			uni.showToast({
 				title: '收藏功能暂未开放，敬请期待！',
@@ -193,46 +183,76 @@ export default {
 				icon: 'none'
 			});
 		},
-		toCartUrl(url){
-			toUrlFunction.toUrl(url);
-		},
+		// 获取书籍详情
 		getBookData() {
 			uni.showLoading();
 			this.$api.getGoodsInfo({ 'NoPageing': '1', 'filterItems': {'id': this.bookID} }).then(res => {
-			   console.log(res.data.rows[0]);
 			   this.bookInfo = res.data.rows[0];
-			   this.cartBookCount = insertBook.cartBookCount();
 			   uni.hideLoading();
 			})
 		},
 		swiperChange(e) {
 			const index = e.detail.current;
 		},
-		insertToCart() { 
-			if(this.bookInfo.stock.usageCount === 0){
+		// 加入书篮
+		push() {
+			// 获取当前添加书籍的数据
+			let add = this.bookInfo;
+			// 如果没有库存return
+			if(add.stock.usageCount === 0) {
 				uni.showToast({
-					title:"书本暂时借完，请选择其他书本",
-					duration:2000,
-					icon:"none"
+					title: '书本暂时借完，请选择其他书本',
+					duration: 2000,
+					icon: 'none'
 				})
-				return;
+				return
 			}
-			
-			// 处理数据
-			let cartList = this.bookInfo;
-			cartList.select = false;
-			cartList.count = 1;
-			insertBook.insertToCart(cartList);
-			// this.cartBookCountFun();
-			
-			this.cartBookCount = insertBook.cartBookCount();
-			try {
-			    let carListArr = uni.getStorageSync('carListInfo');
-			    console.log(carListArr);
-			} catch (e) {
-			    console.log(carListArr);
+			// 书籍有库存
+			let arrList = uni.getStorageSync('offlineCartList') ? uni.getStorageSync('offlineCartList') : [];
+			let arr = [];
+			if (arrList && arrList.length > 0) {
+				arrList.map(obj => {
+					arr.push(obj.id);
+				});
+				if (arr.indexOf(add.id) === -1) {
+					uni.showToast({
+						title: '加入书篮成功',
+						duration: 2000,
+						icon: 'none',
+						success: () => {
+							// 同步数据
+							arrList.unshift(add);
+							this.len = arrList.length;
+							uni.setStorageSync('offlineCartList', arrList);
+						}
+					});
+				} else {
+					uni.showToast({
+						title: '相同图书请不要重复添加',
+						duration: 2000,
+						icon: 'none'
+					});
+				}
+			} else {
+				uni.showToast({
+					title: '加入书篮成功',
+					duration: 2000,
+					icon: 'none',
+					success: () => {
+						// 同步数据
+						arrList.push(add);
+						this.len = arrList.length;
+						uni.setStorageSync('offlineCartList', arrList);
+					}
+				});
 			}
-		}
+		},
+		// 跳转到书篮tabbar页面
+		goCart() {
+			uni.reLaunch({
+				url: '../cart/cart?flag=true'
+			});
+		},
 	}
 }
 </script>

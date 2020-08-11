@@ -24,7 +24,9 @@ export default {
 	justify-items: center;
 	align-items: center;
 	text-align: center;
-	padding: 5upx ;
+	padding: 5upx 10rpx ;
+	box-sizing: border-box;
+	
 }
 .title-content {
 	font-size: 23upx;

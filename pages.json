@@ -1,7 +1,13 @@
 {
-	"pages": [ //pages数组中第一项表示应用启动页，参考：https://uniapp.dcloud.io/collocation/pages		
-		
-		
+
+	"pages": [
+		{
+			"path": "pages/library/pay",
+			"style": {
+				"navigationBarTitleText": "借书币充值"
+			}
+		},
+	
 		{
 			"path": "pages/index/index",
 			"style": {
@@ -11,7 +17,13 @@
 				}
 			}
 		},
-		
+	{
+			"path": "pages/library/virtual",
+			"style": {
+				"navigationBarTitleText": "我的钱包"
+			}
+		},
+	
 		{
 			"path": "pages/promote/promoteSummeryBook",
 			"style": {
@@ -47,7 +59,7 @@
 					"titleNView": false
 				}
 			}
-		},			
+		},
 		{
 			"path": "pages/promote/promoteMonthGiftDetail",
 			"style": {
@@ -56,7 +68,7 @@
 					"titleNView": false
 				}
 			}
-		},	
+		},
 		{
 			"path": "pages/promote/promoteMonthGiftUserDetail",
 			"style": {
@@ -65,7 +77,7 @@
 					"titleNView": false
 				}
 			}
-		},	
+		},
 		{
 			"path": "pages/promote/promoteMonthGift",
 			"style": {
@@ -74,7 +86,7 @@
 					"titleNView": false
 				}
 			}
-		},		
+		},
 		{
 			"path": "pages/promote/promoteThreeAddOne",
 			"style": {
@@ -146,9 +158,9 @@
 					"titleNView": false
 				}
 			}
-		},		
-		
-		
+		},
+
+
 		{
 			"path": "pages/promote/promotePictureBook",
 			"style": {
@@ -158,8 +170,8 @@
 				}
 			}
 		},
-		
-		
+
+
 		{
 			"path": "pages/my/myDeposit",
 			"style": {
@@ -178,7 +190,7 @@
 				}
 			}
 		},
-		
+
 		{
 			"path": "pages/promote/pictureUpload",
 			"style": {
@@ -188,7 +200,7 @@
 				}
 			}
 		},
-		
+
 		{
 			"path": "pages/promote/pictureMonth",
 			"style": {
@@ -198,7 +210,7 @@
 				}
 			}
 		},
-		
+
 		{
 			"path": "pages/promote/picturePainting",
 			"style": {
@@ -235,7 +247,7 @@
 				}
 			}
 		},
-		
+
 		{
 			"path": "pages/my/myIntegral",
 			"style": {
@@ -245,8 +257,8 @@
 				}
 			}
 		},
-		
-		
+
+
 		{
 			"path": "pages/cart/orderList",
 			"style": {
@@ -256,7 +268,7 @@
 				}
 			}
 		},
-		
+
 		{
 			"path": "pages/index/sign",
 			"style": {
@@ -266,18 +278,6 @@
 				}
 			}
 		},
-		
-				
-		
-		// {
-		// 	"path": "pages/cart/orderDetail",
-		// 	"style": {
-		// 		"navigationBarTitleText": "订单详情",
-		// 		"app-plus": {
-		// 			"titleNView": false
-		// 		}
-		// 	}
-		// },
 		{
 			"path": "pages/index/search",
 			"style": {
@@ -296,7 +296,7 @@
 				}
 			}
 		},
-		
+
 		{
 			"path": "pages/cart/addressList",
 			"style": {
@@ -315,9 +315,9 @@
 				}
 			}
 		},
-		
+
 		// 上面是测试地址
-		
+
 		{
 			"path": "pages/guide/register",
 			"style": {
@@ -345,7 +345,7 @@
 				}
 			}
 		},
-		
+
 		{
 			"path": "pages/cart/paysuccess",
 			"style": {
@@ -373,6 +373,7 @@
 				}
 			}
 		},
+
 		{
 			"path": "pages/index/bookdetail",
 			"style": {
@@ -399,58 +400,109 @@
 					"titleNView": false
 				}
 			}
+		},
+		{
+			"path": "pages/library/library",
+			"style": {
+				"navigationBarTitleText": "智慧童书馆"
+			}
+		},
+
+		  {
+			"path": "pages/library/no-payment",
+			"style": {
+				"navigationBarTitleText": "待支付"
+			}
+		},
+		{
+			"path": "pages/library/take-books",
+			"style": {
+				"navigationBarTitleText": "快速取书"
+			}
+		},
+		{
+			"path": "pages/library/return-books",
+			"style": {
+				"navigationBarTitleText": "快速还书"
+			}
+		}, {
+			"path": "pages/library/exprie",
+			"style": {
+				"navigationBarTitleText": "逾期"
+			}
 		}
-		// {
-		// 	"path": "pages/index/index",
-		// 	"style": {
-		// 		"navigationBarTitleText": "五车书",
-		// 		"app-plus": {
-		// 			"titleNView": false
-		// 		}
-		// 	}
-		// },
-		// {
-		// 	"path": "pages/my/my",
-		// 	"style": {
-		// 		"navigationBarTitleText": "我的信息",
-		// 		"app-plus": {
-		// 			"titleNView": false
-		// 		}
-		// 	}
-		// }
-	],
+
+
+
+		, {
+			"path": "pages/library/offline-bookdetail",
+			"style": {
+				"navigationBarTitleText": "商品详情"
+			}
+		}, 
+		{
+			"path": "pages/library/offline-order",
+			"style": {
+				"navigationStyle": "custom",
+				"app-plus": {
+					"titleNView": false
+				}
+		
+			}
+		},
+	
+		{
+			"path": "pages/library/pay-record",
+			"style": {
+				"navigationBarTitleText": "借书币记录"
+			}
+		}
+
+	    ,{
+            "path" : "pages/library/offline-search",
+            "style" : {
+							"navigationBarTitleText": "书籍搜索"
+						}
+        }
+    ],
 	"globalStyle": {
 		"navigationBarTextStyle": "black",
-		"navigationBarBackgroundColor":"#FFFFFF",
+		"navigationBarBackgroundColor": "#FFFFFF",
 		"backgroundColor": "#F8F8F8"
 	},
 	"tabBar": {
 		"color": "#C0C4CC",
-		"selectedColor": "#00B7CC",
+		"selectedColor": "#7DD7E5",
 		"borderStyle": "black",
 		"backgroundColor": "#ffffff",
 		"list": [{
 				"pagePath": "pages/index/index",
-				"iconPath": "static/tab-home.png",
-				"selectedIconPath": "static/tab-home-current.png",
+				"iconPath": "static/index.png",
+				"selectedIconPath": "static/index-active.png",
 				"text": "首页"
 			},
 			{
 				"pagePath": "pages/promote/promoteSummeryBook",
-				"iconPath": "static/tab-cate.png",
-				"selectedIconPath": "static/tab-cate-current.png",
+				"iconPath": "static/guide.png",
+				"selectedIconPath": "static/guide-active.png",
 				"text": "暑假上新"
 			},
 			{
+				"pagePath": "pages/library/library",
+				"iconPath": "static/library.png",
+				"selectedIconPath": "static/library-active.png",
+				"text": "智慧童书馆"
+			},
+			{
 				"pagePath": "pages/cart/cart",
-				"iconPath": "static/tab-cart.png",
-				"selectedIconPath": "static/tab-cart-current.png",
+				"iconPath": "static/cart.png",
+				"selectedIconPath": "static/cart-active.png",
 				"text": "书篮"
 			},
 			{
 				"pagePath": "pages/my/my",
-				"iconPath": "static/tab-my.png",
-				"selectedIconPath": "static/tab-my-current.png",
+				"iconPath": "static/my.png",
+				"selectedIconPath": "static/my-active.png",
 				"text": "我的"
 			}
 		]

@@ -159,13 +159,14 @@ export default {
 		}else{
 			uni.showLoading();
 			let param = {
-		        pageSize:this.pageSize,
+        pageSize:this.pageSize,
 				currentPage: this.currentPage,
-		        filterItems: {
-		           kind: this.tabBarID,
-		           tagCount: 2
-		         }
-	       	};
+        filterItems: {
+           kind: this.tabBarID,
+           tagCount: 2,
+					 state: 1
+         }
+       };
 			this.$api.getGoodsInfo(param).then(res => {
 			   let objArr = [];
 			   res.data.rows.map((item,index)=>{
@@ -231,7 +232,8 @@ export default {
 				currentPage: this.currentPage,
 		        filterItems: {
 		           kind: this.tabBarID,
-		           tagCount: 2
+		           tagCount: 2,
+							 state: 1
 		         }
 	       	};
 			this.$api.getGoodsInfo(param).then(res => {
@@ -297,15 +299,24 @@ export default {
 }
 .list-content-father-position {
 	width: 100%;
-	
 }
-.list-content-position{
+/* .list-content-position{
 	width: 96%;
 	margin: 0 auto;
 	display: flex;
 	flex-direction: row;
 	flex-wrap: wrap;
 	justify-content:space-between;
+} */
+.list-content-position{
+	width: 100%;
+	/* margin: 0 auto; */
+	display: flex;
+	flex-direction: row;
+	flex-wrap: wrap;
+	justify-content:space-between;
+	box-sizing: border-box;
+	padding: 0 30rpx;
 }
 .list-content {
 	width: 45%;

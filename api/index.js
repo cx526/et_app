@@ -119,7 +119,10 @@ api.delUploadPic = params => request.globalRequest('/api/upload/delUploadPic', '
 
 // 获取所有商品库存状态 @param goodsIDs Array, goodsType String online
 api.preOrderCheckStock = params => request.globalRequest('/api/order/preOrderCheckStock', 'POST', params)
-
+// 线下充值
+api.offlinePayMent = params => request.globalRequest('/api/shellWeChatPay/payment', 'POST', params)
+// 线下充值回调
+api.offlineUpdatePayMent = params => request.globalRequest('/api/shellWeChatPay/updatePayment', 'POST', params)
 // 礼品
 api.giftSwitch = params => request.globalRequest('/api/gift/giftSwitch', 'POST', params)
 api.getGiftList = params => request.globalRequest('/api/gift/getGiftList', 'POST', params)
