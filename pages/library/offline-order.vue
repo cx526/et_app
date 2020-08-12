@@ -206,15 +206,13 @@
 			},
 			// 取消订单
 			cancel() {
-				uni.navigateTo({
-					url: './no-payment'
-				})
+				this.$refs.popup.close()
 		
 			},
 			// 确认支付(若无押金需要调起微信支付,若有需要扣除借书币)
 			payment() {
 				uni.navigateTo({
-					url: './take-books'
+					url: './take-books?status=0'
 				})
 			}
 		}

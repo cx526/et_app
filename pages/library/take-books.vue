@@ -1,5 +1,5 @@
 <template>
-	<view>
+	<view v-if="isLogin">
 		<!-- tab切换 -->
 		<view class="tab-box">
 			<block 
@@ -15,26 +15,33 @@
 		</view>
 		<!-- 待归还书单 -->
 		<block v-if="tabList.currentIndex == 0">
-			<view class="order-list">
+			<view class="order-list"
+			v-if="orderList && orderList.length > 0"
+			v-for="(item, index) in orderList"
+			:key="index"
+			>
 				<view class="item">
 					<view class="topic">
-						<view style="font-weight: bold;">订单号：23123123123342</view>
+						<view style="font-weight: bold;">订单号：{{ item.order_no }}</view>
 						<view class="status">
-								<text>18：30</text>
+								<text>{{ item.msg }}</text>
 						</view>
 					</view>
-					<view class="book-list">
-						<block v-for="n in 4" :key="n">
+					<view class="book-list" 
+					v-if="item.dockerInfo && item.dockerInfo.length > 0">
+						<block 
+						v-for="(list,listIndex) in item.dockerInfo" 
+						:key="n">
 							<view class="book-item">
 								<view class="show">
-									<image src="http://et-pic-server.oss-cn-shenzhen.aliyuncs.com/1589783780428.jpg"></image>
+									<image :src="list.pic"></image>
 								</view>
 								
 								<view class="title">
-									不要告状，除非是大事
+									{{ list.title }}
 								</view>
 								<view class="number">
-									<text style="margin-bottom: 20rpx;">39.99贝</text>
+									<text style="margin-bottom: 20rpx;">{{ list.price }}贝</text>
 									<tetx>x1</tetx>
 								</view>
 							</view>
@@ -43,15 +50,15 @@
 					<view class="order-info">
 						<view class="left">
 							<view class="text">
-								<text>创建时间：2020-07-19 16：00</text>
+								<text>创建时间：{{ item.hanlde_create_time }}</text>
 							</view>
 							<view class="text spcial">
-								<view>
-									<text>积分：-100</text>
-									<text style="color: #f00;">（优惠10贝）</text>
+								<view v-if="item.pay_type != 'shell' ">
+									<text>积分：-50</text>
+									<text style="color: #f00;">（优惠{{ item.price }}贝）</text>
 								</view>
 								<view style="font-weight: bold; color: #000;">
-									<text>实付：20</text>
+									<text>实付：{{ item.price }}</text>
 								</view>
 							</view>
 						</view>
@@ -169,7 +176,14 @@
 	export default {
 		data() {
 			return {
+				isLogin: false,
 				popUpWidth: 0,
+				pageSize: 4,
+				currentPage: 1,
+				userInfo: '',
+				orderList: [],
+				current_timestamp: 0,
+				timer: null,
 				tabList: {
 					currentIndex: 0,
 					list: [
@@ -188,7 +202,7 @@
 		},
 		onLoad(option) {
 			if(option !== '{}') {
-				this.tabList.currentIndex = option.status;
+				this.tabList.currentIndex = option.status ? option.status : 0;
 			}
 			// 设置弹窗高度
 			uni.getSystemInfo({
@@ -196,8 +210,113 @@
 					this.popUpWidth = res.windowWidth * 0.7 + 'px'
 				}
 			})
+			
+		},
+		onShow() {
+			// 获取当前的时间戳
+			this.current_timestamp = new Date().getTime();
+			console.log(this.current_timestamp)
+			this.getLogin();
+			// 获取用户信息
+			this.getUserInfo()
+			
 		},
 		methods: {
+			// 检测登录状态
+			getLogin() {
+				let userInfo = uni.getStorageSync('userInfo');
+				if (userInfo.name === 'guest' || !userInfo) {
+					uni.showModal({
+						title: '您还未登录！',
+						content: '是否前往登录页面?',
+						success: (res) => {
+							if (res.confirm) {
+								uni.removeStorageSync('userInfo')
+								uni.reLaunch({url: '../guide/guide'})
+							}else {
+								uni.reLaunch({
+									url: '/pages/index/index'
+								})
+							}
+						}
+					})
+				}else {
+					this.isLogin = true
+				}
+			},
+			// 获取用户订单
+			getUserOrderList() {
+				this.$api.offlineUserOrderList({
+					pageSize: this.pageSize,
+					currentPage: this.currentPage,
+					docker_mac: this.userInfo.dockerInfo.docker_mac,
+					filterItems:{
+						custom_id: this.userInfo.id,
+						order_type: 0 //待取书单类型
+					}
+				}).then(res => {
+					console.log(res)
+					res.data.rows.map(item => {
+						item.hanlde_create_time = this.handleTime(item.create_time)
+						// 订单失效时间
+						item.fail_timestamp = new Date(item.pre_get_book_time).getTime();
+						item.difference = item.fail_timestamp - this.current_timestamp > 86400000 ? 0 : item.fail_timestamp - this.current_timestamp;
+						
+						this.timer = setInterval(() => {
+							item.difference = item.difference - 1000;
+						
+							item.msg =  this.countDown(item.difference);
+							console.log(item.msg)
+						}, 1000)
+					})
+					this.orderList = res.data.rows;
+					console.log(this.orderList)
+				})
+			},
+			// 倒计时
+			countDown(time) {
+				// maxtime = 当前时间 - 订单创建时间 >= 0开启定时器
+				if (time > 0) {
+					// time = time - 1000 ;
+					let hours = parseInt((time % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+					let minutes = parseInt((time % (1000 * 60 * 60)) / (1000 * 60));
+					let seconds = parseInt((time % (1000 * 60)) / 1000);
+					let msg = (`${hours}:${minutes}:${seconds}`)
+					return msg 
+					
+				}else {
+					clearInterval(this.timer)
+				}
+			},
+			// 获取个人账户信息
+			getUserInfo() {
+				let mobile = uni.getStorageSync("userInfo").mobile;
+				this.$api.getCustom({ filterItems: { mobile } }).then(res => {
+					this.userInfo = res.data[0];
+					console.log(this.userInfo);
+					this.getUserOrderList()
+				})
+			},
+			// 格式化时间
+			handleTime(time) {
+				let currentTime = new Date(time)
+				let year = currentTime.getFullYear()
+				let month =  this.complement(currentTime.getMonth() + 1)
+				let day = this.complement(currentTime.getDate())
+				let hour = this.complement(currentTime.getHours())
+				let minute = this.complement(currentTime.getMinutes())
+				let second = this.complement(currentTime.getSeconds())
+				let create_time = `${year}-${month}-${day} ${hour}:${minute}:${second}`
+				
+				return create_time
+			},
+			complement(value) {
+				if(value >= 10) {
+					return value
+				}else {
+					return '0' + value
+				}
+			},
 			// tab切换
 			changTab(index) {
 				this.tabList.currentIndex = index

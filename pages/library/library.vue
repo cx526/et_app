@@ -6,15 +6,15 @@
 			<view class="info">
 				<view class="item">
 					<image src="https://et-pic-server.oss-cn-shenzhen.aliyuncs.com/app_img/userinfo-icon-01.png"></image>
-					<text>3000</text>
+					<text>{{ coin }}</text>
 				</view>
 				<view class="item">
 					<image src="https://et-pic-server.oss-cn-shenzhen.aliyuncs.com/app_img/userinfo-icon-02.png"></image>
-					<text>3000</text>
+					<text>{{ shell }}</text>
 				</view>
 				<view class="item">
 					<image src="https://et-pic-server.oss-cn-shenzhen.aliyuncs.com/app_img/icon-03.png"></image>
-					<text>2</text>
+					<text>{{ free }}</text>
 				</view>
 			</view>
 		</view>
@@ -44,7 +44,8 @@
 					<view class="item" v-for="(item, index) in productList" :key="index" @tap="goDetail(item.id)">
 						<image :src="item.forGoodsPic[0].url" mode="" class="show"></image>
 						<!-- 无库存显示 -->
-						<view class="none-stock" v-if="item.stock.usageCount === 0">
+						<view class="none-stock" 
+						v-if="item.stockCount.totalOfflineUse === 0">
 							<view class="none-notice">
 								<text>暂时</text>
 								<text>借完</text>
@@ -117,7 +118,7 @@
 					<view class="notice"><text>幼儿园合作用户请先绑定童书卡</text></view>
 					<view class="btn">
 						<view @tap="goIndex">取消</view>
-						<view>去绑卡</view>
+						<view @tap="goCard">去绑卡</view>
 					</view>
 				</view>
 			</view>
@@ -151,6 +152,9 @@ export default {
 			id: '', //请求分类的id
 			windowHeight: 0,
 			userInfo: '',//存储用户个人账户信息
+			shell: 0,//五车贝
+			coin: 0,//积分
+			free: 0,//免费借阅次数
 		};
 	},
 	components: {
@@ -160,17 +164,17 @@ export default {
 		Popup
 	},
 	onLoad(option) {
+		// 权限弹窗
+		// this.$refs.powerPopUp.open()
+		
 		// 从搜索页跳转过来
 		if (option.isSearch) {
 			this.productList = JSON.parse(option.productList);
 			this.loadStatus = 'noMore';
 		} else {
-			// 获取书籍列表
-			this.getBooksList();
 			// 获取用户个人账户信息
 			this.getUserInfo()
 		}
-
 		// 获取书籍分类
 		this.getBooksType();
 		this.len = uni.getStorageSync('offlineCartList').length;
@@ -204,10 +208,15 @@ export default {
 			this.currentPage = this.currentPage + 1;
 			this.getMoreList(this.id, this.currentPage);
 		} else {
+			this.currentPage = this.currentPage + 1;
 			if (this.loadStatus !== 'noMore') {
-				this.$api.getGuess().then(res => {
-					this.productList = [...this.productList, ...res.data];
-					if (res.data.length < 10) {
+				this.$api.offlineGetBooksList({
+					docker_mac: this.userInfo.dockerInfo.docker_mac,
+					pageSize: this.pageSize,
+					currentPage: this.currentPage
+				}).then(res => {
+					this.productList = [...this.productList, ...res.data.rows];
+					if (res.data.length < 20) {
 						this.loadStatus === 'noMore';
 					}
 				});
@@ -219,23 +228,37 @@ export default {
 		getUserInfo() {
 			let mobile = uni.getStorageSync("userInfo").mobile;
 			this.$api.getCustom({ filterItems: { mobile } }).then(res => {
-		
 				this.userInfo = res.data[0];
-				console.log(this.userInfo)
+				this.coin = this.userInfo.coin;//积分
+				this.shell = (+this.userInfo.shell).toFixed(2); //五车贝
+				// 计算用户的免费次数
+				this.getUserFreeCount()
+				// 获取所在幼儿园书柜的所有书籍
+				this.getBooksList();
+				
 			})
 		},
-		// 获取书籍列表
+		// 计算用户的免费次数
+		getUserFreeCount() {
+			// 防止传过来的是字符串
+			this.free = (+this.userInfo.free_bind )+ (+this.userInfo.free_month)
+		},
+		// 获取当前所属幼儿园书柜书籍列表
 		getBooksList() {
 			this.productList = [];
 			this.loadStatus = 'loading';
 			uni.showLoading({
-				title: '数据家在中',
+				title: '数据加载中',
 				mask: true
 			});
-			this.$api.getGuess().then(res => {
+			this.$api.offlineGetBooksList({
+				docker_mac: this.userInfo.dockerInfo.docker_mac,
+				pageSize: this.pageSize,
+				currentPage: this.currentPage
+			}).then(res => {
 				uni.hideLoading();
-				this.productList = res.data;
-				if (res.data.length < 10) {
+				this.productList = res.data.rows;
+				if (res.data.rows.length < 20) {
 					this.loadStatus === 'noMore';
 				}
 			});
@@ -393,7 +416,12 @@ export default {
 				url: '../index/index'
 			});
 		},
-		
+		// 跳转到绑卡页面
+		goCard() {
+			uni.navigateTo({
+				url: './tied-card'
+			})
+		},
 	}
 };
 </script>

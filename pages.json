@@ -2,7 +2,12 @@
 
 	"pages": [
 
-	
+		{
+			"path": "pages/library/take-books",
+			"style": {
+				"navigationBarTitleText": "快速取书"
+			}
+		},
 		{
 			"path": "pages/index/index",
 			"style": {
@@ -13,6 +18,12 @@
 			}
 		},
 		
+		{
+		    "path" : "pages/library/tied-card",
+		    "style" : {
+					"navigationBarTitleText": "绑卡"
+				}
+		},
 		{
 			"path": "pages/library/pay",
 			"style": {
@@ -417,12 +428,7 @@
 				"navigationBarTitleText": "待支付"
 			}
 		},
-		{
-			"path": "pages/library/take-books",
-			"style": {
-				"navigationBarTitleText": "快速取书"
-			}
-		},
+		
 		{
 			"path": "pages/library/return-books",
 			"style": {
@@ -467,6 +473,7 @@
 							"navigationBarTitleText": "书籍搜索"
 						}
         }
+        
     ],
 	"globalStyle": {
 		"navigationBarTextStyle": "black",

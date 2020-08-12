@@ -188,6 +188,7 @@ export default {
 			uni.showLoading();
 			this.$api.getGoodsInfo({ 'NoPageing': '1', 'filterItems': {'id': this.bookID} }).then(res => {
 			   this.bookInfo = res.data.rows[0];
+				 console.log(this.bookInfo)
 			   uni.hideLoading();
 			})
 		},

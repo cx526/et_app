@@ -1,10 +1,10 @@
 <template>
 	<view class="offline-box" :style="{ 'min-height': minHeight }">
 		<view class="notice-box">
-			<text>我的借书币：</text>
-			<text style="margin-right: 16rpx;">100</text>
+			<text>我的五车贝：</text>
+			<text style="margin-right: 16rpx;">{{ shell }}</text>
 			<text>剩余免费书本：</text>
-			<text>0</text>
+			<text>{{ free }}</text>
 		</view>
 		<!-- 没有书籍时显示 -->
 		<view class="none-books" v-if="booksNumber == 0" @tap="chooseBooks">
@@ -16,12 +16,15 @@
 		<!-- 书篮存在 -->
 		<view class="books-box" v-else>
 			<scroll-view scroll-y :style="'height:' + scrollHeight">
-				<view class="item" v-for="(item, index) in bookList" :key="index">
+				<view class="item" 
+				v-for="(item, index) in bookList" 
+				:key="index">
 					<view class="goods-info">
 						<view class="left"><checkbox :checked="item.isSelect" style="transform: scale(0.7);" :disabled="item.stock.usageCount === 0" @tap="selechBook(item)" /></view>
 						<view class="main">
 							<!-- 库存为零时显示 -->
-							<view class="none-stock" v-if="item.stock.usageCount === 0">
+							<view class="none-stock" 
+							v-if="item.stockCount.totalOfflineUse == 0">
 								<view class="none-notice">
 									<text>暂时</text>
 									<text>借完</text>
@@ -30,11 +33,11 @@
 							<view class="show"><image :src="item.forGoodsPic[0].url" mode=""></image></view>
 							<view class="topic">
 								<text class="title">{{ item.title }}</text>
-								<text class="condition" v-if="item.stock.usageCount !== 0">可借阅</text>
+								<text class="condition" v-if="item.stockCount.totalOfflineUse != 0">可借阅</text>
 								<text style="font-size: 28rpx; color: #f00;" v-else>已借完</text>
 								<view class="price-box">
 									<view class="price">
-										<text>借书币：{{ item.price }}</text>
+										<text>五车贝：{{ item.price }}</text>
 									</view>
 									<text>x1</text>
 								</view>
@@ -79,11 +82,36 @@
 				<view class="notice">
 					<view>
 						<text>本次需要借书币：</text>
-						<text style="color: #12A4BD;">79.90</text>
+						<text style="color: #12A4BD;">{{ price }}</text>
 					</view>
+					
 					<view>
 						<text>您的借书币：</text>
-						<text style="color: #12A4BD;">0</text>
+						<text style="color: #12A4BD;">{{ shell }}</text>
+					</view>
+				</view>
+				<view class="show">
+					<image src="https://et-pic-server.oss-cn-shenzhen.aliyuncs.com/app_img/popup-banner.png" mode="widthFix"></image>
+				</view>
+				<view class="btn">
+					<view @tap="cancel">取消</view>
+					<view @tap="goPay">去充值</view>
+				</view>
+			</view>
+		</uni-popup>
+		<!-- 押金不足显示弹窗 -->
+		<uni-popup ref="depositPopUp" :maskClick="false">
+			<view class="balance-box" :style="{ width: popUpWidth }">
+				<view class="title"><text>押金不足！</text></view>
+				<view class="notice">
+					<view >
+						<text>线下借阅需要押金：</text>
+						<text style="color: #12A4BD;">29元</text>
+					</view>
+					
+					<view>
+						<text>您的押金：</text>
+						<text style="color: #12A4BD;">{{ deposit }}</text>
 					</view>
 				</view>
 				<view class="show">
@@ -121,27 +149,47 @@ export default {
 			price: 0, // 选中书籍需支付的借书币
 			len: 0, // 选中书籍的本书
 			chooseBookList: [], //储存选中书籍
-			integrate: 200, // 用户当前积分(接口拿)
-			free: 3, //免费借阅次数(接口拿)
-			userInfo: '' //储存用户账号个人信息
+			integrate: 0, // 用户当前积分(接口拿)
+			free: 0, //免费借阅次数(接口拿),
+			shell: 0, //用户当前的五车贝(接口拿)
+			deposit: 0, // 用户当前的押金(接口拿)
+			userInfo: '', //储存用户账号个人信息
+			isLogin: true, //检测登录状态
 		};
 	},
 	created() {
-		// // 获取用户的个人账号信息
-		// this.userInfo = uni.getStorageSync("userInfo");
-		// this.$api.getCustom({ filterItems: { mobile: this.userInfo.mobile } }).then(res=>{
-		// 	console.log(res)
-		// });
+		// 获取用户的个人账号信息
+		this.getUserInfo()
 	},
 	// 在mounted调用确保此时获取的本地缓存数据库存数量已经更新过
 	mounted() {
 		// 储存书籍数据
 		this.bookList = uni.getStorageSync('offlineCartList');
+		console.log(this.bookList)
 		this.booksNumber = this.count;
 		// 若有选中计算价格
 		this.coungPrice();
 	},
 	methods: {
+		// 计算用户当前免费的借阅次数
+		getUserFreeCount() {
+			// 防止传过来的是字符串
+			this.free = (+this.userInfo.free_bind )+ (+this.userInfo.free_month)
+			console.log(this.free)
+		},
+		// 获取用户的个人信息
+		getUserInfo() {
+			let mobile = uni.getStorageSync("userInfo").mobile;
+			this.$api.getCustom({ filterItems: { mobile } }).then(res => {
+				this.userInfo = res.data[0];
+				this.integrate = this.userInfo.coin //储存用户积分;
+				this.shell = (+this.userInfo.shell).toFixed(2) //储存用户的五车贝;
+				this.deposit = (+this.userInfo.deposit).toFixed(2) //储存用户的押金
+				console.log(this.userInfo);
+				// 计算用户的免费借阅次数
+				this.getUserFreeCount()
+			})
+		},
 		// 选取书籍
 		chooseBooks() {
 			uni.switchTab({
@@ -290,25 +338,53 @@ export default {
 				return value1 - value2;
 			};
 		},
+		// 下单成功后需要删除书篮下单过得书籍
+		handlePlaceBooks() {
+			let cacheBooksList = uni.getStorageSync("offlineCartList");
+			let chooseBooksList = this.chooseBookList;
+			console.log(cacheBooksList);
+			console.log(chooseBooksList)
+			for(let i = 0; i < cacheBooksList.length; i++) {
+				for(let j = 0; j < chooseBooksList.length; j++) {
+					if(cacheBooksList[i].id == chooseBooksList[j].id) {
+						cacheBooksList.splice(i ,1);
+						i--
+					}
+				}
+			}
+			uni.setStorageSync("offlineCartList", cacheBooksList)
+		},
+		// 检测登录状态
+		getLogin() {
+			let userInfo = uni.getStorageSync('userInfo');
+			if (userInfo.name === 'guest' || !userInfo) {
+				uni.showModal({
+					title: '您还未登录！',
+					content: '是否前往登录页面?',
+					success: (res) => {
+						if (res.confirm) {
+							uni.removeStorageSync('userInfo')
+							uni.reLaunch({url: '../guide/guide'})
+						}else {
+							this.isLogin = false
+						}
+					}
+				})
+			}
+		},
 		// 借阅
 		borrow() {
-			// 获取用户选中的书籍列表
-			this.chooseBookList = this.bookList.filter(item => {
-				return item.isSelect === true;
-			});
-			// 更新所选商品本地缓存的库存数据
-			let goodsIDs = [];
-			this.chooseBookList.forEach(item => {
-				goodsIDs.push(item.id);
-			});
-			this.$api.preOrderCheckStock({ goodsIDs: goodsIDs, goodsType: 'online' }).then(res => {
-				res.data.map((item, index) => {
-					this.chooseBookList.map((sitem, sindex) => {
-						if (item.goods_id === sitem.id) {
-							// 同步更新本地缓存书籍数量
-							this.chooseBookList[sindex].usageCount = item.usageCount;
-						}
-					});
+			// 检测是否有登录
+			this.getLogin();
+			if(this.isLogin) {
+				// 获取用户选中的书籍列表
+				this.chooseBookList = this.bookList.filter(item => {
+					return item.isSelect === true;
+				});
+				// 更新所选商品本地缓存的库存数据
+				let goodsIDs = [];
+				this.chooseBookList.forEach(item => {
+					goodsIDs.push(item.id);
 				});
 				// 价格升序
 				let result = this.chooseBookList.sort(this.compare('price'));
@@ -321,7 +397,7 @@ export default {
 				// 筛选选中书籍是否存在库存为零的情况
 				let noStockList = [];
 				this.chooseBookList.filter(item => {
-					if (item.sitem === 0) {
+					if (item.usageCount === 0) {
 						noStockList.push(item);
 					}
 				});
@@ -352,30 +428,98 @@ export default {
 					});
 					return;
 				}
-				// 1.用户没有免费借阅次数或者积分/50小于1时(直接计算所选书籍累加的借书币)
+				// 1.用户没有免费借阅次数或者积分/50小于1时(直接计算所选书籍累加的五车贝)
 				else if (this.free === 0 || this.integrate / 50 < 1 || len >= 2) {
 					result.map(item => {
 						amount = (+amount + +item.price).toFixed(2);
 					});
 					console.log(amount);
 					this.price = amount
+					// 当前用户五车贝不足够或押金小于29时显示弹窗
+					if(this.shell < this.price || this.deposit < 29) {
+						if(this.shell < this.price) {
+							// 显示借书币不足弹窗
+							this.$refs.popup.open();
+						}else {
+							// 显示押金不足弹窗
+							this.$refs.depositPopUp.open()
+						}
+					}else {
+						let goods_id = goodsIDs.join(',');
+						// 下单
+						this.placeOrder(goods_id, 'shell');					
+					}
 				}
 				// 2.用户有免费借阅次数且所选书籍小于2且积分/50大于等于1(免费)
 				else if (this.free && len < 2 && reality >= 1) {
+					let goods_id = goodsIDs.join(',');
 					amount = 0;
 					console.log(amount);
-					this.price = amount
+					this.price = amount;
+					// 下单
+					this.placeOrder(goods_id, 'coin')
 				}
-				
-				
-				// 借书币不足时显示弹窗
-				// this.$refs.popup.open();
-				// 同时满足以上两个条件时直接跳转到订单页
-				uni.navigateTo({
-					url: '../../pages/library/offline-order'
-				});
-			});
+			}
 		},
+		// 下单
+		placeOrder(goods_id, type) {
+			this.$api.offlinePlaceOrder({
+				goods_id,
+				type,
+				customer_id: this.userInfo.id
+			}).then(res => {
+				console.log(res);
+				// 下单成功
+				if(res.data.status == 'ok') {
+					// 剔除书篮以下单过得书籍
+					// this.handlePlaceBooks();
+					uni.showToast({
+						title: res.data.msg,
+						icon: 'none',
+						duration: 1000,
+						success: () => {
+							// 跳转到取书页
+							uni.navigateTo({
+								url: '../../pages/library/take-books?status=0'
+							});
+						}
+					})
+				}else {
+					uni.showToast({
+						title: res.data.msg,
+						icon: 'none',
+						duration: 2000
+					})
+				}
+			})
+		},
+		// 点击弹窗取消
+		cancel() {
+			this.$refs.popup.close();
+		},
+		// 跳转借书币页面
+		goPay() {
+			uni.navigateTo({
+				url: '../../pages/library/virtual'
+			});
+		}
+			// this.$api.preOrderCheckStock({ goodsIDs: goodsIDs, goodsType: 'online' }).then(res => {
+			// 	res.data.map((item, index) => {
+			// 		console.log(item);
+			// 		console.log(item.usageCount)
+			// 		this.chooseBookList.map((sitem, sindex) => {
+			// 			console.log(sitem);
+			// 			console.log(sitem.usageCount)
+			// 			if (item.goods_id === sitem.id) {
+			// 				// 同步更新本地缓存书籍数量
+			// 				this.chooseBookList[sindex].usageCount = item.usageCount;
+			// 			}
+			// 		});
+			// 	});
+				
+				
+
+		
 
 		// borrow() {
 		// 	// 获取用户选中的书籍列表
@@ -476,16 +620,7 @@ export default {
 		// 	// 	url: '../../pages/library/offline-order'
 		// 	// })
 		// },
-		// 点击弹窗取消
-		cancel() {
-			this.$refs.popup.close();
-		},
-		// 跳转借书币页面
-		goPay() {
-			uni.navigateTo({
-				url: '../../pages/library/virtual'
-			});
-		}
+
 	}
 };
 </script>
