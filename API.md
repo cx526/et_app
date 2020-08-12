@@ -64,3 +64,22 @@
       }
      */
 ```
+```
+  /****
+     * 查看订单情况
+     * path：/api/offlineOrder/selOfflineOrder
+      {
+          "pageSize":"10",
+          "currentPage":"1",
+          "docker_mac":"74EE2A542FBA",
+          "filterItems":{
+            "order_no":"20200812120124689OF65",
+            "custom_id":"65",
+            "pay_type":"coin：积分/shell：五车贝",
+            "get_book_code":"026752",
+            "get_book_qrcoode":"279467663603167802675209261752",
+            "order_type":"0:待取书  1：订单完成   2：取书完成   3：订单失效   4：待还书  5：逾期"
+          }
+      }
+     */
+```
