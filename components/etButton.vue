@@ -99,7 +99,7 @@ export default {
 }
 .title {
 	padding-top: 8upx;
-	font-size: 30upx;
+	font-size: 26upx;
 	color: rgba(128,128,128,1)
 }
 .buttom-content {

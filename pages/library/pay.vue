@@ -70,15 +70,18 @@
 				<text>1.五车贝为五车书平台虚拟货币，仅适用于平台借阅消费或购买教育产品</text>
 			</view>
 			<view class="item">
-				<text>2.一元人民币可充值10五车贝</text>
+				<text>2.一元人民币可充值10五车贝（单次充值不低于10元）</text>
 			</view>
 			<view class="item">
 				<text>3.充值后不可提现</text>
 			</view>
+			<view class="item">
+				<text>4.首次线下借阅需要提交29元押金（线上已提交过且押金大于29元的不需要再次提交押金，押金可退）</text>
+			</view>
 		</view>
 		<!-- 充值按钮 -->
 		<view class="btn">
-			<view type="default" @tap="goPay">确认充值</view>
+			<view type="default" @tap="sure">确认充值</view>
 		</view>
 	</view>
 </template>
@@ -89,7 +92,7 @@
 		data() {
 			return {
 				flag: true,
-				value: 10,
+				value: 10, //充值金额
 				moneyList: {
 					currentIndex: 0,
 					list: [
@@ -118,10 +121,15 @@
 							money: '自定义金额'
 						}
 					]
-					
 				},
-				
+				userInfo: '', //储存用户个人账户信息
+				deposit: 0, //押金
+				totalMoney: 0, //充值金额+押金
 			}
+		},
+		onLoad() {
+			// 获取用户个人信息
+			this.getUserInfo()
 		},
 		methods: {
 			// 自定义输入金额
@@ -139,9 +147,18 @@
 					this.value = ''
 				}
 			},
-			
-			// 充值
-			goPay() {
+			// 获取用户账户信息
+			getUserInfo() {
+				let mobile = uni.getStorageSync("userInfo").mobile;
+				this.$api.getCustom({ filterItems: { mobile } }).then(res => {
+
+					this.userInfo = res.data[0];
+					console.log(this.userInfo)
+				})
+			},
+			// 点击确认充值
+			sure() {
+				// 充值金额小于10
 				if(this.value < 10) {
 					uni.showToast({
 						title: '充值金额不能小于10元',
@@ -149,56 +166,148 @@
 					})
 					return
 				}
+				// 没有支付过押金
+				else if(this.userInfo.deposit < 29) {
+					uni.showModal({
+						title: '您还没提交过押金(押金可退)',
+						content: '需要在充值金额上累加29元押金',
+						success: res => {
+							console.log(res)
+							if(res.confirm) {
+								let deposit = this.userInfo.deposit >= 29 ? 0 : 29
+								this.totalMoney = deposit + this.value;
+								// 调起支付
+								this.goPay()
+							}else {
+								uni.showToast({
+									title: '支付失败',
+									icon: 'none',
+									duration: 2000
+								})
+							}
+						}
+					})
+					return
+				}
+				this.goPay()
+			},
+			// 充值
+			async goPay() {	
+				// 计算押金
+				let deposit = this.userInfo.deposit >= 29 ? 0 : 29
+				// 计算总金额
+				this.totalMoney = deposit + this.value;
 				uni.showLoading({
 					title: '发起支付中',
 					mask: true
 				})
-				let mobile = uni.getStorageSync("userInfo").mobile;
-				console.log(mobile);
-				// 获取用户的id
-				this.$api.getCustom({ filterItems: { mobile: mobile } }).then(res => {
-					console.log(res.data[0].id);
-					var id = res.data[0].id;
-					var userInfo = uni.getStorageSync("userInfo");
-					userInfo.id = id;
-					let params = {
-						userInfo: userInfo,
-						shell:  "0.01",
-						event: "recharge"
-					}
-					// 从后台读取订单号
-					this.$api.offlinePayMent(params).then(res => {
-						let resData = res.data.finalRes.xml 
-						let order_no = res.data.order_no;
-						console.log(resData);
-						console.log(order_no);
-						if(resData.return_code[0] === 'SUCCESS') {
-							// 获取微信签名
-							let { paySign, time, APPID, nonceStr } = wxPay.wxReSign(resData.prepay_id[0])
-							// 调起微信支付
-							wxPay.wxPay(time, nonceStr, resData.prepay_id[0], paySign,
-								// 支付成功回调事件
-								res => {
-									uni.hideLoading();
-									if(res.errMsg === "requestPayment:ok") {
-										this.$api.offlineUpdatePayMent({
-											userInfo: userInfo,//个人信息
-											event: "recharge",//充值类型
-											order_no: order_no,//订单号
-											shell:  "0.01",//充值金额
-										}).then(res => {
-											console.log(res)
-										})
-									}
-								},
-								// 支付失败回调事件
-								err => {
-									uni.hideLoading();
-								}
-							)
-						}
-					})
+				let id = this.userInfo.id;
+				let userInfo = uni.getStorageSync("userInfo");
+				userInfo.id = id; // 个人id
+				let resData = '';
+				let order_no = '';//订单号
+				// 从后台读取订单号
+				await this.$api.offlinePayMent({
+					userInfo: userInfo,
+					shell: this.value, //充值金额
+					deposit: this.userInfo.deposit >= 29 ? 0 : 29, //押金
+					totalMoney: this.totalMoney, // 充值金额+押金
+					event: "recharge"
+				}).then(res => {
+					resData = res.data.finalRes.xml
+					order_no = res.data.order_no;
 				})
+				if(resData.return_code[0] === 'SUCCESS') {
+					// 获取微信签名
+					let { paySign, time, APPID, nonceStr } = wxPay.wxReSign(resData.prepay_id[0]);
+					// 调起微信支付
+					wxPay.wxPay(time, nonceStr, resData.prepay_id[0], paySign,
+						res => {
+							if(res.errMsg === "requestPayment:ok") {
+								this.$api.offlineUpdatePayMent({
+									userInfo: userInfo,//个人信息
+									event: "recharge",//充值类型
+									order_no: order_no,//订单号
+									shell: this.value, //充值金额
+									deposit: this.userInfo.deposit >= 29 ? 0 : 29, //押金
+									totalMoney: this.totalMoney, // 充值金额+押金
+								}).then(res => {
+									uni.hideLoading()
+									console.log(res)
+									// 跳转到我的钱包页
+									uni.redirectTo({
+										url: './virtual'
+									})
+								})
+							}
+						},
+						err => {
+							uni.hideLoading();
+							uni.showToast({
+								title: '支付失败',
+								icon: 'none',
+								duration: 2000
+							})
+							console.log(err)
+						}
+					)
+				}
+				
+				
+				
+				// 获取用户的id
+				// this.$api.getCustom({ filterItems: { mobile: mobile } }).then(res => {
+				// 	console.log(res.data[0].id);
+				// 	var id = res.data[0].id;
+				// 	var userInfo = uni.getStorageSync("userInfo");
+				// 	userInfo.id = id;
+				// 	let params = {
+				// 		userInfo: userInfo,
+				// 		shell:  "0.01",
+				// 		event: "recharge"
+				// 	}
+				// 	// 从后台读取订单号
+				// 	this.$api.offlinePayMent(params).then(res => {
+				// 		let resData = res.data.finalRes.xml 
+				// 		let order_no = res.data.order_no;
+				// 		console.log(resData);
+				// 		console.log(order_no);
+				// 		if(resData.return_code[0] === 'SUCCESS') {
+				// 			// 获取微信签名
+				// 			let { paySign, time, APPID, nonceStr } = wxPay.wxReSign(resData.prepay_id[0])
+				// 			// 调起微信支付
+				// 			wxPay.wxPay(time, nonceStr, resData.prepay_id[0], paySign,
+				// 				// 支付成功回调事件
+				// 				res => {
+				// 					uni.hideLoading();
+				// 					if(res.errMsg === "requestPayment:ok") {
+				// 						this.$api.offlineUpdatePayMent({
+				// 							userInfo: userInfo,//个人信息
+				// 							event: "recharge",//充值类型
+				// 							order_no: order_no,//订单号
+				// 							shell:  "0.01",//充值金额
+				// 						}).then(res => {
+				// 							console.log(res)
+				// 						})
+				// 					}
+				// 				},
+				// 				// 支付失败回调事件
+				// 				err => {
+				// 					console.log(err)
+				// 					uni.hideLoading();
+				// 					uni.showToast({
+				// 						title: '支付失败',
+				// 						icon: 'none',
+				// 						duration: 2000
+				// 					})
+				// 				}
+								
+				// 			)
+				// 		}
+				// 	})
+				// })
+				
+				
 			}
 		}
 	

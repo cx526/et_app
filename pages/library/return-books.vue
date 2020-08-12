@@ -237,7 +237,10 @@
 		components: {
 			uniPopup
 		},
-		onLoad() {
+		onLoad(option) {
+			if(option !== '{}') {
+				this.tabList.currentIndex = option.status;
+			}
 			// 设置弹窗高度
 			uni.getSystemInfo({
 				success: res => {

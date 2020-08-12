@@ -12,10 +12,12 @@
 			</view>
 		</view>
 		
-		<view class="white-space"></view>
+		<!-- <view class="white-space"></view> -->
 		
 		<view class="menu-position">
-			<view class="menu-content" v-for="(item,index) in myMenuInfo.allMenu">
+			<view class="menu-content" 
+			v-for="(item,index) in myMenuInfo.allMenu"
+			:key="index">
 				<view class="menu-left">
 					<image src="../static/cart/blueRight.png" style="width: 40upx;" mode="widthFix"></image>
 					<text style="margin-left: 10upx; font-weight: 600;">{{item.title}}</text>
@@ -113,12 +115,13 @@ export default {
 	display: flex;
 	flex-direction: row;
 	justify-content: space-between;
-	padding-left: 30upx;
+	/* padding-left: 30upx; */
+	padding-left: 8rpx;
 	padding-bottom: 20upx;
-	border-bottom: 1upx dotted #8B8380;
+	border-bottom: 1upx dotted #CCCCCC;
 }
 .top-content {
-	font-size: 28upx;
+	font-size: 30upx;
 }
 .menu-position {
 	width: 100%;
@@ -138,7 +141,7 @@ export default {
 	justify-content: space-between;
 	align-items: center;
 	
-	font-size: 30upx;
+	font-size: 26upx;
 	
 	padding: 15upx 0;
 	border-bottom: 2upx dotted #ECECEC;

@@ -5,11 +5,11 @@
 			<view class="user"><image src="https://et-pic-server.oss-cn-shenzhen.aliyuncs.com/app_img/user-default.png"></image></view>
 			<view class="info">
 				<view class="item">
-					<image src="https://et-pic-server.oss-cn-shenzhen.aliyuncs.com/app_img/icon-01.png"></image>
+					<image src="https://et-pic-server.oss-cn-shenzhen.aliyuncs.com/app_img/userinfo-icon-01.png"></image>
 					<text>3000</text>
 				</view>
 				<view class="item">
-					<image src="https://et-pic-server.oss-cn-shenzhen.aliyuncs.com/app_img/icon-02.png"></image>
+					<image src="https://et-pic-server.oss-cn-shenzhen.aliyuncs.com/app_img/userinfo-icon-02.png"></image>
 					<text>3000</text>
 				</view>
 				<view class="item">
@@ -149,7 +149,8 @@ export default {
 			pageSize: 20, //接口每次返回几条数据
 			isType: true, //区别是全部上拉加载更多还是单个分类上拉加载更多
 			id: '', //请求分类的id
-			windowHeight: 0
+			windowHeight: 0,
+			userInfo: '',//存储用户个人账户信息
 		};
 	},
 	components: {
@@ -159,12 +160,15 @@ export default {
 		Popup
 	},
 	onLoad(option) {
+		// 从搜索页跳转过来
 		if (option.isSearch) {
 			this.productList = JSON.parse(option.productList);
 			this.loadStatus = 'noMore';
 		} else {
 			// 获取书籍列表
 			this.getBooksList();
+			// 获取用户个人账户信息
+			this.getUserInfo()
 		}
 
 		// 获取书籍分类
@@ -211,6 +215,15 @@ export default {
 		}
 	},
 	methods: {
+		// 获取用户个人账户信息
+		getUserInfo() {
+			let mobile = uni.getStorageSync("userInfo").mobile;
+			this.$api.getCustom({ filterItems: { mobile } }).then(res => {
+		
+				this.userInfo = res.data[0];
+				console.log(this.userInfo)
+			})
+		},
 		// 获取书籍列表
 		getBooksList() {
 			this.productList = [];
@@ -374,12 +387,13 @@ export default {
 				url: './offline-bookdetail?bookID=' + id
 			});
 		},
-		// 点击权限弹窗取消按钮
+		// 点击权限弹窗取消按钮(返回首页)
 		goIndex() {
 			uni.switchTab({
 				url: '../index/index'
 			});
-		}
+		},
+		
 	}
 };
 </script>
@@ -501,7 +515,7 @@ page {
 	height: 80rpx;
 	width: 150rpx;
 	display: flex;
-	background-image: linear-gradient(180deg, #40aed1, #69d9e4);
+	background-image: linear-gradient(180deg, #7BCFEC , #9BE6E7);
 	font-size: 30rpx;
 	align-items: center;
 	border-bottom-right-radius: 40rpx;

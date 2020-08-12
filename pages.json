@@ -1,12 +1,7 @@
 {
 
 	"pages": [
-		{
-			"path": "pages/library/pay",
-			"style": {
-				"navigationBarTitleText": "借书币充值"
-			}
-		},
+
 	
 		{
 			"path": "pages/index/index",
@@ -17,6 +12,14 @@
 				}
 			}
 		},
+		
+		{
+			"path": "pages/library/pay",
+			"style": {
+				"navigationBarTitleText": "借书币充值"
+			}
+		},
+		
 	{
 			"path": "pages/library/virtual",
 			"style": {

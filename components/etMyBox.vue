@@ -3,16 +3,18 @@
 		
 		<view class="top-position">
 			<view class="top-content-position">
+				<!-- 我的订单 -->
 				<view class="top-content">
 					<text style="font-weight: bold;">{{myMenuInfo.menuTitle}}</text>
 				</view>
+				<!-- 更多 -->
 				<view class="8B8380" v-if="myMenuInfo.moreMenu">
 					<text style="color: #2BAEC4; font-size: 25upx;" @tap="menuUrl(myMenuInfo.moreMenuUrl)">{{myMenuInfo.moreMenu}}</text>
 				</view>
 			</view>
 		</view>
-		
-		<view class="white-space"></view>
+		<!-- 间隙 -->
+		<!-- <view class="white-space"></view> -->
 		
 		<view class="menu-position">
 			<et-button v-for="(item,index) in myMenuInfo.allMenu" :key='index' :title="item.title" :img="item.imgSrc" :count="item.count" :buttomContent="item.buttomContent" class="menu-botton" @btnClick="btnClick(item.toUrl)"></et-button>
@@ -53,7 +55,7 @@ export default {
 				url:toUrl
 			})
 		},
-		btnClick(toUrl) {		
+		btnClick(toUrl) {
 			if (this.userInfo.name === 'guest') {
 				//游客 发出提示
 				uni.showModal({
@@ -105,12 +107,14 @@ export default {
 	display: flex;
 	flex-direction: row;
 	justify-content: space-between;
-	padding-left: 30upx;
+	/* padding-left: 30upx; */
+	padding-left: 8rpx;
 	padding-bottom: 20upx;
-	border-bottom: 1upx dotted #8B8380;
+	border-bottom: 1upx dotted #CCCCCC;
 }
 .top-content {
-	font-size: 28upx;
+	/* font-size: 28upx; */
+	font-size: 30rpx;
 }
 .menu-position {
 	width: 100%;
