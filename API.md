@@ -33,3 +33,34 @@
      * 
      */
 ```
+
+-智能书柜部分
+```
+  /***
+     * 获取柜子商品
+     * path：/api/docker/getDockerBook
+     * {
+     *    docker_mac: 74EE2A542FBA
+     *    "pageSize":2,
+     *    "currentPage":1
+     *    "filterItems"：{
+     *      "isbn13": "123456"
+     *    }
+     * }
+     */
+```
+
+
+-线下订单部分
+
+```
+  /****
+     * 新增订单（线下业务下单）
+     * path：/api/offlineOrder/buyOfflineBooks
+      {	
+        "customer_id":"46",
+        "type":"shell/coin" shell:五车贝支付  coin：积分支付
+        "goods_id":"1320,1055"
+      }
+     */
+```
