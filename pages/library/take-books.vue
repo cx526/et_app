@@ -31,7 +31,7 @@
 					v-if="item.dockerInfo && item.dockerInfo.length > 0">
 						<block 
 						v-for="(list,listIndex) in item.dockerInfo" 
-						:key="n">
+						:key="listIndex">
 							<view class="book-item">
 								<view class="show">
 									<image :src="list.pic"></image>
@@ -74,11 +74,15 @@
 					</view>
 				</view>
 			</view>
-			
+			<!-- 显示暂无订单组件 -->
+			<view v-else>
+				<offline-none-order></offline-none-order>
+			</view>
 		</block>
 		<!-- 已归还书单 -->
 		<block v-else>
-			<view class="order-list">
+			<view class="order-list" 
+			v-if="failOrderList && failOrderList.length > 0">
 				<view class="item">
 					<view class="topic">
 						<view style="font-weight: bold;">订单号：23123123123342</view>
@@ -133,6 +137,10 @@
 					</view>
 				</view>
 			</view>
+			<!-- 显示暂无订单组件 -->
+			<view v-else>
+				<offline-none-order></offline-none-order>
+			</view>
 		</block>
 		<!-- 订单凭证弹窗 -->
 		<uni-popup ref="orderPopUp">
@@ -168,20 +176,33 @@
 				</view>
 			</view>
 		</uni-popup>
+		<uni-load-more :status="loadStatus" :content-text="loadText" />
 	</view>
 </template>
 
 <script>
 	import uniPopup from '@/components/uni-popup/uni-popup.vue';
+	import uniLoadMore from '@/components/uni-load-more/uni-load-more.vue';
+	import offlineNoneOrder from '@/components/offline-components/offline-none-order.vue'
 	export default {
 		data() {
 			return {
-				isLogin: false,
+				loadStatus: 'loading',
+				loadText: {
+					contentdown: '上拉加载更多',
+					contentrefresh: '加载中',
+					contentnomore: '暂无更多数据'
+				},
+				isLogin: false,//是否登录
+				isLoadingMore: true, //是否开启上拉加载更多
 				popUpWidth: 0,
-				pageSize: 4,
-				currentPage: 1,
+				pageSize: 4, // 返回待取书单条数
+				currentPage: 1, // 待取书单当前页码
 				userInfo: '',
-				orderList: [],
+				orderList: [],//待取书书单
+				failOrderList: [], //失效书单
+				faliPageSize: 4, // 返回失效书单条数
+				failCurrentPage: 1, // 失效书单当前页码
 				current_timestamp: 0,
 				timer: null,
 				tabList: {
@@ -198,7 +219,9 @@
 			}
 		},
 		components: {
-			uniPopup
+			uniPopup,
+			uniLoadMore,
+			offlineNoneOrder
 		},
 		onLoad(option) {
 			if(option !== '{}') {
@@ -215,11 +238,22 @@
 		onShow() {
 			// 获取当前的时间戳
 			this.current_timestamp = new Date().getTime();
-			console.log(this.current_timestamp)
 			this.getLogin();
 			// 获取用户信息
 			this.getUserInfo()
-			
+		},
+		onUnload() {
+			clearInterval(this.timer)
+		},
+		// 上拉加载更多
+		onReachBottom() {
+			// 待取书单上拉加载更多
+			if(this.isLoadingMore && this.tabList.currentIndex == 0) {
+				// 每次上拉加载之前需要清除下定时器防止重复开启造成错乱
+				clearInterval(this.timer);
+				this.currentPage = this.currentPage + 1;
+				this.getUserOrderList()
+			}
 		},
 		methods: {
 			// 检测登录状态
@@ -244,7 +278,7 @@
 					this.isLogin = true
 				}
 			},
-			// 获取用户订单
+			// 获取待取书书单
 			getUserOrderList() {
 				this.$api.offlineUserOrderList({
 					pageSize: this.pageSize,
@@ -255,37 +289,73 @@
 						order_type: 0 //待取书单类型
 					}
 				}).then(res => {
-					console.log(res)
-					res.data.rows.map(item => {
+					// 如果不存在，改变加载组件的状态
+					if(res.data.rows.length == 0) {
+						this.loadStatus = "noMore"
+					}
+					// 判断是否开启上拉加载更多
+					if(this.currentPage == Math.ceil(res.data.totalPage / 3)) {
+						this.loadStatus = "noMore",
+						this.isLoadingMore = false
+					}
+					res.data.rows && res.data.rows.map(item => {
 						item.hanlde_create_time = this.handleTime(item.create_time)
 						// 订单失效时间
 						item.fail_timestamp = new Date(item.pre_get_book_time).getTime();
 						item.difference = item.fail_timestamp - this.current_timestamp > 86400000 ? 0 : item.fail_timestamp - this.current_timestamp;
-						
-						this.timer = setInterval(() => {
-							item.difference = item.difference - 1000;
-						
-							item.msg =  this.countDown(item.difference);
-							console.log(item.msg)
-						}, 1000)
 					})
-					this.orderList = res.data.rows;
-					console.log(this.orderList)
+					// 开启定时器
+					this.timer = setInterval(() => {
+						res.data.rows && res.data.rows.map(list => {
+							list.difference = list.difference - 1000;
+							list.msg =  this.countDown(list.difference);
+						})						
+					}, 1000)
+					this.orderList = [...this.orderList, ...res.data.rows];
+				})
+			},
+			// 获取失效书单
+			getFailOrderList() {
+				this.$api.offlineUserOrderList({
+					pageSize: this.faliPageSize,
+					currentPage: this.faliCurrentPage,
+					docker_mac: this.userInfo.dockerInfo.docker_mac,
+					filterItems:{
+						custom_id: this.userInfo.id,
+						order_type: 3 //待取书单类型
+					}
+				}).then(res => {
+					console.log(res)
+					this.failOrderList = res.data.rows
+					// 如果不存在，改变加载组件的状态
+					if(res.data.rows.length == 0) {
+						this.loadStatus = "noMore"
+					}
 				})
 			},
 			// 倒计时
 			countDown(time) {
-				// maxtime = 当前时间 - 订单创建时间 >= 0开启定时器
+				let msg = '';
 				if (time > 0) {
 					// time = time - 1000 ;
-					let hours = parseInt((time % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-					let minutes = parseInt((time % (1000 * 60 * 60)) / (1000 * 60));
-					let seconds = parseInt((time % (1000 * 60)) / 1000);
-					let msg = (`${hours}:${minutes}:${seconds}`)
+					let hours = parseInt((time % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)) >= 10 ? 
+					parseInt((time % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)) 					: 
+					'0' + parseInt((time % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+					let minutes = parseInt((time % (1000 * 60 * 60)) / (1000 * 60)) >= 10 ? 
+					parseInt((time % (1000 * 60 * 60)) / (1000 * 60)) 
+					: 
+					'0' + parseInt((time % (1000 * 60 * 60)) / (1000 * 60));
+					let seconds = parseInt((time % (1000 * 60)) / 1000) >= 10 ? 
+					parseInt((time % (1000 * 60)) / 1000) 
+					: 
+					'0' + parseInt((time % (1000 * 60)) / 1000);
+					msg = (`${hours}:${minutes}:${seconds}`)
 					return msg 
 					
 				}else {
+					msg = '已失效';
 					clearInterval(this.timer)
+					return msg
 				}
 			},
 			// 获取个人账户信息
@@ -293,8 +363,10 @@
 				let mobile = uni.getStorageSync("userInfo").mobile;
 				this.$api.getCustom({ filterItems: { mobile } }).then(res => {
 					this.userInfo = res.data[0];
-					console.log(this.userInfo);
+					// 获取待取书书单
 					this.getUserOrderList()
+					// 获取失效书单
+					this.getFailOrderList()
 				})
 			},
 			// 格式化时间
@@ -310,6 +382,7 @@
 				
 				return create_time
 			},
+			// 补零
 			complement(value) {
 				if(value >= 10) {
 					return value
@@ -319,7 +392,9 @@
 			},
 			// tab切换
 			changTab(index) {
-				this.tabList.currentIndex = index
+				this.tabList.currentIndex = index;
+				// 重置加载组件的加载状态
+				this.loadStatus = 'loading'
 			},
 			// 打开订单凭证弹窗
 			open() {

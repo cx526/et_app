@@ -2,12 +2,7 @@
 
 	"pages": [
 
-		{
-			"path": "pages/library/take-books",
-			"style": {
-				"navigationBarTitleText": "快速取书"
-			}
-		},
+		
 		{
 			"path": "pages/index/index",
 			"style": {
@@ -17,7 +12,12 @@
 				}
 			}
 		},
-		
+		{
+			"path": "pages/library/take-books",
+			"style": {
+				"navigationBarTitleText": "快速取书"
+			}
+		},
 		{
 		    "path" : "pages/library/tied-card",
 		    "style" : {
