@@ -1,5 +1,5 @@
 <template>
-	<view>
+	<view v-if="isLogin">
 		<!-- tab切换 -->
 		<view class="tab-box">
 			<block 
@@ -15,169 +15,166 @@
 		</view>
 		<!-- 待归还书单 -->
 		<block v-if="tabList.currentIndex == 0">
-			<view class="order-list">
-				<view class="item">
-					<view class="topic">
-						<view style="font-weight: bold;">订单号：23123123123342</view>
-						<view class="status">
-								<text>待归还5天</text>
-						</view>
-					</view>
-					<view class="book-list">
-						<block v-for="n in 4" :key="n">
-							<view class="book-item">
-								<view class="show">
-									<image src="http://et-pic-server.oss-cn-shenzhen.aliyuncs.com/1589783780428.jpg"></image>
-								</view>
-								
-								<view class="title">
-									不要告状，除非是大事
-								</view>
-								<view class="number">
-									<text style="margin-bottom: 20rpx;">39.99贝</text>
-									<tetx>x1</tetx>
-								</view>
-							</view>
-						</block>
-					</view>
-					<view class="order-info">
-						<view class="left">
-							<view class="text">
-								<text>创建时间：2020-07-19 16：00</text>
-							</view>
-							<view class="text spcial">
-								<view>
-									<text>积分：-100</text>
-									<text style="color: #f00;">（优惠10贝）</text>
-								</view>
-								<view style="font-weight: bold; color: #000;">
-									<text>实付：20</text>
-								</view>
+			<view v-if="waitOrderList && waitOrderList.length > 0">
+				<view class="order-list"
+				v-for="(item, index) in waitOrderList"
+				:key="index">
+					<view class="item">
+						<view class="topic">
+							<view style="font-weight: bold;">订单号：{{ item.order_no }}</view>
+							<!-- 取书时间+5天-当前时间 > 0 ? 未逾期 ： 逾期 -->
+							<view class="status">
+									<text>待归还5天</text>
 							</view>
 						</view>
-						<view class="btn">
-							<view style="flex: 1;"></view>
-							<view class="btn-box">
-								<view class="borrow" @tap="open">
-									<text>还书码</text>
+						<view class="book-list">
+							<block 
+							v-for="(list, listIndex) in item.dockerInfo" 
+							:key="listIndex">
+								<view class="book-item">
+									<view class="show">
+										<image :src="list.pic"></image>
+									</view>
+									
+									<view class="title">
+										{{ list.title }}
+									</view>
+									<view class="number">
+										<text style="margin-bottom: 20rpx;">{{ list.price }}贝</text>
+										<tetx>x1</tetx>
+									</view>
 								</view>
-							</view>
-								
+							</block>
 						</view>
-					</view>
-				</view>
-			</view>
-			<view class="order-list">
-				<view class="item">
-					<view class="topic">
-						<view style="font-weight: bold;">订单号：23123123123342</view>
-						<view class="status active">
-								<text>已逾期1天</text>
-						</view>
-					</view>
-					<view class="book-list">
-						<block v-for="n in 4" :key="n">
-							<view class="book-item">
-								<view class="show">
-									<image src="http://et-pic-server.oss-cn-shenzhen.aliyuncs.com/1589783780428.jpg"></image>
+						<view class="order-info">
+							<view class="left">
+								<view class="text">
+									<text>创建时间：{{ item.hanlde_create_time }}</text>
 								</view>
-								
-								<view class="title">
-									不要告状，除非是大事
+								<!-- 积分支付 -->
+								<view class="text spcial" 
+								v-if="item.pay_type != 'shell'">
+									<view>
+										<text>积分：-50</text>
+										<text style="color: #f00;">（优惠{{ item.price }}贝）</text>
+									</view>
+									<view style="font-weight: bold; color: #000;">
+										<text>实付：0</text>
+									</view>
 								</view>
-								<view class="number">
-									<text style="margin-bottom: 20rpx;">39.99贝</text>
-									<tetx>x1</tetx>
+								<!-- 五车贝支付 -->
+								<view class="text spcial"
+								v-else>
+									<view style="font-weight: bold; color: #000;">
+										<text>实付：{{item.price}}</text>
+									</view>
 								</view>
 							</view>
-						</block>
-					</view>
-					<view class="order-info">
-						<view class="left">
-							<view class="text">
-								<text>创建时间：2020-07-19 16：00</text>
-							</view>
-							<view class="text spcial">
-								<view>
-									<text>积分：-100</text>
-									<text style="color: #f00;">（优惠10贝）</text>
+							<view class="btn">
+								<view style="flex: 1;"></view>
+								<view class="btn-box">
+									<view class="borrow" @tap="open">
+										<text>还书码</text>
+									</view>
 								</view>
-								<view style="font-weight: bold; color: #000;">
-									<text>实付：20</text>
-								</view>
+									
 							</view>
-						</view>
-						<view class="btn">
-							<view style="flex: 1;"></view>
-							<view class="btn-box">
-								<view class="borrow">
-									<text>还书码</text>
-								</view>
-							</view>
-								
 						</view>
 					</view>
 				</view>
+				<!-- 加载更多组件 -->
+				<uni-load-more
+				:status="loadStatus" 
+				:content-text="loadText" 
+				v-if="isLoadingMore" />
 			</view>
+			<!-- 不存在显示无订单组件 -->
+			<view v-else>
+				<offline-none-order></offline-none-order>
+			</view>
+			
 		</block>
 		<!-- 已归还书单 -->
 		<block v-else>
-			<view class="order-list">
-				<view class="item">
-					<view class="topic">
-						<view style="font-weight: bold;">订单号：23123123123342</view>
-						<view class="status">
-								<text style="color: #868686;">已失效</text>
+			<view v-if="returnOrderList && returnOrderList.length > 0">
+				<view class="order-list"
+				v-for="(item, index) in returnOrderList"
+				:key="index">
+					<view class="item">
+						<view class="topic">
+							<view style="font-weight: bold;">订单号：{{ item.order_no }}</view>
+							<view class="status">
+									<text style="color: #868686;">已归还</text>
+							</view>
 						</view>
-					</view>
-					<view class="book-list">
-						<block v-for="n in 4" :key="n">
-							<view class="book-item">
-								<view class="show">
-									<image src="http://et-pic-server.oss-cn-shenzhen.aliyuncs.com/1589783780428.jpg"></image>
+						<view class="book-list">
+							<block 
+							v-for="(list, listIndex) in item.dockerInfo" 
+							:key="listIndex">
+								<view class="book-item">
+									<view class="show">
+										<image :src="list.pic"></image>
+									</view>
+									
+									<view class="title">
+										{{ list.title }}
+									</view>
+									<view class="number">
+										<text style="margin-bottom: 20rpx;">{{ list.price }}贝</text>
+										<tetx>x1</tetx>
+									</view>
+								</view>
+							</block>
+						</view>
+						<view class="order-info">
+							<view class="left">
+								<view class="text">
+									<text>创建时间：{{ item.hanlde_create_time }}</text>
+								</view>
+								<!-- 积分支付 -->
+								<view class="text spcial"
+								v-if="item.pay_type != 'shell'">
+									<view>
+										<text>积分：-100</text>
+										<text style="color: #f00;">（优惠10贝）</text>
+									</view>
+									<view style="font-weight: bold; color: #000;">
+										<text>实付：20</text>
+									</view>
+								</view>
+								<!-- 五车贝支付 -->
+								<view class="text spcial"
+								v-else>
+									<view style="font-weight: bold; color: #000;">
+										<text>实付：{{item.price}}</text>
+									</view>
 								</view>
 								
-								<view class="title">
-									不要告状，除非是大事
-								</view>
-								<view class="number">
-									<text style="margin-bottom: 20rpx;">39.99贝</text>
-									<tetx>x1</tetx>
-								</view>
-							</view>
-						</block>
-					</view>
-					<view class="order-info">
-						<view class="left">
-							<view class="text">
-								<text>创建时间：2020-07-19 16：00</text>
-							</view>
-							<view class="text spcial">
-								<view>
-									<text>积分：-100</text>
-									<text style="color: #f00;">（优惠10贝）</text>
-								</view>
-								<view style="font-weight: bold; color: #000;">
-									<text>实付：20</text>
-								</view>
-							</view>
-							
-							
-							
-						</view>
-						<view class="btn">
-							<view style="flex: 1;"></view>
-							<view class="btn-box">
-								<view class="del">
-									<text>删除</text>
-								</view>
-							</view>
 								
+							</view>
+							<view class="btn">
+								<view style="flex: 1;"></view>
+								<view class="btn-box">
+									<view class="del">
+										<text>删除</text>
+									</view>
+								</view>
+									
+							</view>
 						</view>
 					</view>
 				</view>
+				<!-- 加载更多组件 -->
+				<uni-load-more
+				:status="loadStatus" 
+				:content-text="loadText" 
+				v-if="isLoadingMore" />
+			</view>
+			<view v-else>
+				<offline-none-order></offline-none-order>
 			</view>
 		</block>
+
 		<!-- 订单凭证弹窗 -->
 		<uni-popup ref="orderPopUp">
 			<view class="order-box"  :style="{ width: popUpWidth }">
@@ -217,9 +214,14 @@
 
 <script>
 	import uniPopup from '@/components/uni-popup/uni-popup.vue';
+	import uniLoadMore from '@/components/uni-load-more/uni-load-more.vue';
+	import offlineNoneOrder from '@/components/offline-components/offline-none-order.vue'
 	export default {
 		data() {
 			return {
+				isLogin: false, //判断用户是否登录
+				isLoadingMore: true, //判断加载组件是否显示
+				userInfo: '',//储存用户账号信息
 				popUpWidth: 0,
 				tabList: {
 					currentIndex: 0,
@@ -232,14 +234,30 @@
 						}
 					]
 				},
+				loadStatus: 'loading',
+				loadText: {
+					contentdown: '上拉加载更多',
+					contentrefresh: '加载中',
+					contentnomore: '暂无更多数据'
+				},
+				waitOrderList: [],//待还书单列表
+				waitOrderTotalPage: 0,//待还书单总数
+				waitOrderPageSize: 4,//待还书单返回条数(每页)
+				waitOrderPage: 1,//待还书单当前页码
+				returnOrderList: [],//已归还书单列表
+				returnOrderTotalPage: 0,//已归还书单总数
+				returnOrderPageSize: 4, //已归还书单返回条数(每页)
+				returnOrderPage: 1,//已归还书单当前页码
 			}
 		},
 		components: {
-			uniPopup
+			uniPopup,
+			uniLoadMore,
+			offlineNoneOrder
 		},
 		onLoad(option) {
 			if(option !== '{}') {
-				this.tabList.currentIndex = option.status;
+				this.tabList.currentIndex = option.status ? option.status : 0;
 			}
 			// 设置弹窗高度
 			uni.getSystemInfo({
@@ -248,10 +266,142 @@
 				}
 			})
 		},
+		onShow() {
+			this.getLogin();
+			// 获取用户信息
+			this.getUserInfo()
+		},
+		onReachBottom() {
+			// 待还书单上拉加载
+			if(this.waitOrderTotalPage > this.waitOrderList.length && this.tabList.currentIndex == 0) {
+				console.log('loadingMore');
+				this.waitOrderPage = this.waitOrderPage + 1;
+				this.getWaitOrderList()
+			}
+			else if(this.returnOrderTotalPage > this.returnOrderList.length && this.tabList.currentIndex == 1) {
+				console.log('loadingMore');
+				this.returnOrderPage = this.returnOrderPage + 1;
+				this.getReturnOrderList()
+			}
+		},
 		methods: {
+			// 检测登录状态
+			getLogin() {
+				let userInfo = uni.getStorageSync('userInfo');
+				if (userInfo.name === 'guest' || !userInfo) {
+					uni.showModal({
+						title: '您还未登录！',
+						content: '是否前往登录页面?',
+						success: (res) => {
+							if (res.confirm) {
+								uni.removeStorageSync('userInfo')
+								uni.reLaunch({url: '../guide/guide'})
+							}else {
+								uni.reLaunch({
+									url: '/pages/index/index'
+								})
+							}
+						}
+					})
+				}else {
+					this.isLogin = true
+				}
+			},
+			// 获取用户账号信息
+			getUserInfo() {
+				let mobile = uni.getStorageSync("userInfo").mobile;
+				this.$api.getCustom({ filterItems: { mobile } }).then(res => {
+					this.userInfo = res.data[0];
+					// 获取待归还书书单
+					this.getWaitOrderList()
+					// 获取已归还书单
+					this.getReturnOrderList()
+				})
+			},
+			// 获取待归还书书单
+			getWaitOrderList() {
+				this.$api.offlineUserOrderList({
+					pageSize: this.waitOrderPageSize,
+					currentPage: this.waitOrderPage,
+					docker_mac: this.userInfo.dockerInfo.docker_mac,
+					filterItems:{
+						custom_id: this.userInfo.id,
+						order_type: 4 //待归还书单类型
+					}
+				}).then(res => {
+					// 储存订单总数
+					this.waitOrderTotalPage = res.data.totalPage
+					
+					res.data.rows && res.data.rows.map(item => {
+						// 保留两位小数
+						item.price = (+item.price).toFixed(2)
+						// 格式化订单创建时间
+						item.hanlde_create_time = this.handleTime(item.create_time)
+					})
+					this.waitOrderList = [...this.waitOrderList, ...res.data.rows]
+					// 判断是否改变加载组件状态
+					if(this.waitOrderTotalPage <= this.waitOrderList.length) {
+						this.loadStatus = "noMore"
+					}
+					console.log(this.waitOrderList)
+				})
+			},
+			// 获取已归还书单
+			getReturnOrderList() {
+				this.$api.offlineUserOrderList({
+					pageSize: this.returnOrderPageSize,
+					currentPage: this.returnOrderPage,
+					docker_mac: this.userInfo.dockerInfo.docker_mac,
+					filterItems:{
+						custom_id: this.userInfo.id,
+						order_type: 1 //待归还书单类型
+					}
+				}).then(res => {
+					// 储存订单总数
+					this.returnOrderTotalPage = res.data.totalPage
+					
+					res.data.rows && res.data.rows.map(item => {
+						// 保留两位小数
+						item.price = (+item.price).toFixed(2)
+						// 格式化订单创建时间
+						item.hanlde_create_time = this.handleTime(item.create_time)
+					})
+					this.returnOrderList = [...this.returnOrderList, ...res.data.rows]
+					// 判断是否改变加载组件状态
+					if(this.returnOrderTotalPage <= this.returnOrderList.length) {
+						this.loadStatus = "noMore"
+					}
+					console.log(this.returnOrderList)
+				})
+			},
+			// 格式化时间
+			handleTime(time) {
+				let currentTime = new Date(time)
+				let year = currentTime.getFullYear()
+				let month =  this.complement(currentTime.getMonth() + 1)
+				let day = this.complement(currentTime.getDate())
+				let hour = this.complement(currentTime.getHours())
+				let minute = this.complement(currentTime.getMinutes())
+				let second = this.complement(currentTime.getSeconds())
+				let create_time = `${year}-${month}-${day} ${hour}:${minute}:${second}`
+				
+				return create_time
+			},
+			// 补零
+			complement(value) {
+				if(value >= 10) {
+					return value
+				}else {
+					return '0' + value
+				}
+			},
 			// tab切换
 			changTab(index) {
-				this.tabList.currentIndex = index
+				this.tabList.currentIndex = index,
+				// 重置加载组件的加载状态
+				this.loadStatus = 'loading';
+				// 重置上拉加载的状态
+				this.isLoadingMore = true
 			},
 			// 打开订单凭证弹窗
 			open() {

@@ -15,65 +15,77 @@
 		</view>
 		<!-- 待归还书单 -->
 		<block v-if="tabList.currentIndex == 0">
-			<view class="order-list"
-			v-if="orderList && orderList.length > 0"
-			v-for="(item, index) in orderList"
-			:key="index"
-			>
-				<view class="item">
-					<view class="topic">
-						<view style="font-weight: bold;">订单号：{{ item.order_no }}</view>
-						<view class="status">
-								<text>{{ item.msg }}</text>
-						</view>
-					</view>
-					<view class="book-list" 
-					v-if="item.dockerInfo && item.dockerInfo.length > 0">
-						<block 
-						v-for="(list,listIndex) in item.dockerInfo" 
-						:key="listIndex">
-							<view class="book-item">
-								<view class="show">
-									<image :src="list.pic"></image>
-								</view>
-								
-								<view class="title">
-									{{ list.title }}
-								</view>
-								<view class="number">
-									<text style="margin-bottom: 20rpx;">{{ list.price }}贝</text>
-									<tetx>x1</tetx>
-								</view>
-							</view>
-						</block>
-					</view>
-					<view class="order-info">
-						<view class="left">
-							<view class="text">
-								<text>创建时间：{{ item.hanlde_create_time }}</text>
-							</view>
-							<view class="text spcial">
-								<view v-if="item.pay_type != 'shell' ">
-									<text>积分：-50</text>
-									<text style="color: #f00;">（优惠{{ item.price }}贝）</text>
-								</view>
-								<view style="font-weight: bold; color: #000;">
-									<text>实付：{{ item.price }}</text>
-								</view>
+			<view v-if="orderList && orderList.length > 0">
+				<view class="order-list"
+				v-for="(item, index) in orderList"
+				:key="index">
+					<view class="item">
+						<view class="topic">
+							<view style="font-weight: bold;">订单号：{{ item.order_no }}</view>
+							<view class="status">
+									<text>{{ item.msg }}</text>
 							</view>
 						</view>
-						<view class="btn">
-							<view style="flex: 1;"></view>
-							<view class="btn-box">
-								<view class="borrow" @tap="open">
-									<text>取书码</text>
+						<view class="book-list" 
+						v-if="item.dockerInfo && item.dockerInfo.length > 0">
+							<block 
+							v-for="(list,listIndex) in item.dockerInfo" 
+							:key="listIndex">
+								<view class="book-item">
+									<view class="show">
+										<image :src="list.pic"></image>
+									</view>
+									
+									<view class="title">
+										{{ list.title }}
+									</view>
+									<view class="number">
+										<text style="margin-bottom: 20rpx;">{{ list.price }}贝</text>
+										<tetx>x1</tetx>
+									</view>
+								</view>
+							</block>
+						</view>
+						<view class="order-info">
+							<view class="left">
+								<view class="text">
+									<text>创建时间：{{ item.hanlde_create_time }}</text>
+								</view>
+								<!-- 积分支付 -->
+								<view class="text spcial" v-if="item.pay_type != 'shell' ">
+									<view >
+										<text>积分：-50</text>
+										<text style="color: #f00;">（优惠{{ item.price }}贝）</text>
+									</view>
+									<view style="font-weight: bold; color: #000;">
+										<text>实付：0</text>
+									</view>
+								</view>
+								<!-- 五车贝支付 -->
+								<view class="text spcial" v-else>
+									<view style="font-weight: bold; color: #000;">
+										<text>实付：{{ item.price }}</text>
+									</view>
 								</view>
 							</view>
-								
+							<view class="btn">
+								<view style="flex: 1;"></view>
+								<view class="btn-box">
+									<view class="borrow" @tap="open">
+										<text>取书码</text>
+									</view>
+								</view>
+									
+							</view>
 						</view>
 					</view>
 				</view>
+				<uni-load-more
+				:status="loadStatus" 
+				:content-text="loadText" 
+				v-if="isLoadingMore" />
 			</view>
+			
 			<!-- 显示暂无订单组件 -->
 			<view v-else>
 				<offline-none-order></offline-none-order>
@@ -81,62 +93,80 @@
 		</block>
 		<!-- 已归还书单 -->
 		<block v-else>
-			<view class="order-list" 
-			v-if="failOrderList && failOrderList.length > 0">
-				<view class="item">
-					<view class="topic">
-						<view style="font-weight: bold;">订单号：23123123123342</view>
-						<view class="status">
-								<text style="color: #868686;">已失效</text>
+			<view v-if="failOrderList && failOrderList.length > 0">
+				<view class="order-list" 
+				v-for="(item, index) in failOrderList" :key="index">
+					<view class="item">
+						<view class="topic">
+							<view style="font-weight: bold;">订单号：{{ item.order_no }}</view>
+							<view class="status">
+									<text style="color: #868686;">已失效</text>
+							</view>
 						</view>
-					</view>
-					<view class="book-list">
-						<block v-for="n in 4" :key="n">
-							<view class="book-item">
-								<view class="show">
-									<image src="http://et-pic-server.oss-cn-shenzhen.aliyuncs.com/1589783780428.jpg"></image>
+						<view class="book-list">
+							<block 
+							v-for="(list,listIndex) in item.dockerInfo" 
+							:key="listIndex">
+								<view class="book-item">
+									<view class="show">
+										<image :src="list.pic"></image>
+									</view>
+									
+									<view class="title">
+										{{ list.title }}
+									</view>
+									<view class="number">
+										<text style="margin-bottom: 20rpx;">{{ list.price }}贝</text>
+										<tetx>x1</tetx>
+									</view>
+								</view>
+							</block>
+						</view>
+						<view class="order-info">
+							<view class="left">
+								<view class="text">
+									<text>创建时间：{{ item.hanlde_create_time }}</text>
+								</view>
+								<!-- 积分支付 -->
+								<view class="text spcial"
+								v-if="item.pay_type != 'shell'">
+									<view>
+										<text>积分：-50</text>
+										<text style="color: #f00;">（优惠{{ item.price }}贝）</text>
+									</view>
+									<view style="font-weight: bold; color: #000;">
+										<text>实付：0</text>
+									</view>
+								</view>
+								<!-- 五车贝支付 -->
+								<view class="text spcial" v-else>
+									
+									<view style="font-weight: bold; color: #000;">
+										<text>实付：{{ item.price }}</text>
+									</view>
 								</view>
 								
-								<view class="title">
-									不要告状，除非是大事
-								</view>
-								<view class="number">
-									<text style="margin-bottom: 20rpx;">39.99贝</text>
-									<tetx>x1</tetx>
-								</view>
-							</view>
-						</block>
-					</view>
-					<view class="order-info">
-						<view class="left">
-							<view class="text">
-								<text>创建时间：2020-07-19 16：00</text>
-							</view>
-							<view class="text spcial">
-								<view>
-									<text>积分：-100</text>
-									<text style="color: #f00;">（优惠10贝）</text>
-								</view>
-								<view style="font-weight: bold; color: #000;">
-									<text>实付：20</text>
-								</view>
-							</view>
-							
-							
-							
-						</view>
-						<view class="btn">
-							<view style="flex: 1;"></view>
-							<view class="btn-box">
-								<view class="del">
-									<text>删除</text>
-								</view>
-							</view>
 								
+								
+							</view>
+							<view class="btn">
+								<view style="flex: 1;"></view>
+								<view class="btn-box">
+									<view class="del">
+										<text>删除</text>
+									</view>
+								</view>
+									
+							</view>
 						</view>
 					</view>
 				</view>
+				<uni-load-more
+				:status="loadStatus" 
+				:content-text="loadText" 
+				v-if="isLoadingMore" />
 			</view>
+			
 			<!-- 显示暂无订单组件 -->
 			<view v-else>
 				<offline-none-order></offline-none-order>
@@ -176,7 +206,7 @@
 				</view>
 			</view>
 		</uni-popup>
-		<uni-load-more :status="loadStatus" :content-text="loadText" />
+		
 	</view>
 </template>
 
@@ -198,11 +228,13 @@
 				popUpWidth: 0,
 				pageSize: 4, // 返回待取书单条数
 				currentPage: 1, // 待取书单当前页码
+				orderListPage: 0, //待取书单总数
 				userInfo: '',
 				orderList: [],//待取书书单
 				failOrderList: [], //失效书单
 				faliPageSize: 4, // 返回失效书单条数
 				failCurrentPage: 1, // 失效书单当前页码
+				failOrderListPage: 0, //失效书单总数
 				current_timestamp: 0,
 				timer: null,
 				tabList: {
@@ -248,11 +280,14 @@
 		// 上拉加载更多
 		onReachBottom() {
 			// 待取书单上拉加载更多
-			if(this.isLoadingMore && this.tabList.currentIndex == 0) {
+			if(this.orderListPage > this.orderList.length && this.tabList.currentIndex == 0) {
 				// 每次上拉加载之前需要清除下定时器防止重复开启造成错乱
 				clearInterval(this.timer);
 				this.currentPage = this.currentPage + 1;
 				this.getUserOrderList()
+			}else if(this.failOrderListPage > this.failOrderList.length && this.tabList.currentIndex == 1){
+				this.failCurrentPage = this.failCurrentPage + 1;
+				this.getFailOrderList()
 			}
 		},
 		methods: {
@@ -289,46 +324,55 @@
 						order_type: 0 //待取书单类型
 					}
 				}).then(res => {
-					// 如果不存在，改变加载组件的状态
-					if(res.data.rows.length == 0) {
-						this.loadStatus = "noMore"
-					}
-					// 判断是否开启上拉加载更多
-					if(this.currentPage == Math.ceil(res.data.totalPage / 3)) {
-						this.loadStatus = "noMore",
-						this.isLoadingMore = false
-					}
+					// 储存订单总数
+					this.orderListPage = res.data.totalPage
+					
 					res.data.rows && res.data.rows.map(item => {
+						// 价格保留两个小数
+						item.price = (+item.price).toFixed(2)
 						item.hanlde_create_time = this.handleTime(item.create_time)
 						// 订单失效时间
 						item.fail_timestamp = new Date(item.pre_get_book_time).getTime();
 						item.difference = item.fail_timestamp - this.current_timestamp > 86400000 ? 0 : item.fail_timestamp - this.current_timestamp;
 					})
+					this.orderList = [...this.orderList, ...res.data.rows];
 					// 开启定时器
 					this.timer = setInterval(() => {
-						res.data.rows && res.data.rows.map(list => {
+						this.orderList && this.orderList.map(list => {
 							list.difference = list.difference - 1000;
 							list.msg =  this.countDown(list.difference);
 						})						
 					}, 1000)
-					this.orderList = [...this.orderList, ...res.data.rows];
+					// 判断是否改变加载组件状态
+					if(res.data.totalPage <= this.orderList.length) {
+						this.loadStatus = "noMore"
+					}
 				})
 			},
 			// 获取失效书单
 			getFailOrderList() {
 				this.$api.offlineUserOrderList({
 					pageSize: this.faliPageSize,
-					currentPage: this.faliCurrentPage,
+					currentPage: this.failCurrentPage,
 					docker_mac: this.userInfo.dockerInfo.docker_mac,
 					filterItems:{
 						custom_id: this.userInfo.id,
-						order_type: 3 //待取书单类型
+						order_type: 3 //失效书单类型
 					}
 				}).then(res => {
-					console.log(res)
-					this.failOrderList = res.data.rows
-					// 如果不存在，改变加载组件的状态
-					if(res.data.rows.length == 0) {
+					
+					// 储存订单总数
+					this.failOrderListPage = res.data.totalPage
+					
+					// 格式化时间
+					res.data.rows && res.data.rows.map(item => {
+						// 价格保留两个小数
+						item.price = (+item.price).toFixed(2)
+						item.hanlde_create_time = this.handleTime(item.create_time)
+					})
+					this.failOrderList = [...this.failOrderList, ...res.data.rows]
+					// 判断是否改变加载组件状态
+					if(res.data.totalPage <= this.failOrderList.length) {
 						this.loadStatus = "noMore"
 					}
 				})
@@ -394,7 +438,9 @@
 			changTab(index) {
 				this.tabList.currentIndex = index;
 				// 重置加载组件的加载状态
-				this.loadStatus = 'loading'
+				this.loadStatus = '';
+				// 重置上拉加载的状态
+				this.isLoadingMore = true
 			},
 			// 打开订单凭证弹窗
 			open() {

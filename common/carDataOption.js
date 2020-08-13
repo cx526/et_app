@@ -1,25 +1,25 @@
 import api from '../api/index.js'
 //插入剩余数量缓存
-async function getBookListStockToData() {
-	let carListArr = [];
-	try {
-	    carListArr = uni.getStorageSync('carListInfo');
-	    if (carListArr) {
-	    }else{
-			carListArr = [];
-		}
-	} catch (e) {
-	    carListArr = [];
-	}
+async function getBookListStockToData(docker_mac) {
+	// 获取本地缓存书籍
+	let carListArr = uni.getStorageSync('carListInfo') ? uni.getStorageSync('carListInfo') : [];
 	let goodsIDs = [];
+	let idString = ''
 	carListArr.forEach(item=>{
-		goodsIDs.push(item.id);    //组合商品ID去获取库存
+		goodsIDs.push(item.id.toString())    //组合商品ID去获取库存
 	});
-	await api.preOrderCheckStock({ goodsIDs : goodsIDs, goodsType : 'online'}).then(res=>{
+	for(let i = 0; i < goodsIDs.length; i++) {
+		idString = idString + "'" + goodsIDs[i] + "'" + ',' 
+	}
+	idString = idString.substring(0, idString.lastIndexOf(","));
+	console.log(idString)
+	await api.preOrderCheckStock({ 
+		filterItems: {idString, docker_mac},
+		}).then(res=>{
 		res.data.map((item,index)=>{
 			carListArr.map((sitem,sindex)=>{
 				if(item.goods_id === sitem.id){
-					carListArr[sindex].usageCount = item.usageCount;
+					carListArr[sindex].stockCount.totalOnlineUse = item.stockCount.totalOnlineUse;
 				}
 			})
 		})
@@ -27,6 +27,39 @@ async function getBookListStockToData() {
 	// 数据插入
 	uni.setStorageSync('carListInfo', carListArr);
 }
+
+
+
+
+
+
+// async function getBookListStockToData() {
+// 	let carListArr = [];
+// 	try {
+// 	    carListArr = uni.getStorageSync('carListInfo');
+// 	    if (carListArr) {
+// 	    }else{
+// 			carListArr = [];
+// 		}
+// 	} catch (e) {
+// 	    carListArr = [];
+// 	}
+// 	let goodsIDs = [];
+// 	carListArr.forEach(item=>{
+// 		goodsIDs.push(item.id);    //组合商品ID去获取库存
+// 	});
+// 	await api.preOrderCheckStock({ goodsIDs : goodsIDs, goodsType : 'online'}).then(res=>{
+// 		res.data.map((item,index)=>{
+// 			carListArr.map((sitem,sindex)=>{
+// 				if(item.goods_id === sitem.id){
+// 					carListArr[sindex].usageCount = item.usageCount;
+// 				}
+// 			})
+// 		})
+// 	}) 
+// 	// 数据插入
+// 	uni.setStorageSync('carListInfo', carListArr);
+// }
 
 function getBookListData() {
 	let carListArr = [];

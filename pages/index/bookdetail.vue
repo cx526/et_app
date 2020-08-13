@@ -17,7 +17,7 @@
 				<view class="detail-title-position">
 					<text>{{bookInfo.title}}</text>
 					<view class="book-count-style">
-						<text style="font-size: 30upx;">剩余: {{bookInfo.stock.usageCount}} 本</text>
+						<text style="font-size: 30upx;">剩余: {{bookInfo.stockCount.totalOnlineUse}} 本</text>
 					</view>
 				</view>
 				
@@ -113,7 +113,7 @@
 					<text>{{cartBookCount}}</text>
 				</view>
 			</view>
-			<view v-if="bookInfo.stock.usageCount !== 0" class="bottom-button-input" @tap="insertToCart">
+			<view v-if="bookInfo.stockCount.totalOnlineUse !== 0" class="bottom-button-input" @tap="insertToCart">
 				<text style="font-size: 30upx">加入书篮</text>
 			</view>
 			<view v-else class="bottom-button-input"  style="background-color:#ccc; color: #fff;" @tap="insertToCart">
@@ -167,7 +167,6 @@ export default {
 	},
 	onLoad(option) {
 		this.bookID = JSON.parse(decodeURIComponent(option.bookID));
-		console.log(this.bookID);
 		this.getBookData();
 		// this.cartBookCountFun();
 		
@@ -199,7 +198,6 @@ export default {
 		getBookData() {
 			uni.showLoading();
 			this.$api.getGoodsInfo({ 'NoPageing': '1', 'filterItems': {'id': this.bookID} }).then(res => {
-			   console.log(res.data.rows[0]);
 			   this.bookInfo = res.data.rows[0];
 			   this.cartBookCount = insertBook.cartBookCount();
 			   uni.hideLoading();

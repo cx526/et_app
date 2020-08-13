@@ -118,7 +118,8 @@ api.getPromote = params => request.globalRequest('/api/promote/getPromote', 'POS
 api.delUploadPic = params => request.globalRequest('/api/upload/delUploadPic', 'POST', params)
 
 // 获取所有商品库存状态 @param goodsIDs Array, goodsType String online
-api.preOrderCheckStock = params => request.globalRequest('/api/order/preOrderCheckStock', 'POST', params)
+// api.preOrderCheckStock = params => request.globalRequest('/api/order/preOrderCheckStock', 'POST', params)
+api.preOrderCheckStock = params => request.globalRequest('/api/goods/getGoodsInfo', 'POST', params)
 
 // 礼品
 api.giftSwitch = params => request.globalRequest('/api/gift/giftSwitch', 'POST', params)

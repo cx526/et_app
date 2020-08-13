@@ -233,7 +233,6 @@ export default {
 		},
 		clickBookCat(name) {
 			this.$api.getKindsWithThreeKind({ kind_name: name }).then(res => {
-				// console.log(res);
 				let tabBars = res.data;
 				let selectID = 0;
 				tabBars.map((item, index) => {
@@ -261,11 +260,11 @@ export default {
 			uni.getStorage({
 				key: 'userInfo',
 				success: res => {
-					console.log(res.data);
+					
 				},
 				fail: err => {
 					uni.reLaunch({ url: '../guide/guide' });
-					console.log(err);
+					
 				}
 			});
 		},
@@ -285,7 +284,6 @@ export default {
 			uni.navigateTo({ url: 'search' });
 		},
 		toButtonUrl(toUrl) {
-			console.log(toUrl);
 			uni.navigateTo({ url: toUrl });
 			if (toUrl === './kind') {
 				uni.switchTab({
@@ -300,7 +298,6 @@ export default {
 		getHotBook(type) {
 			this.$api.getRecommend().then(res => {
 				this.hotBookList = res.data;
-				console.log(this.hotBookList);
 			});
 		},
 		getGuessBook(type) {
@@ -309,8 +306,6 @@ export default {
 				return;
 			}
 			this.$api.getGuess().then(res => {
-				console.log(res);
-				// this.guessBookList.push(res.data);
 				res.data.map(item => {
 					this.guessBookList.push(item);
 				});
@@ -320,7 +315,6 @@ export default {
 			uni.navigateTo({ url: './sign' });
 		},
 		toHotListData() {
-			console.log(this.toHotBookList);
 			let tabBars = [{ name: '热门推荐' }];
 			uni.navigateTo({
 				url:
@@ -334,14 +328,13 @@ export default {
 			let kindObject = {
 				secondValue: '主题分类'
 			};
-			console.log(kindObject);
 			uni.navigateTo({ url: './kind?kindObject=' + encodeURIComponent(JSON.stringify(kindObject)) });
 		},
 		// 页面分享
 		onShareAppMessage(res) {
 			if (res.from === 'button') {
 				// 来自页面内分享按钮
-				console.log(res.target);
+				
 			}
 			return {
 				title: '五车书，一个智能的童书借阅和阅读习惯养成的平台~',

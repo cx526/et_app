@@ -43,7 +43,7 @@ export default {
 		}
 	},
 	created() {
-		console.log(this.sessionFromData);
+		
 	},
 	methods: {
 		btnClick() {

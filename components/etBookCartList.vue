@@ -34,7 +34,8 @@
 						<!-- 列表数据 -->
 						<view class="cat-detail-position">
 							<view v-if="listData.length > 0" style="width: 100%; display: flex; flex-direction: column; justify-content: center;align-items: center;">
-								<view class="cat-detail" v-for="(item,index) in listData">
+								<view class="cat-detail" v-for="(item,index) in listData" 
+								:key="index">
 									<et-cart-detail :key="index" :bookID="item.id"  :select="item.select" :imgSrc="item.forGoodsPic[0].url" :title="item.title" :status="item.status" :coin="item.coin" :count="item.count" :usageCount="item.usageCount" @changSelectType="changAllSelectType" @deleteData="deleteData"></et-cart-detail>
 									<view class="white-space" style="height: 25upx;"></view>
 								</view>
@@ -212,6 +213,7 @@ export default {
 	},
 	data() {
 		return {
+			docker_mac: '',
 			coin:"40",
 			moneyCount:"199",
 			allSelect:"true",
@@ -221,24 +223,40 @@ export default {
 			listOutShow:Boolean,
 			customerInfo:{},
 			hestoryOrderInfo:{},
-			orderInfo:{} //价格信息
+			orderInfo:{} ,//价格信息
+			userInfoDoc: ''
 		}
 	},
 	async created() {
 		//更新书本库存缓存
-		await bookListData.getBookListStockToData();
+		await this.getUserInfo()
+		
+		// await bookListData.getBookListStockToData(this.docker_mac);
 		this.getCustomerInfo();
 		//更新数据状态
 		this.statusUpdate();
 	},
 	async mounted() {
 		//更新书本库存缓存
-		await bookListData.getBookListStockToData();
+		await this.getUserInfo()
+		
+		// await bookListData.getBookListStockToData(this.docker_mac);
 		this.getCustomerInfo();
 		//更新数据状态
 		this.statusUpdate();
 	},
 	methods: {
+		// //更新书本库存缓存
+		getUserInfo() {
+			let mobile = uni.getStorageSync("userInfo").mobile ? uni.getStorageSync("userInfo").mobile : '' ;
+			this.$api.getCustom({ 
+				filterItems: { mobile }
+				}).then(res => {
+				this.userInfoDoc = res.data[0];
+				this.docker_mac = this.userInfoDoc.dockerInfo.docker_mac
+				bookListData.getBookListStockToData(this.docker_mac)
+			})
+		},
 		toKineUrl(){
 			// console.log(this.$props.optionData.optionType);
 			if(this.$props.optionData.optionType === 'kindlist'){
@@ -365,6 +383,7 @@ export default {
 			}
 			
 			let noBook = false;
+			console.log(this.listData)
 			this.listData.map((item,index)=>{
 				if(item.select && item.usageCount === 0){
 					noBook = true;

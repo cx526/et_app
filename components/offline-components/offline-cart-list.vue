@@ -24,7 +24,7 @@
 						<view class="main">
 							<!-- 库存为零时显示 -->
 							<view class="none-stock" 
-							v-if="item.stockCount.totalOfflineUse == 0">
+							v-if="item.stockCount.totalDockerUse == 0">
 								<view class="none-notice">
 									<text>暂时</text>
 									<text>借完</text>
@@ -386,6 +386,20 @@ export default {
 				this.chooseBookList.forEach(item => {
 					goodsIDs.push(item.id);
 				});
+				this.$api.preOrderCheckStock({ goodsIDs: goodsIDs, goodsType: 'online' }).then(res => {
+					console.log(res)
+					res.data.map((item, index) => {
+						console.log(item);
+						console.log(item.usageCount)
+						this.chooseBookList.map((sitem, sindex) => {
+							console.log(sitem);
+							console.log(sitem.usageCount)
+							if (item.goods_id === sitem.id) {
+								// 同步更新本地缓存书籍数量
+								this.chooseBookList[sindex].usageCount = item.usageCount;
+							}
+						});
+					});
 				// 价格升序
 				let result = this.chooseBookList.sort(this.compare('price'));
 				// 实际免费借阅次数
@@ -441,7 +455,7 @@ export default {
 							// 显示借书币不足弹窗
 							this.$refs.popup.open();
 						}else {
-							// 显示押金不足弹窗
+							// 显示押金不足弹窗··						
 							this.$refs.depositPopUp.open()
 						}
 					}else {
@@ -452,6 +466,7 @@ export default {
 				}
 				// 2.用户有免费借阅次数且所选书籍小于2且积分/50大于等于1(免费)
 				else if (this.free && len < 2 && reality >= 1) {
+					console.log('fress')
 					let goods_id = goodsIDs.join(',');
 					amount = 0;
 					console.log(amount);
@@ -459,14 +474,17 @@ export default {
 					// 下单
 					this.placeOrder(goods_id, 'coin')
 				}
-			}
+			},
+			)}
 		},
+		
 		// 下单
 		placeOrder(goods_id, type) {
+
 			this.$api.offlinePlaceOrder({
 				goods_id,
 				type,
-				customer_id: this.userInfo.id
+				customer_id: this.userInfo.id,
 			}).then(res => {
 				console.log(res);
 				// 下单成功
@@ -503,19 +521,7 @@ export default {
 				url: '../../pages/library/virtual'
 			});
 		}
-			// this.$api.preOrderCheckStock({ goodsIDs: goodsIDs, goodsType: 'online' }).then(res => {
-			// 	res.data.map((item, index) => {
-			// 		console.log(item);
-			// 		console.log(item.usageCount)
-			// 		this.chooseBookList.map((sitem, sindex) => {
-			// 			console.log(sitem);
-			// 			console.log(sitem.usageCount)
-			// 			if (item.goods_id === sitem.id) {
-			// 				// 同步更新本地缓存书籍数量
-			// 				this.chooseBookList[sindex].usageCount = item.usageCount;
-			// 			}
-			// 		});
-			// 	});
+
 				
 				
 

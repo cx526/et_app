@@ -17,7 +17,7 @@
 				<view class="detail-title-position">
 					<text>{{bookInfo.title}}</text>
 					<view class="book-count-style">
-						<text style="font-size: 30upx;">剩余: {{bookInfo.stock.usageCount}} 本</text>
+						<text style="font-size: 30upx;">剩余: {{bookInfo.stockCount.totalDockerUse}} 本</text>
 					</view>
 				</view>
 				
@@ -114,12 +114,12 @@
 					style="font-size: 20upx;color: #2AAEC4;"
 					>书篮</text>
 				</view>
-				<!-- 跳转书篮按钮加上书篮书本数 -->
-				<view class="cart-book-count-style" v-if="len !== 0">
+				<!-- 书篮本书指示点 -->
+				<view class="cart-book-count-style" v-if="len != 0">
 					<text>{{ len }}</text>
 				</view>
 			</view>
-			<view v-if="bookInfo.stock.usageCount !== 0" class="bottom-button-input" @tap="push">
+			<view v-if="bookInfo.stockCount.totalDockerUse !== 0" class="bottom-button-input" @tap="push">
 				<text style="font-size: 30upx">加入书篮</text>
 			</view>
 			<view v-else class="bottom-button-input"  style="background-color:#ccc; color: #fff;" @tap="push">
@@ -143,6 +143,7 @@ export default {
 			swiperCurrent: 0,
 			swiperLength: 0,
 			cartBookCount:"",
+			userInfo: '',
 			imgInfo: [
 				{
 					'imgUrl' : "../static/bookdetail/people.png"
@@ -167,14 +168,26 @@ export default {
 	},
 	onLoad(option) {
 		this.bookID = JSON.parse(decodeURIComponent(option.bookID));
-		// 获取书籍详情
-		this.getBookData();
+		this.getUserInfo()
 	},
 	onShow() {
 		// 获取书籍列表的数目
 		this.len = uni.getStorageSync("offlineCartList").length;
+		console.log(this.len)
 	},
 	methods: {
+		// 获取个人信息
+		getUserInfo() {
+			let mobile = uni.getStorageSync("userInfo").mobile;
+			this.$api.getCustom({ 
+				filterItems: { mobile }
+				}).then(res => {
+				this.userInfo = res.data[0];
+				let docker_mac = this.userInfo.dockerInfo.docker_mac
+				// 获取书籍详情
+				this.getBookData(docker_mac);
+			})
+		},
 		// 收藏功能
 		collection(){
 			uni.showToast({
@@ -184,11 +197,14 @@ export default {
 			});
 		},
 		// 获取书籍详情
-		getBookData() {
+		getBookData(docker_mac) {
 			uni.showLoading();
-			this.$api.getGoodsInfo({ 'NoPageing': '1', 'filterItems': {'id': this.bookID} }).then(res => {
+			this.$api.getGoodsInfo({ 
+				NoPageing: '1', 
+				filterItems: {'id': this.bookID} ,
+				docker_mac: docker_mac
+			}).then(res => {
 			   this.bookInfo = res.data.rows[0];
-				 console.log(this.bookInfo)
 			   uni.hideLoading();
 			})
 		},
@@ -200,53 +216,54 @@ export default {
 			// 获取当前添加书籍的数据
 			let add = this.bookInfo;
 			// 如果没有库存return
-			if(add.stock.usageCount === 0) {
+			if(add.stockCount.totalDockerUse === 0) {
 				uni.showToast({
 					title: '书本暂时借完，请选择其他书本',
 					duration: 2000,
 					icon: 'none'
 				})
-				return
-			}
-			// 书籍有库存
-			let arrList = uni.getStorageSync('offlineCartList') ? uni.getStorageSync('offlineCartList') : [];
-			let arr = [];
-			if (arrList && arrList.length > 0) {
-				arrList.map(obj => {
-					arr.push(obj.id);
-				});
-				if (arr.indexOf(add.id) === -1) {
+			}else {
+				// 书籍有库存
+				let arrList = uni.getStorageSync('offlineCartList') ? uni.getStorageSync('offlineCartList') : [];
+				let arr = [];
+				if (arrList && arrList.length > 0) {
+					arrList.map(obj => {
+						arr.push(obj.id);
+					});
+					if (arr.indexOf(add.id) === -1) {
+						uni.showToast({
+							title: '加入书篮成功',
+							duration: 2000,
+							icon: 'none',
+							success: () => {
+								// 同步数据
+								arrList.unshift(add);
+								this.len = arrList.length;
+								uni.setStorageSync('offlineCartList', arrList);
+							}
+						});
+					} else {
+						uni.showToast({
+							title: '相同图书请不要重复添加',
+							duration: 2000,
+							icon: 'none'
+						});
+					}
+				} else {
 					uni.showToast({
 						title: '加入书篮成功',
 						duration: 2000,
 						icon: 'none',
 						success: () => {
 							// 同步数据
-							arrList.unshift(add);
+							arrList.push(add);
 							this.len = arrList.length;
 							uni.setStorageSync('offlineCartList', arrList);
 						}
 					});
-				} else {
-					uni.showToast({
-						title: '相同图书请不要重复添加',
-						duration: 2000,
-						icon: 'none'
-					});
 				}
-			} else {
-				uni.showToast({
-					title: '加入书篮成功',
-					duration: 2000,
-					icon: 'none',
-					success: () => {
-						// 同步数据
-						arrList.push(add);
-						this.len = arrList.length;
-						uni.setStorageSync('offlineCartList', arrList);
-					}
-				});
 			}
+			
 		},
 		// 跳转到书篮tabbar页面
 		goCart() {

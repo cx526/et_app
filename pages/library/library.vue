@@ -1,5 +1,8 @@
 <template>
-	<view :style="{ height: showModel ? windowHeight : '' }" :class="showModel ? 'overflow' : ''">
+	<view 
+	:style="{ height: showModel ? windowHeight : '' }" 
+	:class="showModel ? 'overflow' : ''"
+	v-if="isLogin">
 		<!-- 头部 -->
 		<view class="header-box">
 			<view class="user"><image src="https://et-pic-server.oss-cn-shenzhen.aliyuncs.com/app_img/user-default.png"></image></view>
@@ -43,9 +46,9 @@
 				<template v-if="productList && productList.length > 0">
 					<view class="item" v-for="(item, index) in productList" :key="index" @tap="goDetail(item.id)">
 						<image :src="item.forGoodsPic[0].url" mode="" class="show"></image>
-						<!-- 无库存显示 -->
+						<!-- 无库存显示totalDockerUse -->
 						<view class="none-stock" 
-						v-if="item.stockCount.totalOfflineUse === 0">
+						v-if="item.stockCount.totalDockerUse === 0">
 							<view class="none-notice">
 								<text>暂时</text>
 								<text>借完</text>
@@ -63,7 +66,7 @@
 								<image src="https://et-pic-server.oss-cn-shenzhen.aliyuncs.com/app_img/index_zan.png" mode=""></image>
 								<text>{{ item.peopleCount }}人推荐</text>
 							</view>
-							<view class="right" v-if="item.stock.usageCount" @tap.stop="push(item)"><text>加入书篮</text></view>
+							<view class="right" v-if="item.stockCount.totalDockerUse" @tap.stop="push(item)"><text>加入书篮</text></view>
 							<view class="right" v-if="item.stock.usageCount == 0" style="background: #ccc;" @tap.stop="notice"><text>加入书篮</text></view>
 						</view>
 					</view>
@@ -134,6 +137,7 @@ import Popup from '@/components/lvv-popup/lvv-popup.vue';
 export default {
 	data() {
 		return {
+			isLogin: false, //登录限制
 			showModel: false, //控制分类弹窗的显示/隐藏
 			height: 0, //定义分类弹窗的高度
 			productList: [],
@@ -164,9 +168,8 @@ export default {
 		Popup
 	},
 	onLoad(option) {
-		// 权限弹窗
-		// this.$refs.powerPopUp.open()
-		
+		// 检测是否有登录
+		this.getLogin()
 		// 从搜索页跳转过来
 		if (option.isSearch) {
 			this.productList = JSON.parse(option.productList);
@@ -187,6 +190,7 @@ export default {
 	},
 	onShow() {
 		this.len = uni.getStorageSync('offlineCartList').length;
+		
 	},
 	onReady() {
 		// 设置分类弹窗的高度
@@ -224,19 +228,55 @@ export default {
 		}
 	},
 	methods: {
+		// 检测用户的登录状态
+		getLogin() {
+			let userInfo = uni.getStorageSync('userInfo');
+			if (userInfo.name === 'guest' || !userInfo) {
+				uni.showModal({
+					title: '您还未登录！',
+					content: '是否前往登录页面?',
+					success: (res) => {
+						if (res.confirm) {
+							uni.removeStorageSync('userInfo')
+							uni.reLaunch({url: '../guide/guide'})
+						}else {
+							uni.reLaunch({
+								url: '/pages/index/index'
+							})
+						}
+					}
+				})
+			}else {
+				this.isLogin = true
+			}
+		},
 		// 获取用户个人账户信息
 		getUserInfo() {
-			let mobile = uni.getStorageSync("userInfo").mobile;
-			this.$api.getCustom({ filterItems: { mobile } }).then(res => {
-				this.userInfo = res.data[0];
-				this.coin = this.userInfo.coin;//积分
-				this.shell = (+this.userInfo.shell).toFixed(2); //五车贝
-				// 计算用户的免费次数
-				this.getUserFreeCount()
-				// 获取所在幼儿园书柜的所有书籍
-				this.getBooksList();
-				
-			})
+			// 有授权登录过才去请求个人信息
+			if(this.isLogin) {
+				let mobile = uni.getStorageSync("userInfo").mobile;
+				this.$api.getCustom({ 
+					filterItems: { mobile }
+					}).then(res => {
+					this.userInfo = res.data[0];
+					console.log(this.userInfo)
+					if(!this.userInfo.schoolInfo || this.userInfo.schoolInfo == 				 '{}') {
+						// 显示绑卡弹窗
+						this.$refs.powerPopUp.open()
+					}else {
+						
+						this.coin = this.userInfo.coin;//积分
+						this.shell = (+this.userInfo.shell).toFixed(2); //五车贝
+						// 计算用户的免费次数
+						this.getUserFreeCount()
+						// 获取所在幼儿园书柜的所有书籍
+						this.getBooksList();
+					}
+					
+					
+				})
+			}
+
 		},
 		// 计算用户的免费次数
 		getUserFreeCount() {

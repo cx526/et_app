@@ -6,7 +6,7 @@
 		</view>
 		
 		<view class="right-position" @tap="insertToCart">
-			<view class="right-content" v-if="bookInfo.stock.usageCount !== 0">
+			<view class="right-content" v-if="bookInfo.stockCount.totalOnlineUse !== 0">
 				<text>加入书篮</text>
 			</view>
 			<view class="right-content" style="background-color:#ccc; color: #fff;" v-else>
@@ -38,7 +38,7 @@ export default {
 	},
 	methods: {
 		insertToCart() {
-			if(this.$props.bookInfo.stock.usageCount === 0){
+			if(this.$props.bookInfo.stockCount.totalOnlineUse === 0){
 				uni.showToast({
 					title:"书本暂时借完，请选择其他书本",
 					duration:2000,
