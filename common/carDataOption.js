@@ -16,7 +16,7 @@ async function getBookListStockToData(docker_mac) {
 		filterItems: {idString, docker_mac},
 		}).then(res=>{
 			console.log(res)
-		res.data.rows.map((item,index)=>{
+			res.data.rows.map((item,index)=>{
 			carListArr.map((sitem,sindex)=>{
 				if(item.id === sitem.id){
 					carListArr[sindex].stockCount.totalOnlineUse = item.stockCount.totalOnlineUse;
