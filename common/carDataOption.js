@@ -12,13 +12,13 @@ async function getBookListStockToData(docker_mac) {
 		idString = idString + "'" + goodsIDs[i] + "'" + ',' 
 	}
 	idString = idString.substring(0, idString.lastIndexOf(","));
-	console.log(idString)
 	await api.preOrderCheckStock({ 
 		filterItems: {idString, docker_mac},
 		}).then(res=>{
-		res.data.map((item,index)=>{
+			console.log(res)
+		res.data.rows.map((item,index)=>{
 			carListArr.map((sitem,sindex)=>{
-				if(item.goods_id === sitem.id){
+				if(item.id === sitem.id){
 					carListArr[sindex].stockCount.totalOnlineUse = item.stockCount.totalOnlineUse;
 				}
 			})
