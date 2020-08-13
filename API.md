@@ -39,14 +39,17 @@
   /***
      * 获取柜子商品
      * path：/api/docker/getDockerBook
-     * {
-     *    docker_mac: 74EE2A542FBA
-     *    "pageSize":2,
-     *    "currentPage":1
-     *    "filterItems"：{
-     *      "isbn13": "123456"
-     *    }
-     * }
+     *{
+          "pageSize":"2",
+          "currentPage":"1",
+          "filterItems":{
+            "docker_mac": "74EE2A542FBA",
+              "isbn13": "123456",
+              "id":"1098",
+              "title":"小王子",
+              "idString":"'1009','1843'"
+            }
+      }
      */
 ```
 
