@@ -53,6 +53,17 @@
      */
 ```
 
+```
+ /***
+     * 获取柜子所有书本的标签
+     * path：/api/docker/getDockerBookTag
+     * {
+     *   docker_mac: 74EE2A542FBA
+     * }
+     */
+```
+
+
 
 -线下订单部分
 
