@@ -36,7 +36,7 @@
 							<view v-if="listData.length > 0" style="width: 100%; display: flex; flex-direction: column; justify-content: center;align-items: center;">
 								<view class="cat-detail" v-for="(item,index) in listData" 
 								:key="index">
-									<et-cart-detail :key="index" :bookID="item.id"  :select="item.select" :imgSrc="item.forGoodsPic[0].url" :title="item.title" :status="item.status" :coin="item.coin" :count="item.count" :usageCount="item.usageCount" @changSelectType="changAllSelectType" @deleteData="deleteData"></et-cart-detail>
+									<et-cart-detail :key="index" :bookID="item.id"  :select="item.select" :imgSrc="item.forGoodsPic[0].url" :title="item.title" :status="item.status" :coin="item.coin" :count="item.count" :usageCount="item.stockCount.totalOnlineUse" @changSelectType="changAllSelectType" @deleteData="deleteData"></et-cart-detail>
 									<view class="white-space" style="height: 25upx;"></view>
 								</view>
 							</view>
