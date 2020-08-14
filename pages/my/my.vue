@@ -6,10 +6,12 @@
 				<view class="user-left-position">
 					<view class="userInfo-content">
 						<text style="color: #FFFFFF;font-size: 40upx;">{{userInfo.name === 'guest' ? '五车书游客, 您好！' : userInfo.name}}</text>
-						<view class="white-space-width"></view>
+					</view>
+					<view class="bindCard" @tap="goTiedCard">
+						绑卡
 					</view>
 					
-					<view style="height: 10upx;"></view>
+					
 					
 				</view>
 				
@@ -76,9 +78,10 @@
 					<view
 					style="width: 100%; box-sizing: border-box; padding: 0 18rpx;">
 						<uni-notice-bar
+						v-if="failLen > 0"
 						scrollable="true" 
 						single="true" 
-						text="您有一笔订单将逾期,请及时处理!" 
+						:text="noticeText" 
 						backgroundColor="#EBF8FF"
 						color="#333" 
 						showIcon
@@ -163,6 +166,8 @@ export default {
 	},
 	data() {
 		return {
+			noticeText: '',
+			failLen: 0,
 			updateOrderInfo: false,
 			test: '123456',
 			myOrderInfo: {
@@ -364,8 +369,38 @@ export default {
 		//更新tab
 		let bookCount = bookListData.cartBookCount();
 		this.getReadCount();
+		// 获取逾期书单判断是否出现通知条
+		this.getUserInfo()
 	},
 	methods: {
+		// 获取个人信息
+		getUserInfo() {
+			let mobile = uni.getStorageSync("userInfo").mobile;
+			this.$api.getCustom({ filterItems: { mobile } }).then(res => {
+				this.getOrderFail(res.data[0].id,res.data[0].dockerInfo.docker_mac)
+				
+			})
+		},
+		// 获取逾期书单判断是否出现通知条
+		getOrderFail(id ,docker_mac) {
+				this.$api.offlineUserOrderList({
+					docker_mac: docker_mac,
+					filterItems:{
+						custom_id: id,
+						order_type: 5 //失效书单类型
+					}
+				}).then(res => {
+					
+					this.failLen = res.data.rows.length;
+					this.noticeText = `您有${this.failLen}笔订单将逾期，请移步至订单页及时处理`
+				})
+		},
+		// 跳转到绑卡页面
+		goTiedCard() {
+			uni.navigateTo({
+				url: '/pages/library/tied-card'
+			})
+		},
 		clearSessionAction() {
 			uni.showActionSheet({
 			    itemList: ['重新登录'],
@@ -609,10 +644,22 @@ export default {
 	align-items: flex-start;
 }
 .userInfo-content {
-	display: flex;
+/* 	display: flex;
+	flex-direction: column; */
+	/* display: flex;
 	flex-direction: row;
 	justify-content: center;
-	align-items: center;
+	align-items: center; */
+}
+.user-left-position .bindCard {
+	color: #fff;
+	font-size: 28rpx;
+	background: rgba(255,255,255, 0.3);
+	box-sizing: border-box;
+	padding: 4rpx 20rpx;
+	border-radius: 24rpx;
+	display: inline-block;
+	margin-top: 14rpx;
 }
 .userInfo-member-border {
 	/* background-color: #2AAEC4; */

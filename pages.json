@@ -1,7 +1,7 @@
 {
 
 	"pages": [
-
+		
 		
 		{
 			"path": "pages/index/index",
@@ -15,7 +15,11 @@
 		{
 			"path": "pages/library/take-books",
 			"style": {
-				"navigationBarTitleText": "快速取书"
+				"navigationBarTitleText": "快速取书",
+					"navigationStyle": "custom",
+					"app-plus": {
+						"titleNView": false
+					}
 			}
 		},
 		{
@@ -34,7 +38,11 @@
 	{
 			"path": "pages/library/virtual",
 			"style": {
-				"navigationBarTitleText": "我的钱包"
+				"navigationBarTitleText": "我的钱包",
+				"navigationStyle": "custom",
+				"app-plus": {
+					"titleNView": false
+				}
 			}
 		},
 	

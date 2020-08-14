@@ -74,10 +74,8 @@ export default {
 
 	onShow(){
 		this.bookCatShow = true;
-		
-		
 		// 线下逻辑
-		// 判断当前页面显示线上/线下
+		// 判断当前页面显示线上 flag = false /线下 flag = true
 		if(this.flag) {
 			this.isStatus  = false;
 			this.currentIndex = 0
@@ -89,8 +87,7 @@ export default {
 		this.tabList[0].number = uni.getStorageSync("offlineCartList").length;
 		this.tabList[1].number = uni.getStorageSync("carListInfo").length;
 		this.offlineBooksList =  uni.getStorageSync("offlineCartList");
-		// 实时更新线下缓存书籍的库存
-		this.upDateStock()
+		
 		
 	},
 	onHide() {
@@ -100,11 +97,10 @@ export default {
 		this.flag = ''
 	},
 	onLoad(option){
+		console.log(option)
 		this.bookCatShow = true;
-		// 实时更新线下缓存书籍的库存
-		this.upDateStock()
 		// 线下逻辑
-		this.flag = option.flag;
+		this.flag = option.flag
 		// 获取屏幕高度
 		uni.getSystemInfo({
 			success: res => {
@@ -141,29 +137,8 @@ export default {
 		countChange() {
 			this.tabList[0].number = uni.getStorageSync("offlineCartList").length
 		},
-		// 实时更新线下缓存书籍的库存
-		upDateStock() {
-			let goodsIDs = [];
-			this.offlineBooksList.forEach(item => {
-				goodsIDs.push(item.id);
-			});
-			this.$api.preOrderCheckStock({ goodsIDs: goodsIDs, goodsType: 'online' }).then(res => {
-				res.data.map((item, index) => {
-					this.offlineBooksList.map((sitem, sindex) => {
-						// 动态添加isSelect属性用于判定是否选中
-						if(sitem.isSelect) {
-							sitem.isSelect = sitem.isSelect
-						}else {
-							sitem.isSelect = false
-						}
-						if (item.goods_id === sitem.id) {
-							// 同步更新本地缓存书籍数量
-							this.offlineBooksList[sindex].usageCount = item.usageCount;
-						}
-					});
-				});
-			});
-		},
+
+		
 		
 
 		

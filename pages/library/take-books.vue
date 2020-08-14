@@ -1,219 +1,229 @@
 <template>
-	<view v-if="isLogin">
-		<!-- tab切换 -->
-		<view class="tab-box">
-			<block 
-			v-for="( item, index ) in tabList.list"
-			:key="index"
-			>
-				<view class="item" 
-				:class=" tabList.currentIndex == index ? ' active' : '' "
-				@tap="changTab(index)">
-				{{ item.title }}
+	<view>
+		<uni-nav-bar
+		left-icon="back"  
+		title="待取书单" 
+		status-bar
+		:shadow="false"
+		@clickLeft="clickLeft"></uni-nav-bar>
+		<view v-if="isLogin">
+			<!-- tab切换 -->
+			<view class="tab-box">
+				<block 
+				v-for="( item, index ) in tabList.list"
+				:key="index"
+				>
+					<view class="item" 
+					:class=" tabList.currentIndex == index ? ' active' : '' "
+					@tap="changTab(index)">
+					{{ item.title }}
+					</view>
+				</block>
+			</view>
+			<!-- 待归还书单 -->
+			<block v-if="tabList.currentIndex == 0">
+				<view v-if="orderList && orderList.length > 0">
+					<view class="order-list"
+					v-for="(item, index) in orderList"
+					:key="index">
+						<view class="item">
+							<view class="topic">
+								<view style="font-weight: bold;">订单号：{{ item.order_no }}</view>
+								<view class="status">
+										<text>{{ item.msg }}</text>
+								</view>
+							</view>
+							<view class="book-list" 
+							v-if="item.dockerInfo && item.dockerInfo.length > 0">
+								<block 
+								v-for="(list,listIndex) in item.dockerInfo" 
+								:key="listIndex">
+									<view class="book-item">
+										<view class="show">
+											<image :src="list.pic"></image>
+										</view>
+										
+										<view class="title">
+											{{ list.title }}
+										</view>
+										<view class="number">
+											<text style="margin-bottom: 20rpx;">{{ list.price }}贝</text>
+											<tetx>x1</tetx>
+										</view>
+									</view>
+								</block>
+							</view>
+							<view class="order-info">
+								<view class="left">
+									<view class="text">
+										<text>创建时间：{{ item.hanlde_create_time }}</text>
+									</view>
+									<!-- 积分支付 -->
+									<view class="text spcial" v-if="item.pay_type != 'shell' ">
+										<view >
+											<text>积分：-50</text>
+											<text style="color: #f00;">（优惠{{ item.price }}贝）</text>
+										</view>
+										<view style="font-weight: bold; color: #000;">
+											<text>实付：0</text>
+										</view>
+									</view>
+									<!-- 五车贝支付 -->
+									<view class="text spcial" v-else>
+										<view style="font-weight: bold; color: #000;">
+											<text>实付：{{ item.price }}</text>
+										</view>
+									</view>
+								</view>
+								<view class="btn">
+									<view style="flex: 1;"></view>
+									<view class="btn-box">
+										<view class="borrow" @tap="open">
+											<text>取书码</text>
+										</view>
+									</view>
+										
+								</view>
+							</view>
+						</view>
+					</view>
+					<uni-load-more
+					:status="loadStatus" 
+					:content-text="loadText" 
+					v-if="isLoadingMore" />
+				</view>
+				
+				<!-- 显示暂无订单组件 -->
+				<view v-else>
+					<offline-none-order></offline-none-order>
 				</view>
 			</block>
-		</view>
-		<!-- 待归还书单 -->
-		<block v-if="tabList.currentIndex == 0">
-			<view v-if="orderList && orderList.length > 0">
-				<view class="order-list"
-				v-for="(item, index) in orderList"
-				:key="index">
-					<view class="item">
-						<view class="topic">
-							<view style="font-weight: bold;">订单号：{{ item.order_no }}</view>
-							<view class="status">
-									<text>{{ item.msg }}</text>
-							</view>
-						</view>
-						<view class="book-list" 
-						v-if="item.dockerInfo && item.dockerInfo.length > 0">
-							<block 
-							v-for="(list,listIndex) in item.dockerInfo" 
-							:key="listIndex">
-								<view class="book-item">
-									<view class="show">
-										<image :src="list.pic"></image>
-									</view>
-									
-									<view class="title">
-										{{ list.title }}
-									</view>
-									<view class="number">
-										<text style="margin-bottom: 20rpx;">{{ list.price }}贝</text>
-										<tetx>x1</tetx>
-									</view>
-								</view>
-							</block>
-						</view>
-						<view class="order-info">
-							<view class="left">
-								<view class="text">
-									<text>创建时间：{{ item.hanlde_create_time }}</text>
-								</view>
-								<!-- 积分支付 -->
-								<view class="text spcial" v-if="item.pay_type != 'shell' ">
-									<view >
-										<text>积分：-50</text>
-										<text style="color: #f00;">（优惠{{ item.price }}贝）</text>
-									</view>
-									<view style="font-weight: bold; color: #000;">
-										<text>实付：0</text>
-									</view>
-								</view>
-								<!-- 五车贝支付 -->
-								<view class="text spcial" v-else>
-									<view style="font-weight: bold; color: #000;">
-										<text>实付：{{ item.price }}</text>
-									</view>
+			<!-- 已归还书单 -->
+			<block v-else>
+				<view v-if="failOrderList && failOrderList.length > 0">
+					<view class="order-list" 
+					v-for="(item, index) in failOrderList" :key="index">
+						<view class="item">
+							<view class="topic">
+								<view style="font-weight: bold;">订单号：{{ item.order_no }}</view>
+								<view class="status">
+										<text style="color: #868686;">已失效</text>
 								</view>
 							</view>
-							<view class="btn">
-								<view style="flex: 1;"></view>
-								<view class="btn-box">
-									<view class="borrow" @tap="open">
-										<text>取书码</text>
+							<view class="book-list">
+								<block 
+								v-for="(list,listIndex) in item.dockerInfo" 
+								:key="listIndex">
+									<view class="book-item">
+										<view class="show">
+											<image :src="list.pic"></image>
+										</view>
+										
+										<view class="title">
+											{{ list.title }}
+										</view>
+										<view class="number">
+											<text style="margin-bottom: 20rpx;">{{ list.price }}贝</text>
+											<tetx>x1</tetx>
+										</view>
 									</view>
-								</view>
+								</block>
+							</view>
+							<view class="order-info">
+								<view class="left">
+									<view class="text">
+										<text>创建时间：{{ item.hanlde_create_time }}</text>
+									</view>
+									<!-- 积分支付 -->
+									<view class="text spcial"
+									v-if="item.pay_type != 'shell'">
+										<view>
+											<text>积分：-50</text>
+											<text style="color: #f00;">（优惠{{ item.price }}贝）</text>
+										</view>
+										<view style="font-weight: bold; color: #000;">
+											<text>实付：0</text>
+										</view>
+									</view>
+									<!-- 五车贝支付 -->
+									<view class="text spcial" v-else>
+										
+										<view style="font-weight: bold; color: #000;">
+											<text>实付：{{ item.price }}</text>
+										</view>
+									</view>
 									
+									
+									
+								</view>
+								<view class="btn">
+									<view style="flex: 1;"></view>
+									<view class="btn-box">
+										<view class="del">
+											<text>删除</text>
+										</view>
+									</view>
+										
+								</view>
 							</view>
 						</view>
 					</view>
+					<uni-load-more
+					:status="loadStatus" 
+					:content-text="loadText" 
+					v-if="isLoadingMore" />
 				</view>
-				<uni-load-more
-				:status="loadStatus" 
-				:content-text="loadText" 
-				v-if="isLoadingMore" />
-			</view>
-			
-			<!-- 显示暂无订单组件 -->
-			<view v-else>
-				<offline-none-order></offline-none-order>
-			</view>
-		</block>
-		<!-- 已归还书单 -->
-		<block v-else>
-			<view v-if="failOrderList && failOrderList.length > 0">
-				<view class="order-list" 
-				v-for="(item, index) in failOrderList" :key="index">
-					<view class="item">
-						<view class="topic">
-							<view style="font-weight: bold;">订单号：{{ item.order_no }}</view>
-							<view class="status">
-									<text style="color: #868686;">已失效</text>
-							</view>
-						</view>
-						<view class="book-list">
-							<block 
-							v-for="(list,listIndex) in item.dockerInfo" 
-							:key="listIndex">
-								<view class="book-item">
-									<view class="show">
-										<image :src="list.pic"></image>
-									</view>
-									
-									<view class="title">
-										{{ list.title }}
-									</view>
-									<view class="number">
-										<text style="margin-bottom: 20rpx;">{{ list.price }}贝</text>
-										<tetx>x1</tetx>
-									</view>
-								</view>
-							</block>
-						</view>
-						<view class="order-info">
-							<view class="left">
-								<view class="text">
-									<text>创建时间：{{ item.hanlde_create_time }}</text>
-								</view>
-								<!-- 积分支付 -->
-								<view class="text spcial"
-								v-if="item.pay_type != 'shell'">
-									<view>
-										<text>积分：-50</text>
-										<text style="color: #f00;">（优惠{{ item.price }}贝）</text>
-									</view>
-									<view style="font-weight: bold; color: #000;">
-										<text>实付：0</text>
-									</view>
-								</view>
-								<!-- 五车贝支付 -->
-								<view class="text spcial" v-else>
-									
-									<view style="font-weight: bold; color: #000;">
-										<text>实付：{{ item.price }}</text>
-									</view>
-								</view>
-								
-								
-								
-							</view>
-							<view class="btn">
-								<view style="flex: 1;"></view>
-								<view class="btn-box">
-									<view class="del">
-										<text>删除</text>
-									</view>
-								</view>
-									
-							</view>
-						</view>
-					</view>
-				</view>
-				<uni-load-more
-				:status="loadStatus" 
-				:content-text="loadText" 
-				v-if="isLoadingMore" />
-			</view>
-			
-			<!-- 显示暂无订单组件 -->
-			<view v-else>
-				<offline-none-order></offline-none-order>
-			</view>
-		</block>
-		<!-- 订单凭证弹窗 -->
-		<uni-popup ref="orderPopUp">
-			<view class="order-box"  :style="{ width: popUpWidth }">
 				
-				<view class="title">
-					<text class="line" style="margin-right: 16rpx;"></text>
-					<text class="circle" style="margin-right: 20rpx;"></text>
-					<text>取书二维码</text>
-					<text class="circle" style="margin-left: 20rpx;"></text>
-					<text class="line" style="margin-left: 16rpx;"></text>
+				<!-- 显示暂无订单组件 -->
+				<view v-else>
+					<offline-none-order></offline-none-order>
 				</view>
-				<view class="notice">
-					<view>请将此二维码放至扫码区</view>
-					<view>获取个人书单信息</view>
+			</block>
+			<!-- 订单凭证弹窗 -->
+			<uni-popup ref="orderPopUp">
+				<view class="order-box"  :style="{ width: popUpWidth }">
+					
+					<view class="title">
+						<text class="line" style="margin-right: 16rpx;"></text>
+						<text class="circle" style="margin-right: 20rpx;"></text>
+						<text>取书二维码</text>
+						<text class="circle" style="margin-left: 20rpx;"></text>
+						<text class="line" style="margin-left: 16rpx;"></text>
+					</view>
+					<view class="notice">
+						<view>请将此二维码放至扫码区</view>
+						<view>获取个人书单信息</view>
+					</view>
+					<view class="code">
+						<image src="../../static/library/code.png.png" mode=""></image>
+					</view>
+					<view class="title">
+						<text class="line" style="margin-right: 16rpx;"></text>
+						<text class="circle" style="margin-right: 20rpx;"></text>
+						<text>取书验证码</text>
+						<text class="circle" style="margin-left: 20rpx;"></text>
+						<text class="line" style="margin-left: 16rpx;"></text>
+					</view>
+					<view class="notice">
+						<view>请输入以下验证码，点击确认</view>
+						<view>获取个人书单信息</view>
+					</view>
+					<view class="code-number" >
+						<text>229922</text>
+					</view>
 				</view>
-				<view class="code">
-					<image src="../../static/library/code.png.png" mode=""></image>
-				</view>
-				<view class="title">
-					<text class="line" style="margin-right: 16rpx;"></text>
-					<text class="circle" style="margin-right: 20rpx;"></text>
-					<text>取书验证码</text>
-					<text class="circle" style="margin-left: 20rpx;"></text>
-					<text class="line" style="margin-left: 16rpx;"></text>
-				</view>
-				<view class="notice">
-					<view>请输入以下验证码，点击确认</view>
-					<view>获取个人书单信息</view>
-				</view>
-				<view class="code-number" >
-					<text>229922</text>
-				</view>
-			</view>
-		</uni-popup>
-		
+			</uni-popup>
+			
+		</view>
 	</view>
+	
 </template>
 
 <script>
 	import uniPopup from '@/components/uni-popup/uni-popup.vue';
 	import uniLoadMore from '@/components/uni-load-more/uni-load-more.vue';
 	import offlineNoneOrder from '@/components/offline-components/offline-none-order.vue'
+	import uniNavBar from "@/components/uni-nav-bar/uni-nav-bar.vue"
 	export default {
 		data() {
 			return {
@@ -237,6 +247,7 @@
 				failOrderListPage: 0, //失效书单总数
 				current_timestamp: 0,
 				timer: null,
+				from: '',
 				tabList: {
 					currentIndex: 0,
 					list: [
@@ -253,9 +264,12 @@
 		components: {
 			uniPopup,
 			uniLoadMore,
-			offlineNoneOrder
+			offlineNoneOrder,
+			uniNavBar
 		},
 		onLoad(option) {
+			// 判断是从下单成功后跳转过来还是直接从我的页面跳转过来
+			this.from = option.from ? option.from : ''
 			if(option !== '{}') {
 				this.tabList.currentIndex = option.status ? option.status : 0;
 			}
@@ -450,6 +464,19 @@
 			close() {
 				this.$refs.orderPopUp.close()
 			},
+			// 点击自定义导航栏左侧按钮事件
+			clickLeft() {
+				// 从下单成功跳转过来
+				if(this.from == 'placeOrder') {
+					uni.reLaunch({
+						url: '../cart/cart?flag=true'
+					})
+				}else {
+					uni.navigateBack({
+						delta: -1
+					})
+				}
+			},
 		}
 	}
 	
@@ -630,7 +657,7 @@
 		width: 16rpx;
 		height: 16rpx;
 		background: #CAE6F2;
-		transform: rotate(45deg);
+		transfrom: rotate(45deg);
 	}
 	.order-box .notice {
 		text-align: center;

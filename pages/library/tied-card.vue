@@ -15,8 +15,14 @@
 			</view>
 			<view class="item">
 				<text class="label">借书卡号</text>
-				<input type="text" placeholder="请填写幼儿所属班级" 
-				placeholder-style="font-size: 30rpx; color: #999" />
+				<!-- <view style="flex: 1;display: flex;align-items: center;justify-content: right;"> -->
+					<!-- <text style="color: #00B4C9;font-weight: bold;">+ET</text> -->
+					<input type="number" placeholder="请填写借书卡号"
+					placeholder-style="font-size: 30rpx; color: #999"
+					:value="prefix"
+					@input="cardNumber"/>
+				<!-- </view> -->
+				
 				<image src="https://et-pic-server.oss-cn-shenzhen.aliyuncs.com/app_img/offline-icon-right.png" mode=""></image>
 			</view>
 			<view class="item">
@@ -53,14 +59,24 @@
 	export default {
 		data() {
 			return {
-				birthDay: '请选择幼儿生日'
+				birthDay: '请选择幼儿生日',
+				prefix: ''
 			}
 		},
 		methods: {
-			bindDateChange(event) {
-				console.log(event);
+			bindDateChange(event) {;
 				this.birthDay = event.target.value
 			},
+			cardNumber(event) {
+				let value = event.detail.value;
+				if(this.prefix == '') {
+					this.prefix = 'ET' + value;
+				}else {
+					this.prefix = value
+				}
+				
+				console.log(this.prefix)
+			}
 		}
 	}
 </script>

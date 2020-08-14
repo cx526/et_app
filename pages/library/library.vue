@@ -67,7 +67,7 @@
 								<text>{{ item.peopleCount }}人推荐</text>
 							</view>
 							<view class="right" v-if="item.stockCount.totalDockerUse" @tap.stop="push(item)"><text>加入书篮</text></view>
-							<view class="right" v-if="item.stock.usageCount == 0" style="background: #ccc;" @tap.stop="notice"><text>加入书篮</text></view>
+							<view class="right" v-if="item.stockCount.totalDockerUse == 0" style="background: #ccc;" @tap.stop="notice"><text>加入书篮</text></view>
 						</view>
 					</view>
 				</template>
@@ -85,17 +85,14 @@
 							</view>
 						</view>
 						<view class="popup-box">
-							<view class="popup-item" v-for="(item, index) in typeList" :key="index">
-								<view class="topic">{{ item.name }}</view>
+							<view class="popup-item" >
+								<!-- <view class="topic">{{ item.name }}</view> -->
 								<view class="popup-list">
-									<view
-										class="subset"
-										v-for="(list, listIndex) in item.children"
-										:key="listIndex"
-										@tap.stop="changeType(list.id, index, listIndex)"
-										:class="list.isSelect ? 'active' : ''"
-									>
-										{{ list.name }}
+									<view class="subset" 
+									v-for="(item, index) in typeList" :key="index"
+									:class="item.isSelect ? 'active' : ''"
+									@tap="changeType(item.id, index)">
+										{{ item.tag_name }}
 									</view>
 								</view>
 							</view>
@@ -159,6 +156,7 @@ export default {
 			shell: 0,//五车贝
 			coin: 0,//积分
 			free: 0,//免费借阅次数
+			docker_mac: '',
 		};
 	},
 	components: {
@@ -167,7 +165,7 @@ export default {
 		uniNoticeBar,
 		Popup
 	},
-	onLoad(option) {
+	async onLoad(option) {
 		// 检测是否有登录
 		this.getLogin()
 		// 从搜索页跳转过来
@@ -176,10 +174,10 @@ export default {
 			this.loadStatus = 'noMore';
 		} else {
 			// 获取用户个人账户信息
-			this.getUserInfo()
+			await this.getUserInfo()
 		}
-		// 获取书籍分类
-		this.getBooksType();
+		
+		// 读取书篮书籍的本数
 		this.len = uni.getStorageSync('offlineCartList').length;
 		uni.getSystemInfo({
 			success: res => {
@@ -210,7 +208,7 @@ export default {
 		// 分类加载更多
 		if (this.loadStatus !== 'noMore' && !this.isType) {
 			this.currentPage = this.currentPage + 1;
-			this.getMoreList(this.id, this.currentPage);
+			this.getMoreList(this.id);
 		} else {
 			this.currentPage = this.currentPage + 1;
 			if (this.loadStatus !== 'noMore') {
@@ -259,6 +257,7 @@ export default {
 					filterItems: { mobile }
 					}).then(res => {
 					this.userInfo = res.data[0];
+					this.docker_mac = this.userInfo.dockerInfo.docker_mac;
 					console.log(this.userInfo)
 					if(!this.userInfo.schoolInfo || this.userInfo.schoolInfo == 				 '{}') {
 						// 显示绑卡弹窗
@@ -271,6 +270,8 @@ export default {
 						this.getUserFreeCount()
 						// 获取所在幼儿园书柜的所有书籍
 						this.getBooksList();
+						// 获取书籍分类
+						this.getBooksType();
 					}
 					
 					
@@ -305,13 +306,14 @@ export default {
 		},
 		// 获取书籍分类
 		getBooksType() {
-			this.$api.getKinds().then(res => {
-				res.data[0].children.map(item => {
-					item.children.map(list => {
-						list.isSelect = false;
-					});
+			this.$api.offlineBookType({
+				docker_mac: this.docker_mac
+			}).then(res => {
+				console.log(res);
+				res.data.rows.map(item => {
+					item.isSelect = false;
 				});
-				this.typeList = res.data[0].children;
+				this.typeList = res.data.rows;
 			});
 		},
 		// 获取全部书籍
@@ -322,36 +324,42 @@ export default {
 			// this.$refs.typepopup.close();
 		},
 		// 改变分类
-		changeType(id, index, listIndex) {
+		changeType(id, index) {
 			// 改变分类时重置需要请求的参数
 			this.id = id;
+			console.log(this.id);
 			this.currentPage = 1;
 			// 重置区分全部还是单个分类
 			this.isType = false;
 			this.loadStatus = 'loading';
+			// 动态添加样式；
+			this.typeList.map(item => {
+				item.isSelect = false;
+			})
+			this.typeList[index].isSelect = true
+			// 手动关闭弹窗
+			this.showModel = false;
+			// 发起请求
 			uni.showLoading({
 				title: '数据加载中',
 				mask: true
 			});
-			// 动态添加样式
-			this.typeList.map(item => {
-				item.children.map(list => {
-					list.isSelect = false;
-				});
-			});
-			this.typeList[index].children[listIndex].isSelect = true;
+			
 			// 请求分类商品的参数
 			let param = {
 				pageSize: this.pageSize,
 				currentPage: this.currentPage,
 				filterItems: {
-					kind: id,
-					tagCount: 2,
-					state: 1
+					tags: this.id,
+					docker_mac: this.docker_mac
 				}
 			};
-			this.$api.getGoodsInfo(param).then(res => {
+			
+			this.$api.offlineOrderCheckStock(param).then(res => {
 				uni.hideLoading();
+				console.log(res)
+				
+				
 				this.productList = [];
 
 				this.productList = res.data.rows;
@@ -359,22 +367,21 @@ export default {
 				if (this.productList.length < 20) {
 					this.loadStatus = 'noMore';
 				}
-				// 手动关闭弹窗
-				this.showModel = false;
+				
 			});
 		},
 		// 分类上拉加载更多数据
-		getMoreList(id, currentPage) {
+		getMoreList(id) {
 			// 请求参数
 			let param = {
 				pageSize: this.pageSize,
 				currentPage: this.currentPage,
 				filterItems: {
-					kind: id,
-					tagCount: 2
+					tags: id,
+					docker_mac: this.docker_mac
 				}
 			};
-			this.$api.getGoodsInfo(param).then(res => {
+			this.$api.offlineOrderCheckStock(param).then(res => {
 				this.productList = [...this.productList, ...res.data.rows];
 				if (res.data.rows < 20) {
 					this.loadStatus = 'noMore';

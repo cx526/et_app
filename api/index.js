@@ -131,13 +131,25 @@ api.getGiftExchange = params => request.globalRequest('/api/gift/getGiftExchange
 
 // 线下充值
 api.offlinePayMent = params => request.globalRequest('/api/shellWeChatPay/payment', 'POST', params)
+
 // 线下充值回调
 api.offlineUpdatePayMent = params => request.globalRequest('/api/shellWeChatPay/updatePayment', 'POST', params)
+
 // 线下书柜书籍列表
 api.offlineGetBooksList = params => request.globalRequest('/api/docker/getDockerBook', 'POST', params)
+
 // 线下下单业务
 api.offlinePlaceOrder = params => request.globalRequest('/api/offlineOrder/buyOfflineBooks', 'POST', params)
+
 // 线下用户订单
 api.offlineUserOrderList = params => request.globalRequest('/api/offlineOrder/selOfflineOrder', 'POST', params)
 
+// 线下核对订单库存(线下书籍搜索)
+api.offlineOrderCheckStock = params => request.globalRequest('/api/docker/getDockerBook', 'POST', params)
+
+// 线下书籍分类
+api.offlineBookType = params => request.globalRequest('/api/docker/getDockerBookTag', 'POST', params)
+
+// 充值记录
+api.offlinePayRecord = params => request.globalRequest('/api/shell/selShellDetail', 'POST', params)
 export default api

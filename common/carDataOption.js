@@ -15,7 +15,6 @@ async function getBookListStockToData(docker_mac) {
 	await api.preOrderCheckStock({ 
 		filterItems: {idString, docker_mac},
 		}).then(res=>{
-			console.log(res)
 			res.data.rows.map((item,index)=>{
 			carListArr.map((sitem,sindex)=>{
 				if(item.id === sitem.id){
@@ -124,7 +123,6 @@ function insertToCart(bookDetail) {
 
 // 删除购物车
 function deleteToCart(bookID) {
-	console.log(bookID);
 	// 获取书蓝列表
 	let carListArr = getBookListData();
 	// 处理数据
@@ -161,7 +159,6 @@ function changSelectType(bookID) {
 	let carListArr = getBookListData();
 	carListArr.forEach(item=>{
 		 if(String(item.id) === String(bookID)){
-			 console.log(item);
 			if(item.select === true){
 				item.select = false;
 			}else if(item.select === false){

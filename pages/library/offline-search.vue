@@ -32,7 +32,7 @@
 			</view>
 		</view>
 		<!-- 热门搜索 -->
-		<view class="history-search"
+		<!-- <view class="history-search"
 		v-if="hotSearch && hotSearch.length > 0">
 			<view class="topic">
 				<text>热门搜索</text>
@@ -45,7 +45,7 @@
 					<text>{{ item.goods_info.title }}</text>
 				</view>
 			</view>
-		</view>
+		</view> -->
 	</view>
 </template>
 
@@ -57,7 +57,12 @@
 				historySearch: [],//历史搜索
 				productList: [], //搜索结果
 				hotSearch: [], //热门搜索
+				docker_mac: ''
 			}
+		},
+		onLoad() {
+			// 获取用户账户信息
+			this.getUserInfo()
 		},
 		onShow() {
 			this.historySearch = uni.getStorageSync("offlineHistorySearch");
@@ -65,6 +70,15 @@
 			this.getHotSearch()
 		},
 		methods: {
+			// 获取个人账户信息
+			getUserInfo() {
+				let mobile = uni.getStorageSync("userInfo").mobile;
+				this.$api.getCustom({
+					filterItems: { mobile }
+				}).then(res => {
+					this.docker_mac = res.data[0].dockerInfo.docker_mac;
+				})
+			},
 			// 监听input搜索框事件
 			inputSearch(event) {
 				this.seachText = event.detail.value;
@@ -95,7 +109,8 @@
 				}
 				let param = {
 					filterItems: {
-						search: this.seachText
+						search: this.seachText,
+						docker_mac: this.docker_mac
 					}
 				}
 				// 网络请求
@@ -127,7 +142,8 @@
 				}
 				let param = {
 					filterItems: {
-						search: this.seachText
+						search: this.seachText,
+						docker_mac: this.docker_mac					
 					}
 				}
 				// 网络请求

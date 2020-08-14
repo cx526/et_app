@@ -1,5 +1,5 @@
 <template>
-	<view class="content">
+	<view class="content" v-if="isLogin">
 		<view class="top-search">
 			<!-- <view class="search-box" @tap="toSearch">
 				<icon class="search-icon" type="search"/>
@@ -39,6 +39,7 @@ export default {
 	},
 	data() {
 		return {
+			isLogin: false,
 			tabBars:['全部','待支付','待发货','待收货','待还书','待取件','待评价','逾期','退款'],	//订单tab
 			tabBarID:0,  //初始化标签数据库ID
 			tabCurrentIndex:-1,
@@ -71,11 +72,36 @@ export default {
 			this.dataInit();
 		}
 	},
+	onShow() {
+		this.getLogin()
+	},
 	onReachBottom : function(){
 		const status_text = this.tabBars[this.tabCurrentIndex];
 		this.getData(status_text);
 	},
 	methods: {
+		// 授权登录
+		getLogin() {
+			let userInfo = uni.getStorageSync('userInfo');
+			if (userInfo.name === 'guest' || !userInfo) {
+				uni.showModal({
+					title: '您还未登录！',
+					content: '是否前往登录页面?',
+					success: (res) => {
+						if (res.confirm) {
+							uni.removeStorageSync('userInfo')
+							uni.reLaunch({url: '../guide/guide'})
+						}else {
+							uni.reLaunch({
+								url: '/pages/index/index'
+							})
+						}
+					}
+				})
+			}else {
+				this.isLogin = true
+			}
+		},
 		btnClick() {
 			console.log(this.defalutAddress);
 		},

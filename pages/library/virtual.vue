@@ -1,5 +1,11 @@
 <template>
 	<view>
+		<uni-nav-bar
+		left-icon="back"  
+		title="我的钱包" 
+		status-bar
+		:shadow="false"
+		@clickLeft="clickLeft"></uni-nav-bar>
 		<view class="pay-box">
 			<image src="https://et-pic-server.oss-cn-shenzhen.aliyuncs.com/app_img/library-money.png" mode="widthFix" class="banner"></image>
 			<view class="context">
@@ -9,7 +15,7 @@
 						<text>五车贝</text>
 					</view>
 					<view class="number">
-						<text>300</text>
+						<text>{{ shell }}</text>
 					</view>
 					<view class="btn" @tap="goPay">
 						<text>立即充值</text>
@@ -22,9 +28,9 @@
 						<text>押金</text>
 					</view>
 					<view class="number">
-						<text>29.9</text>
+						<text>{{ deposit }}</text>
 					</view>
-					<view class="btn">
+					<view class="btn" @tap="goDeposit">
 						<text>立即提现</text>
 					</view>
 				</view>
@@ -40,16 +46,18 @@
 				<text class="line" style="margin-left: 16rpx;"></text>
 			</view>
 			<view class="context">
-				<block v-for="n in 3" :key="n">
+				<block v-for="(item, index) in payRecordList" :key="index">
 					<view class="main">
 						<view class="item">
 							<view class="topic">
 								<text>书柜借阅</text>
-								<text>-39.00</text>
+								<text v-if="item.shell < 0">{{ item.shell }}</text>
+								<text v-else 
+								style="color: #039EB9;">+{{ item.shell }}</text>
 							</view>
 							<view class="time">
-								<text style="margin-right: 12rpx;">创建时间：2020.07.15</text>
-								<text>16:00:00</text>
+								<text style="margin-right: 12rpx;">创建时间：{{ item.handle_create_time }}</text>
+								<!-- <text>16:00:00</text> -->
 							</view>
 						</view>
 					</view>
@@ -58,23 +66,127 @@
 			</view>
 			
 		</view>
+		<uni-load-more
+		:status="loadStatus" 
+		:content-text="loadText" />
 	</view>
 </template>
 
 <script>
+	import uniNavBar from "@/components/uni-nav-bar/uni-nav-bar.vue"
+	import uniLoadMore from '@/components/uni-load-more/uni-load-more.vue';
 	export default {
 		data() {
 			return {
-				
+				userInfo: '',
+				shell: 0.00,
+				deposit: 0.00,
+				id: '',
+				payRecordList: [],
+				pageSize: 10,
+				currentPage: 1,
+				loadStatus: 'loading',
+				loadText: {
+					contentdown: '上拉加载更多',
+					contentrefresh: '加载中',
+					contentnomore: '暂无更多数据'
+				},
+				isLoadingMore: true
+			}
+		},
+		components: {
+			uniNavBar,
+			uniLoadMore
+		},
+		onLoad() {
+			this.getUserInfo()
+		},
+		onReachBottom() {
+			if(this.isLoadingMore) {
+				this.currentPage = this.currentPage + 1;
+				this.getPayRecord()
 			}
 		},
 		methods: {
+			// 获取用户账户信息
+			getUserInfo() {
+				uni.showLoading({
+					title: '数据加载中',
+					icon: 'none'
+				})
+				let mobile = uni.getStorageSync("userInfo").mobile;
+				this.$api.getCustom({ filterItems: { mobile } }).then(res => {
+					uni.hideLoading()
+					this.userInfo = res.data[0];
+					//储存用户的五车贝;
+					this.shell = (+this.userInfo.shell).toFixed(2) ?  (+this.userInfo.shell).toFixed(2) : 0.00
+					//储存用户的押金
+					this.deposit = (+this.userInfo.deposit).toFixed(2) ? (+this.userInfo.deposit).toFixed(2) : 0.00
+					this.id = this.userInfo.id
+					// 获取充值记录
+					this.getPayRecord()
+				})
+			},
+			// 获取充值记录
+			getPayRecord() {
+				this.$api.offlinePayRecord({
+          pageSize: this.pageSize,
+          currentPage: this.currentPage,
+          filterItems:{
+            custom_id: this.id
+          }
+				}).then(res => {
+					// 格式化时间
+					res.data.rows && res.data.rows.map(item => {
+						item.handle_create_time = this.handleTime(item.create_date)
+					})
+					this.payRecordList = [...this.payRecordList, ...res.data.rows]
+					// 是否开启下拉加载更多
+					if(res.data.rows.length < this.pageSize) {
+						this.isLoadingMore = false;
+						this.loadStatus = 'noMore'
+					}
+				})
+			},
+			// 格式化时间
+			handleTime(time) {
+				let currentTime = new Date(time)
+				let year = currentTime.getFullYear()
+				let month =  this.complement(currentTime.getMonth() + 1)
+				let day = this.complement(currentTime.getDate())
+				let hour = this.complement(currentTime.getHours())
+				let minute = this.complement(currentTime.getMinutes())
+				let second = this.complement(currentTime.getSeconds())
+				let create_time = `${year}-${month}-${day} ${hour}:${minute}:${second}`
+				
+				return create_time
+			},
+			// 补零
+			complement(value) {
+				if(value >= 10) {
+					return value
+				}else {
+					return '0' + value
+				}
+			},
 			// 跳转充值页面
 			goPay() {
 				uni.navigateTo({
 					url: './pay'
 				})
-			}
+			},
+			// 跳转到退押金页面
+			goDeposit() {
+				uni.navigateTo({
+					url: '/pages/my/myDeposit'
+				})
+			},
+			// 返回借阅页面
+			clickLeft() {
+				uni.reLaunch({
+					url: '/pages/cart/cart?flag=true'
+				})
+			},
 		}
 	}
 </script>
@@ -122,7 +234,10 @@
 		box-sizing: border-box;
 /* 		padding: 8rpx 0; */
 		font-weight: bold;
-		font-size: 60rpx;
+		font-size: 42rpx;
+		margin-bottom: 16rpx;
+		margin-top: 12rpx;
+
 	}
 	.pay-box .context .btn {
 		background: rgba(255,255,255,.4);
@@ -132,6 +247,8 @@
 		border-radius: 30rpx;
 		text-shadow: 0 0 10rpx #2AAEC4;
 		display: inline-block;
+		width: 140rpx;
+		text-align: center;
 	}
 	/* 充值记录 */
 	.pay-record {

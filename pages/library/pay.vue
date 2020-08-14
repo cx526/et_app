@@ -151,9 +151,7 @@
 			getUserInfo() {
 				let mobile = uni.getStorageSync("userInfo").mobile;
 				this.$api.getCustom({ filterItems: { mobile } }).then(res => {
-
 					this.userInfo = res.data[0];
-					console.log(this.userInfo)
 				})
 			},
 			// 点击确认充值
@@ -172,7 +170,6 @@
 						title: '您还没提交过押金(押金可退)',
 						content: '需要在充值金额上累加29元押金',
 						success: res => {
-							console.log(res)
 							if(res.confirm) {
 								let deposit = this.userInfo.deposit >= 29 ? 0 : 29
 								this.totalMoney = deposit + this.value;
@@ -233,7 +230,6 @@
 									totalMoney: this.totalMoney, // 充值金额+押金
 								}).then(res => {
 									uni.hideLoading()
-									console.log(res)
 									// 跳转到我的钱包页
 									uni.redirectTo({
 										url: './virtual'
