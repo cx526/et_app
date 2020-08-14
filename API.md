@@ -34,6 +34,22 @@
      */
 ```
 
+```
+  /***
+     * 五车贝充值记录
+     * path：/api/shell/selShellDetail
+      {
+          "pageSize":"10",
+          "currentPage":"1",
+          "filterItems":{
+            "custom_id": "1"
+          }
+      }
+     */
+     * 
+     */
+```
+
 -智能书柜部分
 ```
   /***
