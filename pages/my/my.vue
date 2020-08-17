@@ -1,5 +1,5 @@
 <template>
-	<view class="content">
+	<view class="content" v-if="true">
 		<!-- 顶部底图 -->
 		<view class="top-position">
 			<view class="userInfo-position">
@@ -143,12 +143,17 @@
 			</view>
 		</view>
 	</view>
+	<view v-else>
+		<Entry></Entry>
+	</view>
 </template>
 
 <script>
 import etMyBox from '../../components/etMyBox.vue'
 import etMyReadBookData from '../../components/etMyReadBookData.vue'
 import uniNoticeBar from '@/components/uni-notice-bar/uni-notice-bar.vue'
+// 老师端入口
+import Entry from '@/components/teacher-components/entry.vue'
 const toUrlFunction = require('@/common/toUrlFunction');
 const checkLogin = require('@/common/checkLogin');
 const bookListData = require('@/common/carDataOption');
@@ -162,7 +167,8 @@ export default {
 	components: {
 		etMyBox,
 		etMyReadBookData,
-		uniNoticeBar
+		uniNoticeBar,
+		Entry
 	},
 	data() {
 		return {
@@ -433,7 +439,6 @@ export default {
 		},
 		getOrderCount(){
 			let guestStatus = checkLogin.checkLogin(true);
-			console.log(guestStatus)
 			if(guestStatus){
 				this.updateOrderInfo = true
 				return;
@@ -446,7 +451,6 @@ export default {
 								this.myOrderInfo.allMenu[sindex].count = item.order_total;
 							}
 						});
-						console.log(this.myOrderInfo);
 					});
 					this.updateOrderInfo = true
 				});
@@ -458,7 +462,6 @@ export default {
 			}
 			this.$api.getCustom({ filterItems: { mobile: this.userInfo.mobile } }).then(res=>{
 				this.$api.getHistoryOrderCount({custom_id: res.data[0].id}).then(sres=>{
-					console.log(sres);
 					this.myReadInfo.allMenu.map((item,index)=>{
 						if(item.title === '累计已读'){
 							this.myReadInfo.allMenu[index].count = sres.data.readCount;

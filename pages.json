@@ -1,7 +1,7 @@
 {
 
 	"pages": [
-		
+
 		
 		{
 			"path": "pages/index/index",
@@ -12,40 +12,8 @@
 				}
 			}
 		},
-		{
-			"path": "pages/library/take-books",
-			"style": {
-				"navigationBarTitleText": "快速取书",
-					"navigationStyle": "custom",
-					"app-plus": {
-						"titleNView": false
-					}
-			}
-		},
-		{
-		    "path" : "pages/library/tied-card",
-		    "style" : {
-					"navigationBarTitleText": "绑卡"
-				}
-		},
-		{
-			"path": "pages/library/pay",
-			"style": {
-				"navigationBarTitleText": "借书币充值"
-			}
-		},
-		
-	{
-			"path": "pages/library/virtual",
-			"style": {
-				"navigationBarTitleText": "我的钱包",
-				"navigationStyle": "custom",
-				"app-plus": {
-					"titleNView": false
-				}
-			}
-		},
-	
+
+
 		{
 			"path": "pages/promote/promoteSummeryBook",
 			"style": {
@@ -337,9 +305,6 @@
 				}
 			}
 		},
-
-		// 上面是测试地址
-
 		{
 			"path": "pages/guide/register",
 			"style": {
@@ -423,40 +388,58 @@
 				}
 			}
 		},
+		// 线下部分
 		{
 			"path": "pages/library/library",
 			"style": {
 				"navigationBarTitleText": "智慧童书馆"
 			}
 		},
-
-		  {
-			"path": "pages/library/no-payment",
+		{
+			"path": "pages/library/take-books",
 			"style": {
-				"navigationBarTitleText": "待支付"
+				"navigationBarTitleText": "快速取书",
+				"navigationStyle": "custom",
+				"app-plus": {
+					"titleNView": false
+				}
 			}
 		},
-		
+		{
+			"path": "pages/library/tied-card",
+			"style": {
+				"navigationBarTitleText": "绑卡"
+			}
+		},
+		{
+			"path": "pages/library/pay",
+			"style": {
+				"navigationBarTitleText": "借书币充值"
+			}
+		},
+
+		{
+			"path": "pages/library/virtual",
+			"style": {
+				"navigationBarTitleText": "我的钱包",
+				"navigationStyle": "custom",
+				"app-plus": {
+					"titleNView": false
+				}
+			}
+		},
 		{
 			"path": "pages/library/return-books",
 			"style": {
 				"navigationBarTitleText": "快速还书"
 			}
-		}, {
-			"path": "pages/library/exprie",
-			"style": {
-				"navigationBarTitleText": "逾期"
-			}
 		}
-
-
-
-		, {
+		,{
 			"path": "pages/library/offline-bookdetail",
 			"style": {
 				"navigationBarTitleText": "商品详情"
 			}
-		}, 
+		},
 		{
 			"path": "pages/library/offline-order",
 			"style": {
@@ -464,24 +447,29 @@
 				"app-plus": {
 					"titleNView": false
 				}
-		
+
 			}
 		},
-	
-		{
-			"path": "pages/library/pay-record",
+		 {
+			"path": "pages/library/offline-search",
 			"style": {
-				"navigationBarTitleText": "借书币记录"
+				"navigationBarTitleText": "书籍搜索"
 			}
 		}
-
-	    ,{
-            "path" : "pages/library/offline-search",
+		// 老师端
+		,{
+			"path" : "pages/teacher/bind-card",
+			"style" : {
+				"navigationBarTitleText": "童书卡绑定"
+				}
+			}
+        
+        ,{
+            "path" : "pages/teacher/create-grade",
             "style" : {
-							"navigationBarTitleText": "书籍搜索"
+							"navigationBarTitleText": "创建班级"
 						}
         }
-        
     ],
 	"globalStyle": {
 		"navigationBarTextStyle": "black",

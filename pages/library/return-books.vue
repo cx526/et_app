@@ -1,5 +1,22 @@
 <template>
 	<view v-if="isLogin">
+		<!--
+			由于放在弹窗组件内生成不了二维码(具体原因未知);只能放到外边生成二维码保存路径到src上，点击订单凭证弹窗改变val的值重新生成二维码赋值给当前取书订单凭证二维码 
+		 -->
+		<view 
+		v-if="isGenerate"
+		style="opacity: 0;position: absolute;left: 0;top: 0;z-index: -1;">
+			<tki-qrcode
+			cid="qrcode" 
+			ref="qrcode" 
+			:val="val" 
+			:size="200" 
+			onval="true" 
+			:loadMake="true" 
+			:usingComponents="true" 
+			@result="qrR" 
+			 />
+		</view>
 		<!-- tab切换 -->
 		<view class="tab-box">
 			<block 
@@ -191,7 +208,7 @@
 					<view>获取个人书单信息</view>
 				</view>
 				<view class="code">
-					<image src="../../static/library/code.png.png" mode=""></image>
+					<image :src="src" mode=""></image>
 				</view>
 				<view class="title">
 					<text class="line" style="margin-right: 16rpx;"></text>
@@ -216,9 +233,13 @@
 	import uniPopup from '@/components/uni-popup/uni-popup.vue';
 	import uniLoadMore from '@/components/uni-load-more/uni-load-more.vue';
 	import offlineNoneOrder from '@/components/offline-components/offline-none-order.vue'
+	import tkiQrcode from "@/components/tki-qrcode/tki-qrcode.vue"
 	export default {
 		data() {
 			return {
+				val: '第一个二维码', //订单二维码内容
+				src: '',//二维码生成路径
+				isGenerate: false, //判断是否要生成二维码
 				isLogin: false, //判断用户是否登录
 				isLoadingMore: true, //判断加载组件是否显示
 				userInfo: '',//储存用户账号信息
@@ -253,7 +274,8 @@
 		components: {
 			uniPopup,
 			uniLoadMore,
-			offlineNoneOrder
+			offlineNoneOrder,
+			tkiQrcode
 		},
 		onLoad(option) {
 			if(option !== '{}') {
@@ -331,7 +353,10 @@
 				}).then(res => {
 					// 储存订单总数
 					this.waitOrderTotalPage = res.data.totalPage
-					
+					// 判断是否要生成二维码
+					if(res.data.rows && res.data.rows.length > 0) {
+						this.isGenerate = true
+					}
 					res.data.rows && res.data.rows.map(item => {
 						// 保留两位小数
 						item.price = (+item.price).toFixed(2)
@@ -405,11 +430,17 @@
 			},
 			// 打开订单凭证弹窗
 			open() {
+				this.val="13415011922"
 				this.$refs.orderPopUp.open()
 			},
 			// 关闭订单凭证弹窗
 			close() {
 				this.$refs.orderPopUp.close()
+			},
+			// 二维码生成的路径,改变二维码的内容(val值会重新出发此方法)
+			qrR(res) {
+				console.log(res);
+				this.src = res
 			},
 		}
 	}

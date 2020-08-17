@@ -5,7 +5,13 @@
 	v-if="isLogin">
 		<!-- 头部 -->
 		<view class="header-box">
-			<view class="user"><image src="https://et-pic-server.oss-cn-shenzhen.aliyuncs.com/app_img/user-default.png"></image></view>
+			<view class="user">
+				<image src="https://et-pic-server.oss-cn-shenzhen.aliyuncs.com/app_img/user-default.png"
+				v-if="!userInfo.avatar"></image>
+				<image 
+				:src="userInfo.avatar"
+				style="border-radius: 50%;"></image>
+			</view>
 			<view class="info">
 				<view class="item">
 					<image src="https://et-pic-server.oss-cn-shenzhen.aliyuncs.com/app_img/userinfo-icon-01.png"></image>
@@ -25,7 +31,14 @@
 		<view class="banner-box" id="banner">
 			<image src="https://et-pic-server.oss-cn-shenzhen.aliyuncs.com/app_img/library-banner.png" style="height: 300rpx;"></image>
 			<view class="name">
-				<uni-notice-bar scrollable="true" single="true" text="林头幼儿园欢迎您!" color="#fff" backgroundColor="rgba(255,255,255,.3)" :single="true"></uni-notice-bar>
+				<uni-notice-bar 
+				scrollable="true" 
+				single="true" 
+				:text="userInfo.schoolInfo.name + '欢迎您！'" 
+				color="#fff" 
+				backgroundColor="rgba(255,255,255,.3)" 
+				:single="true">
+				</uni-notice-bar>
 			</view>
 		</view>
 		<!-- 搜索框 -->
@@ -157,6 +170,8 @@ export default {
 			coin: 0,//积分
 			free: 0,//免费借阅次数
 			docker_mac: '',
+			userInfo: '',//用户信息
+			isSearch: false,
 		};
 	},
 	components: {
@@ -170,8 +185,12 @@ export default {
 		this.getLogin()
 		// 从搜索页跳转过来
 		if (option.isSearch) {
+			this.isSearch = option.isSearch
+			// 获取用户个人账户信息
+			await this.getUserInfo()
 			this.productList = JSON.parse(option.productList);
 			this.loadStatus = 'noMore';
+			
 		} else {
 			// 获取用户个人账户信息
 			await this.getUserInfo()
@@ -268,10 +287,10 @@ export default {
 						this.shell = (+this.userInfo.shell).toFixed(2); //五车贝
 						// 计算用户的免费次数
 						this.getUserFreeCount()
-						// 获取所在幼儿园书柜的所有书籍
-						this.getBooksList();
 						// 获取书籍分类
 						this.getBooksType();
+						// 获取所在幼儿园书柜的所有书籍(如果从搜索页跳转过来不调用)
+						!this.isSearch && this.getBooksList();
 					}
 					
 					
@@ -299,7 +318,7 @@ export default {
 			}).then(res => {
 				uni.hideLoading();
 				this.productList = res.data.rows;
-				if (res.data.rows.length < 20) {
+				if (res.data.rows.length < this.pageSize) {
 					this.loadStatus === 'noMore';
 				}
 			});
@@ -309,7 +328,6 @@ export default {
 			this.$api.offlineBookType({
 				docker_mac: this.docker_mac
 			}).then(res => {
-				console.log(res);
 				res.data.rows.map(item => {
 					item.isSelect = false;
 				});
@@ -327,7 +345,6 @@ export default {
 		changeType(id, index) {
 			// 改变分类时重置需要请求的参数
 			this.id = id;
-			console.log(this.id);
 			this.currentPage = 1;
 			// 重置区分全部还是单个分类
 			this.isType = false;
@@ -357,17 +374,12 @@ export default {
 			
 			this.$api.offlineOrderCheckStock(param).then(res => {
 				uni.hideLoading();
-				console.log(res)
-				
-				
 				this.productList = [];
-
 				this.productList = res.data.rows;
 				// 返回数据小于20时默认不启动上拉加载更多
-				if (this.productList.length < 20) {
+				if (this.productList.length < this.pageSize) {
 					this.loadStatus = 'noMore';
-				}
-				
+				}	
 			});
 		},
 		// 分类上拉加载更多数据
@@ -383,7 +395,7 @@ export default {
 			};
 			this.$api.offlineOrderCheckStock(param).then(res => {
 				this.productList = [...this.productList, ...res.data.rows];
-				if (res.data.rows < 20) {
+				if (res.data.rows < this.pageSize) {
 					this.loadStatus = 'noMore';
 				}
 			});

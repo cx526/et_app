@@ -7,42 +7,29 @@
 				value="林头幼儿园" />
 			</view>
 			<view class="item">
-				<text class="label">班级</text>
-				<input type="text"
-				placeholder="请填写幼儿所在班级"
-				placeholder-style="font-size: 30rpx; color: #999"
+				<text class="label">年级</text>
+				<input type="text" disabled
+				value="中班"
+				
 				 />
 			</view>
 			<view class="item">
-				<text class="label">借书卡号</text>
-					<input type="text" placeholder="请扫码绑定童书卡"
-					placeholder-style="font-size: 30rpx; color: #999"
-					:value="prefix"
-					@input="cardNumber"/>
-				<image 
-				src="https://et-pic-server.oss-cn-shenzhen.aliyuncs.com/app_img/teacher-icon-02.png" 
-				mode="widthFix"
-				style="width: 40rpx;height: 40rpx;margin-left: 20rpx;"
-				@tap="scan">
-				</image>
+				<text class="label">班级</text>
+				<input type="text"
+				placeholder="请填写班级"
+				placeholder-style="font-size: 30rpx; color: #999"
+				 />
 			</view>
 			
 			<view class="item">
-				<text class="label">幼儿姓名</text>
-				<input type="text" placeholder="请填写幼儿姓名" 
+				<text class="label">老师姓名</text>
+				<input type="text" placeholder="请填写老师姓名" 
 				placeholder-style="font-size: 30rpx; color: #999" />
 			</view>
+			
 			<view class="item">
-				<text class="label">幼儿生日</text>
-				<picker mode="date" @change="bindDateChange" style="flex: 1;text-align: right;">
-						<view 
-						style="font-size: 30rpx; color: #999"
-						>{{ birthDay }}</view>
-				</picker>
-			</view>
-			<view class="item">
-				<text class="label">家长姓名</text>
-				<input type="text" placeholder="请填写家长姓名" 
+				<text class="label">班级人数</text>
+				<input type="number" placeholder="请填写班级人数" 
 				placeholder-style="font-size: 30rpx; color: #999" />
 			</view>
 			<view class="item">
@@ -61,8 +48,8 @@
 			</view>
 		</view>
 		<view class="btn">
-			<view>
-				<text>提交</text>
+			<view @tap="createGrade">
+				<text>创建班级</text>
 			</view>
 		</view>
 	</view>
@@ -72,28 +59,18 @@
 	export default {
 		data() {
 			return {
-				birthDay: '请选择幼儿生日',
-				prefix: ''
+				
+				
 			}
 		},
 		methods: {
-			// 生日选择
-			bindDateChange(event) {;
-				this.birthDay = event.target.value
-			},
-			// 监听input框的变化
-			cardNumber(event) {
-				let value = event.detail.value;
-				this.prefix = value
-			},
-			// 调起微信扫一扫
-			scan() {
-				uni.scanCode({
-					success: res => {
-						console.log(res)
-					}
+			// 创建班级(在my页面判断是显示普通用户身份资料还是老师端资料)
+			createGrade() {
+				uni.switchTab({
+					url: '/pages/my/my'
 				})
 			}
+			
 		}
 	}
 </script>

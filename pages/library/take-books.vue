@@ -1,11 +1,30 @@
 <template>
 	<view>
+		
 		<uni-nav-bar
 		left-icon="back"  
 		title="待取书单" 
 		status-bar
 		:shadow="false"
-		@clickLeft="clickLeft"></uni-nav-bar>
+		@clickLeft="clickLeft">
+		</uni-nav-bar>
+		<!-- 
+			由于放在弹窗组件内生成不了二维码(具体原因未知);只能放到外边生成二维码保存路径到src上，点击订单凭证弹窗改变val的值重新生成二维码赋值给当前取书订单凭证二维码 
+		 -->
+		<view 
+		style="opacity: 0;position: absolute;left: 0;top: 0;z-index: -1;"
+		v-if="isGenerate">
+			<tki-qrcode
+			cid="qrcode" 
+			ref="qrcode" 
+			:val="val" 
+			:size="200" 
+			onval="true" 
+			:loadMake="true" 
+			:usingComponents="true" 
+			@result="qrR" 
+			 />
+		</view>
 		<view v-if="isLogin">
 			<!-- tab切换 -->
 			<view class="tab-box">
@@ -20,6 +39,7 @@
 					</view>
 				</block>
 			</view>
+			
 			<!-- 待归还书单 -->
 			<block v-if="tabList.currentIndex == 0">
 				<view v-if="orderList && orderList.length > 0">
@@ -195,7 +215,8 @@
 						<view>获取个人书单信息</view>
 					</view>
 					<view class="code">
-						<image src="../../static/library/code.png.png" mode=""></image>
+						<image :src="src" mode=""></image>
+							
 					</view>
 					<view class="title">
 						<text class="line" style="margin-right: 16rpx;"></text>
@@ -213,20 +234,26 @@
 					</view>
 				</view>
 			</uni-popup>
-			
 		</view>
+		
+		
 	</view>
 	
 </template>
 
 <script>
-	import uniPopup from '@/components/uni-popup/uni-popup.vue';
-	import uniLoadMore from '@/components/uni-load-more/uni-load-more.vue';
+	
+	import uniPopup from '@/components/uni-popup/uni-popup.vue'
+	import uniLoadMore from '@/components/uni-load-more/uni-load-more.vue'
 	import offlineNoneOrder from '@/components/offline-components/offline-none-order.vue'
 	import uniNavBar from "@/components/uni-nav-bar/uni-nav-bar.vue"
+	import tkiQrcode from "@/components/tki-qrcode/tki-qrcode.vue"
 	export default {
 		data() {
 			return {
+				val: '第一个二维码', //订单二维码内容
+				src: '',//二维码生成路径
+				isGenerate: false, //判断是否要生成二维码
 				loadStatus: 'loading',
 				loadText: {
 					contentdown: '上拉加载更多',
@@ -265,7 +292,8 @@
 			uniPopup,
 			uniLoadMore,
 			offlineNoneOrder,
-			uniNavBar
+			uniNavBar,
+			tkiQrcode
 		},
 		onLoad(option) {
 			// 判断是从下单成功后跳转过来还是直接从我的页面跳转过来
@@ -305,6 +333,7 @@
 			}
 		},
 		methods: {
+
 			// 检测登录状态
 			getLogin() {
 				let userInfo = uni.getStorageSync('userInfo');
@@ -340,7 +369,10 @@
 				}).then(res => {
 					// 储存订单总数
 					this.orderListPage = res.data.totalPage
-					
+					// 判断是否要生成二维码
+					if(res.data.rows && res.data.rows.length > 0) {
+						this.isGenerate = true
+					}
 					res.data.rows && res.data.rows.map(item => {
 						// 价格保留两个小数
 						item.price = (+item.price).toFixed(2)
@@ -458,6 +490,7 @@
 			},
 			// 打开订单凭证弹窗
 			open() {
+				this.val="13415011922"
 				this.$refs.orderPopUp.open()
 			},
 			// 关闭订单凭证弹窗
@@ -466,16 +499,23 @@
 			},
 			// 点击自定义导航栏左侧按钮事件
 			clickLeft() {
+				console.log('clickLeft')
 				// 从下单成功跳转过来
 				if(this.from == 'placeOrder') {
 					uni.reLaunch({
 						url: '../cart/cart?flag=true'
 					})
 				}else {
+					console.log('else')
 					uni.navigateBack({
-						delta: -1
+						delta: 1
 					})
 				}
+			},
+			// 二维码生成的路径,改变二维码的内容(val值会重新出发此方法)
+			qrR(res) {
+				console.log(res);
+				this.src = res
 			},
 		}
 	}
