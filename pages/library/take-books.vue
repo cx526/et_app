@@ -98,7 +98,7 @@
 								<view class="btn">
 									<view style="flex: 1;"></view>
 									<view class="btn-box">
-										<view class="borrow" @tap="open">
+										<view class="borrow" @tap="open(item)">
 											<text>取书码</text>
 										</view>
 									</view>
@@ -215,7 +215,7 @@
 						<view>获取个人书单信息</view>
 					</view>
 					<view class="code">
-						<image :src="src" mode=""></image>
+						<image :src="src" mode="widthFix" v-if="val"></image>
 							
 					</view>
 					<view class="title">
@@ -230,7 +230,7 @@
 						<view>获取个人书单信息</view>
 					</view>
 					<view class="code-number" >
-						<text>229922</text>
+						<text>{{ code }}</text>
 					</view>
 				</view>
 			</uni-popup>
@@ -251,7 +251,8 @@
 	export default {
 		data() {
 			return {
-				val: '第一个二维码', //订单二维码内容
+				code: '', //取书码
+				val: '', //订单二维码内容
 				src: '',//二维码生成路径
 				isGenerate: false, //判断是否要生成二维码
 				loadStatus: 'loading',
@@ -325,15 +326,18 @@
 			if(this.orderListPage > this.orderList.length && this.tabList.currentIndex == 0) {
 				// 每次上拉加载之前需要清除下定时器防止重复开启造成错乱
 				clearInterval(this.timer);
+				// 重置加载组件的加载状态
+				this.loadStatus = 'loading';
 				this.currentPage = this.currentPage + 1;
 				this.getUserOrderList()
 			}else if(this.failOrderListPage > this.failOrderList.length && this.tabList.currentIndex == 1){
+				// 重置加载组件的加载状态
+				this.loadStatus = 'loading';
 				this.failCurrentPage = this.failCurrentPage + 1;
 				this.getFailOrderList()
 			}
 		},
 		methods: {
-
 			// 检测登录状态
 			getLogin() {
 				let userInfo = uni.getStorageSync('userInfo');
@@ -376,10 +380,11 @@
 					res.data.rows && res.data.rows.map(item => {
 						// 价格保留两个小数
 						item.price = (+item.price).toFixed(2)
+						// 格式化订单创建时间
 						item.hanlde_create_time = this.handleTime(item.create_time)
 						// 订单失效时间
 						item.fail_timestamp = new Date(item.pre_get_book_time).getTime();
-						item.difference = item.fail_timestamp - this.current_timestamp > 86400000 ? 0 : item.fail_timestamp - this.current_timestamp;
+						item.difference = item.fail_timestamp - this.current_timestamp > 86400000  ? 0 : item.fail_timestamp - this.current_timestamp;
 					})
 					this.orderList = [...this.orderList, ...res.data.rows];
 					// 开启定时器
@@ -444,7 +449,7 @@
 					
 				}else {
 					msg = '已失效';
-					clearInterval(this.timer)
+					// clearInterval(this.timer)
 					return msg
 				}
 			},
@@ -483,14 +488,26 @@
 			// tab切换
 			changTab(index) {
 				this.tabList.currentIndex = index;
-				// 重置加载组件的加载状态
-				this.loadStatus = '';
-				// 重置上拉加载的状态
-				this.isLoadingMore = true
+				if(index == 0) {
+					if(this.orderList.length == this.pageSize) {
+						this.loadStatus = 'loading'
+						this.isLoadingMore = true
+					}else {
+						this.loadStatus = 'noMore'
+					}
+				}else if(index == 1) {
+					if(this.failOrderList.length == this.faliPageSize) {
+						this.loadStatus = 'loading'
+						this.isLoadingMore = true
+					}else {
+						this.loadStatus = 'noMore'
+					}
+				}
 			},
 			// 打开订单凭证弹窗
-			open() {
-				this.val="13415011922"
+			open(item) {
+				this.code = item.get_book_code //还书码
+				this.val = item.get_book_qrcode // 还书二维码内容;
 				this.$refs.orderPopUp.open()
 			},
 			// 关闭订单凭证弹窗

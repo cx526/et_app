@@ -13,7 +13,8 @@
 				placeholder="请扫码绑定童书卡" 
 				placeholder-style="color: #666"
 				@input="cardNumber"
-				
+				class="uni-input" 
+				cursor-spacing="40"
 				:value="val"/>
 				<image 
 				src="https://et-pic-server.oss-cn-shenzhen.aliyuncs.com/app_img/teacher-icon-02.png" 
@@ -170,7 +171,7 @@
 	.form .btn-box .btn:nth-child(2) {
 		margin-left: 10rpx;
 		color: #fff;
-		background-image: linear-gradient(to right, #66dbe5, #3ab4d2);
+		background-image: linear-gradient(to right, #9BE6E7, #7BCFEC);
 		font-weight: bold;
 	}
 </style>

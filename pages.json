@@ -1,7 +1,7 @@
 {
 
 	"pages": [
-
+	
 		
 		{
 			"path": "pages/index/index",
@@ -468,6 +468,24 @@
             "path" : "pages/teacher/create-grade",
             "style" : {
 							"navigationBarTitleText": "创建班级"
+						}
+        }
+        ,{
+            "path" : "pages/teacher/edit-info",
+            "style" : {
+							"navigationBarTitleText": "老师信息"
+						}
+        }
+        ,{
+            "path" : "pages/teacher/my-grade",
+            "style" : {
+							"navigationBarTitleText":"我的班级"
+						}
+        }
+        ,{
+            "path" : "pages/teacher/student-info",
+            "style" : {
+							"navigationBarTitleText":"成员信息"
 						}
         }
     ],

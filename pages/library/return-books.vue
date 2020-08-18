@@ -40,8 +40,11 @@
 						<view class="topic">
 							<view style="font-weight: bold;">订单号：{{ item.order_no }}</view>
 							<!-- 取书时间+5天-当前时间 > 0 ? 未逾期 ： 逾期 -->
-							<view class="status">
-									<text>待归还5天</text>
+							<view 
+							class="status"
+							:class="item.msg.indexOf('待归还') !== -1 ? '': 'colorActive'"
+							v-if="item.msg">
+									<text>{{ item.msg }}</text>
 							</view>
 						</view>
 						<view class="book-list">
@@ -66,7 +69,7 @@
 						<view class="order-info">
 							<view class="left">
 								<view class="text">
-									<text>创建时间：{{ item.hanlde_create_time }}</text>
+									<text>创建时间：{{ item.handle_create_time }}</text>
 								</view>
 								<!-- 积分支付 -->
 								<view class="text spcial" 
@@ -90,7 +93,7 @@
 							<view class="btn">
 								<view style="flex: 1;"></view>
 								<view class="btn-box">
-									<view class="borrow" @tap="open">
+									<view class="borrow" @tap="open(item)">
 										<text>还书码</text>
 									</view>
 								</view>
@@ -120,8 +123,10 @@
 					<view class="item">
 						<view class="topic">
 							<view style="font-weight: bold;">订单号：{{ item.order_no }}</view>
-							<view class="status">
-									<text style="color: #868686;">已归还</text>
+							<view class="status" 
+							v-if="item.msg"
+							:class="item.msg.indexOf('已归还') !== -1 ? '':'colorActive'">
+									<text>{{ item.msg }}</text>
 							</view>
 						</view>
 						<view class="book-list">
@@ -146,7 +151,7 @@
 						<view class="order-info">
 							<view class="left">
 								<view class="text">
-									<text>创建时间：{{ item.hanlde_create_time }}</text>
+									<text>创建时间：{{ item.handle_create_time }}</text>
 								</view>
 								<!-- 积分支付 -->
 								<view class="text spcial"
@@ -208,7 +213,7 @@
 					<view>获取个人书单信息</view>
 				</view>
 				<view class="code">
-					<image :src="src" mode=""></image>
+					<image :src="src" mode="widthFix" v-if="val"></image>
 				</view>
 				<view class="title">
 					<text class="line" style="margin-right: 16rpx;"></text>
@@ -222,7 +227,7 @@
 					<view>获取个人书单信息</view>
 				</view>
 				<view class="code-number" >
-					<text>229922</text>
+					<text>{{ code }}</text>
 				</view>
 			</view>
 		</uni-popup>
@@ -237,7 +242,8 @@
 	export default {
 		data() {
 			return {
-				val: '第一个二维码', //订单二维码内容
+				code: '',//还书码
+				val: '', //订单二维码内容
 				src: '',//二维码生成路径
 				isGenerate: false, //判断是否要生成二维码
 				isLogin: false, //判断用户是否登录
@@ -269,6 +275,7 @@
 				returnOrderTotalPage: 0,//已归还书单总数
 				returnOrderPageSize: 4, //已归还书单返回条数(每页)
 				returnOrderPage: 1,//已归还书单当前页码
+				current_time_stamp: '', //储存每次进入页面当前时间戳
 			}
 		},
 		components: {
@@ -291,17 +298,20 @@
 		onShow() {
 			this.getLogin();
 			// 获取用户信息
-			this.getUserInfo()
+			this.getUserInfo();
+			this.current_time_stamp = new Date().getTime();
+			console.log(this.current_time_stamp)
 		},
 		onReachBottom() {
 			// 待还书单上拉加载
 			if(this.waitOrderTotalPage > this.waitOrderList.length && this.tabList.currentIndex == 0) {
-				console.log('loadingMore');
+				console.log('waitOrderList')
+				this.loadStatus = "loading"
 				this.waitOrderPage = this.waitOrderPage + 1;
 				this.getWaitOrderList()
 			}
 			else if(this.returnOrderTotalPage > this.returnOrderList.length && this.tabList.currentIndex == 1) {
-				console.log('loadingMore');
+				this.loadStatus = "loading"
 				this.returnOrderPage = this.returnOrderPage + 1;
 				this.getReturnOrderList()
 			}
@@ -348,7 +358,7 @@
 					docker_mac: this.userInfo.dockerInfo.docker_mac,
 					filterItems:{
 						custom_id: this.userInfo.id,
-						order_type: 4 //待归还书单类型
+						order_type: 0 //待归还书单类型
 					}
 				}).then(res => {
 					// 储存订单总数
@@ -361,14 +371,24 @@
 						// 保留两位小数
 						item.price = (+item.price).toFixed(2)
 						// 格式化订单创建时间
-						item.hanlde_create_time = this.handleTime(item.create_time)
+						item.handle_create_time = this.handleTime(item.create_time)
+						// 计算借书时间是否逾期(取书时间+5天-现在时间做判断)
+						item.handle_get_book = new Date(item.create_time).getTime() + (24 * 3600 * 1000 * 5);
+						let difference = item.handle_get_book - this.current_time_stamp;
+						// 时间戳转为天计算
+						let day = Math.ceil(Math.abs(difference / (24 * 3600 * 1000))) 
+						if(difference >= 0) {
+							item.msg = `待归还${day}天`
+						}else {
+							item.msg = `已逾期${day}天`
+						}
 					})
 					this.waitOrderList = [...this.waitOrderList, ...res.data.rows]
+					console.log(this.waitOrderList)
 					// 判断是否改变加载组件状态
 					if(this.waitOrderTotalPage <= this.waitOrderList.length) {
 						this.loadStatus = "noMore"
 					}
-					console.log(this.waitOrderList)
 				})
 			},
 			// 获取已归还书单
@@ -379,7 +399,7 @@
 					docker_mac: this.userInfo.dockerInfo.docker_mac,
 					filterItems:{
 						custom_id: this.userInfo.id,
-						order_type: 1 //待归还书单类型
+						order_type: 4 //待归还书单类型
 					}
 				}).then(res => {
 					// 储存订单总数
@@ -389,14 +409,23 @@
 						// 保留两位小数
 						item.price = (+item.price).toFixed(2)
 						// 格式化订单创建时间
-						item.hanlde_create_time = this.handleTime(item.create_time)
+						item.handle_create_time = this.handleTime(item.create_time)
+						// 计算借书时间是否逾期(取书时间+5天-现在时间做判断)
+						item.handle_get_book = new Date(item.create_time).getTime() + (24 * 3600 * 1000 * 5);
+						let difference = item.handle_get_book - this.current_time_stamp;
+						// 时间戳转为天计算
+						let day = Math.ceil(Math.abs(difference / (24 * 3600 * 1000))) 
+						if(difference >= 0) {
+							item.msg = '已归还'
+						}else {
+							item.msg = `已逾期${day}天`
+						}
 					})
 					this.returnOrderList = [...this.returnOrderList, ...res.data.rows]
 					// 判断是否改变加载组件状态
 					if(this.returnOrderTotalPage <= this.returnOrderList.length) {
 						this.loadStatus = "noMore"
 					}
-					console.log(this.returnOrderList)
 				})
 			},
 			// 格式化时间
@@ -422,15 +451,38 @@
 			},
 			// tab切换
 			changTab(index) {
-				this.tabList.currentIndex = index,
-				// 重置加载组件的加载状态
-				this.loadStatus = 'loading';
-				// 重置上拉加载的状态
-				this.isLoadingMore = true
+				this.tabList.currentIndex = index
+				if(index == 0) {
+					if(this.waitOrderList.length == 
+					this.waitOrderPageSize){
+						// 重置加载组件的加载状态
+						this.loadStatus = 'loading';
+						// 重置上拉加载的状态
+						this.isLoadingMore = true
+					}else {
+						this.loadStatus = 'noMore';
+					}
+				}else if(index == 1) {
+					if(this.returnOrderList.length == 
+					this.returnOrderPageSize){
+						// 重置加载组件的加载状态
+						this.loadStatus = 'loading';
+						// 重置上拉加载的状态
+						this.isLoadingMore = true
+					}else {
+						this.loadStatus = 'noMore';
+					}
+				}
+				// // 重置加载组件的加载状态
+				// this.loadStatus = 'loading';
+				// // 重置上拉加载的状态
+				// this.isLoadingMore = true
 			},
 			// 打开订单凭证弹窗
-			open() {
-				this.val="13415011922"
+			open(item) {
+				console.log(item)
+				this.code = item.get_book_code //还书码
+				this.val = item.get_book_qrcode // 还书二维码内容
 				this.$refs.orderPopUp.open()
 			},
 			// 关闭订单凭证弹窗
@@ -646,5 +698,8 @@
 		text-align: center;
 		margin-top: 14rpx;
 		color: #30AAC3;
+	}
+	.colorActive {
+		color: #f00 !important;
 	}
 </style>

@@ -33,7 +33,9 @@
 							<view class="show"><image :src="item.forGoodsPic[0].url" mode=""></image></view>
 							<view class="topic">
 								<text class="title">{{ item.title }}</text>
-								<text class="condition" v-if="item.stockCount.totalOfflineUse != 0">可借阅</text>
+								<text class="condition" 
+								v-if="item.stockCount.totalDockerUse != 0">
+								可借阅</text>
 								<text style="font-size: 28rpx; color: #f00;" v-else>已借完</text>
 								<view class="price-box">
 									<view class="price">
@@ -159,11 +161,9 @@ export default {
 			isStock: true, // 判断是否有商品存在没库存情况
 		};
 	},
-	async created() {
+	created() {
 		// 获取用户的个人账号信息
-		await this.getUserInfo();
-		// 更新库存
-		await this.upDateStock()
+		this.getUserInfo();
 		this.booksNumber = this.count;
 	},
 	methods: {
@@ -185,7 +185,8 @@ export default {
 				this.deposit = (+this.userInfo.deposit).toFixed(2);
 				this.docker_mac = this.userInfo.dockerInfo.docker_mac
 				// 计算用户的免费借阅次数
-				this.getUserFreeCount()
+				this.getUserFreeCount();
+				this.upDateStock()
 			})
 		},
 		// 更新库存
@@ -209,6 +210,7 @@ export default {
 					docker_mac: this.docker_mac
 				}
 			}).then(res => {
+				console.log(res);
 				// 实时更新本地书籍的缓存
 				res.data.rows.map((item, index) => {
 					bookList.map((list, listIndex) => {

@@ -14,7 +14,12 @@
 							<view class="name">王老师</view>
 							<view class="number">ET08765876</view>
 						</view>
-						<image src="https://et-pic-server.oss-cn-shenzhen.aliyuncs.com/app_img/teacher-icon-03.png" mode="widthFix" class="edit"></image>
+						<image 
+						src="https://et-pic-server.oss-cn-shenzhen.aliyuncs.com/app_img/teacher-icon-03.png" 
+						mode="widthFix" 
+						class="edit"
+						@tap="edit">
+						</image>
 					</view>
 				</view>
 			</view>
@@ -35,10 +40,16 @@
 					<block 
 					v-for="(item,index) in adhibitionList" 
 					:key="index">
-						<view class="item">
+						<view class="item" @tap="goSubPage(index)">
 							<image :src="item.imgUrl" mode="widthFix"></image>
 							<view class="text">
 								{{item.text}}
+							</view>
+							<view class="badge" v-if="item.number">
+								<uni-badge
+								size="small"
+								:text="item.number" 
+								type="error"></uni-badge>
 							</view>
 						</view>
 					</block>
@@ -49,6 +60,7 @@
 </template>
 
 <script>
+	import uniBadge from "@/components/uni-badge/uni-badge.vue"
 	export default {
 		data() {
 			return {
@@ -59,11 +71,13 @@
 					},
 					{
 						imgUrl: 'https://et-pic-server.oss-cn-shenzhen.aliyuncs.com/app_img/teacher-entry-02.png',
-						text: '待取书单'
+						text: '待取书单',
+						number: 8
 					},
 					{
 						imgUrl: 'https://et-pic-server.oss-cn-shenzhen.aliyuncs.com/app_img/teacher-entry-03.png',
-						text: '代还书单'
+						text: '代还书单',
+						number: 10
 					},
 					{
 						imgUrl: 'https://et-pic-server.oss-cn-shenzhen.aliyuncs.com/app_img/teacher-entry-04.png',
@@ -71,6 +85,26 @@
 					}
 				],
 			}
+		},
+		components: {
+			uniBadge
+		},
+		methods: {
+			// 编辑
+			edit() {
+				uni.navigateTo({
+					url: '/pages/teacher/edit-info'
+				})
+			},
+			// 跳转子页面
+			goSubPage(index) {
+				switch(index) {
+					case 0:
+					uni.navigateTo({
+						url: '/pages/teacher/my-grade'
+					})
+				}
+			},
 		}
 	}
 </script>
@@ -147,7 +181,7 @@
 	.adhibition-box .adhibition {
 		box-sizing: border-box;
 		background: #fff;
-		box-shadow: 0 0 6rpx #f0f0f0;
+		box-shadow: 0 0 12rpx #f0f0f0;
 		border-radius: 20rpx;
 	}
 	.adhibition-box .topic {
@@ -165,7 +199,7 @@
 	.adhibition-box .line {
 		width: 10rpx;
 		height: 36rpx;
-		background-image: linear-gradient(to bottom,  #3ab4d2, #66dbe5);
+		background-image: linear-gradient(to bottom,#3ab4d2, #66dbe5);
 		flex-shrink: 0;
 		margin-right: 12rpx;
 		border-radius: 8rpx;
@@ -181,10 +215,16 @@
 		text-align: center;
 		font-size: 30rpx;
 		color: #999;
+		position: relative;
 	}
 	.adhibition-box .list .item image {
 		width: 90rpx;
 		height: 90rpx;
 		margin-bottom: 8rpx;
+	}
+	.adhibition-box .list .item .badge {
+		position: absolute;
+		right: 0;
+		top: 0;
 	}
 </style>

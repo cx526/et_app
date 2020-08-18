@@ -187,13 +187,13 @@ export default {
 		if (option.isSearch) {
 			this.isSearch = option.isSearch
 			// 获取用户个人账户信息
-			await this.getUserInfo()
+			this.getUserInfo()
 			this.productList = JSON.parse(option.productList);
 			this.loadStatus = 'noMore';
 			
 		} else {
 			// 获取用户个人账户信息
-			await this.getUserInfo()
+			this.getUserInfo();
 		}
 		
 		// 读取书篮书籍的本数
@@ -237,8 +237,8 @@ export default {
 					currentPage: this.currentPage
 				}).then(res => {
 					this.productList = [...this.productList, ...res.data.rows];
-					if (res.data.length < 20) {
-						this.loadStatus === 'noMore';
+					if (res.data.rows.length < this.pageSize) {
+						this.loadStatus = 'noMore';
 					}
 				});
 			}
@@ -278,7 +278,8 @@ export default {
 					this.userInfo = res.data[0];
 					this.docker_mac = this.userInfo.dockerInfo.docker_mac;
 					console.log(this.userInfo)
-					if(!this.userInfo.schoolInfo || this.userInfo.schoolInfo == 				 '{}') {
+					if(!this.userInfo.schoolInfo || 
+					this.userInfo.schoolInfo =='{}') {
 						// 显示绑卡弹窗
 						this.$refs.powerPopUp.open()
 					}else {

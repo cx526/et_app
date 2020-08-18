@@ -382,7 +382,8 @@ export default {
 		// 获取个人信息
 		getUserInfo() {
 			let mobile = uni.getStorageSync("userInfo").mobile;
-			this.$api.getCustom({ filterItems: { mobile } }).then(res => {
+			this.$api.getCustom({ filterItems: { mobile } })
+			.then(res => {
 				this.getOrderFail(res.data[0].id,res.data[0].dockerInfo.docker_mac)
 				
 			})
@@ -404,7 +405,7 @@ export default {
 		// 跳转到绑卡页面
 		goTiedCard() {
 			uni.navigateTo({
-				url: '/pages/library/tied-card'
+				url: '/pages/teacher/bind-card'
 			})
 		},
 		clearSessionAction() {

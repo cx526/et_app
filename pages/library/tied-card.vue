@@ -145,7 +145,7 @@
 		margin-top: 60rpx;
 	}
 	.btn view {
-		background-image: linear-gradient(to right, #66dbe5, #3ab4d2);
+		background-image: linear-gradient(to right, #9BE6E7, #7BCFEC);
 		line-height: 80rpx;
 		font-size: 30rpx;
 		color: #fff;
