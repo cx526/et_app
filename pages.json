@@ -488,6 +488,36 @@
 							"navigationBarTitleText":"成员信息"
 						}
         }
+        ,{
+            "path" : "pages/teacher/proxy-take",
+            "style" : {
+							"navigationBarTitleText":"代取书单"
+						}
+        }
+        ,{
+            "path" : "pages/teacher/take-detail",
+            "style" : {
+							"navigationBarTitleText":"代取详情"
+						}
+        }
+        ,{
+            "path" : "pages/teacher/proxy-return",
+            "style" : {
+							"navigationBarTitleText":"代还书单"
+						}
+        }
+        ,{
+            "path" : "pages/teacher/return-detail",
+            "style" : {
+							"navigationBarTitleText":"代还详情"
+						}
+        }
+        ,{
+            "path" : "pages/teacher/my-proof",
+            "style" : {
+							"navigationBarTitleText":"我的凭证"
+						}
+        }
     ],
 	"globalStyle": {
 		"navigationBarTextStyle": "black",

@@ -76,7 +76,7 @@
 								v-if="item.pay_type != 'shell'">
 									<view>
 										<text>积分：-50</text>
-										<text style="color: #f00;">（优惠{{ item.price }}贝）</text>
+										<text style="color: #f00;">（优惠{{ item.dockerInfo[0].price }}贝）</text>
 									</view>
 									<view style="font-weight: bold; color: #000;">
 										<text>实付：0</text>
@@ -158,7 +158,7 @@
 								v-if="item.pay_type != 'shell'">
 									<view>
 										<text>积分：-100</text>
-										<text style="color: #f00;">（优惠10贝）</text>
+										<text style="color: #f00;">（优惠{{ item.dockerInfo[0].price }}贝）</text>
 									</view>
 									<view style="font-weight: bold; color: #000;">
 										<text>实付：20</text>
@@ -174,7 +174,7 @@
 								
 								
 							</view>
-							<view class="btn">
+							<!-- <view class="btn">
 								<view style="flex: 1;"></view>
 								<view class="btn-box">
 									<view class="del">
@@ -182,7 +182,7 @@
 									</view>
 								</view>
 									
-							</view>
+							</view> -->
 						</view>
 					</view>
 				</view>
@@ -303,6 +303,7 @@
 			console.log(this.current_time_stamp)
 		},
 		onReachBottom() {
+			console.log('onReachBottom')
 			// 待还书单上拉加载
 			if(this.waitOrderTotalPage > this.waitOrderList.length && this.tabList.currentIndex == 0) {
 				console.log('waitOrderList')
@@ -361,6 +362,7 @@
 						order_type: 0 //待归还书单类型
 					}
 				}).then(res => {
+					console.log(res);
 					// 储存订单总数
 					this.waitOrderTotalPage = res.data.totalPage
 					// 判断是否要生成二维码
@@ -372,8 +374,8 @@
 						item.price = (+item.price).toFixed(2)
 						// 格式化订单创建时间
 						item.handle_create_time = this.handleTime(item.create_time)
-						// 计算借书时间是否逾期(取书时间+5天-现在时间做判断)
-						item.handle_get_book = new Date(item.create_time).getTime() + (24 * 3600 * 1000 * 5);
+						// 计算借书时间是否逾期
+						item.handle_get_book = new Date(item.formatPreReturnBookTime).getTime();
 						let difference = item.handle_get_book - this.current_time_stamp;
 						// 时间戳转为天计算
 						let day = Math.ceil(Math.abs(difference / (24 * 3600 * 1000))) 
@@ -453,8 +455,8 @@
 			changTab(index) {
 				this.tabList.currentIndex = index
 				if(index == 0) {
-					if(this.waitOrderList.length == 
-					this.waitOrderPageSize){
+					if(this.waitOrderList.length < 
+					this.waitOrderTotalPage){
 						// 重置加载组件的加载状态
 						this.loadStatus = 'loading';
 						// 重置上拉加载的状态
@@ -463,8 +465,8 @@
 						this.loadStatus = 'noMore';
 					}
 				}else if(index == 1) {
-					if(this.returnOrderList.length == 
-					this.returnOrderPageSize){
+					if(this.returnOrderList.length < 
+					this.returnOrderTotalPage){
 						// 重置加载组件的加载状态
 						this.loadStatus = 'loading';
 						// 重置上拉加载的状态

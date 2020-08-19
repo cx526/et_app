@@ -163,7 +163,7 @@
 		border-radius: 60rpx;
 	}
 	.form .btn-box .btn:nth-child(1) {
-		box-shadow: 0 0 6rpx #dae6ed;
+		box-shadow: 0 0 20rpx #ddd;
 		margin-right: 10rpx;
 		background: #fff;
 		color: #b3b3b3;

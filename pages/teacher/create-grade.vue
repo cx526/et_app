@@ -83,7 +83,7 @@
 	}
 	.form {
 		background: #fff;
-		box-shadow: 0rpx 0rpx 20rpx rgba(179, 179, 179, 0.3);
+		box-shadow: 0rpx 0rpx 20rpx #ddd;
 		box-sizing: border-box;
 		padding: 0 24rpx;
 		border-radius: 24rpx;

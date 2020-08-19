@@ -162,7 +162,7 @@
 		box-sizing: border-box;
 		background: #fff;
 		padding: 0 26rpx;
-		box-shadow: 0 0 12rpx #f0f0f0;
+		box-shadow: 0 0 20rpx #ddd;
 		border-radius: 20rpx;
 	}
 	.form .list .item {

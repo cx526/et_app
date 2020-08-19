@@ -30,7 +30,7 @@
 		<!-- banner -->
 		<view class="banner-box" id="banner">
 			<image src="https://et-pic-server.oss-cn-shenzhen.aliyuncs.com/app_img/library-banner.png" style="height: 300rpx;"></image>
-			<view class="name">
+			<view class="name" v-if="userInfo.schoolInfo">
 				<uni-notice-bar 
 				scrollable="true" 
 				single="true" 
@@ -127,11 +127,11 @@
 			<view class="power-box" :style="{ width: popUpWidth }">
 				<image src="https://et-pic-server.oss-cn-shenzhen.aliyuncs.com/app_img/power-banner.png" mode="widthFix"></image>
 				<view class="context">
-					<view class="title"><text>请绑定童书卡</text></view>
-					<view class="notice"><text>幼儿园合作用户请先绑定童书卡</text></view>
+					<view class="title"><text>暂未绑定幼儿园信息！</text></view>
+					<view class="notice"><text>请先填写幼儿园信息</text></view>
 					<view class="btn">
 						<view @tap="goIndex">取消</view>
-						<view @tap="goCard">去绑卡</view>
+						<view @tap="goCard">去填写</view>
 					</view>
 				</view>
 			</view>
@@ -170,7 +170,6 @@ export default {
 			coin: 0,//积分
 			free: 0,//免费借阅次数
 			docker_mac: '',
-			userInfo: '',//用户信息
 			isSearch: false,
 		};
 	},
@@ -181,8 +180,7 @@ export default {
 		Popup
 	},
 	async onLoad(option) {
-		// 检测是否有登录
-		this.getLogin()
+		
 		// 从搜索页跳转过来
 		if (option.isSearch) {
 			this.isSearch = option.isSearch
@@ -206,6 +204,10 @@ export default {
 		});
 	},
 	onShow() {
+		// 检测是否有登录
+		this.getLogin()
+		// 获取用户个人账户信息
+		this.getUserInfo();
 		this.len = uni.getStorageSync('offlineCartList').length;
 		
 	},
@@ -232,7 +234,10 @@ export default {
 			this.currentPage = this.currentPage + 1;
 			if (this.loadStatus !== 'noMore') {
 				this.$api.offlineGetBooksList({
-					docker_mac: this.userInfo.dockerInfo.docker_mac,
+					filterItems: {
+						docker_mac: this.userInfo.dockerInfo.docker_mac
+					},
+					
 					pageSize: this.pageSize,
 					currentPage: this.currentPage
 				}).then(res => {
@@ -276,7 +281,7 @@ export default {
 					filterItems: { mobile }
 					}).then(res => {
 					this.userInfo = res.data[0];
-					this.docker_mac = this.userInfo.dockerInfo.docker_mac;
+					this.docker_mac = this.userInfo.dockerInfo.docker_mac 
 					console.log(this.userInfo)
 					if(!this.userInfo.schoolInfo || 
 					this.userInfo.schoolInfo =='{}') {
@@ -284,8 +289,8 @@ export default {
 						this.$refs.powerPopUp.open()
 					}else {
 						
-						this.coin = this.userInfo.coin;//积分
-						this.shell = (+this.userInfo.shell).toFixed(2); //五车贝
+						this.coin = this.userInfo.coin ? this.userInfo.coin : '';//积分
+						this.shell = (+this.userInfo.shell).toFixed(2) ? (+this.userInfo.shell).toFixed(2) : ''; //五车贝
 						// 计算用户的免费次数
 						this.getUserFreeCount()
 						// 获取书籍分类
@@ -313,7 +318,9 @@ export default {
 				mask: true
 			});
 			this.$api.offlineGetBooksList({
-				docker_mac: this.userInfo.dockerInfo.docker_mac,
+				filterItems: {
+					docker_mac: this.userInfo.dockerInfo.docker_mac,
+				},
 				pageSize: this.pageSize,
 				currentPage: this.currentPage
 			}).then(res => {
@@ -479,7 +486,7 @@ export default {
 		// 跳转到绑卡页面
 		goCard() {
 			uni.navigateTo({
-				url: './tied-card'
+				url: '/pages/my/myInfoList'
 			})
 		},
 	}
@@ -531,6 +538,7 @@ page {
 	position: relative;
 	box-sizing: border-box;
 	margin-right: 28rpx;
+
 }
 .header-box .info .item:last-child {
 	margin-right: 0;
@@ -544,9 +552,9 @@ page {
 	top: -8rpx;
 }
 .header-box .info .item text {
-	font-size: 30rpx;
+	font-size: 26rpx;
 	color: #fff;
-	font-weight: bold;
+
 	margin-left: 22rpx;
 	text-shadow: 0 0 8rpx #2aaec4;
 }

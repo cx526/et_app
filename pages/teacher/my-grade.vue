@@ -211,7 +211,7 @@
 	.students-list scroll-view {
 		box-sizing: border-box;
 		background: #fff;
-		box-shadow: 0 0 20rpx #f0f0f0;
+		box-shadow: 0 0 20rpx #ddd;
 		border-radius: 20rpx;
 		padding: 0 26rpx;
 	}

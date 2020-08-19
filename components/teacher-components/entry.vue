@@ -103,6 +103,18 @@
 					uni.navigateTo({
 						url: '/pages/teacher/my-grade'
 					})
+					case 1:
+					uni.navigateTo({
+						url: '/pages/teacher/proxy-take'
+					})
+					case 2:
+					uni.navigateTo({
+						url: '/pages/teacher/proxy-return'
+					})
+					case 3:
+					uni.navigateTo({
+						url: '/pages/teacher/my-proof'
+					})
 				}
 			},
 		}

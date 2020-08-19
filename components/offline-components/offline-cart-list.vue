@@ -211,28 +211,48 @@ export default {
 				}
 			}).then(res => {
 				console.log(res);
-				// 实时更新本地书籍的缓存
-				res.data.rows.map((item, index) => {
-					bookList.map((list, listIndex) => {
-						if(item.id === list.id) {
-							bookList[listIndex].stockCount.totalDockerUse = item.stockCount.totalDockerUse;
-							
-						}
-						// 选中书籍存在无库存情况
-						if(!bookList[listIndex].stockCount.totalDockerUse && bookList[listIndex].isSelect) {
-							this.isStock = false
-						}
-						// 如果选中但没库存更改选中状态
-						if(bookList[listIndex].stockCount.totalDockerUse == 0 && bookList[listIndex].isSelect) {
-							bookList[listIndex].isSelect = false
+				if(res.data.rows.length == 0) {
+					this.isStock = false;
+					// 如果选中但没库存更改选中状态
+					bookList.map(item => {
+						if(item.stockCount.totalDockerUse == 0 && item.isSelect) {
+							item.isSelect = false
 						}
 					})
-				})  
-				// 更新缓存
-				uni.setStorageSync('offlineCartList', bookList);
-				this.bookList = uni.getStorageSync('offlineCartList')
-				// 若有选中计算价格
-				this.coungPrice();
+					
+					// 更新缓存
+					uni.setStorageSync('offlineCartList', bookList);
+					console.log(bookList)
+					this.bookList = uni.getStorageSync('offlineCartList')
+					// 若有选中计算价格
+					this.coungPrice();
+					return
+				}
+				else {
+					// 实时更新本地书籍的缓存
+					res.data.rows.map((item, index) => {
+						bookList.map((list, listIndex) => {
+							if(item.id === list.id) {
+								bookList[listIndex].stockCount.totalDockerUse = item.stockCount.totalDockerUse;
+								
+							}
+							// 选中书籍存在无库存情况
+							if(!bookList[listIndex].stockCount.totalDockerUse && bookList[listIndex].isSelect) {
+								this.isStock = false
+							}
+							// 如果选中但没库存更改选中状态
+							if(bookList[listIndex].stockCount.totalDockerUse == 0 && bookList[listIndex].isSelect) {
+								bookList[listIndex].isSelect = false
+							}
+						})
+					})  
+					// 更新缓存
+					uni.setStorageSync('offlineCartList', bookList);
+					this.bookList = uni.getStorageSync('offlineCartList')
+					// 若有选中计算价格
+					this.coungPrice();
+				}
+				
 			})
 		},
 		// 选取书籍
@@ -395,7 +415,9 @@ export default {
 					}
 				}
 			}
-			uni.setStorageSync("offlineCartList", cacheBooksList)
+			uni.setStorageSync("offlineCartList", cacheBooksList);
+			// 通知父组件更改本地书籍数量
+			this.$emit('countChange')
 		},
 		// 检测登录状态
 		getLogin() {
@@ -501,6 +523,7 @@ export default {
 		},
 		
 		// 下单
+	
 		placeOrder(goods_id, type) {
 			this.$api.offlinePlaceOrder({
 				goods_id,
@@ -516,7 +539,7 @@ export default {
 						icon: 'none',
 						duration: 1000,
 						success: () => {
-							// // 跳转到取书页
+							// 跳转到取书页
 							uni.redirectTo({
 								url: '../../pages/library/take-books?status=0&from=placeOrder'
 							})

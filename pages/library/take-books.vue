@@ -49,8 +49,11 @@
 						<view class="item">
 							<view class="topic">
 								<view style="font-weight: bold;">订单号：{{ item.order_no }}</view>
-								<view class="status">
+								<view class="status" v-if="item.order_type == 0">
 										<text>{{ item.msg }}</text>
+								</view>
+								<view class="status" v-else>
+										<text>已失效</text>
 								</view>
 							</view>
 							<view class="book-list" 
@@ -82,7 +85,7 @@
 									<view class="text spcial" v-if="item.pay_type != 'shell' ">
 										<view >
 											<text>积分：-50</text>
-											<text style="color: #f00;">（优惠{{ item.price }}贝）</text>
+											<text style="color: #f00;">（优惠{{ item.dockerInfo[0].price }}贝）</text>
 										</view>
 										<view style="font-weight: bold; color: #000;">
 											<text>实付：0</text>
@@ -159,7 +162,7 @@
 									v-if="item.pay_type != 'shell'">
 										<view>
 											<text>积分：-50</text>
-											<text style="color: #f00;">（优惠{{ item.price }}贝）</text>
+											<text style="color: #f00;">（优惠{{ item.dockerInfo[0].price }}贝）</text>
 										</view>
 										<view style="font-weight: bold; color: #000;">
 											<text>实付：0</text>
@@ -176,7 +179,7 @@
 									
 									
 								</view>
-								<view class="btn">
+								<!-- <view class="btn">
 									<view style="flex: 1;"></view>
 									<view class="btn-box">
 										<view class="del">
@@ -184,7 +187,7 @@
 										</view>
 									</view>
 										
-								</view>
+								</view> -->
 							</view>
 						</view>
 					</view>
@@ -382,16 +385,25 @@
 						item.price = (+item.price).toFixed(2)
 						// 格式化订单创建时间
 						item.hanlde_create_time = this.handleTime(item.create_time)
-						// 订单失效时间
-						item.fail_timestamp = new Date(item.pre_get_book_time).getTime();
-						item.difference = item.fail_timestamp - this.current_timestamp > 86400000  ? 0 : item.fail_timestamp - this.current_timestamp;
+						
+						// 如果订单状态为0开启计时器
+						if(item.order_type == 0) {
+							// 订单失效时间formatPreGetBookTime
+							item.fail_timestamp = new Date(item.formatPreGetBookTime).getTime();
+							item.difference = item.fail_timestamp - this.current_timestamp
+						}
+						
 					})
 					this.orderList = [...this.orderList, ...res.data.rows];
 					// 开启定时器
 					this.timer = setInterval(() => {
 						this.orderList && this.orderList.map(list => {
-							list.difference = list.difference - 1000;
-							list.msg =  this.countDown(list.difference);
+							// 开启计时器
+							if(list.order_type == 0) {
+								list.difference = list.difference - 1000;
+								list.msg =  this.countDown(list.difference);
+							}
+							
 						})						
 					}, 1000)
 					// 判断是否改变加载组件状态
@@ -432,10 +444,7 @@
 			countDown(time) {
 				let msg = '';
 				if (time > 0) {
-					// time = time - 1000 ;
-					let hours = parseInt((time % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)) >= 10 ? 
-					parseInt((time % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)) 					: 
-					'0' + parseInt((time % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+					let hours = parseInt(time / (1000 * 60 * 60 )) >= 10 ?	parseInt(time / (1000 * 60 * 60 )) : '0' + parseInt(time / (1000 * 60 * 60 ))
 					let minutes = parseInt((time % (1000 * 60 * 60)) / (1000 * 60)) >= 10 ? 
 					parseInt((time % (1000 * 60 * 60)) / (1000 * 60)) 
 					: 
@@ -489,14 +498,14 @@
 			changTab(index) {
 				this.tabList.currentIndex = index;
 				if(index == 0) {
-					if(this.orderList.length == this.pageSize) {
+					if(this.orderList.length < this.orderListPage) {
 						this.loadStatus = 'loading'
 						this.isLoadingMore = true
 					}else {
 						this.loadStatus = 'noMore'
 					}
 				}else if(index == 1) {
-					if(this.failOrderList.length == this.faliPageSize) {
+					if(this.failOrderList.length < this.failOrderListPage) {
 						this.loadStatus = 'loading'
 						this.isLoadingMore = true
 					}else {
@@ -516,7 +525,6 @@
 			},
 			// 点击自定义导航栏左侧按钮事件
 			clickLeft() {
-				console.log('clickLeft')
 				// 从下单成功跳转过来
 				if(this.from == 'placeOrder') {
 					uni.reLaunch({
