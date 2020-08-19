@@ -68,7 +68,7 @@
 					</view>
 					<!-- 没选中时显示 -->
 					<view v-else><text>合计：0本</text></view>
-					<view v-if="len"><text style="color: #999;font-size: 22rpx;">押金：40(可退)</text></view>
+					<view v-if="len"><text style="color: #999;font-size: 22rpx;">押金：29(可退)</text></view>
 				</view>
 			</view>
 
@@ -263,36 +263,33 @@ export default {
 		},
 		// 计算借书币
 		coungPrice() {
-			this.price = 0;
-			this.len = 0;
 			let flag = true;
-			this.bookList.map(item => {
-				if (item.isSelect) {
-					
-					// 选中书籍的价格
-					this.price = (+this.price + +item.price).toFixed(2);
-					// 选中书籍的本数
-					this.len = this.len + 1;
-					// 实时计算借书币
-					// 1.用户没有免费借阅次数或者积分/50小于1时(直接计算所选书籍累加的借书币)
-					if (this.free === 0 || this.integrate / 50 < 1 
-					|| this.len >= 2) {
-						this.price = (+this.price + +item.price).toFixed(2);
-					}
-					// 2.用户有免费借阅次数且所选书籍小于2且积分/50大于等于1(免费)
-					else if (this.free && this.len < 2 
-					&& this.integrate / 50 >= 1) {
-						this.price = 0
-					}
-				} else {
-					flag = false;
-				}
+			this.price = 0
+			// 获取用户选中的书籍列表
+			let chooseBookList = this.bookList.filter(item => {
+				return item.isSelect === true;
 			});
-			
-			// 判断全选复选框是否选中
-			this.offlineAllSelect = flag;
-			// 同步缓存数据
-			uni.setStorageSync('offlineCartList', this.bookList);
+			// 选中书籍本数
+			this.len = chooseBookList.length;
+			if(chooseBookList.length == 0) {
+				flag = false //全选不选中
+			}else {
+				chooseBookList.map(item => {
+					if (this.free === 0 || this.integrate / 50 < 1 || this.len >= 2) {
+						this.price = (+this.price + +item.price).toFixed(2);
+					}else {
+						this.price = 0;
+					}
+				})
+				// 每次点击复选框都要做一下判断此时全选是否选中
+				if(chooseBookList.length != this.bookList.length) {
+					flag = false
+				}
+				// 赋值全选按钮的checkbox值
+				this.offlineAllSelect = flag;
+				// 同步缓存数据
+				uni.setStorageSync('offlineCartList', this.bookList);
+			}
 		},
 		// 选择书本(点击复选框)
 		selechBook(item) {
@@ -313,7 +310,7 @@ export default {
 			this.offlineAllSelect = !this.offlineAllSelect;
 			this.bookList.map(item => {
 				// 如果库存数为0,依然不给选
-				if (item.stock.usageCount) {
+				if (item.stockCount.totalDockerUse) {
 					item.isSelect = this.offlineAllSelect;
 				}
 			});
@@ -495,6 +492,7 @@ export default {
 						amount = (+amount + +item.price).toFixed(2);
 					});
 					this.price = amount
+					console.log(this.price)
 					// 当前用户五车贝不足够或押金小于29时显示弹窗
 					if(this.shell < this.price || this.deposit < 29) {
 						if(this.shell < this.price) {
@@ -564,112 +562,6 @@ export default {
 				url: '../../pages/library/virtual'
 			})
 		}
-
-				
-				
-
-		
-
-		// borrow() {
-		// 	// 获取用户选中的书籍列表
-		// 	this.chooseBookList = this.bookList.filter(item => {
-		// 		return item.isSelect === true;
-		// 	});
-		// 	// 价格升序
-		// 	let result = this.chooseBookList.sort(this.compare('price'));
-		// 	// console.log(result);
-		// 	// 实际免费借阅次数
-		// 	let reality = this.integrate / 50; //(积分/50)
-		// 	// 实际所需支付借书币
-		// 	let amount = 0;
-		// 	// 选中书籍的本书
-		// 	let len = this.chooseBookList.length;
-		// 	// 用户没有选中书籍
-		// 	if(this.chooseBookList.length === 0) {
-		// 		uni.showToast({
-		// 			title: '请先选择需要借阅的书籍',
-		// 			duration: 2000,
-		// 			icon: 'none'
-		// 		})
-		// 		return
-		// 	}
-		// 	// 每单借阅小于10本
-		// 	else if(this.chooseBookList.length >= 10) {
-		// 		uni.showToast({
-		// 			title: '每单借阅本书不能超过10本',
-		// 			duration:2000,
-		// 			icon: 'none'
-		// 		})
-		// 		return
-		// 	}
-
-		// 	// 1.用户没有免费借阅次数或者积分/50小于1时(直接计算所选书籍累加的借书币)
-		// 	else if(this.free === 0 || this.integrate/50 < 1) {
-		// 		result.map(item => {
-		// 			amount = ((+amount) + (+item.price)).toFixed(2)
-		// 		})
-		// 		console.log(amount)
-		// 	}
-		// 	// 2.用户有免费借阅次数且所选书籍小于/等于免费借阅次数且积分/50大于所选本数(免费)
-		// 	else if(this.free && len <= this.free && reality >= len) {
-		// 		amount = 0;
-		// 		console.log(amount)
-		// 	}
-		// 	// 3.用户有免费借阅次数且所选书籍小于/等于免费借阅次数且积分/50小于所选本数(借书币=所选本书-积分/50)
-		// 	else if(this.free && len <= this.free && reality < len) {
-		// 		// 需要支付借书币的本书
-		// 		let need = len - reality; //4-3=1
-		// 		console.log(need);
-		// 		let arr = [];
-		// 		for(let i = 1; i <= need; i++) {
-		// 			console.log(result[result.length - i])
-		// 			arr.push(result[result.length - i])
-		// 		};
-		// 		console.log(arr);
-		// 		arr.map(item => {
-		// 			amount = ((+amount) + (+item.price)).toFixed(2)
-		// 		})
-		// 		console.log(amount)
-		// 	}
-		// 	// 4.用户有免费借阅次数且所选书籍大于免费借阅次数且积分/50大于当前免费借阅次数(借书币=所选本书-免费借阅次数，此情况无关积分)
-		// 	else if(this.free && len > this.free && reality >= this.free) {
-		// 		// 需要支付的本书
-		// 		let need = len - this.free;
-		// 		console.log(need);
-		// 		let arr = [];
-		// 		for(let i = 1; i <= need; i++) {
-		// 			console.log(result[result.length - i])
-		// 			arr.push(result[result.length - i])
-		// 		};
-		// 		console.log(arr);
-		// 		arr.map(item => {
-		// 			amount = ((+amount) + (+item.price)).toFixed(2)
-		// 		})
-		// 		console.log(amount)
-		// 	}
-		// 	// 5.用户有免费借阅次数且所选书籍大于免费借阅次数且积分/50小于当前免费借阅次数(借书币=所选本书-积分/50)
-		// 	else if(this.free && len > this.free && reality < this.free) {
-		// 		let need = len - reality
-		// 		console.log(need);
-		// 		let arr = [];
-		// 		for(let i = 1; i <= need; i++) {
-		// 			console.log(result[result.length - i])
-		// 			arr.push(result[result.length - i])
-		// 		};
-		// 		console.log(arr);
-		// 		arr.map(item => {
-		// 			amount = ((+amount) + (+item.price)).toFixed(2)
-		// 		})
-		// 		console.log(amount)
-		// 	}
-		// 	// 借书币不足时显示弹窗
-		// 	// this.$refs.popup.open();
-		// 	// 同时满足以上两个条件时直接跳转到订单页
-		// 	// uni.navigateTo({
-		// 	// 	url: '../../pages/library/offline-order'
-		// 	// })
-		// },
-
 	}
 };
 </script>
