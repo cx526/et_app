@@ -300,13 +300,10 @@
 			// 获取用户信息
 			this.getUserInfo();
 			this.current_time_stamp = new Date().getTime();
-			console.log(this.current_time_stamp)
 		},
 		onReachBottom() {
-			console.log('onReachBottom')
 			// 待还书单上拉加载
 			if(this.waitOrderTotalPage > this.waitOrderList.length && this.tabList.currentIndex == 0) {
-				console.log('waitOrderList')
 				this.loadStatus = "loading"
 				this.waitOrderPage = this.waitOrderPage + 1;
 				this.getWaitOrderList()
@@ -363,7 +360,6 @@
 						order_type: 0 //待归还书单类型
 					}
 				}).then(res => {
-					console.log(res);
 					// 储存订单总数
 					this.waitOrderTotalPage = res.data.totalPage
 					// 判断是否要生成二维码
@@ -387,7 +383,6 @@
 						}
 					})
 					this.waitOrderList = [...this.waitOrderList, ...res.data.rows]
-					console.log(this.waitOrderList)
 					// 判断是否改变加载组件状态
 					if(this.waitOrderTotalPage <= this.waitOrderList.length) {
 						this.loadStatus = "noMore"
@@ -484,7 +479,6 @@
 			},
 			// 打开订单凭证弹窗
 			open(item) {
-				console.log(item)
 				this.code = item.get_book_code //还书码
 				this.val = item.get_book_qrcode // 还书二维码内容
 				this.$refs.orderPopUp.open()
@@ -495,7 +489,6 @@
 			},
 			// 二维码生成的路径,改变二维码的内容(val值会重新出发此方法)
 			qrR(res) {
-				console.log(res);
 				this.src = res
 			},
 		}

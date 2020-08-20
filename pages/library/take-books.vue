@@ -532,7 +532,6 @@
 						url: '../cart/cart?flag=true'
 					})
 				}else {
-					console.log('else')
 					uni.navigateBack({
 						delta: 1
 					})
@@ -540,7 +539,6 @@
 			},
 			// 二维码生成的路径,改变二维码的内容(val值会重新出发此方法)
 			qrR(res) {
-				console.log(res);
 				this.src = res
 			},
 		}

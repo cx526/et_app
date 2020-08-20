@@ -281,8 +281,6 @@ export default {
 					filterItems: { mobile }
 					}).then(res => {
 					this.userInfo = res.data[0];
-					console.log(this.userInfo)
-					console.log(this.userInfo.schoolInfo.name)
 					// 如果幼儿园不存在提示填写幼儿园信息弹窗
 					if(!this.userInfo.schoolInfo.name) {
 						// 显示绑卡弹窗
@@ -341,8 +339,8 @@ export default {
 			}).then(res => {
 				uni.hideLoading();
 				this.productList = res.data.rows;
-				if (res.data.rows.length < this.pageSize) {
-					this.loadStatus === 'noMore';
+				if (res.data.rows.length < this.pageSize || this.productList.length == 0) {
+					this.loadStatus = 'noMore';
 				}
 			});
 		},

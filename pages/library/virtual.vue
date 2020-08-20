@@ -98,7 +98,7 @@
 			uniNavBar,
 			uniLoadMore
 		},
-		onLoad() {
+		onShow() {
 			this.getUserInfo()
 		},
 		onReachBottom() {

@@ -186,7 +186,6 @@ export default {
 			.then(res => {
 				uni.hideLoading()
 				this.userInfo = res.data[0];
-				console.log(this.userInfo)
 				// 如果不是合作幼儿园
 				if(!this.userInfo.dockerInfo) {
 					
@@ -243,11 +242,10 @@ export default {
 					docker_mac: this.docker_mac
 				}
 			}).then(res => {
-				console.log(res);
 				if(res.data.rows.length == 0) {
 					this.isStock = false;
 					// 如果选中但没库存更改选中状态
-					bookList.map(item => {
+					bookList && bookList.map(item => {
 						if(item.stockCount.totalDockerUse == 0 && item.isSelect) {
 							item.isSelect = false
 						}
@@ -255,7 +253,6 @@ export default {
 					
 					// 更新缓存
 					uni.setStorageSync('offlineCartList', bookList);
-					console.log(bookList)
 					this.bookList = uni.getStorageSync('offlineCartList')
 					// 若有选中计算价格
 					this.coungPrice();
@@ -264,7 +261,7 @@ export default {
 				else {
 					// 实时更新本地书籍的缓存
 					res.data.rows.map((item, index) => {
-						bookList.map((list, listIndex) => {
+						bookList && bookList.map((list, listIndex) => {
 							if(item.id === list.id) {
 								bookList[listIndex].stockCount.totalDockerUse = item.stockCount.totalDockerUse;
 								
@@ -298,10 +295,14 @@ export default {
 		coungPrice() {
 			let flag = true;
 			this.price = 0
+			let chooseBookList = []
 			// 获取用户选中的书籍列表
-			let chooseBookList = this.bookList.filter(item => {
-				return item.isSelect === true;
-			});
+			if(this.bookList.length != 0) {
+				chooseBookList = this.bookList.filter(item => {
+					return item.isSelect === true;
+				});
+			}
+			
 			// 选中书籍本数
 			this.len = chooseBookList.length;
 			if(chooseBookList.length == 0) {
@@ -523,7 +524,6 @@ export default {
 						amount = (+amount + +item.price).toFixed(2);
 					});
 					this.price = amount
-					console.log(this.price)
 					// 当前用户五车贝不足够或押金小于29时显示弹窗
 					if(this.shell < this.price || this.deposit < 29) {
 						if(this.shell < this.price) {

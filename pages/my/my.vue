@@ -27,27 +27,6 @@
 		</view>
 		
 		<view class="content-position">
-			<!-- <view class="userInfo-position">
-				<view class="user-left-position">
-					<view class="userInfo-content">
-						<text style="color: #FFFFFF;font-size: 40upx;">{{userInfo.name === 'guest' ? '五车书游客, 您好！' : userInfo.name}}</text>
-						<view class="white-space-width"></view>
-					</view>
-					
-					<view style="height: 10upx;"></view>
-					
-				</view>
-				
-				<view class="user-right-position">
-					<view v-if="userInfo.name === 'guest'" @tap="goAuth">
-						<image src="https://et-pic-server.oss-cn-shenzhen.aliyuncs.com/app_img/avatar.png" style="border-radius: 50%; width: 120upx; height: 120upx;"></image>
-					</view>
-					<view v-else @tap="clearSessionAction">
-						<image :src="userInfo.avatar" style="border-radius: 50%; width: 120upx; height: 120upx;"></image>
-					</view>
-				</view>
-			</view> -->
-			
 			<view class="white-space"></view>
 			<!-- 线下订单 -->
 			<view class="offline-box">

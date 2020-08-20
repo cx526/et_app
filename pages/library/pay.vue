@@ -248,62 +248,7 @@
 						}
 					)
 				}
-				
-				
-				
-				// 获取用户的id
-				// this.$api.getCustom({ filterItems: { mobile: mobile } }).then(res => {
-				// 	console.log(res.data[0].id);
-				// 	var id = res.data[0].id;
-				// 	var userInfo = uni.getStorageSync("userInfo");
-				// 	userInfo.id = id;
-				// 	let params = {
-				// 		userInfo: userInfo,
-				// 		shell:  "0.01",
-				// 		event: "recharge"
-				// 	}
-				// 	// 从后台读取订单号
-				// 	this.$api.offlinePayMent(params).then(res => {
-				// 		let resData = res.data.finalRes.xml 
-				// 		let order_no = res.data.order_no;
-				// 		console.log(resData);
-				// 		console.log(order_no);
-				// 		if(resData.return_code[0] === 'SUCCESS') {
-				// 			// 获取微信签名
-				// 			let { paySign, time, APPID, nonceStr } = wxPay.wxReSign(resData.prepay_id[0])
-				// 			// 调起微信支付
-				// 			wxPay.wxPay(time, nonceStr, resData.prepay_id[0], paySign,
-				// 				// 支付成功回调事件
-				// 				res => {
-				// 					uni.hideLoading();
-				// 					if(res.errMsg === "requestPayment:ok") {
-				// 						this.$api.offlineUpdatePayMent({
-				// 							userInfo: userInfo,//个人信息
-				// 							event: "recharge",//充值类型
-				// 							order_no: order_no,//订单号
-				// 							shell:  "0.01",//充值金额
-				// 						}).then(res => {
-				// 							console.log(res)
-				// 						})
-				// 					}
-				// 				},
-				// 				// 支付失败回调事件
-				// 				err => {
-				// 					console.log(err)
-				// 					uni.hideLoading();
-				// 					uni.showToast({
-				// 						title: '支付失败',
-				// 						icon: 'none',
-				// 						duration: 2000
-				// 					})
-				// 				}
-								
-				// 			)
-				// 		}
-				// 	})
-				// })
-				
-				
+
 			}
 		}
 	
