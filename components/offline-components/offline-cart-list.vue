@@ -177,6 +177,26 @@ export default {
 			let mobile = uni.getStorageSync("userInfo").mobile;
 			this.$api.getCustom({ filterItems: { mobile } }).then(res => {
 				this.userInfo = res.data[0];
+				console.log(this.userInfo)
+				// 如果不是合作幼儿园
+				if(!this.userInfo.dockerInfo) {
+					// 通知父组件隐藏页面
+					this.$emit('pageHide', false)
+					uni.showToast({
+						title: '此幼儿园暂时不是合作用户',
+						icon: 'none',
+						duration:2000,
+						success: res => {
+							setTimeout(() => {
+								uni.switchTab({
+									url: '/pages/index/index'
+								})
+							}, 2000)
+							
+						}
+					})
+					return
+				}
 				//储存用户积分;
 				this.integrate = this.userInfo.coin 
 				//储存用户的五车贝;

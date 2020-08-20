@@ -1,5 +1,5 @@
 <template>
-	<view>
+	<view v-show="isShow">
 		<!-- tab切换线上/线下 -->
 		<view class="tab-box">
 			<view 
@@ -31,7 +31,8 @@
 				:scrollHeight="scrollHeight"
 				:minHeight="minHeight"
 				:popUpWidth="popUpWidth"
-				@countChange="countChange"></offline-cart-list>
+				@countChange="countChange"
+				@pageHide="pageHide"></offline-cart-list>
 			</view>
 		</view>
 	</view>
@@ -68,13 +69,27 @@ export default {
 			],
 			offlineAllSelect: false,
 			offlineBooksList: [],
-			popUpWidth: 0
+			popUpWidth: 0,
+			isShow: true
 		}
 	},
-
+	onLoad(option){
+		this.bookCatShow = true;
+		// 线下逻辑
+		this.flag = option.flag
+		// 获取屏幕高度
+		uni.getSystemInfo({
+			success: res => {
+				this.minHeight = (res.windowHeight - 40) + 'px'
+				this.scrollHeight = (res.windowHeight - res.navigationBarHeight - res.statusBarHeight) + 'px'
+				this.popUpWidth = res.windowWidth * 0.8 + 'px'
+			}
+		})
+	},
 	onShow(){
 		this.bookCatShow = true;
 		// 线下逻辑
+		this.isShow = true
 		// 判断当前页面显示线上 flag = false /线下 flag = true
 		if(this.flag) {
 			this.isStatus  = false;
@@ -96,20 +111,7 @@ export default {
 		// 线下逻辑
 		this.flag = ''
 	},
-	onLoad(option){
-		console.log(option)
-		this.bookCatShow = true;
-		// 线下逻辑
-		this.flag = option.flag
-		// 获取屏幕高度
-		uni.getSystemInfo({
-			success: res => {
-				this.minHeight = (res.windowHeight - 40) + 'px'
-				this.scrollHeight = (res.windowHeight - res.navigationBarHeight - res.statusBarHeight) + 'px'
-				this.popUpWidth = res.windowWidth * 0.8 + 'px'
-			}
-		})
-	},
+	
 	methods: {
 		// 线上/线下显示切换
 		changeTab(index) {
@@ -137,19 +139,10 @@ export default {
 		countChange() {
 			this.tabList[0].number = uni.getStorageSync("offlineCartList").length
 		},
-
-		
-		
-
-		
-
-		
-
-		
-
-		
-		
-		
+		// 监听页面做显示或者隐藏
+		pageHide(flag) {
+			this.isShow = flag
+		}
 	}
 }
 </script>

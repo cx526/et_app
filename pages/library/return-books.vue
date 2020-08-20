@@ -353,7 +353,8 @@
 			},
 			// 获取待归还书书单
 			getWaitOrderList() {
-				this.$api.offlineUserOrderList({
+				// 如果不是合作用户不发送请求
+				this.userInfo.dockerInfo && this.$api.offlineUserOrderList({
 					pageSize: this.waitOrderPageSize,
 					currentPage: this.waitOrderPage,
 					docker_mac: this.userInfo.dockerInfo.docker_mac,
@@ -395,7 +396,8 @@
 			},
 			// 获取已归还书单
 			getReturnOrderList() {
-				this.$api.offlineUserOrderList({
+				// 如果不是合作用户不发送请求
+				this.userInfo.dockerInfo && this.$api.offlineUserOrderList({
 					pageSize: this.returnOrderPageSize,
 					currentPage: this.returnOrderPage,
 					docker_mac: this.userInfo.dockerInfo.docker_mac,

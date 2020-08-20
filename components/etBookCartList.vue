@@ -253,7 +253,8 @@ export default {
 				filterItems: { mobile }
 				}).then(res => {
 				this.userInfoDoc = res.data[0];
-				this.docker_mac = this.userInfoDoc.dockerInfo.docker_mac
+				// this.docker_mac = this.userInfoDoc.dockerInfo.docker_mac
+				this.docker_mac = this.userInfoDoc.dockerInfo ? this.userInfoDoc.dockerInfo.docker_mac : ''
 				bookListData.getBookListStockToData(this.docker_mac)
 			})
 		},

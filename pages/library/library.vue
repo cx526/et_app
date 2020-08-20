@@ -2,7 +2,7 @@
 	<view 
 	:style="{ height: showModel ? windowHeight : '' }" 
 	:class="showModel ? 'overflow' : ''"
-	v-if="isLogin">
+	v-show="isLogin">
 		<!-- 头部 -->
 		<view class="header-box">
 			<view class="user">
@@ -30,7 +30,7 @@
 		<!-- banner -->
 		<view class="banner-box" id="banner">
 			<image src="https://et-pic-server.oss-cn-shenzhen.aliyuncs.com/app_img/library-banner.png" style="height: 300rpx;"></image>
-			<view class="name" v-if="userInfo.schoolInfo">
+			<view class="name" v-if="userInfo.schoolInfo.name">
 				<uni-notice-bar 
 				scrollable="true" 
 				single="true" 
@@ -213,17 +213,17 @@ export default {
 	},
 	onReady() {
 		// 设置分类弹窗的高度
-		const query = uni.createSelectorQuery().in(this);
-		query
-			.select('#banner')
-			.boundingClientRect(data => {
-				uni.getSystemInfo({
-					success: res => {
-						this.height = res.windowHeight - (data.top + data.height) + 'px';
-					}
-				});
-			})
-			.exec();
+			const query = uni.createSelectorQuery().in(this);
+			query
+				.select('#banner')
+				.boundingClientRect(data => {
+					uni.getSystemInfo({
+						success: res => {
+							this.height = res.windowHeight - (data.top + data.height) + 'px';
+						}
+					});
+				})
+				.exec();
 	},
 	onReachBottom() {
 		// 分类加载更多
@@ -281,14 +281,32 @@ export default {
 					filterItems: { mobile }
 					}).then(res => {
 					this.userInfo = res.data[0];
-					this.docker_mac = this.userInfo.dockerInfo.docker_mac 
 					console.log(this.userInfo)
-					if(!this.userInfo.schoolInfo || 
-					this.userInfo.schoolInfo =='{}') {
+					console.log(this.userInfo.schoolInfo.name)
+					// 如果幼儿园不存在提示填写幼儿园信息弹窗
+					if(!this.userInfo.schoolInfo.name) {
 						// 显示绑卡弹窗
 						this.$refs.powerPopUp.open()
 					}else {
-						
+						// 如果绑定的幼儿园没有书柜
+						if(!this.userInfo.dockerInfo) {
+							this.isLogin = false
+							uni.showToast({
+								title: '此幼儿园暂时不是合作用户',
+								icon: 'none',
+								duration:2000,
+								success: res => {
+									setTimeout(() => {
+										uni.switchTab({
+											url: '/pages/index/index'
+										})
+									}, 2000)
+									
+								}
+							})
+							return
+						}
+						this.docker_mac = this.userInfo.dockerInfo.docker_mac 
 						this.coin = this.userInfo.coin ? this.userInfo.coin : '';//积分
 						this.shell = (+this.userInfo.shell).toFixed(2) ? (+this.userInfo.shell).toFixed(2) : ''; //五车贝
 						// 计算用户的免费次数
@@ -298,11 +316,8 @@ export default {
 						// 获取所在幼儿园书柜的所有书籍(如果从搜索页跳转过来不调用)
 						!this.isSearch && this.getBooksList();
 					}
-					
-					
 				})
 			}
-
 		},
 		// 计算用户的免费次数
 		getUserFreeCount() {

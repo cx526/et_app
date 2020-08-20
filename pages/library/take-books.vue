@@ -1,6 +1,5 @@
 <template>
 	<view>
-		
 		<uni-nav-bar
 		left-icon="back"  
 		title="待取书单" 
@@ -365,7 +364,8 @@
 			},
 			// 获取待取书书单
 			getUserOrderList() {
-				this.$api.offlineUserOrderList({
+				// 如果不是合作用户不发送请求
+				this.userInfo.dockerInfo && this.$api.offlineUserOrderList({
 					pageSize: this.pageSize,
 					currentPage: this.currentPage,
 					docker_mac: this.userInfo.dockerInfo.docker_mac,
@@ -414,7 +414,8 @@
 			},
 			// 获取失效书单
 			getFailOrderList() {
-				this.$api.offlineUserOrderList({
+				// 如果不是合作用户不发送请求
+				this.userInfo.dockerInfo && this.$api.offlineUserOrderList({
 					pageSize: this.faliPageSize,
 					currentPage: this.failCurrentPage,
 					docker_mac: this.userInfo.dockerInfo.docker_mac,

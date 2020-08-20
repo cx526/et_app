@@ -7,6 +7,7 @@ if(process.env.NODE_ENV === 'development'){
 }else{
     // 生产环境
     url_config = 'https://www.52diyike.com/api'
+		// url_config = 'http://47.112.145.215:7001'
 }
 
 export default url_config

@@ -457,67 +457,67 @@
 			}
 		}
 		// 老师端
-		,{
-			"path" : "pages/teacher/bind-card",
-			"style" : {
-				"navigationBarTitleText": "童书卡绑定"
-				}
-			}
+		// ,{
+		// 	"path" : "pages/teacher/bind-card",
+		// 	"style" : {
+		// 		"navigationBarTitleText": "童书卡绑定"
+		// 		}
+		// 	}
         
-        ,{
-            "path" : "pages/teacher/create-grade",
-            "style" : {
-							"navigationBarTitleText": "创建班级"
-						}
-        }
-        ,{
-            "path" : "pages/teacher/edit-info",
-            "style" : {
-							"navigationBarTitleText": "老师信息"
-						}
-        }
-        ,{
-            "path" : "pages/teacher/my-grade",
-            "style" : {
-							"navigationBarTitleText":"我的班级"
-						}
-        }
-        ,{
-            "path" : "pages/teacher/student-info",
-            "style" : {
-							"navigationBarTitleText":"成员信息"
-						}
-        }
-        ,{
-            "path" : "pages/teacher/proxy-take",
-            "style" : {
-							"navigationBarTitleText":"代取书单"
-						}
-        }
-        ,{
-            "path" : "pages/teacher/take-detail",
-            "style" : {
-							"navigationBarTitleText":"代取详情"
-						}
-        }
-        ,{
-            "path" : "pages/teacher/proxy-return",
-            "style" : {
-							"navigationBarTitleText":"代还书单"
-						}
-        }
-        ,{
-            "path" : "pages/teacher/return-detail",
-            "style" : {
-							"navigationBarTitleText":"代还详情"
-						}
-        }
-        ,{
-            "path" : "pages/teacher/my-proof",
-            "style" : {
-							"navigationBarTitleText":"我的凭证"
-						}
-        }
+  //       ,{
+  //           "path" : "pages/teacher/create-grade",
+  //           "style" : {
+		// 					"navigationBarTitleText": "创建班级"
+		// 				}
+  //       }
+  //       ,{
+  //           "path" : "pages/teacher/edit-info",
+  //           "style" : {
+		// 					"navigationBarTitleText": "老师信息"
+		// 				}
+  //       }
+  //       ,{
+  //           "path" : "pages/teacher/my-grade",
+  //           "style" : {
+		// 					"navigationBarTitleText":"我的班级"
+		// 				}
+  //       }
+  //       ,{
+  //           "path" : "pages/teacher/student-info",
+  //           "style" : {
+		// 					"navigationBarTitleText":"成员信息"
+		// 				}
+  //       }
+  //       ,{
+  //           "path" : "pages/teacher/proxy-take",
+  //           "style" : {
+		// 					"navigationBarTitleText":"代取书单"
+		// 				}
+  //       }
+  //       ,{
+  //           "path" : "pages/teacher/take-detail",
+  //           "style" : {
+		// 					"navigationBarTitleText":"代取详情"
+		// 				}
+  //       }
+  //       ,{
+  //           "path" : "pages/teacher/proxy-return",
+  //           "style" : {
+		// 					"navigationBarTitleText":"代还书单"
+		// 				}
+  //       }
+  //       ,{
+  //           "path" : "pages/teacher/return-detail",
+  //           "style" : {
+		// 					"navigationBarTitleText":"代还详情"
+		// 				}
+  //       }
+  //       ,{
+  //           "path" : "pages/teacher/my-proof",
+  //           "style" : {
+		// 					"navigationBarTitleText":"我的凭证"
+		// 				}
+  //       }
     ],
 	"globalStyle": {
 		"navigationBarTextStyle": "black",

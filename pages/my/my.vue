@@ -1,5 +1,5 @@
 <template>
-	<view class="content" v-if="true">
+	<view class="content">
 		<!-- 顶部底图 -->
 		<view class="top-position">
 			<view class="userInfo-position">
@@ -143,9 +143,9 @@
 			</view>
 		</view>
 	</view>
-	<view v-else>
+	<!-- <view v-else>
 		<Entry></Entry>
-	</view>
+	</view> -->
 </template>
 
 <script>
@@ -153,7 +153,7 @@ import etMyBox from '../../components/etMyBox.vue'
 import etMyReadBookData from '../../components/etMyReadBookData.vue'
 import uniNoticeBar from '@/components/uni-notice-bar/uni-notice-bar.vue'
 // 老师端入口
-import Entry from '@/components/teacher-components/entry.vue'
+// import Entry from '@/components/teacher-components/entry.vue'
 const toUrlFunction = require('@/common/toUrlFunction');
 const checkLogin = require('@/common/checkLogin');
 const bookListData = require('@/common/carDataOption');
@@ -168,7 +168,7 @@ export default {
 		etMyBox,
 		etMyReadBookData,
 		uniNoticeBar,
-		Entry
+		// Entry
 	},
 	data() {
 		return {
@@ -384,6 +384,8 @@ export default {
 			let mobile = uni.getStorageSync("userInfo").mobile;
 			this.$api.getCustom({ filterItems: { mobile } })
 			.then(res => {
+				// 如果不是合作用户不发送请求
+				res.data[0].dockerInfo &&
 				this.getOrderFail(res.data[0].id,res.data[0].dockerInfo.docker_mac)
 				
 			})
@@ -404,9 +406,9 @@ export default {
 		},
 		// 跳转到绑卡页面
 		goTiedCard() {
-			uni.navigateTo({
-				url: '/pages/teacher/bind-card'
-			})
+			// uni.navigateTo({
+			// 	url: '/pages/library/tied-card'
+			// })
 		},
 		clearSessionAction() {
 			uni.showActionSheet({
