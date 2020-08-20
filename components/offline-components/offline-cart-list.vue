@@ -1,5 +1,6 @@
 <template>
-	<view class="offline-box" :style="{ 'min-height': minHeight }">
+	<view class="offline-box" 
+	:style="{ 'min-height': minHeight }">
 		<view class="notice-box">
 			<text>我的五车贝：</text>
 			<text style="margin-right: 16rpx;">{{ shell }}</text>
@@ -174,16 +175,23 @@ export default {
 		},
 		// 获取用户的个人信息
 		getUserInfo() {
+			// 通知父组件隐藏页面
+			this.$emit('pageHide', false) //解决接口返回慢页面闪烁问题
 			let mobile = uni.getStorageSync("userInfo").mobile;
-			this.$api.getCustom({ filterItems: { mobile } }).then(res => {
+			uni.showLoading({
+				title: '数据加载中',
+				mask: true
+			})
+			this.$api.getCustom({ filterItems: { mobile } })
+			.then(res => {
+				uni.hideLoading()
 				this.userInfo = res.data[0];
 				console.log(this.userInfo)
 				// 如果不是合作幼儿园
 				if(!this.userInfo.dockerInfo) {
-					// 通知父组件隐藏页面
-					this.$emit('pageHide', false)
+					
 					uni.showToast({
-						title: '此幼儿园暂时不是合作用户',
+						title: '所属幼儿园暂时不是合作学校',
 						icon: 'none',
 						duration:2000,
 						success: res => {
@@ -197,6 +205,8 @@ export default {
 					})
 					return
 				}
+				// 通知父组件隐藏页面
+				this.$emit('pageHide', true)
 				//储存用户积分;
 				this.integrate = this.userInfo.coin 
 				//储存用户的五车贝;
@@ -207,7 +217,10 @@ export default {
 				// 计算用户的免费借阅次数
 				this.getUserFreeCount();
 				this.upDateStock()
+			}).catch(err => {
+				uni.hideLoading()
 			})
+			
 		},
 		// 更新库存
 		upDateStock() {

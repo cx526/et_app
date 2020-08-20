@@ -292,7 +292,7 @@ export default {
 						if(!this.userInfo.dockerInfo) {
 							this.isLogin = false
 							uni.showToast({
-								title: '此幼儿园暂时不是合作用户',
+								title: '所属幼儿园暂时不是合作学校',
 								icon: 'none',
 								duration:2000,
 								success: res => {

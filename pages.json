@@ -545,7 +545,7 @@
 				"pagePath": "pages/library/library",
 				"iconPath": "static/library.png",
 				"selectedIconPath": "static/library-active.png",
-				"text": "智慧童书馆"
+				"text": "童书馆"
 			},
 			{
 				"pagePath": "pages/cart/cart",
