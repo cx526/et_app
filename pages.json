@@ -440,16 +440,16 @@
 				"navigationBarTitleText": "商品详情"
 			}
 		},
-		{
-			"path": "pages/library/offline-order",
-			"style": {
-				"navigationStyle": "custom",
-				"app-plus": {
-					"titleNView": false
-				}
+		// {
+		// 	"path": "pages/library/offline-order",
+		// 	"style": {
+		// 		"navigationStyle": "custom",
+		// 		"app-plus": {
+		// 			"titleNView": false
+		// 		}
 
-			}
-		},
+		// 	}
+		// },
 		 {
 			"path": "pages/library/offline-search",
 			"style": {
