@@ -245,7 +245,7 @@ export default {
 								bookList[listIndex].isSelect = false
 							}
 						})
-					})  
+					})
 					// 更新缓存
 					uni.setStorageSync('offlineCartList', bookList);
 					this.bookList = uni.getStorageSync('offlineCartList')
@@ -408,7 +408,6 @@ export default {
 				for(let j = 0; j < chooseBooksList.length; j++) {
 					if(cacheBooksList[i].id == chooseBooksList[j].id) {
 						cacheBooksList.splice(i ,1);
-						i--
 					}
 				}
 			}
@@ -435,7 +434,7 @@ export default {
 			}
 		},
 		// 借阅
-		borrow() {
+		borrow() {	
 			// 检测是否有登录
 			this.getLogin();
 			if(this.isLogin) {
@@ -457,8 +456,7 @@ export default {
 				// 选中书籍的本书
 				let len = this.chooseBookList.length;
 				// 筛选选中书籍是否存在库存为零的情况
-				
-				// 用户没有选中书籍
+					// 用户没有选中书籍
 				if (this.chooseBookList.length === 0) {
 					uni.showToast({
 						title: '请先选择需要借阅的书籍',
