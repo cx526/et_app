@@ -58,7 +58,7 @@
 		</view>
 		
 		<view class="process-position">
-			<image class="out-img" src="https://et-pic-server.oss-cn-shenzhen.aliyuncs.com/app_img/index_bookdetail_progress_borrow.png" style="width: 750upx;" mode="widthFix"></image>
+			<image class="out-img" :src="$aliImage + 'index_bookdetail_progress_borrow.png'" style="width: 750upx;" mode="widthFix"></image>
 		</view>
 	
 		
@@ -72,7 +72,7 @@
 		</view>
 		
 		<view class="process-position">
-			<image class="out-img" src="https://et-pic-server.oss-cn-shenzhen.aliyuncs.com/app_img/index_bookdetail_progress_return.png" style="width: 750upx;" mode="widthFix"></image>
+			<image class="out-img" :src="$aliImage + 'index_bookdetail_progress_return.png'" style="width: 750upx;" mode="widthFix"></image>
 		</view>
 			
 		
@@ -100,7 +100,7 @@
 			<!-- 收藏 -->
 			<view class="bottom-button-position">
 				<view class="bottom-button" @tap="collection">
-					<image src="https://et-pic-server.oss-cn-shenzhen.aliyuncs.com/app_img/bookdetail_add.png" class="bottom-image"></image>
+					<image :src="$aliImage + 'bookdetail_add.png'" class="bottom-image'"></image>
 					<text style="font-size: 20upx;color: #2AAEC4;">收藏</text>
 				</view>
 			</view>
@@ -109,7 +109,7 @@
 			class="bottom-button-position cart-book-count-father" 
 			@tap="goCart">
 				<view class="bottom-button">
-					<image src="https://et-pic-server.oss-cn-shenzhen.aliyuncs.com/app_img/bookdetail_cart.png" class="bottom-image"></image>
+					<image :src="$aliImage + 'bookdetail_cart.png'" class="bottom-image"></image>
 					<text 
 					style="font-size: 20upx;color: #2AAEC4;"
 					>书篮</text>
@@ -137,6 +137,7 @@ export default {
 	},
 	data() {
 		return {
+			$aliImage: this.$aliImage, //静态图片路径
 			len: '',
 			bookInfo:{},
 			bookID:	0,

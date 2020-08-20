@@ -3,7 +3,7 @@
 		<!-- 搜索框 -->
 		<view class="search-box" id="search">
 			<view class="search">
-				<image src="https://et-pic-server.oss-cn-shenzhen.aliyuncs.com/app_img/search.png" class="icon-search"></image>
+				<image :src="$aliImage + 'search.png'" class="icon-search"></image>
 				<input 
 				type="text" 
 				placeholder="请输入书名/作者/关键词..." 
@@ -20,7 +20,7 @@
 		v-if="historySearch && historySearch.length > 0">
 			<view class="topic">
 				<text>历史搜索</text>
-				<image src="https://et-pic-server.oss-cn-shenzhen.aliyuncs.com/app_img/cart_rubbish.png" mode="" @tap="del"></image>
+				<image :src="$aliImage + 'cart_rubbish.png'" mode="" @tap="del"></image>
 			</view>
 			<view class="list">
 				<view class="item"
@@ -53,6 +53,7 @@
 	export default {
 		data() {
 			return {
+				$aliImage: this.$aliImage, //本地静态图片路径
 				seachText: '',
 				historySearch: [],//历史搜索
 				productList: [], //搜索结果

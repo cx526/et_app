@@ -7,14 +7,10 @@
 					<view class="userInfo-content">
 						<text style="color: #FFFFFF;font-size: 40upx;">{{userInfo.name === 'guest' ? '五车书游客, 您好！' : userInfo.name}}</text>
 					</view>
-					<view class="bindCard" @tap="goTiedCard">
+					<!-- <view class="bindCard" @tap="goTiedCard">
 						绑卡
-					</view>
-					
-					
-					
+					</view> -->
 				</view>
-				
 				<view class="user-right-position">
 					<view v-if="userInfo.name === 'guest'" @tap="goAuth">
 						<image src="https://et-pic-server.oss-cn-shenzhen.aliyuncs.com/app_img/avatar.png" style="border-radius: 50%; width: 120upx; height: 120upx;"></image>
@@ -37,18 +33,18 @@
 					border-top-left-radius: 20rpx;
 					border-top-right-radius: 20rpx;">
 						<view class="left">
-							<image src="https://et-pic-server.oss-cn-shenzhen.aliyuncs.com/app_img/offline-icon-all.png" mode=""></image>
+							<image :src="$aliImage + 'offline-icon-all.png'" mode=""></image>
 							<text>智慧书柜订单</text>
 						</view>
 						<view class="center">
-							<image src="https://et-pic-server.oss-cn-shenzhen.aliyuncs.com/app_img/offline-cut-line.png" mode="widthFix"></image>
+							<image :src="$aliImage + 'offline-cut-line.png'" mode="widthFix"></image>
 						</view>
 						<view class="right">
 							<block 
 							v-for="(item, index) in offlineOrderList" 
 							:key="index">
 								<view class="item" @tap="goOffline(item.url)">
-									<image :src="item.imgUrl" mode="widthFix"></image>
+									<image :src="$aliImage + item.imgUrl" mode="widthFix"></image>
 									<text>{{ item.text }}</text>
 								</view>
 							</block>
@@ -78,11 +74,11 @@
 			<view class="offline-box">
 				<view class="offline-order">
 					<view class="left" @tap="goOnlineAll">
-						<image src="https://et-pic-server.oss-cn-shenzhen.aliyuncs.com/app_img/online-icon-00.png" mode=""></image>
+						<image :src="$aliImage + 'online-icon-00.png'" mode=""></image>
 						<text>邮寄借阅订单</text>
 					</view>
 					<view class="center">
-						<image src="https://et-pic-server.oss-cn-shenzhen.aliyuncs.com/app_img/offline-cut-line.png" mode="widthFix"></image>
+						<image :src="$aliImage + 'offline-cut-line.png'" mode="widthFix"></image>
 					</view>
 					<view class="online-right">
 						<scroll-view scroll-x>
@@ -90,7 +86,7 @@
 							v-for="(item, index) in onlineOrderList" 
 							:key="index">
 								<view class="item" @tap="goOnline(item.url)">
-									<image :src="item.imgUrl" mode=""></image>
+									<image :src="$aliImage + item.imgUrl" mode=""></image>
 									<view>{{ item.text }}</view>
 								</view>
 							</block>
@@ -98,7 +94,7 @@
 						
 					</view>
 					<image
-					src="https://et-pic-server.oss-cn-shenzhen.aliyuncs.com/app_img/offline-icon-right.png"
+					:src="$aliImage + 'offline-icon-right.png'"
 					style="position: absolute;right: 12rpx;top: 50%;transform: translateY(-50%);width: 24rpx;height: 24rpx;"></image>
 				</view>
 				
@@ -118,7 +114,7 @@
 			<view class="white-space"></view>
 			<!-- 底图 -->
 			<view class="bottom-banner" @tap="phone">
-				<image src="https://et-pic-server.oss-cn-shenzhen.aliyuncs.com/app_img/my-bottom-banner.png" mode="widthFix"></image>
+				<image :src="$aliImage + 'my-bottom-banner.png'" mode="widthFix"></image>
 			</view>
 		</view>
 	</view>
@@ -151,6 +147,7 @@ export default {
 	},
 	data() {
 		return {
+			$aliImage: this.$aliImage,//静态图片域名
 			noticeText: '',
 			failLen: 0,
 			updateOrderInfo: false,
@@ -278,64 +275,64 @@ export default {
 			},
 			offlineOrderList: [
 				{
-					imgUrl: 'https://et-pic-server.oss-cn-shenzhen.aliyuncs.com/app_img/offline-icon-01.png',
+					imgUrl: 'offline-icon-01.png',
 					text: '待取书',
 					url: '/pages/library/take-books?status=0'
 				},
 				{
-					imgUrl: 'https://et-pic-server.oss-cn-shenzhen.aliyuncs.com/app_img/offline-icon-02.png',
+					imgUrl: 'offline-icon-02.png',
 					text: '待还书',
 					url: '/pages/library/return-books?status=0'
 				},
 				{
-					imgUrl: 'https://et-pic-server.oss-cn-shenzhen.aliyuncs.com/app_img/offline-icon-03.png',
+					imgUrl: 'offline-icon-03.png',
 					text: '已归还',
 					url: '/pages/library/return-books?status=1'
 				},
 				{
-					imgUrl: 'https://et-pic-server.oss-cn-shenzhen.aliyuncs.com/app_img/offline-icon-04.png',
+					imgUrl: 'offline-icon-04.png',
 					text: '已失效',
 					url: '/pages/library/take-books?status=1'
 				},
 			],
 			onlineOrderList: [
 				{
-					imgUrl: 'https://et-pic-server.oss-cn-shenzhen.aliyuncs.com/app_img/online-icon-01.png',
+					imgUrl: 'online-icon-01.png',
 					text: '待支付',
 					url: '/pages/cart/orderList?status_text=待支付'
 				},
 				{
-					imgUrl: 'https://et-pic-server.oss-cn-shenzhen.aliyuncs.com/app_img/online-icon-02.png',
+					imgUrl: 'online-icon-02.png',
 					text: '待发货',
 					url: '/pages/cart/orderList?status_text=待发货'
 				},
 				{
-					imgUrl: 'https://et-pic-server.oss-cn-shenzhen.aliyuncs.com/app_img/online-icon-03.png',
+					imgUrl: 'online-icon-03.png',
 					text: '待收货',
 					url: '/pages/cart/orderList?status_text=待收货'
 				},
 				{
-					imgUrl: 'https://et-pic-server.oss-cn-shenzhen.aliyuncs.com/app_img/online-icon-04.png',
+					imgUrl: 'online-icon-04.png',
 					text: '待归还',
 					url: '/pages/cart/orderList?status_text=待还书'
 				},
 				{
-					imgUrl: 'https://et-pic-server.oss-cn-shenzhen.aliyuncs.com/app_img/online-icon-05.png',
+					imgUrl: 'online-icon-05.png',
 					text: '待取件',
 					url: '/pages/cart/orderList?status_text=待取件'
 				},
 				{
-					imgUrl: 'https://et-pic-server.oss-cn-shenzhen.aliyuncs.com/app_img/online-icon-06.png',
+					imgUrl: 'online-icon-06.png',
 					text: '待评价',
 					url: '/pages/cart/orderList?status_text=待评价'
 				},
 				{
-					imgUrl: 'https://et-pic-server.oss-cn-shenzhen.aliyuncs.com/app_img/online-icon-07.png',
+					imgUrl: 'online-icon-07.png',
 					text: '退款',
 					url: '/pages/cart/orderList?status_text=退款'
 				},
 				{
-					imgUrl: 'https://et-pic-server.oss-cn-shenzhen.aliyuncs.com/app_img/online-icon-08.png',
+					imgUrl: 'online-icon-08.png',
 					text: '逾期',
 					url: '/pages/cart/orderList?status_text=逾期'
 				},

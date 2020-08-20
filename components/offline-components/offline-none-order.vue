@@ -6,11 +6,18 @@
 		<view class="topic">
 			可以去看看那些书想看的
 		</view>
-		<image src="https://et-pic-server.oss-cn-shenzhen.aliyuncs.com/app_img/no-order-list.png" mode="widthFix" style="width: 500rpx;"></image>
+		<image :src="$aliImage+'no-order-list.png'" mode="widthFix" style="width: 500rpx;"></image>
 	</view>
 </template>
 
 <script>
+	export default {
+		data() {
+			return {
+				$aliImage: this.$aliImage,//静态图片域名
+			}
+		}
+	}
 </script>
 
 <style>

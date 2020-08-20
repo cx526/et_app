@@ -53,7 +53,7 @@
 					v-if="index == 5">
 						{{ item.money }}</text>
 					<view class="img-bottom">
-						<image src="https://et-pic-server.oss-cn-shenzhen.aliyuncs.com/app_img/library-pay-number.png" mode="widthFix"
+						<image :src="$aliImage + 'library-pay-number.png'" mode="widthFix"
 						v-if="moneyList.currentIndex === index"></image>
 					</view>
 				</view>
@@ -91,6 +91,7 @@
 	export default {
 		data() {
 			return {
+				$aliImage: this.$aliImage,
 				flag: true,
 				value: 10, //充值金额
 				moneyList: {

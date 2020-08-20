@@ -6,7 +6,7 @@
 		<!-- 头部 -->
 		<view class="header-box">
 			<view class="user">
-				<image src="https://et-pic-server.oss-cn-shenzhen.aliyuncs.com/app_img/user-default.png"
+				<image :src="$aliImage + 'user-default.png'"
 				v-if="!userInfo.avatar"></image>
 				<image 
 				:src="userInfo.avatar"
@@ -14,22 +14,22 @@
 			</view>
 			<view class="info">
 				<view class="item">
-					<image src="https://et-pic-server.oss-cn-shenzhen.aliyuncs.com/app_img/userinfo-icon-01.png"></image>
+					<image :src="$aliImage + 'userinfo-icon-01.png'"></image>
 					<text>{{ coin }}</text>
 				</view>
 				<view class="item">
-					<image src="https://et-pic-server.oss-cn-shenzhen.aliyuncs.com/app_img/userinfo-icon-02.png"></image>
+					<image :src="$aliImage + 'userinfo-icon-02.png'"></image>
 					<text>{{ shell }}</text>
 				</view>
 				<view class="item">
-					<image src="https://et-pic-server.oss-cn-shenzhen.aliyuncs.com/app_img/icon-03.png"></image>
+					<image :src="$aliImage + 'icon-03.png'"></image>
 					<text>{{ free }}</text>
 				</view>
 			</view>
 		</view>
 		<!-- banner -->
 		<view class="banner-box" id="banner">
-			<image src="https://et-pic-server.oss-cn-shenzhen.aliyuncs.com/app_img/library-banner.png" style="height: 300rpx;"></image>
+			<image :src="$aliImage + 'library-banner.png'" style="height: 300rpx;"></image>
 			<view class="name" v-if="userInfo.schoolInfo.name">
 				<uni-notice-bar 
 				scrollable="true" 
@@ -44,10 +44,10 @@
 		<!-- 搜索框 -->
 		<view class="search-box" id="search">
 			<view class="search">
-				<image src="https://et-pic-server.oss-cn-shenzhen.aliyuncs.com/app_img/search.png" class="icon-search"></image>
+				<image :src="$aliImage + 'search.png'" class="icon-search"></image>
 				<input type="text" disabled placeholder="请输入书名/作者/关键词..." placeholder-style="font-size: 30rpx;color: #C5C5C5" @tap="goSearch" />
 				<view class="right" @tap="open">
-					<image src="https://et-pic-server.oss-cn-shenzhen.aliyuncs.com/app_img/classify.png"></image>
+					<image :src="$aliImage + 'classify.png'"></image>
 					<text>分类</text>
 				</view>
 			</view>
@@ -76,7 +76,7 @@
 						</view>
 						<view class="recommend">
 							<view class="left">
-								<image src="https://et-pic-server.oss-cn-shenzhen.aliyuncs.com/app_img/index_zan.png" mode=""></image>
+								<image :src="$aliImage + 'index_zan.png'" mode=""></image>
 								<text>{{ item.peopleCount }}人推荐</text>
 							</view>
 							<view class="right" v-if="item.stockCount.totalDockerUse" @tap.stop="push(item)"><text>加入书篮</text></view>
@@ -89,10 +89,10 @@
 					<view :style="{ height: height, position: absolute, left: 0, bottom: 0 }" class="popUp">
 						<view class="search-box active">
 							<view class="search active">
-								<image src="https://et-pic-server.oss-cn-shenzhen.aliyuncs.com/app_img/search.png" class="icon-search"></image>
+								<image :src="$aliImage + 'search.png'" class="icon-search"></image>
 								<input type="text" disabled placeholder="请输入书名/作者/关键词..." placeholder-style="font-size: 30rpx;color: #C5C5C5" @tap="goSearch" />
 								<view class="right" @tap="getAllProductList" style="top: -1px;">
-									<image src="https://et-pic-server.oss-cn-shenzhen.aliyuncs.com/app_img/classify.png"></image>
+									<image :src="$aliImage + 'classify.png'"></image>
 									<text>全部</text>
 								</view>
 							</view>
@@ -116,7 +116,7 @@
 		</view>
 		<!-- 书篮 -->
 		<view class="library-box" v-if="len" @tap="goCart">
-			<image src="https://et-pic-server.oss-cn-shenzhen.aliyuncs.com/app_img/bookdetail_cart.png" mode=""></image>
+			<image :src="$aliImage + 'bookdetail_cart.png'" mode=""></image>
 			<text>{{ len }}</text>
 		</view>
 		<!-- 加载组件 -->
@@ -125,7 +125,7 @@
 		<!-- 权限弹窗 -->
 		<uni-popup ref="powerPopUp" :maskClick="false">
 			<view class="power-box" :style="{ width: popUpWidth }">
-				<image src="https://et-pic-server.oss-cn-shenzhen.aliyuncs.com/app_img/power-banner.png" mode="widthFix"></image>
+				<image :src="$aliImage + 'power-banner.png'" mode="widthFix"></image>
 				<view class="context">
 					<view class="title"><text>暂未绑定幼儿园信息！</text></view>
 					<view class="notice"><text>请先填写幼儿园信息</text></view>
@@ -147,6 +147,7 @@ import Popup from '@/components/lvv-popup/lvv-popup.vue';
 export default {
 	data() {
 		return {
+			$aliImage: this.$aliImage, //静态图片路径
 			isLogin: false, //登录限制
 			showModel: false, //控制分类弹窗的显示/隐藏
 			height: 0, //定义分类弹窗的高度
@@ -281,6 +282,8 @@ export default {
 					filterItems: { mobile }
 					}).then(res => {
 					this.userInfo = res.data[0];
+					console.log(this.userInfo)
+					console.log(this.userInfo.schoolInfo.name)
 					// 如果幼儿园不存在提示填写幼儿园信息弹窗
 					if(!this.userInfo.schoolInfo.name) {
 						// 显示绑卡弹窗
@@ -290,9 +293,9 @@ export default {
 						if(!this.userInfo.dockerInfo) {
 							this.isLogin = false
 							uni.showToast({
-								title: '所属幼儿园暂时不是合作学校',
+								title: '此幼儿园暂时不是合作用户',
 								icon: 'none',
-								duration:2000,
+								duration:1500,
 								success: res => {
 									setTimeout(() => {
 										uni.switchTab({
@@ -314,8 +317,11 @@ export default {
 						// 获取所在幼儿园书柜的所有书籍(如果从搜索页跳转过来不调用)
 						!this.isSearch && this.getBooksList();
 					}
+					
+					
 				})
 			}
+
 		},
 		// 计算用户的免费次数
 		getUserFreeCount() {
@@ -336,13 +342,17 @@ export default {
 				},
 				pageSize: this.pageSize,
 				currentPage: this.currentPage
-			}).then(res => {
+			})
+			.then(res => {
 				uni.hideLoading();
 				this.productList = res.data.rows;
-				if (res.data.rows.length < this.pageSize || this.productList.length == 0) {
+				if (res.data.rows.length < this.pageSize || res.data.rows.length == 0) {
 					this.loadStatus = 'noMore';
 				}
-			});
+			})
+			.catch(err => {
+				uni.hideLoading()
+			})
 		},
 		// 获取书籍分类
 		getBooksType() {

@@ -20,7 +20,7 @@
 					:value="prefix"
 					@input="cardNumber"/>
 				<image 
-				src="https://et-pic-server.oss-cn-shenzhen.aliyuncs.com/app_img/teacher-icon-02.png" 
+				:src="$aliImage + 'teacher-icon-02.png'" 
 				mode="widthFix"
 				style="width: 40rpx;height: 40rpx;margin-left: 20rpx;"
 				@tap="scan">
@@ -72,6 +72,7 @@
 	export default {
 		data() {
 			return {
+				$aliImage: this.$aliImage,//静态图片域名
 				birthDay: '请选择幼儿生日',
 				prefix: ''
 			}

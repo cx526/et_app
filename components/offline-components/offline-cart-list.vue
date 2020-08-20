@@ -94,7 +94,7 @@
 					</view>
 				</view>
 				<view class="show">
-					<image src="https://et-pic-server.oss-cn-shenzhen.aliyuncs.com/app_img/popup-banner.png" mode="widthFix"></image>
+					<image :src="$aliImage + 'popup-banner.png'" mode="widthFix"></image>
 				</view>
 				<view class="btn">
 					<view @tap="cancel">取消</view>
@@ -118,7 +118,7 @@
 					</view>
 				</view>
 				<view class="show">
-					<image src="https://et-pic-server.oss-cn-shenzhen.aliyuncs.com/app_img/popup-banner.png" mode="widthFix"></image>
+					<image :src="$aliImage + 'popup-banner.png'" mode="widthFix"></image>
 				</view>
 				<view class="btn">
 					<view @tap="cancel">取消</view>
@@ -146,6 +146,7 @@ export default {
 
 	data() {
 		return {
+			$aliImage: this.$aliImage,//静态图片域名
 			offlineAllSelect: false, //全选/反选
 			bookList: [], //储存书篮书籍
 			booksNumber: 0, // 书篮书籍数目(用于判断书篮是否存在)
@@ -342,7 +343,7 @@ export default {
 		// 全选/全不选
 		selectAllBooks() {
 			this.offlineAllSelect = !this.offlineAllSelect;
-			this.bookList.map(item => {
+			this.bookList && this.bookList.map(item => {
 				// 如果库存数为0,依然不给选
 				if (item.stockCount.totalDockerUse) {
 					item.isSelect = this.offlineAllSelect;
@@ -385,7 +386,7 @@ export default {
 			let flag = false;
 			let dataList = this.bookList;
 			// 判断是否选中书籍
-			this.bookList.map((item, index) => {
+			this.bookList && this.bookList.map((item, index) => {
 				if (item.isSelect) {
 					flag = true;
 				}
@@ -402,12 +403,15 @@ export default {
 					title: '是否确认要移除此书籍?',
 					success: res => {
 						if (res.confirm) {
-							for (let i = 0; i < dataList.length; i++) {
-								if (dataList[i].isSelect) {
-									dataList.splice(i, 1);
-									i--;
+							if(dataList.length != 0) {
+								for (let i = 0; i < dataList.length; i++) {
+									if (dataList[i].isSelect) {
+										dataList.splice(i, 1);
+										i--;
+									}
 								}
 							}
+							
 							this.bookList = dataList;
 							// 更新缓存
 							uni.setStorageSync('offlineCartList', this.bookList);
@@ -473,16 +477,16 @@ export default {
 			this.getLogin();
 			if(this.isLogin) {
 				// 获取用户选中的书籍列表
-				this.chooseBookList = this.bookList.filter(item => {
+				this.chooseBookList = this.bookList && this.bookList.filter(item => {
 					return item.isSelect === true;
 				});
 				// 更新所选商品本地缓存的库存数据
 				let goodsIDs = [];
-				this.chooseBookList.forEach(item => {
+				this.chooseBookList && this.chooseBookList.forEach(item => {
 					goodsIDs.push(item.id);
 				});
 				// 价格升序
-				let result = this.chooseBookList.sort(this.compare('price'));
+				let result = this.chooseBookList && this.chooseBookList.sort(this.compare('price'));
 				// 实际免费借阅次数
 				let reality = this.integrate / 50; //(积分/50)
 				// 实际所需支付借书币

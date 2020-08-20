@@ -7,11 +7,11 @@
 		:shadow="false"
 		@clickLeft="clickLeft"></uni-nav-bar>
 		<view class="pay-box">
-			<image src="https://et-pic-server.oss-cn-shenzhen.aliyuncs.com/app_img/library-money.png" mode="widthFix" class="banner"></image>
+			<image :src="$aliImage + 'library-money.png'" mode="widthFix" class="banner"></image>
 			<view class="context">
 				<view class="item">
 					<view class="topic">
-						<image src="https://et-pic-server.oss-cn-shenzhen.aliyuncs.com/app_img/library-money-icon01.png" mode="" class="icon"></image>
+						<image :src="$aliImage + 'library-money-icon01.png'" mode="" class="icon"></image>
 						<text>五车贝</text>
 					</view>
 					<view class="number">
@@ -24,7 +24,7 @@
 				
 				<view class="item">
 					<view class="topic">
-						<image src="https://et-pic-server.oss-cn-shenzhen.aliyuncs.com/app_img/library-money-icon02.png" mode="" class="icon"></image>
+						<image :src="$aliImage + 'library-money-icon02.png'" mode="" class="icon"></image>
 						<text>押金</text>
 					</view>
 					<view class="number">
@@ -78,6 +78,7 @@
 	export default {
 		data() {
 			return {
+				$aliImage: this.$aliImage,
 				userInfo: '',
 				shell: 0.00,
 				deposit: 0.00,
@@ -139,6 +140,8 @@
 					// 格式化时间
 					res.data.rows && res.data.rows.map(item => {
 						item.handle_create_time = this.handleTime(item.create_date)
+						// 保存两位小数
+						item.shell = (Number(item.shell)).toFixed(2)
 					})
 					this.payRecordList = [...this.payRecordList, ...res.data.rows]
 					// 是否开启下拉加载更多
