@@ -40,12 +40,15 @@
 						<view class="topic">
 							<view style="font-weight: bold;">订单号：{{ item.order_no }}</view>
 							<!-- 取书时间+5天-当前时间 > 0 ? 未逾期 ： 逾期 -->
-							<view 
-							class="status"
-							:class="item.msg.indexOf('待归还') !== -1 ? '': 'colorActive'"
-							v-if="item.msg">
-									<text>{{ item.msg }}</text>
+							<view v-if="item.msg">
+								<view
+								class="status"
+								:class="item.msg && item.msg.indexOf('待归还') !== -1 ? '': 'colorActive'"
+								>
+										<text>{{ item.msg }}</text>
+								</view>
 							</view>
+							
 						</view>
 						<view class="book-list">
 							<block 
@@ -109,7 +112,7 @@
 				v-if="isLoadingMore" />
 			</view>
 			<!-- 不存在显示无订单组件 -->
-			<view v-else>
+			<view v-else >
 				<offline-none-order></offline-none-order>
 			</view>
 			
@@ -123,11 +126,14 @@
 					<view class="item">
 						<view class="topic">
 							<view style="font-weight: bold;">订单号：{{ item.order_no }}</view>
-							<view class="status" 
-							v-if="item.msg"
-							:class="item.msg.indexOf('已归还') !== -1 ? '':'colorActive'">
-									<text>{{ item.msg }}</text>
+							<view v-if="item.msg">
+								<view class="status"
+								
+								:class="item.msg && item.msg.indexOf('已归还') !== -1 ? '':'colorActive'">
+										<text>{{ item.msg }}</text>
+								</view>
 							</view>
+							
 						</view>
 						<view class="book-list">
 							<block 
@@ -242,6 +248,7 @@
 	export default {
 		data() {
 			return {
+				requestTime: null,
 				code: '',//还书码
 				val: '', //订单二维码内容
 				src: '',//二维码生成路径
@@ -314,6 +321,9 @@
 				this.getReturnOrderList()
 			}
 		},
+		onUnload() {
+			clearInterval(this.requestTime) //清除订单刷新状态
+		},
 		methods: {
 			// 检测登录状态
 			getLogin() {
@@ -350,6 +360,7 @@
 			},
 			// 获取待归还书书单
 			getWaitOrderList() {
+				console.log('调用了getWaitOrderList')
 				// 如果不是合作用户不发送请求
 				this.userInfo.dockerInfo && this.$api.offlineUserOrderList({
 					pageSize: this.waitOrderPageSize,
@@ -357,9 +368,10 @@
 					docker_mac: this.userInfo.dockerInfo.docker_mac,
 					filterItems:{
 						custom_id: this.userInfo.id,
-						order_type: 0 //待归还书单类型
+						order_type: 4 //待归还书单类型
 					}
-				}).then(res => {
+				})
+				.then(res => {
 					// 储存订单总数
 					this.waitOrderTotalPage = res.data.totalPage
 					// 判断是否要生成二维码
@@ -372,17 +384,21 @@
 						// 格式化订单创建时间
 						item.handle_create_time = this.handleTime(item.create_time)
 						// 计算借书时间是否逾期
+						item.formatPreReturnBookTime = item.formatPreReturnBookTime.replace(/-/g, '/');
 						item.handle_get_book = new Date(item.formatPreReturnBookTime).getTime();
 						let difference = item.handle_get_book - this.current_time_stamp;
 						// 时间戳转为天计算
 						let day = Math.ceil(Math.abs(difference / (24 * 3600 * 1000))) 
 						if(difference >= 0) {
 							item.msg = `待归还${day}天`
+							item.color = true
 						}else {
 							item.msg = `已逾期${day}天`
+							item.color = false
 						}
 					})
 					this.waitOrderList = [...this.waitOrderList, ...res.data.rows]
+					console.log(this.waitOrderList)
 					// 判断是否改变加载组件状态
 					if(this.waitOrderTotalPage <= this.waitOrderList.length) {
 						this.loadStatus = "noMore"
@@ -398,7 +414,7 @@
 					docker_mac: this.userInfo.dockerInfo.docker_mac,
 					filterItems:{
 						custom_id: this.userInfo.id,
-						order_type: 4 //待归还书单类型
+						order_type: 1 //已完成书单类型
 					}
 				}).then(res => {
 					// 储存订单总数
@@ -452,6 +468,9 @@
 			changTab(index) {
 				this.tabList.currentIndex = index
 				if(index == 0) {
+					this.waitOrderList = ''
+					this.returnOrderPage = 1
+					this.getWaitOrderList()
 					if(this.waitOrderList.length < 
 					this.waitOrderTotalPage){
 						// 重置加载组件的加载状态
@@ -462,6 +481,9 @@
 						this.loadStatus = 'noMore';
 					}
 				}else if(index == 1) {
+					this.returnOrderList = ''
+					this.waitOrderPage = 1
+					this.getReturnOrderList()
 					if(this.returnOrderList.length < 
 					this.returnOrderTotalPage){
 						// 重置加载组件的加载状态
@@ -482,7 +504,42 @@
 				this.code = item.get_book_code //还书码
 				this.val = item.get_book_qrcode // 还书二维码内容
 				this.$refs.orderPopUp.open()
+				this.requestTime = setInterval(() => {
+					if(this.tabList.currentIndex == 0) {
+						console.log('开启了定时器')
+						this.userInfo.dockerInfo 
+						&& this.$api.offlineUserOrderList({
+							pageSize: this.waitOrderPageSize,
+							currentPage: this.waitOrderPage,
+							docker_mac: this.userInfo.dockerInfo.docker_mac,
+							filterItems:{
+								custom_id: this.userInfo.id,
+								order_type: 4 //待归还书单类型
+							}
+						})
+						.then(res => {
+							if(res.data.rows.length != this.waitOrderList.length) {
+								console.log('entry')
+								 
+								 this.userInfo.dockerInfo && this.$api.offlineUserOrderList({
+								 	pageSize: this.waitOrderPageSize,
+								 	currentPage: this.waitOrderPage,
+								 	docker_mac: this.userInfo.dockerInfo.docker_mac,
+								 	filterItems:{
+								 		custom_id: this.userInfo.id,
+								 		order_type: 4 //待归还书单类型
+								 	}
+								 }).then(res => {
+									 this.waitOrderList = res.data.rows
+								 })
+							}
+						})
+					}
+				
+				}, 2000)
+				
 			},
+			
 			// 关闭订单凭证弹窗
 			close() {
 				this.$refs.orderPopUp.close()

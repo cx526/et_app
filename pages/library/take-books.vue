@@ -253,6 +253,7 @@
 	export default {
 		data() {
 			return {
+				requestTime: null,
 				code: '', //取书码
 				val: '', //订单二维码内容
 				src: '',//二维码生成路径
@@ -298,7 +299,7 @@
 			uniNavBar,
 			tkiQrcode
 		},
-		onLoad(option) {
+		onLoad(option) {		
 			// 判断是从下单成功后跳转过来还是直接从我的页面跳转过来
 			this.from = option.from ? option.from : ''
 			if(option !== '{}') {
@@ -321,6 +322,7 @@
 		},
 		onUnload() {
 			clearInterval(this.timer)
+			clearInterval(this.requestTime) //清除订单刷新状态
 		},
 		// 上拉加载更多
 		onReachBottom() {
@@ -364,6 +366,7 @@
 			},
 			// 获取待取书书单
 			getUserOrderList() {
+				console.log('调用了getUserOrderList')
 				// 如果不是合作用户不发送请求
 				this.userInfo.dockerInfo && this.$api.offlineUserOrderList({
 					pageSize: this.pageSize,
@@ -371,7 +374,7 @@
 					docker_mac: this.userInfo.dockerInfo.docker_mac,
 					filterItems:{
 						custom_id: this.userInfo.id,
-						order_type: 0 //待取书单类型
+						order_type: "0" //待取书单类型
 					}
 				}).then(res => {
 					// 储存订单总数
@@ -389,23 +392,28 @@
 						// 如果订单状态为0开启计时器
 						if(item.order_type == 0) {
 							// 订单失效时间formatPreGetBookTime
-							item.fail_timestamp = new Date(item.formatPreGetBookTime).getTime();
+							
+							item.formatPreGetBookTime = item.formatPreGetBookTime.replace(/-/g, '/');
+							item.fail_timestamp = (new Date(item.formatPreGetBookTime)).getTime();
+							
 							item.difference = item.fail_timestamp - this.current_timestamp
 						}
 						
 					})
-					this.orderList = [...this.orderList, ...res.data.rows];
+					
 					// 开启定时器
 					this.timer = setInterval(() => {
 						this.orderList && this.orderList.map(list => {
 							// 开启计时器
 							if(list.order_type == 0) {
-								list.difference = list.difference - 1000;
+								list.difference = (+list.difference) - 1000;
 								list.msg =  this.countDown(list.difference);
 							}
 							
 						})						
 					}, 1000)
+					this.orderList = [...this.orderList, ...res.data.rows];
+					console.log(this.orderList)
 					// 判断是否改变加载组件状态
 					if(res.data.totalPage <= this.orderList.length) {
 						this.loadStatus = "noMore"
@@ -497,8 +505,13 @@
 			},
 			// tab切换
 			changTab(index) {
+				clearInterval(this.requestTime) //清除订单刷新状态
+				clearInterval(this.timer)
 				this.tabList.currentIndex = index;
 				if(index == 0) {
+					this.orderList = ''
+					this.failCurrentPage = 1
+					this.getUserOrderList()
 					if(this.orderList.length < this.orderListPage) {
 						this.loadStatus = 'loading'
 						this.isLoadingMore = true
@@ -506,6 +519,9 @@
 						this.loadStatus = 'noMore'
 					}
 				}else if(index == 1) {
+					this.failOrderList = ''
+					this.currentPage = 1
+					this.getFailOrderList()
 					if(this.failOrderList.length < this.failOrderListPage) {
 						this.loadStatus = 'loading'
 						this.isLoadingMore = true
@@ -516,14 +532,52 @@
 			},
 			// 打开订单凭证弹窗
 			open(item) {
+				clearInterval(this.requestTime) //清除订单刷新状态
 				this.code = item.get_book_code //还书码
 				this.val = item.get_book_qrcode // 还书二维码内容;
-				this.$refs.orderPopUp.open()
+				this.$refs.orderPopUp.open();
+				this.requestTime = setInterval(() => {
+					if(this.tabList.currentIndex == 0) {
+						console.log('开启了定时器')
+						this.$api.offlineUserOrderList({
+							pageSize: this.pageSize,
+							currentPage: this.currentPage,
+							docker_mac: this.userInfo.dockerInfo.docker_mac,
+							filterItems:{
+								custom_id: this.userInfo.id,
+								order_type: "0" //待取书单类型
+							}
+						})
+						.then(res => {
+							console.log(res.data.rows)
+							if(res.data.rows.length != this.orderList.length) {
+								console.log('enter')
+								this.orderList = []
+								this.$api.offlineUserOrderList({
+									pageSize: this.pageSize,
+									currentPage: this.currentPage,
+									docker_mac: this.userInfo.dockerInfo.docker_mac,
+									filterItems:{
+										custom_id: this.userInfo.id,
+										order_type: "0" //待取书单类型
+									}
+								}).then(res => {
+									this.orderList = res.data.rows
+								})
+							}
+						})
+					}
+				}, 2000)
+				
 			},
 			// 关闭订单凭证弹窗
-			close() {
-				this.$refs.orderPopUp.close()
-			},
+			// changePopUp(e) {
+			// 	// console.log(e)
+			// 	if(!e.show) {
+			// 		clearInterval(this.requestTime) //清除刷新订单状态
+			// 	}
+				
+			// },
 			// 点击自定义导航栏左侧按钮事件
 			clickLeft() {
 				// 从下单成功跳转过来

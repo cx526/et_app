@@ -167,7 +167,7 @@ export default {
 		
 		// 获取用户的个人账号信息
 		this.getUserInfo();
-		this.booksNumber = this.count;
+		this.booksNumber = this.count; //判断书篮是否存在
 	},
 	methods: {
 		// 计算用户当前免费的借阅次数
@@ -556,9 +556,7 @@ export default {
 			}
 		
 		},
-		
 		// 下单
-	
 		placeOrder(goods_id, type) {
 			this.$api.offlinePlaceOrder({
 				goods_id,
