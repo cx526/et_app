@@ -181,7 +181,7 @@ export default {
 		Popup
 	},
 	async onLoad(option) {
-		
+	
 		// 从搜索页跳转过来
 		if (option.isSearch) {
 			this.isSearch = option.isSearch
@@ -282,9 +282,7 @@ export default {
 					filterItems: { mobile }
 					}).then(res => {
 					this.userInfo = res.data[0];
-					console.log(this.userInfo)
-					console.log(this.userInfo.schoolInfo.name)
-					// 如果幼儿园不存在提示填写幼儿园信息弹窗
+					// 如果幼儿园不存在提示填写幼儿园信息弹窗(后期判断条件可能需要更改)
 					if(!this.userInfo.schoolInfo.name) {
 						// 显示绑卡弹窗
 						this.$refs.powerPopUp.open()

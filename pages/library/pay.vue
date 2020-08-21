@@ -6,7 +6,7 @@
 					<text>充值金额</text>
 				</view>
 				<view class="ipt">
-					<input type="text" :value="value" 
+					<input type="number" :value="value" 
 					:disabled="flag" 
 					@input="customMoney"/>
 				</view>
@@ -157,8 +157,15 @@
 			},
 			// 点击确认充值
 			sure() {
+				if(this.value == '' && this.value !== 0) {
+					uni.showToast({
+						title: '充值金额不能为空',
+						icon: 'none'
+					})
+					return
+				}
 				// 充值金额小于10
-				if(this.value < 10) {
+				else if(this.value < 10) {
 					uni.showToast({
 						title: '充值金额不能小于10元',
 						icon: 'none'

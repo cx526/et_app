@@ -97,7 +97,7 @@
 					<image :src="$aliImage + 'popup-banner.png'" mode="widthFix"></image>
 				</view>
 				<view class="btn">
-					<view @tap="cancel">取消</view>
+					<view @tap="cancel('popup')">取消</view>
 					<view @tap="goPay">去充值</view>
 				</view>
 			</view>
@@ -121,7 +121,7 @@
 					<image :src="$aliImage + 'popup-banner.png'" mode="widthFix"></image>
 				</view>
 				<view class="btn">
-					<view @tap="cancel">取消</view>
+					<view @tap="cancel('depositPopUp')">取消</view>
 					<view @tap="goPay">去充值</view>
 				</view>
 			</view>
@@ -164,6 +164,7 @@ export default {
 		};
 	},
 	created() {
+		
 		// 获取用户的个人账号信息
 		this.getUserInfo();
 		this.booksNumber = this.count;
@@ -205,7 +206,7 @@ export default {
 					})
 					return
 				}
-				// 通知父组件隐藏页面
+				// 通知父组件显示页面
 				this.$emit('pageHide', true)
 				//储存用户积分;
 				this.integrate = this.userInfo.coin 
@@ -303,7 +304,6 @@ export default {
 					return item.isSelect === true;
 				});
 			}
-			
 			// 选中书籍本数
 			this.len = chooseBookList.length;
 			if(chooseBookList.length == 0) {
@@ -331,7 +331,7 @@ export default {
 			// 判断全选复选框是否选中
 			let flag = true;
 			item.isSelect = !item.isSelect;
-			this.bookList.map(list => {
+			this.bookList && this.bookList.map(list => {
 				if (!list.isSelect) {
 					flag = false;
 				}
@@ -347,6 +347,8 @@ export default {
 				// 如果库存数为0,依然不给选
 				if (item.stockCount.totalDockerUse) {
 					item.isSelect = this.offlineAllSelect;
+				}else {
+					item.isSelect = this.offlineAllSelect
 				}
 			});
 			this.coungPrice();
@@ -358,7 +360,7 @@ export default {
 				title: '是否确认移除此书籍?',
 				success: res => {
 					if (res.confirm) {
-						dataList.map((item, index) => {
+						dataList && dataList.map((item, index) => {
 							if (item.id === id) {
 								dataList.splice(index, 1);
 							}
@@ -588,8 +590,18 @@ export default {
 			})
 		},
 		// 点击弹窗取消
-		cancel() {
-			this.$refs.popup.close();
+		cancel(type) {
+			console.log(type);
+			switch(type) {
+				case 'popup':
+				this.$refs.popup.close();
+				break;
+				case 'depositPopUp':
+				this.$refs.depositPopUp.close();
+				break;
+				default: 
+				return 
+			}
 		},
 		// 跳转借书币页面
 		goPay() {
