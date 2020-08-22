@@ -276,7 +276,7 @@
 				},
 				waitOrderList: [],//待还书单列表
 				waitOrderTotalPage: 0,//待还书单总数
-				waitOrderPageSize: 4,//待还书单返回条数(每页)
+				waitOrderPageSize: 20,//待还书单返回条数(每页)
 				waitOrderPage: 1,//待还书单当前页码
 				returnOrderList: [],//已归还书单列表
 				returnOrderTotalPage: 0,//已归还书单总数
@@ -306,6 +306,7 @@
 			this.getLogin();
 			// 获取用户信息
 			this.getUserInfo();
+			// 获取进入当前页面的时间戳
 			this.current_time_stamp = new Date().getTime();
 		},
 		onReachBottom() {
@@ -363,8 +364,8 @@
 				console.log('调用了getWaitOrderList')
 				// 如果不是合作用户不发送请求
 				this.userInfo.dockerInfo && this.$api.offlineUserOrderList({
-					pageSize: this.waitOrderPageSize,
-					currentPage: this.waitOrderPage,
+					// pageSize: this.waitOrderPageSize,
+					// currentPage: this.waitOrderPage,
 					docker_mac: this.userInfo.dockerInfo.docker_mac,
 					filterItems:{
 						custom_id: this.userInfo.id,
@@ -509,8 +510,8 @@
 						console.log('开启了定时器')
 						this.userInfo.dockerInfo 
 						&& this.$api.offlineUserOrderList({
-							pageSize: this.waitOrderPageSize,
-							currentPage: this.waitOrderPage,
+							// pageSize: this.waitOrderPageSize,
+							// currentPage: this.waitOrderPage,
 							docker_mac: this.userInfo.dockerInfo.docker_mac,
 							filterItems:{
 								custom_id: this.userInfo.id,
@@ -520,18 +521,22 @@
 						.then(res => {
 							if(res.data.rows.length != this.waitOrderList.length) {
 								console.log('entry')
-								 
-								 this.userInfo.dockerInfo && this.$api.offlineUserOrderList({
-								 	pageSize: this.waitOrderPageSize,
-								 	currentPage: this.waitOrderPage,
-								 	docker_mac: this.userInfo.dockerInfo.docker_mac,
-								 	filterItems:{
-								 		custom_id: this.userInfo.id,
-								 		order_type: 4 //待归还书单类型
-								 	}
-								 }).then(res => {
-									 this.waitOrderList = res.data.rows
-								 })
+								// 重置当前页面时间戳
+								this.current_time_stamp = new Date().getTime();
+								// 重置数据
+								this.waitOrderList = [];
+								this.getWaitOrderList()
+								 // this.userInfo.dockerInfo && this.$api.offlineUserOrderList({
+								 // 	pageSize: this.waitOrderPageSize,
+								 // 	currentPage: this.waitOrderPage,
+								 // 	docker_mac: this.userInfo.dockerInfo.docker_mac,
+								 // 	filterItems:{
+								 // 		custom_id: this.userInfo.id,
+								 // 		order_type: 4 //待归还书单类型
+								 // 	}
+								 // }).then(res => {
+									//  this.waitOrderList = res.data.rows
+								 // })
 							}
 						})
 					}

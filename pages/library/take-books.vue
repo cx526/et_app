@@ -267,7 +267,7 @@
 				isLogin: false,//是否登录
 				isLoadingMore: true, //是否开启上拉加载更多
 				popUpWidth: 0,
-				pageSize: 4, // 返回待取书单条数
+				pageSize: 20, // 返回待取书单条数
 				currentPage: 1, // 待取书单当前页码
 				orderListPage: 0, //待取书单总数
 				userInfo: '',
@@ -339,6 +339,7 @@
 				this.loadStatus = 'loading';
 				this.failCurrentPage = this.failCurrentPage + 1;
 				this.getFailOrderList()
+				
 			}
 		},
 		methods: {
@@ -369,8 +370,8 @@
 				console.log('调用了getUserOrderList')
 				// 如果不是合作用户不发送请求
 				this.userInfo.dockerInfo && this.$api.offlineUserOrderList({
-					pageSize: this.pageSize,
-					currentPage: this.currentPage,
+					// pageSize: this.pageSize,
+					// currentPage: this.currentPage,
 					docker_mac: this.userInfo.dockerInfo.docker_mac,
 					filterItems:{
 						custom_id: this.userInfo.id,
@@ -540,8 +541,8 @@
 					if(this.tabList.currentIndex == 0) {
 						console.log('开启了定时器')
 						this.$api.offlineUserOrderList({
-							pageSize: this.pageSize,
-							currentPage: this.currentPage,
+							// pageSize: this.pageSize,
+							// currentPage: this.currentPage,
 							docker_mac: this.userInfo.dockerInfo.docker_mac,
 							filterItems:{
 								custom_id: this.userInfo.id,
@@ -552,18 +553,13 @@
 							console.log(res.data.rows)
 							if(res.data.rows.length != this.orderList.length) {
 								console.log('enter')
+								// 重置当前的时间戳
+								this.current_timestamp = new Date().getTime();
+								// 重置页面数据
 								this.orderList = []
-								this.$api.offlineUserOrderList({
-									pageSize: this.pageSize,
-									currentPage: this.currentPage,
-									docker_mac: this.userInfo.dockerInfo.docker_mac,
-									filterItems:{
-										custom_id: this.userInfo.id,
-										order_type: "0" //待取书单类型
-									}
-								}).then(res => {
-									this.orderList = res.data.rows
-								})
+								// 清除倒计时计时器
+								clearInterval(this.timer);
+								this.getUserOrderList()
 							}
 						})
 					}
