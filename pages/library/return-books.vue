@@ -126,11 +126,9 @@
 					<view class="item">
 						<view class="topic">
 							<view style="font-weight: bold;">订单号：{{ item.order_no }}</view>
-							<view v-if="item.msg">
-								<view class="status"
-								
-								:class="item.msg && item.msg.indexOf('已归还') !== -1 ? '':'colorActive'">
-										<text>{{ item.msg }}</text>
+							<view>
+								<view class="status">
+										<text>已归还</text>
 								</view>
 							</view>
 							
@@ -427,15 +425,15 @@
 						// 格式化订单创建时间
 						item.handle_create_time = this.handleTime(item.create_time)
 						// 计算借书时间是否逾期(取书时间+5天-现在时间做判断)
-						item.handle_get_book = new Date(item.create_time).getTime() + (24 * 3600 * 1000 * 5);
-						let difference = item.handle_get_book - this.current_time_stamp;
+						// item.handle_get_book = new Date(item.create_time).getTime() + (24 * 3600 * 1000 * 5);
+						// let difference = item.handle_get_book - this.current_time_stamp;
 						// 时间戳转为天计算
-						let day = Math.ceil(Math.abs(difference / (24 * 3600 * 1000))) 
-						if(difference >= 0) {
-							item.msg = '已归还'
-						}else {
-							item.msg = `已逾期${day}天`
-						}
+						// let day = Math.ceil(Math.abs(difference / (24 * 3600 * 1000))) 
+						// if(difference >= 0) {
+						// 	item.msg = '已归还'
+						// }else {
+						// 	item.msg = `已逾期${day}天`
+						// }
 					})
 					this.returnOrderList = [...this.returnOrderList, ...res.data.rows]
 					// 判断是否改变加载组件状态

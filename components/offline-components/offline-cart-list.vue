@@ -164,10 +164,11 @@ export default {
 		};
 	},
 	created() {
-		
+		console.log('create')
+		this.booksNumber = this.count; //判断书篮是否存在
 		// 获取用户的个人账号信息
 		this.getUserInfo();
-		this.booksNumber = this.count; //判断书篮是否存在
+		
 	},
 	methods: {
 		// 计算用户当前免费的借阅次数
@@ -227,6 +228,7 @@ export default {
 		upDateStock() {
 			// 获取线下书篮书籍
 			let bookList = uni.getStorageSync('offlineCartList');
+			console.log(bookList)
 			// 储存书篮所有书籍的id
 			let goods_id = [];
 			let idString = '';
@@ -244,6 +246,8 @@ export default {
 					docker_mac: this.docker_mac
 				}
 			}).then(res => {
+				console.log('upStock')
+				console.log(res)
 				if(res.data.rows.length == 0) {
 					this.isStock = false;
 					// 如果选中但没库存更改选中状态

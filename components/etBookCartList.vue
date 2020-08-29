@@ -256,6 +256,7 @@ export default {
 				// this.docker_mac = this.userInfoDoc.dockerInfo.docker_mac
 				this.docker_mac = this.userInfoDoc.dockerInfo ? this.userInfoDoc.dockerInfo.docker_mac : ''
 				bookListData.getBookListStockToData(this.docker_mac)
+				
 			})
 		},
 		toKineUrl(){
