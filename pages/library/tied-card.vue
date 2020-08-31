@@ -115,10 +115,37 @@
 				<text>保存</text>
 			</view>
 		</view>
+		<!-- 选择老师弹窗 -->
+		
+			<uni-popup ref="teacherChoose" :maskClick="false">
+				<view class="popUp">
+					<view class="title">
+						<text>请选择老师</text>
+					</view>
+					<radio-group @change="radioChange">
+						<label
+						v-for="(item, index) in teacherList" 
+						:key="item.value"
+						style="transform: scale(0.6);">
+								<view style="margin-right: 12rpx;">
+										<radio :value="item.value" :checked="index === current" />
+								</view>
+								<view>{{item.name}}</view>
+						</label>
+					</radio-group>
+					<view class="btn">
+						<view >
+							<text>确定</text>
+						</view>
+					</view>
+				</view>
+			</uni-popup>
+		
 	</view>
 </template>
 
 <script>
+	import uniPopup from '@/components/uni-popup/uni-popup.vue';
 	export default {
 		data() {
 			return {
@@ -143,14 +170,38 @@
 				sexIndex: 0,
 				gender: 1,
 				change_class_status: '',
-				teacherInfo: {}
+				teacherInfo: {},
+				teacher_id: '',
+				teacherList: [
+					{
+						name: '王老师',
+						value: 1
+					},
+					{
+						name: '李老师',
+						value: 2
+					},
+					{
+						name: '赵老师',
+						value: 3
+					}
+				]
 			}
 		},
+		components: {
+			uniPopup
+		},
 		onLoad() {
+			
 			this.getId()
 			this.dataInit()
 		},
 		methods: {
+			// 选择老师
+			radioChange(event) {
+				console.log(event)
+				this.teacher_id = event.detail.value
+			},
 			// 获取学生id
 			getId() {
 				let mobile = uni.getStorageSync("userInfo").mobile;
@@ -259,6 +310,11 @@
 				}
 				this.$api.addStudentInfo(param).then(res => {
 					console.log(res)
+					
+					if(res.data.status == 'ok') {
+						// 查询老师信息
+						this.checkTeacherInfo()
+					}
 				})
 			},
 			// 审核中
@@ -279,7 +335,22 @@
 					}
 				})
 			},
-			
+			// 查询老师
+			checkTeacherInfo() {
+				let mobile = uni.getStorageSync("userInfo").mobile;
+				let param = {
+					filterItems:{
+					  id: this.custom_id,
+					  mobile: mobile,
+					  school_id: this.schoolId,
+					  grade_id: this.gradeId,
+					  class: this.class
+					}
+				}
+				this.$api.checkTeacherInfo(param).then(res => {
+					console.log(res)
+				})
+			},
 			// 检查录入卡后是否符合规范
 			checkCard(val) {
 				let prefix = val.substring(0, 2)
@@ -366,5 +437,37 @@
 		align-items: center;
 		justify-content: center;
 		border-radius: 50rpx;
+	}
+	/* 弹窗 */
+	.popUp {
+		box-sizing: border-box;
+		width: 300px;
+		height: 400rpx;
+		background: #fff;
+		display: flex;
+		flex-direction: column;
+	}
+	.popUp radio-group {
+		display: flex;
+		width: 100%;
+	}
+	.popUp .title {
+		text-align: center;
+		font-weight: bold;
+		line-height: 70rpx;
+		box-sizing: border-box;
+		padding: 32rpx 0;
+		color: #00B7CC;
+	}
+	.popUp radio-group label {
+		width: 40%;
+		text-align: center;
+		display: flex;
+		align-items: center;
+		flex-wrap: wrap;
+		margin-bottom: 12rpx;
+	}
+	.popUp radio-group view {
+		font-size: 40rpx;
 	}
 </style>
