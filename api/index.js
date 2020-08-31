@@ -152,4 +152,17 @@ api.offlineBookType = params => request.globalRequest('/api/docker/getDockerBook
 
 // 充值记录
 api.offlinePayRecord = params => request.globalRequest('/api/shell/selShellDetail', 'POST', params)
+
+// 获取班级学校信息
+api.getSchoolInfo = params => request.globalRequest('/api/school/getSchool', 'POST', params)
+
+// 学生绑定老师
+api.bindTeacher = params => request.globalRequest('/api/customChild/bindTeacher', 'POST', params)
+
+// 学生申请转班
+api.applyChangeGrade = params => request.globalRequest('/api/customChild/changeClassApply','POST',params)
+
+// 增加或修改学生信息
+api.addStudentInfo = params => request.globalRequest('/api/customChild/addOrModCustomChild','POST',params)
+
 export default api

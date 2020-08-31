@@ -37,7 +37,7 @@ export default {
 	props: {
 		myMenuInfo:Object
 	},
-	onLoad(){
+	created(){
 		console.log(this.myMenuInfo);
 	},
 	computed: {
@@ -56,6 +56,7 @@ export default {
 			})
 		},
 		btnClick(toUrl) {
+			console.log(toUrl)
 			if (this.userInfo.name === 'guest') {
 				//游客 发出提示
 				uni.showModal({

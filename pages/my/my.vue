@@ -34,7 +34,7 @@
 					border-top-right-radius: 20rpx;">
 						<view class="left">
 							<image :src="$aliImage + 'offline-icon-all.png'" mode=""></image>
-							<text>智慧书柜订单</text>
+							<text>童书馆借阅订单</text>
 						</view>
 						<view class="center">
 							<image :src="$aliImage + 'offline-cut-line.png'" mode="widthFix"></image>
@@ -239,7 +239,8 @@ export default {
 					{
 						'imgSrc' : this.$aliImage + 'my2_5.png',
 						'title'	: '完善信息',
-						'toUrl'	: '/pages/my/myInfoList'
+						'toUrl'	: '/pages/library/tied-card'
+						// 'toUrl'	: '/pages/my/myInfoList'
 					},
 					{
 						'imgSrc' : this.$aliImage + 'my2_6.png',

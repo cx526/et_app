@@ -3,22 +3,48 @@
 		<view class="form">
 			<view class="item">
 				<text class="label">学校</text>
-				<input type="text" disabled 
-				value="林头幼儿园" />
+				<picker class="picker-input" mode="selector" @change="bindSchoolChange" :value="schoolIndex" :range="schoolArray" range-key="name">
+				<input type="text"
+				placeholder="请选择学生所在学校"
+				placeholder-style="font-size: 30rpx; color: #999"
+				disabled 
+				:value="schoolArray[schoolIndex].name" />
+				</picker>
 			</view>
 			<view class="item">
-				<text class="label">班级</text>
+				<text class="label">年级</text>
+				<picker class="picker-input" mode="selector" @change="bindradeChange" :value="gradeIndex" :range="gradeArray" range-key="name">
 				<input type="text"
-				placeholder="请填写幼儿所在班级"
+				placeholder="请选择学生所在年级"
 				placeholder-style="font-size: 30rpx; color: #999"
+				disabled 
+				:value="gradeArray[gradeIndex].name" />
+				</picker>
+			</view>
+			<view class="item">
+				
+				<text class="label">班级</text>
+				<picker class="picker-input" @change="bindClassChange" :value="classIndex" :range="classArray">
+				<input type="text"
+				placeholder="请选择学生所在班级"
+				placeholder-style="font-size: 30rpx; color: #999"
+				:value="classArray[classIndex]+'班'"
+				disabled
 				 />
+				 </picker>
+				 <!-- <image
+				 :src="$aliImage + 'teacher-icon-02.png'" 
+				 mode="widthFix"
+				 style="width: 40rpx;height: 40rpx;margin-left: 20rpx;"
+				 @tap="scan">
+				 </image> -->
 			</view>
 			<view class="item">
 				<text class="label">借书卡号</text>
 					<input type="text" placeholder="请扫码绑定童书卡"
 					placeholder-style="font-size: 30rpx; color: #999"
-					:value="prefix"
-					@input="cardNumber"/>
+					:value="card_no" disabled
+					/>
 				<image 
 				:src="$aliImage + 'teacher-icon-02.png'" 
 				mode="widthFix"
@@ -28,12 +54,13 @@
 			</view>
 			
 			<view class="item">
-				<text class="label">幼儿姓名</text>
-				<input type="text" placeholder="请填写幼儿姓名" 
-				placeholder-style="font-size: 30rpx; color: #999" />
+				<text class="label">学生姓名</text>
+				<input type="text" placeholder="请填写学生姓名" 
+				placeholder-style="font-size: 30rpx; color: #999" 
+				@input="getName"/>
 			</view>
 			<view class="item">
-				<text class="label">幼儿生日</text>
+				<text class="label">学生生日</text>
 				<picker mode="date" @change="bindDateChange" style="flex: 1;text-align: right;">
 						<view 
 						style="font-size: 30rpx; color: #999"
@@ -41,9 +68,20 @@
 				</picker>
 			</view>
 			<view class="item">
+				<text class="label">学生性别</text>
+				<picker mode="selector" @change="bindSexChange" 
+				style="flex: 1;text-align: right;"
+				:range="sexArray" :value="sexIndex">
+						<view 
+						style="font-size: 30rpx; color: #999"
+						>{{ sexArray[sexIndex] }}</view>
+				</picker>
+			</view>
+			<view class="item">
 				<text class="label">家长姓名</text>
 				<input type="text" placeholder="请填写家长姓名" 
-				placeholder-style="font-size: 30rpx; color: #999" />
+				placeholder-style="font-size: 30rpx; color: #999" 
+				@input="getParentName"/>
 			</view>
 			<view class="item">
 				<text class="label">用户名</text>
@@ -60,9 +98,21 @@
 				 />
 			</view>
 		</view>
-		<view class="btn">
-			<view>
-				<text>提交</text>
+		<!-- @tap="applyForMod" -->
+		<view class="btn" v-if="teacherInfo && JSON.stringify(teacherInfo) != '{}'">
+			<view @tap="applyForMod" v-if="change_class_status == 0">
+				<text>申请修改</text>
+			</view>
+			<view @tap="saveInfo" v-if="change_class_status == 1">
+				<text>保存</text>
+			</view>
+			<view @tap="applying" v-if="change_class_status == 2">
+				<text>审批中</text>
+			</view>
+		</view>
+		<view v-else class="btn">
+			<view @tap="saveInfo">
+				<text>保存</text>
 			</view>
 		</view>
 	</view>
@@ -73,28 +123,190 @@
 		data() {
 			return {
 				$aliImage: this.$aliImage,//静态图片域名
-				birthDay: '请选择幼儿生日',
-				prefix: ''
+				birthDay: '请选择学生生日',
+				prefix: '',
+				userInfo: {},
+				card_no: '',//卡号
+				schoolArray: [],//学校列表
+				gradeArray: [], //年级列表
+				classArray: [], //班级列表
+				schoolIndex: 0,
+				schoolId: '',
+				gradeIndex: 0,
+				gradeId: '',
+				classIndex: 0,
+				class: '',
+				name: '',
+				parent_name: '',
+				custom_id: '',
+				sexArray: ['男','女'],
+				sexIndex: 0,
+				gender: 1,
+				change_class_status: '',
+				teacherInfo: {}
 			}
 		},
+		onLoad() {
+			this.getId()
+			this.dataInit()
+		},
 		methods: {
+			// 获取学生id
+			getId() {
+				let mobile = uni.getStorageSync("userInfo").mobile;
+				this.$api.getCustom({
+					filterItems: { mobile }
+				}).then(res => {
+					this.custom_id = res.data[0].id;
+					this.change_class_status = res.data[0].change_class_status
+					this.teacherInfo = res.data[0].teacherInfo
+					console.log(this.custom_id, this.change_class_status, this.teacherInfo)
+				})
+			},
+			// 获取班级学校信息
+			dataInit() {
+				this.$api.getSchoolInfo().then(res => {
+					console.log(res.data)
+					this.schoolArray = res.data,
+					// 初始化默认数据
+					this.schoolId = this.schoolArray[this.schoolIndex].id
+					this.gradeArray = this.schoolArray[this.schoolIndex].classInfo
+					this.gradeId = this.schoolArray[this.schoolIndex].classInfo[this.gradeIndex].id
+					this.class = this.classArray[this.classIndex]
+					console.log(this.schoolId, this.gradeId,this.class)
+				})
+				for (let i=1; i < 51; i++) {
+					this.classArray.push(String(i))
+				}
+			},
+			// 选择学校
+			bindSchoolChange(event) {
+				console.log(event)
+				this.schoolIndex = event.detail.value
+				this.schoolId = this.schoolArray[this.schoolIndex].id;
+				console.log(this.schoolId)
+				// 初始化班级
+				this.gradeArray = this.schoolArray[this.schoolIndex].classInfo
+				// 每次更改初始化班级索引
+				this.gradeIndex = 0
+			},
+			// 选择年级
+			bindradeChange(event) {
+				this.gradeIndex = event.detail.value
+				this.gradeId = this.schoolArray[this.schoolIndex].classInfo[this.gradeIndex].id;
+				console.log(this.gradeId)
+			},
+			// 选择班级
+			bindClassChange(event) {
+				this.classIndex = event.detail.value
+				this.class = this.classArray[event.detail.value];
+				console.log(this.class)
+			},
 			// 生日选择
-			bindDateChange(event) {;
+			bindDateChange(event) {
 				this.birthDay = event.target.value
+				console.log(this.birthDay)
+			},
+			// 性别选择
+			bindSexChange(event) {
+				this.sexIndex = event.detail.value
+				this.gender = +event.detail.value + 1
+				console.log(this.gender)
+			},
+			// 学生姓名
+			getName(event) {
+				this.name = event.detail.value;
+				
+				console.log(this.name)
+			},
+			// 家长姓名
+			getParentName(event) {
+				this.parent_name = event.detail.value;
+				console.log(this.parent_name)
 			},
 			// 监听input框的变化
 			cardNumber(event) {
 				let value = event.detail.value;
 				this.prefix = value
 			},
+			// 申请修改
+			applyForMod() {
+				this.$api.applyChangeGrade({
+					custom_id: this.custom_id
+				}).then(res => {
+					console.log(res)
+				})
+			},
+			// 保存修改信息
+			saveInfo() {
+				let param = {
+					custom_id:  this.custom_id,
+					parent_name: this.parent_name,
+					outer_code:  this.card_no,
+					name: this.name,
+					gender: this.gender,  //1:男  2：女 
+					birth_day: this.birthDay,
+					school_id: this.schoolId,
+					grade_id: this.gradeId,
+					class: this.class
+				}
+				if(this.card_no.replace(/\s*/g,"") == '' || this.name.replace(/\s*/g,"") == '' || this.parent_name.replace(/\s*/g,"") == '' || this.birthDay == '请选择学生生日') {
+					uni.showToast({
+						title: '请补全信息再提交',
+						icon: 'none'
+					})
+					return
+				}
+				this.$api.addStudentInfo(param).then(res => {
+					console.log(res)
+				})
+			},
+			// 审核中
+			applying() {
+				uni.showToast({ icon : 'none', title: '您的申请审批中' })
+			},
 			// 调起微信扫一扫
 			scan() {
 				uni.scanCode({
 					success: res => {
 						console.log(res)
+						if(this.checkCard(res.result)) {
+							this.userInfo.card_no = res.result;
+							this.card_no = res.result
+						}else {
+							uni.showToast({ icon : 'none', title: '卡号异常!' })
+						}
 					}
 				})
-			}
+			},
+			
+			// 检查录入卡后是否符合规范
+			checkCard(val) {
+				let prefix = val.substring(0, 2)
+				if (prefix === 'ET') {
+					if (val.length === 15 || val.length === 11) {
+						return true
+					} else {
+						return false
+					}
+				} else {
+					return false
+				}
+			},
+			// 区别学生/老师卡
+			checkCardType(val) {
+				let prefix = val.substring(0, 2)
+				let cardType = val.substring(2, 3)
+				if (prefix === 'ET') {
+					if (cardType === '0') {
+						// 老师卡
+						return 'TEACHER_CARD'
+					} else if (cardType === '1') {
+						// 学生卡
+						return 'STUDENT_CARD'
+					}
+				}
+			},
 		}
 	}
 </script>
