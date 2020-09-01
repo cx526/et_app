@@ -32,6 +32,10 @@
 		<view class="content-buttom-position" :style="{'width' : width}">
 			<et-add-book-to-cart :peopleCount="bookInfo.peopleCount" :bookInfo="bookInfo" @insertBookToCart="insertBookToCart"></et-add-book-to-cart>
 		</view>
+		<!-- 区分书籍标识 -->
+		<!-- <image 
+		:src="$aliImage + 'book-logo-01.png'" mode="widthFix"
+		style="width: 78rpx;position: absolute;left: 24rpx;top: -8rpx;"></image> -->
 	</view>
 </template>
 
@@ -42,7 +46,8 @@ import etTag from './etTag.vue';
 export default {
 	data() {
 		return {
-			width: 0
+			width: 0,
+			$aliImage: this.$aliImage,
 		}
 	},
 	components: {
@@ -89,6 +94,7 @@ export default {
 	margin-top: 20upx;
 	background-color: #ffffff;
 	box-sizing: border-box;
+	position: relative;
 }
 .img-content {
 	position: relative;

@@ -159,6 +159,9 @@ api.getSchoolInfo = params => request.globalRequest('/api/school/getSchool', 'PO
 // 学生绑定老师
 api.bindTeacher = params => request.globalRequest('/api/customChild/bindTeacher', 'POST', params)
 
+// 教师二维码解析
+api.teacherQrCode = params => request.globalRequest('/api/teacherInfo/decodeQrCode', 'POST', params)
+
 // 查询老师信息
 api.checkTeacherInfo = params => request.globalRequest('/api/teacherInfo/getTeacherService', 'POST', params)
 

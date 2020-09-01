@@ -164,7 +164,6 @@ export default {
 		};
 	},
 	created() {
-		console.log('create')
 		this.booksNumber = this.count; //判断书篮是否存在
 		// 获取用户的个人账号信息
 		this.getUserInfo();
@@ -228,7 +227,6 @@ export default {
 		upDateStock() {
 			// 获取线下书篮书籍
 			let bookList = uni.getStorageSync('offlineCartList');
-			console.log(bookList)
 			// 储存书篮所有书籍的id
 			let goods_id = [];
 			let idString = '';
@@ -246,8 +244,6 @@ export default {
 					docker_mac: this.docker_mac
 				}
 			}).then(res => {
-				console.log('upStock')
-				console.log(res)
 				if(res.data.rows.length == 0) {
 					this.isStock = false;
 					// 如果选中但没库存更改选中状态
@@ -593,7 +589,6 @@ export default {
 		},
 		// 点击弹窗取消
 		cancel(type) {
-			console.log(type);
 			switch(type) {
 				case 'popup':
 				this.$refs.popup.close();
@@ -666,7 +661,7 @@ export default {
 }
 .offline-box .item {
 	background: #fff;
-	box-shadow: 0rpx 0rpx 20rpx rgba(179, 179, 179, 0.3);
+	box-shadow: 0rpx 0rpx 12rpx #ddd;
 	border-radius: 16rpx;
 	margin-top: 24rpx;
 	padding: 20rpx 20rpx 20rpx 12rpx;

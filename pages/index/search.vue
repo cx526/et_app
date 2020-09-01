@@ -106,7 +106,11 @@ export default {
 	}
 }
 </script>
-
+<style>
+	page {
+		background: #F9F9F9;
+	}
+</style>
 <style scoped>
 .content {
 	width: 100%;

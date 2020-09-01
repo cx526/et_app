@@ -8,17 +8,30 @@
 				placeholder="请选择学生所在学校"
 				placeholder-style="font-size: 30rpx; color: #999"
 				disabled 
-				:value="schoolArray[schoolIndex].name" />
+				:value="schoolName" />
 				</picker>
 			</view>
 			<view class="item">
 				<text class="label">年级</text>
-				<picker class="picker-input" mode="selector" @change="bindradeChange" :value="gradeIndex" :range="gradeArray" range-key="name">
+				<picker class="picker-input" 
+				mode="selector" 
+				@change="bindradeChange" 
+				:value="gradeIndex" 
+				:range="gradeArray" 
+				range-key="name"
+				style="position: relative;">
 				<input type="text"
 				placeholder="请选择学生所在年级"
 				placeholder-style="font-size: 30rpx; color: #999"
 				disabled 
-				:value="gradeArray[gradeIndex].name" />
+				:value="gradeName"
+				style="box-sizing: border-box;padding-right: 60rpx;"/>
+				<image
+				:src="$aliImage + 'teacher-icon-02.png'" 
+				mode="widthFix"
+				style="width: 40rpx;height: 40rpx;margin-left: 20rpx;position: absolute;top: 52%;right: 0;transform: translateY(-50%);z-index: 4;"
+				@tap.stop="gradeScan">
+				</image>
 				</picker>
 			</view>
 			<view class="item">
@@ -28,7 +41,7 @@
 				<input type="text"
 				placeholder="请选择学生所在班级"
 				placeholder-style="font-size: 30rpx; color: #999"
-				:value="classArray[classIndex]+'班'"
+				:value="className+'班'"
 				disabled
 				 />
 				 </picker>
@@ -115,6 +128,11 @@
 				<text>保存</text>
 			</view>
 		</view>
+		<view class="btn" v-if="from == 'home'" >
+			<view @tap="noBind" style="background: #ccc;">
+				<text>暂不绑定</text>
+			</view>
+		</view>
 		<!-- 选择老师弹窗 -->
 		
 			<uni-popup ref="teacherChoose" :maskClick="false">
@@ -125,16 +143,17 @@
 					<radio-group @change="radioChange">
 						<label
 						v-for="(item, index) in teacherList" 
-						:key="item.value"
-						style="transform: scale(0.6);">
+						:key="item.value">
 								<view style="margin-right: 12rpx;">
-										<radio :value="item.value" :checked="index === current" />
+										<radio :value="item.id" 
+										style="transform: scale(0.6);"
+										color="#00B7CC"/>
 								</view>
 								<view>{{item.name}}</view>
 						</label>
 					</radio-group>
 					<view class="btn">
-						<view >
+						<view @tap="chooseTeacher">
 							<text>确定</text>
 						</view>
 					</view>
@@ -149,6 +168,7 @@
 	export default {
 		data() {
 			return {
+				from: '',
 				$aliImage: this.$aliImage,//静态图片域名
 				birthDay: '请选择学生生日',
 				prefix: '',
@@ -162,45 +182,74 @@
 				gradeIndex: 0,
 				gradeId: '',
 				classIndex: 0,
-				class: '',
-				name: '',
-				parent_name: '',
-				custom_id: '',
-				sexArray: ['男','女'],
+				class: '',//所在班级
+				name: '',//学生姓名
+				parent_name: '',//家长姓名
+				custom_id: '', //学生id
+				sexArray: ['男','女'],//学生性别
 				sexIndex: 0,
 				gender: 1,
-				change_class_status: '',
-				teacherInfo: {},
-				teacher_id: '',
-				teacherList: [
-					{
-						name: '王老师',
-						value: 1
-					},
-					{
-						name: '李老师',
-						value: 2
-					},
-					{
-						name: '赵老师',
-						value: 3
-					}
-				]
+				change_class_status: '',//审核状态
+				teacherInfo: {},//老师信息
+				teacher_id: '',//老师id
+				teacherList: [],//老师列表
+				schoolName: '',//所属学校名称
+				gradeName: '',//所属年级
+				className: '',//所属班级
 			}
 		},
 		components: {
 			uniPopup
 		},
-		onLoad() {
-			
+		onLoad(option) {
+			this.from = option.from ? option.from : ''
+			console.log(this.from)
 			this.getId()
 			this.dataInit()
 		},
 		methods: {
+			// 班级扫描
+			gradeScan() {
+				uni.scanCode({
+					success: res => {
+						console.log(res)
+						let classQrcode = res.result
+						this.$api.teacherQrCode({
+							classQrcode
+						}).then(res => {
+							console.log(res)
+							if(res.data.status == 'ok') {
+								let info = res.data.rows;
+								console.log(info)
+								// 重置学校/年级/班级id,名称
+								this.className = info.classInfo
+								this.schoolName = info.schoolInfo.name
+								this.gradeName = info.gradeInfo.name
+								this.schoolId = info.schoolInfo.id
+								this.gradeId = info.gradeInfo.id
+								console.log(this.schoolId,this.gradeId)
+							}
+						})
+					}
+				})
+			},
 			// 选择老师
 			radioChange(event) {
 				console.log(event)
-				this.teacher_id = event.detail.value
+				this.teacher_id = event.detail.value;
+				console.log(this.teacher_id)
+			},
+			// 确定老师
+			chooseTeacher() {
+				if(this.teacher_id == '') {
+					uni.showToast({
+						title: '请选择老师',
+						icon: 'none'
+					})
+					return
+				}
+				this.bindTeacher()
+				
 			},
 			// 获取学生id
 			getId() {
@@ -224,7 +273,10 @@
 					this.gradeArray = this.schoolArray[this.schoolIndex].classInfo
 					this.gradeId = this.schoolArray[this.schoolIndex].classInfo[this.gradeIndex].id
 					this.class = this.classArray[this.classIndex]
-					console.log(this.schoolId, this.gradeId,this.class)
+					this.schoolName = this.schoolArray[this.schoolIndex].name
+					this.gradeName = this.gradeArray[this.gradeIndex].name
+					this.className = this.classArray[this.classIndex]
+					console.log(this.schoolId, this.gradeId,this.className)
 				})
 				for (let i=1; i < 51; i++) {
 					this.classArray.push(String(i))
@@ -235,6 +287,7 @@
 				console.log(event)
 				this.schoolIndex = event.detail.value
 				this.schoolId = this.schoolArray[this.schoolIndex].id;
+				this.schoolName = this.schoolArray[this.schoolIndex].name
 				console.log(this.schoolId)
 				// 初始化班级
 				this.gradeArray = this.schoolArray[this.schoolIndex].classInfo
@@ -245,12 +298,14 @@
 			bindradeChange(event) {
 				this.gradeIndex = event.detail.value
 				this.gradeId = this.schoolArray[this.schoolIndex].classInfo[this.gradeIndex].id;
+				this.gradeName = this.gradeArray[this.gradeIndex].name
 				console.log(this.gradeId)
 			},
 			// 选择班级
 			bindClassChange(event) {
 				this.classIndex = event.detail.value
 				this.class = this.classArray[event.detail.value];
+				this.className = this.classArray[this.classIndex]
 				console.log(this.class)
 			},
 			// 生日选择
@@ -282,9 +337,19 @@
 			},
 			// 申请修改
 			applyForMod() {
+				if(this.card_no.replace(/\s*/g,"") == '' || this.name.replace(/\s*/g,"") == '' || this.parent_name.replace(/\s*/g,"") == '' || this.birthDay == '请选择学生生日') {
+					uni.showToast({
+						title: '请补全信息再提交',
+						icon: 'none'
+					})
+					return
+				}
 				this.$api.applyChangeGrade({
 					custom_id: this.custom_id
 				}).then(res => {
+					if(res.data.status == 'ok') {
+						this.change_class_status = 2
+					}
 					console.log(res)
 				})
 			},
@@ -299,7 +364,7 @@
 					birth_day: this.birthDay,
 					school_id: this.schoolId,
 					grade_id: this.gradeId,
-					class: this.class
+					class: this.className
 				}
 				if(this.card_no.replace(/\s*/g,"") == '' || this.name.replace(/\s*/g,"") == '' || this.parent_name.replace(/\s*/g,"") == '' || this.birthDay == '请选择学生生日') {
 					uni.showToast({
@@ -337,18 +402,50 @@
 			},
 			// 查询老师
 			checkTeacherInfo() {
-				let mobile = uni.getStorageSync("userInfo").mobile;
 				let param = {
 					filterItems:{
-					  id: this.custom_id,
-					  mobile: mobile,
-					  school_id: this.schoolId,
-					  grade_id: this.gradeId,
-					  class: this.class
+					  school_id: String(this.schoolId),
+					  grade_id: String(this.gradeId),
+					  class: String(this.class)
 					}
 				}
 				this.$api.checkTeacherInfo(param).then(res => {
+					this.teacherList = res.data.rows;
+					console.log(this.teacherList)
+					if(this.teacherList && this.teacherList.length > 0) {
+						// 显示选择老师弹窗
+						this.$refs.teacherChoose.open()
+					}
+				})
+			},
+			// 绑定老师
+			bindTeacher() {
+				this.$api.bindTeacher({
+					custom_id:  this.custom_id,
+					teacher_id: this.teacher_id
+				}).then(res => {
 					console.log(res)
+					if(res.data.status == 'ok') {
+						this.$refs.teacherChoose.close()
+						setTimeout(() => {
+							uni.showToast({
+								title: '绑定教师成功',
+								success: () => {
+									uni.switchTab({
+										url: '/pages/library/library'
+									})
+								}
+							})
+						},500)
+					}
+					// 关闭弹窗
+					
+				})
+			},
+			// 暂不绑定
+			noBind() {
+				uni.switchTab({
+					url: '/pages/index/index'
 				})
 			},
 			// 检查录入卡后是否符合规范
@@ -445,6 +542,7 @@
 		height: 400rpx;
 		background: #fff;
 		display: flex;
+		border-radius: 30rpx;
 		flex-direction: column;
 	}
 	.popUp radio-group {
@@ -468,6 +566,6 @@
 		margin-bottom: 12rpx;
 	}
 	.popUp radio-group view {
-		font-size: 40rpx;
+		font-size: 28rpx;
 	}
 </style>

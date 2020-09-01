@@ -4,12 +4,18 @@
 		<!-- 头部内容 -->
 		<view class="top-content">
 			<!-- 顶栏搜索框 -->
-			<view class="search-box" @tap="toSearch">
+			<!-- <view class="search-box" @tap="toSearch">
 				<icon class="search-icon" type="search" />
 				<input class="search-input" type="text" placeholder="请输入书籍名..." disabled />
+			</view> -->
+			<view class="search-box active">
+				<view class="search active">
+					<image :src="$aliImage + 'search.png'" class="icon-search"></image>
+					<input type="text" disabled placeholder="请输入书籍名..." placeholder-style="font-size: 30rpx;color: #C5C5C5" @tap="toSearch" />
+				</view>
 			</view>
 
-			<view class="white-space"></view>
+			<!-- <view class="white-space"></view> -->
 
 			<!-- 轮播图 -->
 			<view style="position: relative;">
@@ -116,6 +122,7 @@ export default {
 	},
 	data() {
 		return {
+			$aliImage: this.$aliImage, //静态图片路径
 			popupData: {},
 			swiperCurrent: 0,
 			swiperLength: 0,
@@ -270,6 +277,7 @@ export default {
 		},
 		getSwiperData() {
 			this.$api.getSwiperData({ link_usage: 'app_swiper' }).then(res => {
+				console.log(res.data)
 				this.carouselList = res.data;
 				this.swiperLength = this.carouselList.length;
 			});
@@ -359,7 +367,32 @@ export default {
 	background-size: 100% 500upx;
 	background-repeat: no-repeat;
 }
+/* search */
 .search-box {
+	box-sizing: border-box;
+	padding: 0 40rpx;
+	margin-top: 25upx;
+}
+.search-box .search {
+	height: 80rpx;
+	box-sizing: border-box;
+	background: #fff;
+	position: relative;
+	display: flex;
+	align-items: center;
+	padding-left: 30rpx;
+	border-radius: 40rpx;
+}
+.search-box .search.active {
+	border: 1px solid #ebf7ff;
+}
+.search-box .icon-search {
+	width: 40rpx;
+	height: 40rpx;
+	flex-shrink: 0;
+	margin-right: 12rpx;
+}
+/* .search-box {
 	padding: 8upx 20upx;
 	width: 85%;
 	display: flex;
@@ -376,7 +409,7 @@ export default {
 .search-input {
 	margin-left: 10upx;
 	font-size: 34upx;
-}
+} */
 .carousel {
 	width: 100%;
 	height: 450upx;

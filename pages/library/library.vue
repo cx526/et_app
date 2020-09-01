@@ -82,6 +82,9 @@
 							<view class="right" v-if="item.stockCount.totalDockerUse" @tap.stop="push(item)"><text>加入书篮</text></view>
 							<view class="right" v-if="item.stockCount.totalDockerUse == 0" style="background: #ccc;" @tap.stop="notice"><text>加入书篮</text></view>
 						</view>
+						<!-- 书籍标签 -->
+						<!-- <image :src="$aliImage + 'book-logo-01.png'" mode="widthFix"
+						style="position: absolute;width: 78rpx;left: 30rpx;top: -8rpx;"></image> -->
 					</view>
 				</template>
 				<!-- 分类弹窗 -->
@@ -181,7 +184,7 @@ export default {
 		Popup
 	},
 	async onLoad(option) {
-	
+		console.log(option)
 		// 从搜索页跳转过来
 		if (option.isSearch) {
 			this.isSearch = option.isSearch
@@ -282,8 +285,9 @@ export default {
 					filterItems: { mobile }
 					}).then(res => {
 					this.userInfo = res.data[0];
-					// 如果幼儿园不存在提示填写幼儿园信息弹窗(后期判断条件可能需要更改)
-					if(!this.userInfo.schoolInfo.name) {
+					console.log(this.userInfo)
+					// 卡号为空
+					if(this.userInfo.card_no == '') {
 						// 显示绑卡弹窗
 						this.$refs.powerPopUp.open()
 					}else {
@@ -507,7 +511,7 @@ export default {
 		// 跳转到绑卡页面
 		goCard() {
 			uni.navigateTo({
-				url: '/pages/my/myInfoList'
+				url: '/pages/library/tied-card'
 			})
 		},
 	}

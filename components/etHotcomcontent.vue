@@ -6,6 +6,9 @@
 		</view>
 		
 		<text class="title">{{dataArr.title}}</text>
+		<!-- 书籍标识 -->
+		<!-- <image :src="$aliImage + 'book-logo-01.png'" mode="widthFix"
+		style="position: absolute;width: 78rpx;top: -8rpx;left: 12rpx;"></image> -->
 	</view>
 </template>
 
@@ -13,6 +16,11 @@
 export default {
 	props: {
 		dataArr: Object
+	},
+	data() {
+		return {
+			$aliImage: this.$aliImage,
+		}
 	},
 	methods: {
 		btnClick() {
@@ -24,6 +32,7 @@ export default {
 
 <style>
 .btn-content {
+	position: relative;
 	width: 205upx;
 	display: flex;
 	flex-direction: column;
