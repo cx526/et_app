@@ -3,7 +3,7 @@
 		<view class="form">
 			<view class="item">
 				<text class="label">学校</text>
-				<picker class="picker-input" mode="selector" @change="bindSchoolChange" :value="schoolIndex" :range="schoolArray" range-key="name">
+				<picker class="picker-input" mode="selector" @change="bindSchoolChange" :value="schoolIndex" :range="schoolArray" range-key="name" :disabled="isDisabled">
 				<input type="text"
 				placeholder="请选择学生所在学校"
 				placeholder-style="font-size: 30rpx; color: #999"
@@ -19,7 +19,8 @@
 				:value="gradeIndex" 
 				:range="gradeArray" 
 				range-key="name"
-				style="position: relative;">
+				style="position: relative;"
+				:disabled="isDisabled">
 				<input type="text"
 				placeholder="请选择学生所在年级"
 				placeholder-style="font-size: 30rpx; color: #999"
@@ -37,7 +38,7 @@
 			<view class="item">
 				
 				<text class="label">班级</text>
-				<picker class="picker-input" @change="bindClassChange" :value="classIndex" :range="classArray">
+				<picker class="picker-input" @change="bindClassChange" :value="classIndex" :range="classArray" :disabled="isDisabled">
 				<input type="text"
 				placeholder="请选择学生所在班级"
 				placeholder-style="font-size: 30rpx; color: #999"
@@ -70,11 +71,12 @@
 				<text class="label">学生姓名</text>
 				<input type="text" placeholder="请填写学生姓名" 
 				placeholder-style="font-size: 30rpx; color: #999" 
-				@input="getName"/>
+				@input="getName" :disabled="isDisabled"/>
 			</view>
 			<view class="item">
 				<text class="label">学生生日</text>
-				<picker mode="date" @change="bindDateChange" style="flex: 1;text-align: right;">
+				<picker mode="date" :disabled="isDisabled"
+				 @change="bindDateChange" style="flex: 1;text-align: right;">
 						<view 
 						style="font-size: 30rpx; color: #999"
 						>{{ birthDay }}</view>
@@ -84,7 +86,8 @@
 				<text class="label">学生性别</text>
 				<picker mode="selector" @change="bindSexChange" 
 				style="flex: 1;text-align: right;"
-				:range="sexArray" :value="sexIndex">
+				:range="sexArray" :value="sexIndex"
+				:disabled="isDisabled">
 						<view 
 						style="font-size: 30rpx; color: #999"
 						>{{ sexArray[sexIndex] }}</view>
@@ -94,7 +97,7 @@
 				<text class="label">家长姓名</text>
 				<input type="text" placeholder="请填写家长姓名" 
 				placeholder-style="font-size: 30rpx; color: #999" 
-				@input="getParentName"/>
+				@input="getParentName" :disabled="isDisabled"/>
 			</view>
 			<view class="item">
 				<text class="label">用户名</text>
@@ -168,6 +171,7 @@
 	export default {
 		data() {
 			return {
+				isDisabled: true,
 				from: '',
 				$aliImage: this.$aliImage,//静态图片域名
 				birthDay: '请选择学生生日',
@@ -209,29 +213,39 @@
 		},
 		methods: {
 			// 班级扫描
-			gradeScan() {
-				uni.scanCode({
-					success: res => {
-						console.log(res)
-						let classQrcode = res.result
-						this.$api.teacherQrCode({
-							classQrcode
-						}).then(res => {
+			gradeScan() {	
+				if(!this.isDisabled) {
+					uni.scanCode({
+						success: res => {
 							console.log(res)
-							if(res.data.status == 'ok') {
-								let info = res.data.rows;
-								console.log(info)
-								// 重置学校/年级/班级id,名称
-								this.className = info.classInfo
-								this.schoolName = info.schoolInfo.name
-								this.gradeName = info.gradeInfo.name
-								this.schoolId = info.schoolInfo.id
-								this.gradeId = info.gradeInfo.id
-								console.log(this.schoolId,this.gradeId)
-							}
-						})
-					}
-				})
+							let classQrcode = res.result
+							this.$api.teacherQrCode({
+								classQrcode
+							}).then(res => {
+								console.log(res)
+								if(res.data.status == 'ok') {
+									let info = res.data.rows;
+									console.log(info)
+									// 重置学校/年级/班级id,名称
+									this.className = info.classInfo
+									this.schoolName = info.schoolInfo.name
+									this.gradeName = info.gradeInfo.name
+									this.schoolId = info.schoolInfo.id
+									this.gradeId = info.gradeInfo.id
+									console.log(this.schoolId,this.gradeId)
+								}
+							})
+						}
+					})
+				}else {
+					uni.showToast({
+						title: '请先提交修改申请',
+						icon: 'none',
+						duration: 2000
+					})
+					return
+				}
+				
 			},
 			// 选择老师
 			radioChange(event) {
@@ -260,6 +274,12 @@
 					this.custom_id = res.data[0].id;
 					this.change_class_status = res.data[0].change_class_status
 					this.teacherInfo = res.data[0].teacherInfo
+					// 确认信息是否给修改
+					if(this.change_class_status == 1) {
+						this.isDisabled = false
+					}else {
+						this.isDisabled = true
+					}
 					console.log(this.custom_id, this.change_class_status, this.teacherInfo)
 				})
 			},
@@ -337,13 +357,13 @@
 			},
 			// 申请修改
 			applyForMod() {
-				if(this.card_no.replace(/\s*/g,"") == '' || this.name.replace(/\s*/g,"") == '' || this.parent_name.replace(/\s*/g,"") == '' || this.birthDay == '请选择学生生日') {
-					uni.showToast({
-						title: '请补全信息再提交',
-						icon: 'none'
-					})
-					return
-				}
+				// if(this.card_no.replace(/\s*/g,"") == '' || this.name.replace(/\s*/g,"") == '' || this.parent_name.replace(/\s*/g,"") == '' || this.birthDay == '请选择学生生日') {
+				// 	uni.showToast({
+				// 		title: '请补全信息再提交',
+				// 		icon: 'none'
+				// 	})
+				// 	return
+				// }
 				this.$api.applyChangeGrade({
 					custom_id: this.custom_id
 				}).then(res => {
@@ -388,17 +408,27 @@
 			},
 			// 调起微信扫一扫
 			scan() {
-				uni.scanCode({
-					success: res => {
-						console.log(res)
-						if(this.checkCard(res.result)) {
-							this.userInfo.card_no = res.result;
-							this.card_no = res.result
-						}else {
-							uni.showToast({ icon : 'none', title: '卡号异常!' })
+				if(!this.isDisabled) {
+					uni.scanCode({
+						success: res => {
+							console.log(res)
+							if(this.checkCard(res.result)) {
+								this.userInfo.card_no = res.result;
+								this.card_no = res.result
+							}else {
+								uni.showToast({ icon : 'none', title: '卡号异常!' })
+							}
 						}
-					}
-				})
+					})
+				}else {
+					uni.showToast({
+						title: '请先提交修改申请',
+						icon: 'none',
+						duration: 2000
+					})
+					return
+				}
+				
 			},
 			// 查询老师
 			checkTeacherInfo() {

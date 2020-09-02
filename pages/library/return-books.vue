@@ -390,10 +390,10 @@
 						let day = Math.ceil(Math.abs(difference / (24 * 3600 * 1000))) 
 						if(difference >= 0) {
 							item.msg = `待归还${day}天`
-							item.color = true
+							// item.color = true
 						}else {
 							item.msg = `已逾期${day}天`
-							item.color = false
+							// item.color = false
 						}
 					})
 					this.waitOrderList = [...this.waitOrderList, ...res.data.rows]
