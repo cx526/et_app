@@ -181,11 +181,11 @@
 				schoolArray: [],//学校列表
 				gradeArray: [], //年级列表
 				classArray: [], //班级列表
-				schoolIndex: 0,
+				schoolIndex: '',
 				schoolId: '',
-				gradeIndex: 0,
+				gradeIndex: '',
 				gradeId: '',
-				classIndex: 0,
+				classIndex: '',
 				class: '',//所在班级
 				name: '',//学生姓名
 				parent_name: '',//家长姓名
@@ -282,7 +282,8 @@
 				
 					this.birthDay = res.data[0].childInfo ? res.data[0].childInfo.birth_day : ''
 					this.parent_name = res.data[0].childInfo ? res.data[0].childInfo.parent_name : ''
-					this.sexIndex = res.data[0].childInfo ? res.data[0].childInfo.gender - 1 : 0
+					this.sexIndex = JSON.stringify(res.data[0].childInfo) != "{}" ? res.data[0].childInfo.gender - 1 : 0
+					console.log(this.sexArray[this.sexIndex])
 					this.custom_id = res.data[0].id;
 					this.change_class_status = res.data[0].change_class_status
 					this.teacherInfo = res.data[0].teacherInfo
@@ -411,6 +412,11 @@
 					if(res.data.status == 'ok') {
 						// 查询老师信息
 						this.checkTeacherInfo()
+					}else {
+						uni.showToast({
+							title: res.data.msg,
+							icon: 'none'
+						})
 					}
 				})
 			},
