@@ -169,6 +169,7 @@ export default {
 				contentrefresh: '加载中',
 				contentnomore: '暂无更多数据'
 			},
+			totalPage: 0,
 			popUpWidth: 0,
 			typeList: [],
 			currentPage: 1, // 请求接口的当前页码
@@ -242,8 +243,8 @@ export default {
 			this.currentPage = this.currentPage + 1;
 			this.getMoreList(this.id);
 		} else {
-			this.currentPage = this.currentPage + 1;
-			if (this.loadStatus !== 'noMore') {
+			if (this.totalPage > this.productList.length) {
+				this.currentPage = this.currentPage + 1;
 				this.$api.offlineGetBooksList({
 					filterItems: {
 						docker_mac: this.userInfo.dockerInfo.docker_mac
@@ -354,6 +355,7 @@ export default {
 			})
 			.then(res => {
 				uni.hideLoading();
+				this.totalPage = res.data.totalPage
 				this.productList = res.data.rows;
 				console.log(this.productList)
 				if (res.data.rows.length < this.pageSize || res.data.rows.length == 0) {
