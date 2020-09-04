@@ -531,8 +531,8 @@ export default {
 					});
 					this.price = amount
 					// 当前用户五车贝不足够或押金小于29时显示弹窗
-					if(this.shell < this.price || this.deposit < 29) {
-						if(this.shell < this.price) {
+					if(Number(this.shell) < this.price || this.deposit < 29) {
+						if(Number(this.shell) < this.price) {
 							// 显示借书币不足弹窗
 							this.$refs.popup.open();
 						}else {
@@ -572,9 +572,10 @@ export default {
 						icon: 'none',
 						duration: 1000,
 						success: () => {
+							console.log('success')
 							// 跳转到取书页
 							uni.redirectTo({
-								url: '../../pages/library/take-books?status=0&from=placeOrder'
+								url: '/pages/library/take-books?status=0&from=placeOrder'
 							})
 						}
 					})
