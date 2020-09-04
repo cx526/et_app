@@ -71,7 +71,7 @@
 				<text class="label">学生姓名</text>
 				<input type="text" placeholder="请填写学生姓名" 
 				placeholder-style="font-size: 30rpx; color: #999" 
-				@input="getName" :disabled="isDisabled"/>
+				@input="getName" :disabled="isDisabled" :value="name"/>
 			</view>
 			<view class="item">
 				<text class="label">学生生日</text>
@@ -97,7 +97,7 @@
 				<text class="label">家长姓名</text>
 				<input type="text" placeholder="请填写家长姓名" 
 				placeholder-style="font-size: 30rpx; color: #999" 
-				@input="getParentName" :disabled="isDisabled"/>
+				@input="getParentName" :disabled="isDisabled" :value="parent_name"/>
 			</view>
 			<view class="item">
 				<text class="label">用户名</text>
@@ -271,6 +271,18 @@
 				this.$api.getCustom({
 					filterItems: { mobile }
 				}).then(res => {
+					console.log(res)
+					// 初始信息
+					this.schoolName = res.data[0].schoolInfo ? res.data[0].schoolInfo.name : ''
+					this.gradeName = res.data[0].gradeInfo ? res.data[0].gradeInfo.name : ''
+					this.className = res.data[0].childInfo ? res.data[0].childInfo.class : ''
+					this.card_no = res.data[0].card_no ? res.data[0].card_no : ''
+					this.name = res.data[0].childInfo ?
+					res.data[0].childInfo.name : ''
+				
+					this.birthDay = res.data[0].childInfo ? res.data[0].childInfo.birth_day : ''
+					this.parent_name = res.data[0].childInfo ? res.data[0].childInfo.parent_name : ''
+					this.sexIndex = res.data[0].childInfo ? res.data[0].childInfo.gender - 1 : 0
 					this.custom_id = res.data[0].id;
 					this.change_class_status = res.data[0].change_class_status
 					this.teacherInfo = res.data[0].teacherInfo
@@ -293,9 +305,9 @@
 					this.gradeArray = this.schoolArray[this.schoolIndex].classInfo
 					this.gradeId = this.schoolArray[this.schoolIndex].classInfo[this.gradeIndex].id
 					this.class = this.classArray[this.classIndex]
-					this.schoolName = this.schoolArray[this.schoolIndex].name
-					this.gradeName = this.gradeArray[this.gradeIndex].name
-					this.className = this.classArray[this.classIndex]
+					// this.schoolName = this.schoolArray[this.schoolIndex].name
+					// this.gradeName = this.gradeArray[this.gradeIndex].name
+					// this.className = this.classArray[this.classIndex]
 					console.log(this.schoolId, this.gradeId,this.className)
 				})
 				for (let i=1; i < 51; i++) {
