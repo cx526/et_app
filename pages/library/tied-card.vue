@@ -436,7 +436,7 @@
 					filterItems:{
 					  school_id: String(this.schoolId),
 					  grade_id: String(this.gradeId),
-					  class: String(this.class)
+					  class: String(this.className)
 					}
 				}
 				this.$api.checkTeacherInfo(param).then(res => {

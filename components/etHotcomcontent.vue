@@ -7,15 +7,23 @@
 		
 		<text class="title">{{dataArr.title}}</text>
 		<!-- 书籍标识 -->
-		<!-- <image :src="$aliImage + 'book-logo-01.png'" mode="widthFix"
-		style="position: absolute;width: 78rpx;top: -8rpx;left: 12rpx;"></image> -->
+		<image :src="$aliImage + 'book-logo-01.png'" mode="widthFix"
+		style="position: absolute;width: 78rpx;top: -8rpx;left: 12rpx;"
+		v-if="lineType == 1"></image>
+		<image :src="$aliImage + 'book-logo-02.png'" mode="widthFix"
+		style="position: absolute;width: 78rpx;top: -8rpx;left: 12rpx;"
+		v-else-if="lineType == 2"></image>
+		<image :src="$aliImage + 'book-logo-03.png'" mode="widthFix"
+		style="position: absolute;width: 78rpx;top: -8rpx;left: 12rpx;"
+		v-else-if="lineType == 3"></image>
 	</view>
 </template>
 
 <script>
 export default {
 	props: {
-		dataArr: Object
+		dataArr: Object,
+		lineType: String
 	},
 	data() {
 		return {

@@ -83,8 +83,15 @@
 							<view class="right" v-if="item.stockCount.totalDockerUse == 0" style="background: #ccc;" @tap.stop="notice"><text>加入书篮</text></view>
 						</view>
 						<!-- 书籍标签 -->
-						<!-- <image :src="$aliImage + 'book-logo-01.png'" mode="widthFix"
-						style="position: absolute;width: 78rpx;left: 30rpx;top: -8rpx;"></image> -->
+						<image :src="$aliImage + 'book-logo-01.png'" 
+						mode="widthFix" v-if="item.lineType == 1"
+						style="position: absolute;width: 78rpx;left: 30rpx;top: -8rpx;"></image>
+						<image :src="$aliImage + 'book-logo-02.png'"
+						mode="widthFix" v-if="item.lineType == 2"
+						style="position: absolute;width: 78rpx;left: 30rpx;top: -8rpx;"></image>
+						<image :src="$aliImage + 'book-logo-03.png'"
+						mode="widthFix" v-if="item.lineType == 3"
+						style="position: absolute;width: 78rpx;left: 30rpx;top: -8rpx;"></image>
 					</view>
 				</template>
 				<!-- 分类弹窗 -->
@@ -348,6 +355,7 @@ export default {
 			.then(res => {
 				uni.hideLoading();
 				this.productList = res.data.rows;
+				console.log(this.productList)
 				if (res.data.rows.length < this.pageSize || res.data.rows.length == 0) {
 					this.loadStatus = 'noMore';
 				}

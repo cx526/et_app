@@ -49,7 +49,7 @@
 			<et-titlenavigation title="热门推荐" img="../static/index/start.png" toUrl="baidu.com" @toMoreData="toHotListData"></et-titlenavigation>
 
 			<view class="hotcomcontent">
-				<et-hotcomcontent v-for="(item, i) in hotBookList" v-if="i <= 5" :key="i" :dataArr="item.goods_info" @tap="toBookDetail(item.goods_info.id)"></et-hotcomcontent>
+				<et-hotcomcontent v-for="(item, i) in hotBookList" v-if="i <= 5" :key="i":lineType="item.lineType"  :dataArr="item.goods_info" @tap="toBookDetail(item.goods_info.id)"></et-hotcomcontent>
 			</view>
 		</view>
 
@@ -192,7 +192,8 @@ export default {
 					img: 'https://et-pic-server.oss-cn-shenzhen.aliyuncs.com/app_img/index_new6.png'
 				}
 			],
-			guessBookList: []
+			guessBookList: [],
+			docker_mac: ''
 		};
 	},
 	onShow() {
@@ -202,8 +203,9 @@ export default {
 	onLoad() {
 		this.checkAuth();
 		this.getSwiperData();
-		this.getHotBook('init');
-		this.getGuessBook('init');
+		this.getUserInfo()
+		// this.getHotBook('init');
+		// this.getGuessBook('init');
 		//更新tab
 		let bookCount = bookListData.cartBookCount();
 		this.showAD();
@@ -214,6 +216,27 @@ export default {
 		this.getGuessBook('push');
 	},
 	methods: {
+		// 获取用户信息
+		getUserInfo() {
+			let userInfo = uni.getStorageSync("userInfo")
+			let mobile = userInfo.mobile
+			this.$api.getCustom({ 
+				filterItems: { mobile }
+			}).then(res => {
+				let dockerInfo = res.data[0].dockerInfo
+				// 如果有绑定学校
+				if(dockerInfo) {
+					userInfo.docker_mac = dockerInfo.docker_mac
+					uni.setStorageSync("userInfo", userInfo)
+				}
+				this.docker_mac = dockerInfo ? dockerInfo.docker_mac : ''
+				console.log(this.docker_mac)
+				// 获取推荐书籍
+				this.getHotBook('init');
+				// 获取猜你喜欢书籍
+				this.getGuessBook('init');
+			})
+		},
 		closePopup() {
 			uni.setStorageSync('et_popOver', true);
 			this.$refs.popup.close();
@@ -303,17 +326,29 @@ export default {
 			const index = e.detail.current;
 			this.swiperCurrent = index;
 		},
+		// 获取热门推荐书籍
 		getHotBook(type) {
-			this.$api.getRecommend().then(res => {
+			let param = {
+				filterItems: {
+					docker_mac: this.docker_mac
+				}
+			}
+			this.$api.getRecommend(param).then(res => {
 				this.hotBookList = res.data;
+				console.log(this.hotBookList)
 			});
 		},
 		getGuessBook(type) {
+			let param = {
+				filterItems: {
+					docker_mac: this.docker_mac
+				}
+			}
 			if (this.guessBookList.length >= 30) {
 				this.loadStatus = 'noMore'; //没有数据时显示‘没有更多’
 				return;
 			}
-			this.$api.getGuess().then(res => {
+			this.$api.getGuess(param).then(res => {
 				res.data.map(item => {
 					this.guessBookList.push(item);
 				});

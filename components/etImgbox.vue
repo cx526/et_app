@@ -33,9 +33,15 @@
 			<et-add-book-to-cart :peopleCount="bookInfo.peopleCount" :bookInfo="bookInfo" @insertBookToCart="insertBookToCart"></et-add-book-to-cart>
 		</view>
 		<!-- 区分书籍标识 -->
-		<!-- <image 
+		<image v-if="bookInfo.lineType == 1 || lineType == 1"
 		:src="$aliImage + 'book-logo-01.png'" mode="widthFix"
-		style="width: 78rpx;position: absolute;left: 24rpx;top: -8rpx;"></image> -->
+		style="width: 78rpx;position: absolute;left: 24rpx;top: -8rpx;"></image>
+		<image v-if="bookInfo.lineType == 2 || lineType == 2"
+		:src="$aliImage + 'book-logo-02.png'" mode="widthFix"
+		style="width: 78rpx;position: absolute;left: 24rpx;top: -8rpx;"></image>
+		<image v-if="bookInfo.lineType == 3 || lineType == 3"
+		:src="$aliImage + 'book-logo-03.png'" mode="widthFix"
+		style="width: 78rpx;position: absolute;left: 24rpx;top: -8rpx;"></image>
 	</view>
 </template>
 
@@ -60,7 +66,12 @@ export default {
 		peopleCount: String,
 		img: String,
 		tag: Array,
-		bookInfo: Object
+		bookInfo: Object,
+		// 从热门搜索更多传递过来书籍编辑
+		lineType: {
+			type: String,
+			default: ""
+		}
 	},
 	created() {
 		uni.getSystemInfo({

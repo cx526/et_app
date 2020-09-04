@@ -14,7 +14,7 @@
 					<!-- 搜索，热门推荐页面不做库存为0限制 -->
 					<view class="list-content-position" v-if="isHidden === 0">
 						<view  v-for="(item,i) in listData" :key="i">
-							<et-imgbox :bookInfo="item.goods_info" @insertBookToCart="insertBookToCart"></et-imgbox>
+							<et-imgbox :bookInfo="item.goods_info" @insertBookToCart="insertBookToCart" :lineType="item.lineType"></et-imgbox>
 						</view>						
 					</view>
 					
@@ -102,10 +102,12 @@ export default {
 			cartBookCount:0,
 			popupShow:false,
 			listStatus:1,	//列表状态0：没数据，1：加载中，其他：有数据
-			isHidden:1		//是否隐藏没库存数据，0不隐藏，1隐藏  默认隐藏，如果是搜索页面与热门推荐则不隐藏
+			isHidden:1,	//是否隐藏没库存数据，0不隐藏，1隐藏  默认隐藏，如果是搜索页面与热门推荐则不隐藏
+			docker_mac: '',
 		}
 	},
-	onLoad(option) {		
+	onLoad(option) {	
+		this.docker_mac = uni.getStorageSync("userInfo").docker_mac ? uni.getStorageSync("userInfo").docker_mac : ''
 		//初始化书篮书本数量
 		this.cartBookCount = insertBook.cartBookCount();
 		
@@ -158,13 +160,15 @@ export default {
 			this.loadStatus = 'noMore';
 		}else{
 			uni.showLoading();
+			
 			let param = {
         pageSize:this.pageSize,
 				currentPage: this.currentPage,
         filterItems: {
            kind: this.tabBarID,
            tagCount: 2,
-					 state: 1
+					 state: 1,
+					 docker_mac: this.docker_mac
          }
        };
 			this.$api.getGoodsInfo(param).then(res => {
@@ -201,7 +205,8 @@ export default {
 			currentPage: this.currentPage,
 	        filterItems: {
 	           kind: this.tabBarID,
-	           tagCount: 2
+	           tagCount: 2,
+						 docker_mac: this.docker_mac
 	         }
        	};
 		this.$api.getGoodsInfo(param).then(res => {
@@ -233,7 +238,8 @@ export default {
 		        filterItems: {
 		           kind: this.tabBarID,
 		           tagCount: 2,
-							 state: 1
+							 state: 1,
+							 docker_mac: this.docker_mac
 		         }
 	       	};
 			this.$api.getGoodsInfo(param).then(res => {
