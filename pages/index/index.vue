@@ -218,14 +218,14 @@ export default {
 	methods: {
 		// 获取用户信息
 		getUserInfo() {
-			let userInfo = uni.getStorageSync("userInfo")
+			let userInfo = uni.getStorageSync("userInfo") ? uni.getStorageSync("userInfo") : {}
 			let mobile = userInfo.mobile
 			this.$api.getCustom({ 
 				filterItems: { mobile }
 			}).then(res => {
 				let dockerInfo = res.data[0].dockerInfo
 				// 如果有绑定学校
-				if(dockerInfo) {
+				if(dockerInfo && JSON.stringify(dockerInfo) != "{}") {
 					userInfo.docker_mac = dockerInfo.docker_mac
 					uni.setStorageSync("userInfo", userInfo)
 				}
