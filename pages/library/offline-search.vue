@@ -98,7 +98,7 @@
 				let arr = uni.getStorageSync("offlineHistorySearch") ? 
 				uni.getStorageSync("offlineHistorySearch") : [];
 				let flag = true
-				// 提出重复
+				// 剔除重复
 				for(let i = 0; i < arr.length; i++) {
 					if(arr[i] === this.seachText) {
 						flag = false
@@ -111,11 +111,12 @@
 				let param = {
 					filterItems: {
 						search: this.seachText,
-						docker_mac: this.docker_mac
+						docker_mac: this.docker_mac,
+						show_status: "1"
 					}
 				}
 				// 网络请求
-				this.$api.getGoodsInfo(param).then(res => {
+				this.$api.offlineGetBooksList(param).then(res => {
 					this.productList = res.data.rows
 					uni.reLaunch({
 						url: './library?isSearch=true&productList='+JSON.stringify(this.productList)

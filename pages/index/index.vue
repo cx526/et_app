@@ -69,7 +69,7 @@
 		<view class="white-space" style="height: 20upx;"></view>
 
 		<!-- banner -->
-		<view class="banner" @tap="twoBannerUrl"><image :src="secondBanner" class="read-img" mode="widthFix"></image></view>
+		<view class="banner" @tap="twoBannerUrl"><image :src="$aliImage + 'index-kaixue.png'" class="read-img" mode="widthFix"></image></view>
 
 		<view class="white-space" style="height: 10upx;"></view>
 
@@ -282,9 +282,9 @@ export default {
 			});
 		},
 		twoBannerUrl() {
-			uni.navigateTo({
-				url: '/pages/promote/promotePictureBook'
-			});
+			uni.switchTab({
+				url: "/pages/library/library"
+			})
 		},
 		checkAuth() {
 			uni.getStorage({

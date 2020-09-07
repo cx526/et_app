@@ -1,8 +1,8 @@
 {
 
 	"pages": [
-		
-		
+
+
 		{
 			"path": "pages/index/index",
 			"style": {
@@ -433,8 +433,7 @@
 			"style": {
 				"navigationBarTitleText": "快速还书"
 			}
-		}
-		,{
+		}, {
 			"path": "pages/library/offline-bookdetail",
 			"style": {
 				"navigationBarTitleText": "商品详情"
@@ -450,20 +449,33 @@
 
 		// 	}
 		// },
-		 {
+		{
 			"path": "pages/library/offline-search",
 			"style": {
 				"navigationBarTitleText": "书籍搜索"
 			}
 		},
 		{
-		    "path" : "pages/index/free",
-		    "style" : {
-					"navigationBarTitleText": "专享免费借阅"
-				}
+			"path": "pages/index/free",
+			"style": {
+				"navigationBarTitleText": "专享免费借阅"
+			}
+		},
+		{
+			"path": "pages/index/banner-borrow",
+			"style": {
+				"navigationBarTitleText": "开学有礼"
+			}
+		},
+		{
+			"path": "pages/index/banner-flow",
+			"style": {
+				"navigationBarTitleText": "借阅流程"
+			}
 		}
-        
-    ],
+
+
+	],
 	"globalStyle": {
 		"navigationBarTextStyle": "black",
 		"navigationBarBackgroundColor": "#FFFFFF",

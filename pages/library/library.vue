@@ -57,41 +57,43 @@
 			<!-- 列表 -->
 			<view class="list" id="list">
 				<template v-if="productList && productList.length > 0">
-					<view class="item" v-for="(item, index) in productList" :key="index" @tap="goDetail(item.id)">
-						<image :src="item.forGoodsPic[0].url" mode="" class="show"></image>
-						<!-- 无库存显示totalDockerUse -->
-						<view class="none-stock" 
-						v-if="item.stockCount.totalDockerUse === 0">
-							<view class="none-notice">
-								<text>暂时</text>
-								<text>借完</text>
+					<view class="item" v-for="(item, index) in productList" :key="index" @tap="goDetail(item.id)" v-if="item.show_status == 1">
+						<view >
+							<image :src="item.forGoodsPic[0].url" mode="" class="show"></image>
+							<!-- 无库存显示totalDockerUse -->
+							<view class="none-stock" 
+							v-if="item.stockCount.totalDockerUse === 0">
+								<view class="none-notice">
+									<text>暂时</text>
+									<text>借完</text>
+								</view>
 							</view>
-						</view>
-						<view class="title">
-							<text>{{ item.title }}</text>
-						</view>
-						<view class="price"><text>借书币：{{ item.price }}</text></view>
-						<view class="label">
-							<text v-for="(label, labelIndex) in item.tagInfo" :key="labelIndex" v-if="labelIndex < 2">{{ label.tag_name }}</text>
-						</view>
-						<view class="recommend">
-							<view class="left">
-								<image :src="$aliImage + 'index_zan.png'" mode=""></image>
-								<text>{{ item.peopleCount }}人推荐</text>
+							<view class="title">
+								<text>{{ item.title }}</text>
 							</view>
-							<view class="right" v-if="item.stockCount.totalDockerUse" @tap.stop="push(item)"><text>加入书篮</text></view>
-							<view class="right" v-if="item.stockCount.totalDockerUse == 0" style="background: #ccc;" @tap.stop="notice"><text>加入书篮</text></view>
+							<view class="price"><text>借书币：{{ item.price }}</text></view>
+							<view class="label">
+								<text v-for="(label, labelIndex) in item.tagInfo" :key="labelIndex" v-if="labelIndex < 2">{{ label.tag_name }}</text>
+							</view>
+							<view class="recommend">
+								<view class="left">
+									<image :src="$aliImage + 'index_zan.png'" mode=""></image>
+									<text>{{ item.peopleCount }}人推荐</text>
+								</view>
+								<view class="right" v-if="item.stockCount.totalDockerUse" @tap.stop="push(item)"><text>加入书篮</text></view>
+								<view class="right" v-if="item.stockCount.totalDockerUse == 0" style="background: #ccc;" @tap.stop="notice"><text>加入书篮</text></view>
+							</view>
+							<!-- 书籍标签 -->
+							<image :src="$aliImage + 'book-logo-01.png'" 
+							mode="widthFix" v-if="item.lineType == 1"
+							style="position: absolute;width: 78rpx;left: 30rpx;top: -8rpx;"></image>
+							<image :src="$aliImage + 'book-logo-02.png'"
+							mode="widthFix" v-if="item.lineType == 2"
+							style="position: absolute;width: 78rpx;left: 30rpx;top: -8rpx;"></image>
+							<image :src="$aliImage + 'book-logo-03.png'"
+							mode="widthFix" v-if="item.lineType == 3"
+							style="position: absolute;width: 78rpx;left: 30rpx;top: -8rpx;"></image>
 						</view>
-						<!-- 书籍标签 -->
-						<image :src="$aliImage + 'book-logo-01.png'" 
-						mode="widthFix" v-if="item.lineType == 1"
-						style="position: absolute;width: 78rpx;left: 30rpx;top: -8rpx;"></image>
-						<image :src="$aliImage + 'book-logo-02.png'"
-						mode="widthFix" v-if="item.lineType == 2"
-						style="position: absolute;width: 78rpx;left: 30rpx;top: -8rpx;"></image>
-						<image :src="$aliImage + 'book-logo-03.png'"
-						mode="widthFix" v-if="item.lineType == 3"
-						style="position: absolute;width: 78rpx;left: 30rpx;top: -8rpx;"></image>
 					</view>
 				</template>
 				<!-- 分类弹窗 -->
