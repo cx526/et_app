@@ -39,7 +39,7 @@
 		<view class="white-space" style="height: 10upx;"></view>
 
 		<!-- banner -->
-		<view class="banner" @tap="oneBannerUrl"><image :src="oneBanner" class="banner-img" mode="widthFix"></image></view>
+		<view class="banner" @tap="oneBannerUrl"><image :src="$aliImage + 'index-kaixue.png'" class="banner-img" mode="widthFix"></image></view>
 
 		<view class="white-space" style="height: 20upx;"></view>
 
@@ -49,7 +49,7 @@
 			<et-titlenavigation title="热门推荐" img="../static/index/start.png" toUrl="baidu.com" @toMoreData="toHotListData"></et-titlenavigation>
 
 			<view class="hotcomcontent">
-				<et-hotcomcontent v-for="(item, i) in hotBookList" v-if="i <= 5" :key="i":lineType="item.lineType"  :dataArr="item.goods_info" @tap="toBookDetail(item.goods_info.id)"></et-hotcomcontent>
+				<et-hotcomcontent v-for="(item, index) in hotBookList" v-if="index <= 5" :key="index":lineType="item.lineType"  :dataArr="item.goods_info" @tap="toBookDetail(item.goods_info.id)"></et-hotcomcontent>
 			</view>
 		</view>
 
@@ -69,7 +69,7 @@
 		<view class="white-space" style="height: 20upx;"></view>
 
 		<!-- banner -->
-		<view class="banner" @tap="twoBannerUrl"><image :src="$aliImage + 'index-kaixue.png'" class="read-img" mode="widthFix"></image></view>
+		<view class="banner" @tap="twoBannerUrl"><image :src="secondBanner" class="read-img" mode="widthFix"></image></view>
 
 		<view class="white-space" style="height: 10upx;"></view>
 
@@ -275,15 +275,13 @@ export default {
 			});
 		},
 		oneBannerUrl() {
-			uni.navigateTo({
-				// url:'/pages/promote/pictureToHome',
-				// url:'/pages/promote/promoteMonthGift',
-				url: '/pages/promote/promoteThreeAddOne'
-			});
+			uni.switchTab({
+				url: '/pages/library/library'
+			})
 		},
 		twoBannerUrl() {
-			uni.switchTab({
-				url: "/pages/library/library"
+			uni.navigateTo({
+				url: "/pages/promote/promotePictureBook"
 			})
 		},
 		checkAuth() {

@@ -54,12 +54,14 @@ export default {
 				uni.showModal({ title: this.refundInfo.msg })
 			}
 		},
+		// 目前退还押金状态
 		getRefundInfo() {
 			let param = { custom_id: this.userInfoAll.id }
 			this.$api.getRefund(param).then(res => {
 				this.refundInfo = res.data
 			})
 		},
+		// 获取用户的押金
 		getCustomerInfo(){
 			this.$api.getCustom({ filterItems: { mobile: this.userInfo.mobile } }).then(res=>{
 				this.userInfoAll = res.data[0];

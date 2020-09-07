@@ -26,6 +26,7 @@
 	image {
 		display: block;
 		position: relative;
+		width: 100%;
 	}
 	button {
 		position: absolute;
@@ -37,6 +38,7 @@
 		height: 100rpx;
 		transform: translateX(-50%);
 		border: none;
+		
 	}
 	button:after {
 		border: none;
