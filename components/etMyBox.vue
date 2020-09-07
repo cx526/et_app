@@ -37,8 +37,14 @@ export default {
 	props: {
 		myMenuInfo:Object
 	},
+	data() {
+		return {
+			custom_type: ''
+		}
+	},
 	created(){
 		console.log(this.myMenuInfo);
+		this.getUserInfo()
 	},
 	computed: {
 		userInfo() {
@@ -46,6 +52,16 @@ export default {
 		}
 	},
 	methods: {
+		// 获取用户信息
+		getUserInfo() {
+			let mobile = uni.getStorageSync("userInfo").mobile
+			this.$api.getCustom({
+				filterItems: { mobile }
+			}).then(res => {
+				this.custom_type = res.data[0].custom_type
+				console.log(this.custom_type)
+			})
+		},
 		menuUrl(toUrl){
 			let guestStatus = checkLogin.checkLogin();
 			if(guestStatus){
@@ -56,7 +72,6 @@ export default {
 			})
 		},
 		btnClick(toUrl) {
-			console.log(toUrl)
 			if (this.userInfo.name === 'guest') {
 				//游客 发出提示
 				uni.showModal({
@@ -79,7 +94,17 @@ export default {
 					
 					return;
 				}
-				
+				if(toUrl === '/pages/library/tied-card') {
+					// 如果是教师身份默认不给进修改信息页面
+					if(this.custom_type == 0 && this.custom_type != '') {
+						uni.showToast({
+							title: "您的身份是老师，请前往老师端修改信息",
+							icon: 'none',
+							duration: 2000
+						})
+						return
+					}
+				}
 				uni.navigateTo({url: toUrl});
 				if (toUrl === '/pages/promote/promoteSummeryBook'){
 					uni.switchTab({

@@ -272,6 +272,7 @@
 					filterItems: { mobile }
 				}).then(res => {
 					console.log(res)
+					
 					// 初始信息
 					this.schoolName = res.data[0].schoolInfo ? res.data[0].schoolInfo.name : ''
 					this.gradeName = res.data[0].gradeInfo ? res.data[0].gradeInfo.name : ''
@@ -288,7 +289,10 @@
 					this.change_class_status = res.data[0].change_class_status
 					this.teacherInfo = res.data[0].teacherInfo
 					// 确认信息是否给修改
-					if(this.change_class_status == 1) {
+					if(this.change_class_status == 1  ) {
+						console.log('teacherInfo')
+						this.isDisabled = false
+					}else if(JSON.stringify(res.data[0].teacherInfo) == "{}"){
 						this.isDisabled = false
 					}else {
 						this.isDisabled = true
@@ -302,10 +306,10 @@
 					console.log(res.data)
 					this.schoolArray = res.data,
 					// 初始化默认数据
-					this.schoolId = this.schoolArray[this.schoolIndex].id
-					this.gradeArray = this.schoolArray[this.schoolIndex].classInfo
-					this.gradeId = this.schoolArray[this.schoolIndex].classInfo[this.gradeIndex].id
-					this.class = this.classArray[this.classIndex]
+					// this.schoolId = this.schoolArray[this.schoolIndex].id
+					// this.gradeArray = this.schoolArray[this.schoolIndex].classInfo
+					// this.gradeId = this.schoolArray[this.schoolIndex].classInfo[this.gradeIndex].id
+					// this.class = this.classArray[this.classIndex]
 					// this.schoolName = this.schoolArray[this.schoolIndex].name
 					// this.gradeName = this.gradeArray[this.gradeIndex].name
 					// this.className = this.classArray[this.classIndex]
@@ -463,6 +467,16 @@
 					if(this.teacherList && this.teacherList.length > 0) {
 						// 显示选择老师弹窗
 						this.$refs.teacherChoose.open()
+					}else {
+						uni.showToast({
+							title: "绑卡成功!",
+							duration: 2000,
+							success: () => {
+								uni.switchTab({
+									url: '/pages/library/library'
+								})
+							}
+						})
 					}
 				})
 			},
