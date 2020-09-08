@@ -1,6 +1,6 @@
 <template>
 	<view style="position: relative;">
-		<image :src="$aliImage + 'school-broow.png'" mode="widthFix"  ></image>
+		<image :src="$aliImage + 'school-borrow.png'" mode="widthFix"  ></image>
 		<button  @tap="go"></button>
 	</view>
 </template>

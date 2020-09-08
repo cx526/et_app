@@ -30,8 +30,8 @@
 					<view class="number">
 						<text>{{ deposit }}</text>
 					</view>
-					<view class="btn" @tap="goDeposit">
-						<text>立即提现</text>
+					<view class="btn" @tap="goDeposit" v-if="deposit > 0">
+						<text>{{ refundInfo.status_text }}</text>
 					</view>
 				</view>
 			</view>
@@ -92,12 +92,18 @@
 					contentrefresh: '加载中',
 					contentnomore: '暂无更多数据'
 				},
-				isLoadingMore: true
+				isLoadingMore: true,
+				refundInfo: "",//储存押金状态
+				from: "",//区别页面从哪里跳转过来
 			}
 		},
 		components: {
 			uniNavBar,
 			uniLoadMore
+		},
+		onLoad(options) {
+			console.log(options);
+			this.from = options.from
 		},
 		onShow() {
 			this.getUserInfo()
@@ -124,6 +130,8 @@
 					//储存用户的押金
 					this.deposit = (+this.userInfo.deposit).toFixed(2) ? (+this.userInfo.deposit).toFixed(2) : 0.00
 					this.id = this.userInfo.id
+					// 目前退还押金状态
+					this.getRefundInfo()
 					// 获取充值记录
 					this.getPayRecord()
 				})
@@ -149,6 +157,14 @@
 						this.isLoadingMore = false;
 						this.loadStatus = 'noMore'
 					}
+				})
+			},
+			// 目前退还押金状态
+			getRefundInfo() {
+				let param = { custom_id: this.userInfo.id }
+				this.$api.getRefund(param).then(res => {
+					console.log(res.data)
+					this.refundInfo = res.data
 				})
 			},
 			// 格式化时间
@@ -178,17 +194,40 @@
 					url: './pay'
 				})
 			},
-			// 跳转到退押金页面
+			// 点击退还押金
 			goDeposit() {
-				uni.navigateTo({
-					url: '/pages/my/myDeposit'
-				})
+				// 1 待退还 2 审批中 3已完成
+				if (this.refundInfo.status === 1) {
+					let param = { custom_id: this.userInfo.id, deposit: this.userInfo.deposit }
+					this.$api.postRefund(param).then(res => {
+						this.refundInfo = {
+							canRefund: 1,
+							status: 2,
+							// status_text: '审批中',
+							// msg: '退还押金审批中，请您耐心等候！'
+						}
+						this.getRefundInfo()
+						uni.showToast({ title: res.data.msg })
+					})
+				} else {
+					uni.showModal({ title: this.refundInfo.msg })
+				}
 			},
 			// 返回借阅页面
 			clickLeft() {
-				uni.reLaunch({
-					url: '/pages/cart/cart?flag=true'
-				})
+				// 从我的页面押金进入
+				if(this.from == "mine") {
+					uni.navigateBack({
+						delta: 1
+					})
+				}
+				// 从押金不足弹窗进入
+				else {
+					uni.reLaunch({
+						url: '/pages/cart/cart?flag=true'
+					})
+				}
+				
 			},
 		}
 	}

@@ -2,24 +2,45 @@
 	<view class="content">
 		<!-- 顶部底图 -->
 		<view class="top-position">
-			<view class="userInfo-position">
-				<view class="user-left-position">
-					<view class="userInfo-content">
-						<text style="color: #FFFFFF;font-size: 40upx;">{{userInfo.name === 'guest' ? '五车书游客, 您好！' : userInfo.name}}</text>
+			<image :src="$aliImage + 'userInfo-bg.png'" 
+			mode="widthFix"
+			class="bg"></image>
+			<!-- context -->
+			<view class="context">
+				<view class="userInfo-position">
+					<!-- left -->
+					<view class="user-left-position">
+						<!-- 头像 -->
+						<view class="user-right-position">
+							<view v-if="userInfo.name === 'guest'" @tap="goAuth">
+								<image src="https://et-pic-server.oss-cn-shenzhen.aliyuncs.com/app_img/avatar.png"></image>
+							</view>
+							<view v-else @tap="clearSessionAction">
+								<image :src="userInfo.avatar"></image>
+							</view>
+						</view>
+						<!-- 昵称 -->
+						<view class="userInfo-content">
+							<text style="font-size: 42rpx;margin-bottom: 4rpx;">{{userInfo.name === 'guest' ? '五车书游客, 您好！' : userInfo.name}}</text>
+							<text style="font-size: 28rpx;">您当前尚未开通会员服务</text>
+						</view>
 					</view>
-					<!-- <view class="bindCard" @tap="goTiedCard">
-						绑卡
-					</view> -->
+					<!-- right -->
+					<view class="user-right">
+						<image :src="$aliImage + 'menber-btn.png'" mode=""></image>
+					</view>
+					
 				</view>
-				<view class="user-right-position">
-					<view v-if="userInfo.name === 'guest'" @tap="goAuth">
-						<image src="https://et-pic-server.oss-cn-shenzhen.aliyuncs.com/app_img/avatar.png" style="border-radius: 50%; width: 120upx; height: 120upx;"></image>
-					</view>
-					<view v-else @tap="clearSessionAction">
-						<image :src="userInfo.avatar" style="border-radius: 50%; width: 120upx; height: 120upx;"></image>
-					</view>
+				<!-- 剩余借阅次数 -->
+				<view class="borrow-count">
+					<image :src="$aliImage + 'menber-icon-01.png'" 
+					mode="widthFix"
+					style="width: 50rpx; height: 44rpx;"></image>
+					<text>本月剩余借阅次数：0次</text>
 				</view>
 			</view>
+			
+			
 		</view>
 		
 		<view class="content-position">
@@ -215,7 +236,8 @@ export default {
 					{
 						'imgSrc' : this.$aliImage + 'my2_1.png',
 						'title'	: '押金',
-						'toUrl'	: '/pages/my/myDeposit',
+						'toUrl'	: '/pages/library/virtual?from=mine',
+						// 'toUrl'	: '/pages/my/myDeposit',
 						'buttomContent' : ''
 					},
 					{
@@ -584,6 +606,8 @@ export default {
 	box-sizing: border-box;
 	width: 100%;
 	padding-bottom: 24rpx;
+	display: flex;
+	align-items: center;
 }
 .bottom-banner image {
 	width: 100%;
@@ -596,11 +620,15 @@ export default {
 	background-color: #FFFFFF;
 	position: relative;
 }
+/* 个人信息 */
 .top-position {
-	background-image: linear-gradient(to bottom, #7ED1E7 , #8CD9D8);
-	border-bottom-right-radius: 30upx;
-	border-bottom-left-radius: 30upx;
-	height: 350upx;
+	height: 472upx;
+	width: 100%;
+	padding: relative;
+}
+.top-position .bg {
+	height: 472rpx;
+	display: block;
 	width: 100%;
 }
 .content-position {
@@ -609,53 +637,64 @@ export default {
 	flex-direction: column;
 	justify-content: center;
 	align-items: center;
-	margin-top: -150rpx;
+	/* margin-top: -150rpx; */
+}
+.top-position .context {
+	box-sizing: border-box;
+	padding: 0 84rpx;
+	width: 100%;
+	position: absolute;
+	left: 50%;
+	top: 188rpx;
+	transform: translateX(-50%);
+	z-index: 12;
 }
 .userInfo-position {
-	width: 80%;
+	box-sizing: border-box;
 	display: flex;
 	flex-direction: row;
 	justify-content: space-between;
 	align-items: center;
-	padding: 40upx 0;
+	box-sizing: border-box;
 	margin: 0 auto;
+	
 }
 .user-left-position {
+	flex: 1;
+	box-sizing: border-box;
 	display: flex;
-	flex-direction: column;
-	justify-content: flex-start;
-	align-items: flex-start;
+	align-items: center;
+	box-sizing: border-box;
+}
+.user-right-position image {
+	width: 80rpx;
+	height: 80rpx;
+	flex-shrink: 0;
+	border-radius: 50%;
+	margin-right: 12rpx;
 }
 .userInfo-content {
-/* 	display: flex;
-	flex-direction: column; */
-	/* display: flex;
-	flex-direction: row;
-	justify-content: center;
-	align-items: center; */
-}
-.user-left-position .bindCard {
-	color: #fff;
-	font-size: 28rpx;
-	background: rgba(255,255,255, 0.3);
-	box-sizing: border-box;
-	padding: 4rpx 20rpx;
-	border-radius: 24rpx;
-	display: inline-block;
-	margin-top: 14rpx;
-}
-.userInfo-member-border {
-	/* background-color: #2AAEC4; */
-	border-radius: 30upx;
-	color: #FFFFFF;
-	font-size: 20UPX;
-	padding: 10upx 20upx;
-}
-.vip-button-position {
-	width: 90%;
 	display: flex;
-	justify-content: center;
-	align-items: center;
+	flex-direction: column;
+	color: #fff;
+}
+
+.user-right {
+	box-sizing: border-box;
+	flex-shrink: 0;
+}
+.user-right image {
+	width: 167rpx;
+	height: 54rpx;
+}
+.borrow-count {
+	color: #fff;
+	font-size: 32rpx;
+	margin-top: 60rpx;
+}
+.borrow-count image {
+	width: 50rpx;
+	height: 44rpx;
 }
 .my-box-position {
 	width: 94%;

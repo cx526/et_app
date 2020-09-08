@@ -32,7 +32,7 @@
 				:minHeight="minHeight"
 				:popUpWidth="popUpWidth"
 				@countChange="countChange"
-				@pageHide="pageHide"></offline-cart-list>
+				></offline-cart-list>
 			</view>
 		</view>
 	</view>

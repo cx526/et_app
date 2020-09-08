@@ -473,9 +473,7 @@
 				"navigationBarTitleText": "借阅流程"
 			}
 		}
-
-
-	],
+    ],
 	"globalStyle": {
 		"navigationBarTextStyle": "black",
 		"navigationBarBackgroundColor": "#FFFFFF",

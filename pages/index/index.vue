@@ -39,7 +39,7 @@
 		<view class="white-space" style="height: 10upx;"></view>
 
 		<!-- banner -->
-		<view class="banner" @tap="oneBannerUrl"><image :src="$aliImage + 'index-kaixue.png'" class="banner-img" mode="widthFix"></image></view>
+		<view class="banner" @tap="oneBannerUrl"><image :src="$aliImage + 'index-kaixue-01.png'" class="banner-img" mode="widthFix"></image></view>
 
 		<view class="white-space" style="height: 20upx;"></view>
 

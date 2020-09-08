@@ -165,6 +165,7 @@ export default {
 	},
 	created() {
 		this.booksNumber = this.count; //判断书篮是否存在
+		this.bookList = uni.getStorageSync('offlineCartList')
 		// 获取用户的个人账号信息
 		this.getUserInfo();
 		
@@ -178,19 +179,14 @@ export default {
 		// 获取用户的个人信息
 		getUserInfo() {
 			// 通知父组件隐藏页面
-			this.$emit('pageHide', false) //解决接口返回慢页面闪烁问题
 			let mobile = uni.getStorageSync("userInfo").mobile;
-			uni.showLoading({
-				title: '数据加载中',
-				mask: true
-			})
-			this.$api.getCustom({ filterItems: { mobile } })
+			this.$api.offlineUserDockerInfo({ mobile } )
 			.then(res => {
-				uni.hideLoading()
-				this.userInfo = res.data[0];
+				console.log('getUserInfo')
+				console.log(res.data)
+				this.userInfo = res.data;
 				// 如果不是合作幼儿园
-				if(!this.userInfo.dockerInfo) {
-					
+				if(!this.userInfo.dockerInfo) {	
 					uni.showToast({
 						title: '所属幼儿园暂时不是合作学校',
 						icon: 'none',
@@ -206,8 +202,6 @@ export default {
 					})
 					return
 				}
-				// 通知父组件显示页面
-				this.$emit('pageHide', true)
 				//储存用户积分;
 				this.integrate = this.userInfo.coin 
 				//储存用户的五车贝;
@@ -572,7 +566,6 @@ export default {
 						icon: 'none',
 						duration: 1000,
 						success: () => {
-							console.log('success')
 							// 跳转到取书页
 							uni.redirectTo({
 								url: '/pages/library/take-books?status=0&from=placeOrder'
