@@ -68,7 +68,7 @@
 		onShow() {
 			this.historySearch = uni.getStorageSync("offlineHistorySearch");
 			// 获取热门搜索
-			this.getHotSearch()
+			// this.getHotSearch()
 		},
 		methods: {
 			// 获取个人账户信息
@@ -171,11 +171,11 @@
 				})
 			},
 			// 获取热门搜索记录
-			getHotSearch() {
-				this.$api.getRecommend().then(res => {
-					this.hotSearch = res.data
-				})
-			}
+			// getHotSearch() {
+			// 	this.$api.getRecommend().then(res => {
+			// 		this.hotSearch = res.data
+			// 	})
+			// }
 			
 		}
 	}

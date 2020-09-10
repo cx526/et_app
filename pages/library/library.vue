@@ -224,12 +224,7 @@ export default {
 	onShow() {
 		// 每次进来都需要检测卡号和docket_mac
 		this.getCheckUserInfo()
-		this.len = uni.getStorageSync('offlineCartList').length;
-		
-		
-		
-		
-		
+		this.len = uni.getStorageSync('offlineCartList').length
 	},
 	onReady() {
 		// 设置分类弹窗的高度
@@ -295,30 +290,41 @@ export default {
 		// 检测用户的卡号和幼儿园信息
 		getCheckUserInfo() {
 			let userInfoStorage = uni.getStorageSync("userInfo")
-			if(!userInfoStorage.card_no ||
-			userInfoStorage.card_no.replace(/\s*/g , "") == '') {
-				// 显示绑卡弹窗
-				this.$refs.powerPopUp.open()
+			if(userInfoStorage.card_no && userInfoStorage.docker_mac) {
 				return
 			}
-			// 如果没有绑定幼儿园
-			else if(!userInfoStorage.docker_mac ||
-			userInfoStorage.docker_mac.replace(/\s*/g , "") == '') {
-				this.isLogin = false
-				uni.showToast({
-					title: '此幼儿园暂时不是合作用户',
-					icon: 'none',
-					duration:1500,
-					success: res => {
-						setTimeout(() => {
-							uni.switchTab({
-								url: '/pages/index/index'
-							})
-						}, 2000)			
-					}
-				})
-				return
-			}
+			let mobile = userInfoStorage.mobile;
+			this.$api.offlineUserDockerInfo({mobile}).then(res => {
+				let data = res.data
+				userInfoStorage.card_no = data.card_no ?data.card_no : ''
+				userInfoStorage.docker_mac = data.docker_mac ? data.docker_mac : ''
+				uni.setStorageSync('userInfo', userInfoStorage)
+				if(!data.card_no ||
+				data.card_no.replace(/\s*/g , "") == '') {
+					// 显示绑卡弹窗
+					this.$refs.powerPopUp.open()
+				}
+				else if(!data.docker_mac ||
+				data.docker_mac.replace(/\s*/g , "") == '') {
+					this.isLogin = false
+					uni.showToast({
+						title: '此幼儿园暂时不是合作用户',
+						icon: 'none',
+						duration:1500,
+						success: res => {
+							setTimeout(() => {
+								uni.switchTab({
+									url: '/pages/index/index'
+								})
+							}, 2000)			
+						}
+					})
+				}else {
+					this.$refs.powerPopUp.close()
+				}
+			})
+			
+			
 		},
 		// 获取用户个人账户信息
 		getUserInfo() {
