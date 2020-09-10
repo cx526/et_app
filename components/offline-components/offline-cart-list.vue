@@ -552,11 +552,16 @@ export default {
 		},
 		// 下单
 		placeOrder(goods_id, type) {
+			uni.showLoading({
+				title: '数据加载中',
+				mask: true
+			})
 			this.$api.offlinePlaceOrder({
 				goods_id,
 				type,
 				customer_id: this.userInfo.id,
 			}).then(res => {
+				uni.hideLoading()
 				// 下单成功
 				if(res.data.status == 'ok') {
 					// 剔除书篮已下单过得书籍
