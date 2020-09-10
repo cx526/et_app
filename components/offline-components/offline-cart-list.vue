@@ -564,6 +564,7 @@ export default {
 				uni.hideLoading()
 				// 下单成功
 				if(res.data.status == 'ok') {
+					uni.hideLoading()
 					// 剔除书篮已下单过得书籍
 					this.handlePlaceBooks();
 					uni.showToast({

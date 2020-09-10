@@ -72,6 +72,7 @@ export default {
 			})
 		},
 		btnClick(toUrl) {
+			console.log(toUrl)
 			if (this.userInfo.name === 'guest') {
 				//游客 发出提示
 				uni.showModal({
@@ -93,6 +94,14 @@ export default {
 					})
 					
 					return;
+				}
+				if(toUrl === '/pages/my/myMember') {
+					uni.showToast({
+						title: '敬请期待',
+						duration: 2000,
+						icon: 'none'
+					})
+					return
 				}
 				if(toUrl === '/pages/library/tied-card') {
 					// 如果是教师身份默认不给进修改信息页面

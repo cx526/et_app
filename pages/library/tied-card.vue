@@ -410,7 +410,12 @@
 					})
 					return
 				}
+				uni.showLoading({
+					title: '提交资料中',
+					mask: true
+				})
 				this.$api.addStudentInfo(param).then(res => {
+					uni.hideLoading()
 					console.log(res)
 					
 					if(res.data.status == 'ok') {
@@ -454,6 +459,10 @@
 			},
 			// 查询老师
 			checkTeacherInfo() {
+				uni.showLoading({
+					title: '数据加载中',
+					icon: 'none'
+				})
 				let param = {
 					filterItems:{
 					  school_id: String(this.schoolId),
@@ -462,6 +471,7 @@
 					}
 				}
 				this.$api.checkTeacherInfo(param).then(res => {
+					uni.hideLoading()
 					this.teacherList = res.data.rows;
 					console.log(this.teacherList)
 					if(this.teacherList && this.teacherList.length > 0) {
@@ -482,10 +492,15 @@
 			},
 			// 绑定老师
 			bindTeacher() {
+				uni.showLoading({
+					title: '提交中',
+					mask: true
+				})
 				this.$api.bindTeacher({
 					custom_id:  this.custom_id,
 					teacher_id: this.teacher_id
 				}).then(res => {
+					uni.hideLoading()
 					console.log(res)
 					if(res.data.status == 'ok') {
 						this.$refs.teacherChoose.close()
