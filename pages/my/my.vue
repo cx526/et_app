@@ -1,10 +1,15 @@
 <template>
 	<view class="content">
-		<!-- 顶部底图 -->
+		<!-- 顶部 -->
 		<view class="top-position">
+			<!-- 底图 -->
 			<image :src="$aliImage + 'userInfo-bg.png'" 
 			mode="widthFix"
 			class="bg"></image>
+			<!-- 卡号 -->
+			<view class="card-number" v-if="card_no">
+					<text>{{ card_no }}</text>
+			</view>
 			<!-- context -->
 			<view class="context">
 				<view class="userInfo-position">
@@ -21,23 +26,35 @@
 						</view>
 						<!-- 昵称 -->
 						<view class="userInfo-content">
-							<text style="font-size: 42rpx;margin-bottom: 4rpx;">{{userInfo.name === 'guest' ? '五车书游客, 您好！' : userInfo.name}}</text>
-							<text style="font-size: 28rpx;">您当前尚未开通会员服务</text>
+							<view class="userInfo-name" >
+								<text>
+								{{userInfo.name === 'guest' ? '五车书游客, 您好！' : userInfo.name}}
+								</text>
+								<image mode="widthFix"  v-if="false"
+								:src="$aliImage + 'member-icon-03.png'"></image>
+							</view>
+							<!-- <text style="font-size: 20rpx;">
+								您当前尚未开通会员服务</text> -->
+							<text style="font-size: 20rpx;" 
+							v-if="false">会员到期日：2020.12.12</text>
 						</view>
 					</view>
 					<!-- right -->
-					<view class="user-right">
-						<image :src="$aliImage + 'menber-btn.png'" mode=""></image>
-					</view>
+					<!-- <view class="user-right" @tap="goMember">
+						<image :src="$aliImage + 'menber-btn.png'"></image>
+						<image :src="$aliImage + 'member-icon-02.png'" 
+						v-if="false"></image>
+					</view> -->
 					
 				</view>
 				<!-- 剩余借阅次数 -->
-				<view class="borrow-count">
+				<!-- <view class="borrow-count">
 					<image :src="$aliImage + 'menber-icon-01.png'" 
-					mode="widthFix"
-					style="width: 50rpx; height: 44rpx;"></image>
-					<text>本月剩余借阅次数：0次</text>
-				</view>
+					mode="widthFix"></image>
+					<text style="font-weight: bold;">本月剩余借阅次数：</text>
+					<text>0次</text>
+					<text v-if="false">畅读年卡专享无限次借阅</text>
+				</view> -->
 			</view>
 			
 			
@@ -170,7 +187,8 @@ export default {
 		return {
 			$aliImage: this.$aliImage,//静态图片域名
 			noticeText: '',
-			failLen: 0,
+			failLen: 0, //逾期单数
+			card_no: '',//卡号
 			updateOrderInfo: false,
 			test: '123456',
 			myOrderInfo: {
@@ -235,7 +253,7 @@ export default {
 				'allMenu': [
 					{
 						'imgSrc' : this.$aliImage + 'my2_1.png',
-						'title'	: '押金',
+						'title'	: '钱包',
 						'toUrl'	: '/pages/library/virtual?from=mine',
 						// 'toUrl'	: '/pages/my/myDeposit',
 						'buttomContent' : ''
@@ -253,9 +271,9 @@ export default {
 						'buttomContent' : ''
 					},
 					{
-						'imgSrc' : this.$aliImage + 'my2_4.png',
-						'title'	: '活动',
-						'toUrl' : '/pages/promote/promoteSummeryBook',
+						'imgSrc' : this.$aliImage + 'my_rule.png',
+						'title'	: '规则',
+						'toUrl' : '/pages/my/myRule',
 						// 'count'	: '2'
 					},
 					{
@@ -383,6 +401,7 @@ export default {
 			let mobile = uni.getStorageSync("userInfo").mobile;
 			this.$api.getCustom({ filterItems: { mobile } })
 			.then(res => {
+				this.card_no = res.data[0].card_no
 				// 如果不是合作用户不发送请求
 				res.data[0].dockerInfo &&
 				this.getOrderFail(res.data[0].id,res.data[0].dockerInfo.docker_mac)
@@ -403,12 +422,13 @@ export default {
 					this.noticeText = `您有${this.failLen}笔订单将逾期，请移步至订单页及时处理`
 				})
 		},
-		// 跳转到绑卡页面
-		goTiedCard() {
-			// uni.navigateTo({
-			// 	url: '/pages/library/tied-card'
-			// })
+		// 跳转到会员页面
+		goMember() {
+			uni.navigateTo({
+				url: '/pages/member/member'
+			})
 		},
+		// 重新登录
 		clearSessionAction() {
 			uni.showActionSheet({
 			    itemList: ['重新登录'],
@@ -631,17 +651,23 @@ export default {
 	display: block;
 	width: 100%;
 }
+.top-position .card-number {
+	position: absolute;
+	font-size: 24rpx;
+	color: #fff;
+	left: 336rpx;
+	top: 104rpx;
+}
 .content-position {
 	z-index: 99;
 	display: flex;
 	flex-direction: column;
 	justify-content: center;
 	align-items: center;
-	/* margin-top: -150rpx; */
 }
 .top-position .context {
 	box-sizing: border-box;
-	padding: 0 84rpx;
+	padding: 0 70rpx 0 75rpx;
 	width: 100%;
 	position: absolute;
 	left: 50%;
@@ -657,7 +683,6 @@ export default {
 	align-items: center;
 	box-sizing: border-box;
 	margin: 0 auto;
-	
 }
 .user-left-position {
 	flex: 1;
@@ -678,7 +703,18 @@ export default {
 	flex-direction: column;
 	color: #fff;
 }
-
+.userInfo-name {
+	display: flex;
+	align-items: center;
+}
+.userInfo-name text {
+	font-size: 30rpx;
+	margin-bottom: 4rpx;
+}
+.userInfo-name image {
+	width: 90rpx; 
+	height: 28rpx;
+}
 .user-right {
 	box-sizing: border-box;
 	flex-shrink: 0;
@@ -689,8 +725,10 @@ export default {
 }
 .borrow-count {
 	color: #fff;
-	font-size: 32rpx;
+	font-size: 24rpx;
 	margin-top: 60rpx;
+	display: flex;
+	align-items: center;
 }
 .borrow-count image {
 	width: 50rpx;

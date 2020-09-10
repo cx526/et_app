@@ -1,7 +1,7 @@
 {
 
 	"pages": [
-
+		
 
 		{
 			"path": "pages/index/index",
@@ -14,15 +14,15 @@
 		},
 
 
-		{
-			"path": "pages/promote/promoteSummeryBook",
-			"style": {
-				"navigationBarTitleText": "暑假上新",
-				"app-plus": {
-					"titleNView": false
-				}
-			}
-		},
+		// {
+		// 	"path": "pages/promote/promoteSummeryBook",
+		// 	"style": {
+		// 		"navigationBarTitleText": "暑假上新",
+		// 		"app-plus": {
+		// 			"titleNView": false
+		// 		}
+		// 	}
+		// },
 		{
 			"path": "pages/my/myReadList",
 			"style": {
@@ -191,15 +191,15 @@
 			}
 		},
 
-		{
-			"path": "pages/promote/pictureMonth",
-			"style": {
-				"navigationBarTitleText": "暑假上新",
-				"app-plus": {
-					"titleNView": false
-				}
-			}
-		},
+		// {
+		// 	"path": "pages/promote/pictureMonth",
+		// 	"style": {
+		// 		"navigationBarTitleText": "暑假上新",
+		// 		"app-plus": {
+		// 			"titleNView": false
+		// 		}
+		// 	}
+		// },
 
 		{
 			"path": "pages/promote/picturePainting",
@@ -472,7 +472,25 @@
 			"style": {
 				"navigationBarTitleText": "借阅流程"
 			}
-		}
+		},
+		// {
+		// 	"path": "pages/member/member",
+		// 	"style": {
+		// 		"navigationBarTitleText": "会员购买"
+		// 	}
+		// },
+			{
+				"path" : "pages/my/myRule",
+				"style" : {
+					"navigationBarTitleText": "借阅规则"
+				}
+			}
+        ,{
+            "path" : "pages/index/article",
+            "style" : {
+							"navigationBarTitleText": "五车书绘本借阅"
+						}
+        }
     ],
 	"globalStyle": {
 		"navigationBarTextStyle": "black",
@@ -490,12 +508,12 @@
 				"selectedIconPath": "static/index-active.png",
 				"text": "首页"
 			},
-			{
-				"pagePath": "pages/promote/promoteSummeryBook",
-				"iconPath": "static/guide.png",
-				"selectedIconPath": "static/guide-active.png",
-				"text": "暑假上新"
-			},
+			// {
+			// 	"pagePath": "pages/promote/promoteSummeryBook",
+			// 	"iconPath": "static/guide.png",
+			// 	"selectedIconPath": "static/guide-active.png",
+			// 	"text": "暑假上新"
+			// },
 			{
 				"pagePath": "pages/library/library",
 				"iconPath": "static/library.png",

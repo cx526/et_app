@@ -45,6 +45,9 @@ api.postRefund = params => request.globalRequest('/api/refund/postRefund', 'POST
 //获取轮播图
 api.getSwiperData = params => request.globalRequest('/api/swiper/getSwiper', 'POST', params)
 
+// banner图跳转页面
+api.skipBanner = params => request.globalRequest('/api/upload/queryResources', 'POST', params)
+
 //获取所有分类
 api.getKinds = params => request.globalRequest('/api/kinds/getKinds', 'POST', params)
 
@@ -60,6 +63,9 @@ api.getGoodsInfo = params => request.globalRequest('/api/goods/getGoodsInfo', 'P
 
 // 获取推荐书
 api.getRecommend = params => request.globalRequest('/api/frontend/getRecommend', 'POST', params)
+
+// 获取老师推荐/书柜上新书籍
+api.getNewBook = params => request.globalRequest('/api/frontend/getRecommendDockerBook', 'POST', params)
 
 // 猜你喜欢
 api.getGuess= params => request.globalRequest('/api/frontend/getGuess', 'POST', params)

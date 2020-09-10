@@ -50,30 +50,29 @@
 		
 		<view class="grey-space"></view>
 		
-		<view class="out-position">
+		<!-- <view class="out-position">
 			<view class="out-content" style="position-bottom:20upx;">
 				<text class="title-content-process">借阅流程</text>
 				<text class="link-content"  @tap='toProgressUrl'>详情 ></text>
 			</view>
-		</view>
+		</view> -->
 		
-		<view class="process-position">
+		<!-- <view class="process-position">
 			<image class="out-img" src="https://et-pic-server.oss-cn-shenzhen.aliyuncs.com/app_img/index_bookdetail_progress_borrow.png" style="width: 750upx;" mode="widthFix"></image>
-		</view>
+		</view> -->
 	
 		
 		<!-- <view class="white-space"></view> -->
 		
-		<view class="out-position">
+		<!-- <view class="out-position">
 			<view class="out-content" style="position-bottom:20upx;">
 				<text class="title-content-process">归还流程</text>
-				<!-- <text class="link-content"  @tap='toProgressUrl'>详情></text> -->
 			</view>
-		</view>
+		</view> -->
 		
-		<view class="process-position">
+		<!-- <view class="process-position">
 			<image class="out-img" src="https://et-pic-server.oss-cn-shenzhen.aliyuncs.com/app_img/index_bookdetail_progress_return.png" style="width: 750upx;" mode="widthFix"></image>
-		</view>
+		</view> -->
 			
 		
 		<!-- <view class="white-space"></view> -->

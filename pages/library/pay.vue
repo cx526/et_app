@@ -214,7 +214,7 @@
 				// 从后台读取订单号
 				await this.$api.offlinePayMent({
 					userInfo: userInfo,
-					shell: this.value, //充值金额
+					shell: Number(this.value) * 10, //充值金额
 					deposit: this.userInfo.deposit >= 29 ? 0 : 29, //押金
 					totalMoney: this.totalMoney, // 充值金额+押金
 					event: "recharge"
@@ -233,7 +233,7 @@
 									userInfo: userInfo,//个人信息
 									event: "recharge",//充值类型
 									order_no: order_no,//订单号
-									shell: this.value, //充值金额
+									shell: this.value * 10, //充值金额
 									deposit: this.userInfo.deposit >= 29 ? 0 : 29, //押金
 									totalMoney: this.totalMoney, // 充值金额+押金
 								}).then(res => {

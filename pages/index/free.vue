@@ -7,9 +7,14 @@
 
 <script>
 	export default {
+		onLoad(option) {
+			console.log(option.imgURL)
+			this.src = option.imgURL
+		},
 		data() {
 			return {
 				$aliImage: this.$aliImage, //静态图片路径
+				src: ''
 			}
 		},
 		methods: {

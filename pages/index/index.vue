@@ -4,10 +4,6 @@
 		<!-- 头部内容 -->
 		<view class="top-content">
 			<!-- 顶栏搜索框 -->
-			<!-- <view class="search-box" @tap="toSearch">
-				<icon class="search-icon" type="search" />
-				<input class="search-input" type="text" placeholder="请输入书籍名..." disabled />
-			</view> -->
 			<view class="search-box active">
 				<view class="search active">
 					<image :src="$aliImage + 'search.png'" class="icon-search"></image>
@@ -20,7 +16,7 @@
 			<!-- 轮播图 -->
 			<view style="position: relative;">
 				<swiper class="carousel" circular autoplay @change="swiperChange">
-					<swiper-item v-for="(item, i) in carouselList" :key="i" class="carousel-item" @tap="toTargetUrl(item.target)"><image :src="item.img" /></swiper-item>
+					<swiper-item v-for="(item, i) in carouselList" :key="i" class="carousel-item" @tap="toTargetUrl(item)"><image :src="item.img" /></swiper-item>
 				</swiper>
 				<!-- 自定义swiper指示器 -->
 				<view class="swiper-dots">
@@ -31,28 +27,51 @@
 			</view>
 		</view>
 
-		<!-- <view class="white-space"></view> -->
-
 		<!-- 按钮组合栏 -->
 		<view class="btn-group"><et-button v-for="(item, i) in groupList" :key="i" :title="item.name" :img="item.img" @tap="toButtonUrl(item.toUrl)"></et-button></view>
 
 		<view class="white-space" style="height: 10upx;"></view>
 
 		<!-- banner -->
-		<view class="banner" @tap="oneBannerUrl"><image :src="$aliImage + 'index-kaixue-01.png'" class="banner-img" mode="widthFix"></image></view>
+		<view class="banner" @tap="oneBannerUrl()" v-if="oneBannerList">
+			<image :src="oneBannerList.url" class="banner-img" mode="widthFix"></image>
+		</view>
 
 		<view class="white-space" style="height: 20upx;"></view>
 
-		<!-- 热门推荐 -->
+		<!-- 老师推荐 -->
 		<view class="hot-recom">
 			<!-- 导航条 -->
-			<et-titlenavigation title="热门推荐" img="../static/index/start.png" toUrl="baidu.com" @toMoreData="toHotListData"></et-titlenavigation>
+			<et-titlenavigation title="老师推荐" img="../static/index/start.png" toUrl="baidu.com" @toMoreData="toHotListData('teacher',hotBookList)"></et-titlenavigation>
 
 			<view class="hotcomcontent">
-				<et-hotcomcontent v-for="(item, index) in hotBookList" v-if="index <= 5" :key="index":lineType="item.lineType"  :dataArr="item.goods_info" @tap="toBookDetail(item.goods_info.id)"></et-hotcomcontent>
+				<et-hotcomcontent
+					v-for="(item, index) in hotBookList"
+					v-if="index <= 5"
+					:key="index"
+					:lineType="item.lineType"
+					:dataArr="item"
+					@tap="toBookDetail(item.id)"
+				></et-hotcomcontent>
 			</view>
 		</view>
-
+		<view class="white-space" style="height: 40upx;"></view>
+		<!-- 书柜上新 -->
+		<view class="hot-recom">
+			<!-- 导航条 -->
+			<et-titlenavigation title="书柜上新" img="../static/index/start.png" toUrl="baidu.com" @toMoreData="toHotListData('new',newBookList)"></et-titlenavigation>
+		
+			<view class="hotcomcontent">
+				<et-hotcomcontent
+					v-for="(item, index) in newBookList"
+					v-if="index <= 5"
+					:key="index"
+					:lineType="item.lineType"
+					:dataArr="item"
+					@tap="toBookDetail(item.id)"
+				></et-hotcomcontent>
+			</view>
+		</view>
 		<view class="white-space" style="height: 40upx;"></view>
 
 		<!-- 新书推荐 -->
@@ -69,7 +88,7 @@
 		<view class="white-space" style="height: 20upx;"></view>
 
 		<!-- banner -->
-		<view class="banner" @tap="twoBannerUrl"><image :src="secondBanner" class="read-img" mode="widthFix"></image></view>
+		<view class="banner" @tap="twoBannerUrl" v-if="twoBannerList"><image :src="twoBannerList.url" class="read-img" mode="widthFix"></image></view>
 
 		<view class="white-space" style="height: 10upx;"></view>
 
@@ -127,6 +146,7 @@ export default {
 			swiperCurrent: 0,
 			swiperLength: 0,
 			carouselList: [],
+			newBookList: [], //书柜上新数据
 			oneBanner: 'https://et-pic-server.oss-cn-shenzhen.aliyuncs.com/app_img/index_pricture_first3.png',
 			secondBanner: 'https://et-pic-server.oss-cn-shenzhen.aliyuncs.com/app_img/index_pricture_two.png',
 			loadStatus: 'loading',
@@ -138,30 +158,33 @@ export default {
 			toHotBookList: [],
 			groupList: [
 				{
-					name: '选书',
-					img: 'https://et-pic-server.oss-cn-shenzhen.aliyuncs.com/app_img/index_button_1.png',
-					toUrl: './kind'
+					// name: '选书',// toUrl: './kind'
+					name: '童书馆',
+					img: 'https://et-pic-server.oss-cn-shenzhen.aliyuncs.com/app_img/index_button_02.png',
+					toUrl: '/pages/library/library'	
 				},
 				{
-					name: '规则',
-					img: 'https://et-pic-server.oss-cn-shenzhen.aliyuncs.com/app_img/index_button_2.png',
+					// name: '规则',toUrl: '/pages/guide/borrowExplain'
+					name: '选绘本',
+					img: 'https://et-pic-server.oss-cn-shenzhen.aliyuncs.com/app_img/index_button_01.png',
+					toUrl: './kind'
 					// 'toUrl' : '/pages/promote/promotePictureBook',
-					toUrl: '/pages/guide/borrowExplain'
+					
 					// 'toUrl' : '/pages/index/bookdetail?bookID=900'
 				},
 				{
 					name: '积分',
-					img: 'https://et-pic-server.oss-cn-shenzhen.aliyuncs.com/app_img/index_button_3.png',
+					img: 'https://et-pic-server.oss-cn-shenzhen.aliyuncs.com/app_img/index_button_03.png',
 					toUrl: '/pages/my/myIntegral'
 				},
 				{
 					name: '签到',
-					img: 'https://et-pic-server.oss-cn-shenzhen.aliyuncs.com/app_img/index_button_4.png',
+					img: 'https://et-pic-server.oss-cn-shenzhen.aliyuncs.com/app_img/index_button_04.png',
 					toUrl: './sign'
 				},
 				{
 					name: '会员',
-					img: 'https://et-pic-server.oss-cn-shenzhen.aliyuncs.com/app_img/index_button_5.png',
+					img: 'https://et-pic-server.oss-cn-shenzhen.aliyuncs.com/app_img/index_button_05.png',
 					toUrl: '/pages/my/myMember'
 				}
 			],
@@ -193,7 +216,9 @@ export default {
 				}
 			],
 			guessBookList: [],
-			docker_mac: ''
+			docker_mac: '',
+			oneBannerList: '',
+			twoBannerList: ''
 		};
 	},
 	onShow() {
@@ -203,12 +228,13 @@ export default {
 	onLoad() {
 		this.checkAuth();
 		this.getSwiperData();
-		this.getUserInfo()
+		this.getUserInfo();
 		// this.getHotBook('init');
 		// this.getGuessBook('init');
 		//更新tab
 		let bookCount = bookListData.cartBookCount();
 		this.showAD();
+		this.getBanner()
 	},
 	// 上拉加载更多,onReachBottom上拉触底函数
 	onReachBottom: function() {
@@ -218,24 +244,27 @@ export default {
 	methods: {
 		// 获取用户信息
 		getUserInfo() {
-			let userInfo = uni.getStorageSync("userInfo") ? uni.getStorageSync("userInfo") : {}
-			let mobile = userInfo.mobile
-			this.$api.getCustom({ 
-				filterItems: { mobile }
-			}).then(res => {
-				let dockerInfo = res.data[0].dockerInfo
-				// 如果有绑定学校
-				if(dockerInfo && JSON.stringify(dockerInfo) != "{}") {
-					userInfo.docker_mac = dockerInfo.docker_mac
-					uni.setStorageSync("userInfo", userInfo)
-				}
-				this.docker_mac = dockerInfo ? dockerInfo.docker_mac : ''
-				console.log(this.docker_mac)
-				// 获取推荐书籍
-				this.getHotBook('init');
-				// 获取猜你喜欢书籍
-				this.getGuessBook('init');
-			})
+			let userInfo = uni.getStorageSync('userInfo') ? uni.getStorageSync('userInfo') : {};
+			let mobile = userInfo.mobile;
+			this.$api
+				.getCustom({
+					filterItems: { mobile }
+				})
+				.then(res => {
+					let dockerInfo = res.data[0].dockerInfo;
+					// 如果有绑定学校
+					if (dockerInfo && JSON.stringify(dockerInfo) != '{}') {
+						userInfo.docker_mac = dockerInfo.docker_mac;
+						uni.setStorageSync('userInfo', userInfo);
+					}
+					this.docker_mac = dockerInfo ? dockerInfo.docker_mac : '';
+					// 获取老师推荐书籍
+					this.getHotBook('init');
+					// 获取书柜上新书籍
+					this.getNewBook('init')
+					// 获取猜你喜欢书籍
+					this.getGuessBook('init');
+				});
 		},
 		closePopup() {
 			uni.setStorageSync('et_popOver', true);
@@ -274,74 +303,146 @@ export default {
 				uni.navigateTo({ url: 'kindlist?selectID=' + JSON.stringify(selectID) + '&tabBars=' + JSON.stringify(tabBars) });
 			});
 		},
+		// 获取轮播底下两张banner图
+		getBanner() {
+			let param = {
+				filterItems :
+				{
+				target_usage : "app_index_first_banner"
+				}
+			}
+			this.$api.skipBanner(param).then(res => {
+				this.oneBannerList = res.data.rows[0]
+				console.log(this.oneBannerList)
+			})
+			let param2 = {
+				filterItems :
+				{
+				target_usage : "app_index_second_banner"
+				}
+			}
+			this.$api.skipBanner(param2).then(secondRes => {
+				this.twoBannerList = secondRes.data.rows[0]
+				console.log(this.twoBannerList)
+			})
+		},
+		// 第一张banner
 		oneBannerUrl() {
-			uni.switchTab({
-				url: '/pages/library/library'
-			})
+			console.log(this.oneBannerList.remark.indexOf('http'))
+			if(this.oneBannerList.remark.replace(/\s*/g, "") == '') {
+				return
+			}
+			else if(this.oneBannerList.remark.indexOf('http') != -1) {
+				uni.navigateTo({
+					url: '/pages/index/article?src='+this.oneBannerList.target_usage
+				})
+			}
+			else if(this.oneBannerList.remark.indexOf('/pages') != -1) {
+				uni.navigateTo({
+					url: this.oneBannerList.remark
+				})
+			}
 		},
+		// 第二张banner
 		twoBannerUrl() {
-			uni.navigateTo({
-				url: "/pages/promote/promotePictureBook"
-			})
+			if(this.twoBannerList.remark.replace(/\s*/g, "") == '') {
+				return
+			}
+			else if(this.twoBannerList.remark.indexOf('http') != -1) {
+				uni.navigateTo({
+					url: '/pages/index/article?from='+this.twoBannerList.target_usage
+				})
+			}
+			else if(this.twoBannerList.remark.indexOf('/pages') != -1) {
+				uni.navigateTo({
+					url: this.twoBannerList.remark
+				})
+			}
 		},
+		// 检测是否授权
 		checkAuth() {
 			uni.getStorage({
 				key: 'userInfo',
-				success: res => {
-					
-				},
+				success: res => {},
 				fail: err => {
 					uni.reLaunch({ url: '../guide/guide' });
-					
 				}
 			});
 		},
+		// 获取轮播图
 		getSwiperData() {
 			this.$api.getSwiperData({ link_usage: 'app_swiper' }).then(res => {
-				console.log(res.data)
 				this.carouselList = res.data;
 				this.swiperLength = this.carouselList.length;
 			});
 		},
-		toTargetUrl(url) {
-			toUrlFunction.toUrl(url);
+		// 点击swiper
+		toTargetUrl(item) {
+			// toUrlFunction.toUrl(url);
+			console.log(item);
+			uni.navigateTo({
+				url: item.target
+			})
 		},
+		// 跳转书籍详情页
 		toBookDetail(bookID) {
 			uni.navigateTo({ url: 'bookdetail?bookID=' + JSON.stringify(bookID) });
 		},
+		// 跳转搜索页
 		toSearch() {
 			uni.navigateTo({ url: 'search' });
 		},
+		// 跳转子页面
 		toButtonUrl(toUrl) {
-			uni.navigateTo({ url: toUrl });
-			if (toUrl === './kind') {
+			if(toUrl === '/pages/library/library') {
 				uni.switchTab({
 					url: toUrl
-				});
+				})
+				return
+			}else if(toUrl === '/pages/my/myMember') {
+				uni.showToast({
+					title: '敬请期待',
+					icon: 'none',
+					duration: 2000
+				})
+				return
 			}
+			uni.navigateTo({ url: toUrl });
 		},
+		// 监听轮播图发生改变
 		swiperChange(e) {
 			const index = e.detail.current;
 			this.swiperCurrent = index;
 		},
-		// 获取热门推荐书籍
+		// 获取老师推荐
 		getHotBook(type) {
 			let param = {
 				filterItems: {
-					docker_mac: this.docker_mac
+					docker_mac: this.docker_mac ? this.docker_mac : ''
 				}
-			}
-			this.$api.getRecommend(param).then(res => {
+			};
+			this.$api.getNewBook(param).then(res => {
 				this.hotBookList = res.data;
-				console.log(this.hotBookList)
 			});
 		},
+		// 获取书柜上新书籍
+		getNewBook(type) {
+			let param = {
+				filterItems: {
+					docker_mac: this.docker_mac ? this.docker_mac : ''
+				}
+			};
+			this.$api.getNewBook(param).then(res => {
+				this.newBookList = res.data;
+			});
+		},
+		// 获取猜你喜欢书籍
 		getGuessBook(type) {
 			let param = {
 				filterItems: {
 					docker_mac: this.docker_mac
 				}
-			}
+			};
 			if (this.guessBookList.length >= 30) {
 				this.loadStatus = 'noMore'; //没有数据时显示‘没有更多’
 				return;
@@ -355,16 +456,32 @@ export default {
 		toSign() {
 			uni.navigateTo({ url: './sign' });
 		},
-		toHotListData() {
-			let tabBars = [{ name: '热门推荐' }];
+		// 老师推荐(更多)
+		toHotListData(type, bookList) {
+			let name = ''
+			switch(type) {
+				case 'teacher':
+					name = "老师推荐"
+					break
+				case 'new':
+					name = "书柜上新"
+					break
+			}
+			let tabBars = [{ name: name }];
+			// noPull:是否允许上拉加载更多 selectID:当前选中tabBar索引 
+			// tabBars:tabBar名称 booksList:数据 pagesType:是否对库存为零的书籍进行隐藏
 			uni.navigateTo({
 				url:
 					'./kindlist?pagesType=hotList&noPull=1&selectID=0&tabBars=' +
 					encodeURIComponent(JSON.stringify(tabBars)) +
 					'&bookList=' +
-					encodeURIComponent(JSON.stringify(this.hotBookList))
+					encodeURIComponent(JSON.stringify(bookList))
 			});
 		},
+		
+		
+		
+		
 		toKineList() {
 			let kindObject = {
 				secondValue: '主题分类'
@@ -375,7 +492,6 @@ export default {
 		onShareAppMessage(res) {
 			if (res.from === 'button') {
 				// 来自页面内分享按钮
-				
 			}
 			return {
 				title: '五车书，一个智能的童书借阅和阅读习惯养成的平台~',
@@ -521,6 +637,8 @@ export default {
 	flex-direction: row;
 	flex-wrap: nowrap;
 	overflow: scroll;
+	box-sizing: border-box;
+	padding: 0 16rpx;
 }
 
 /* 阅读圈 */
