@@ -21,7 +21,6 @@
 				</view>
 				<view class="tag-style">
 					<!-- 只显示两个标签 -->
-					<!-- <text class="tag-content"  v-for="(item,i) in tag" v-if="i < 2" :key="i">{{item}}</text> -->
 					<view class="tag-content" v-for="(item, index) in bookInfo.tagInfo" v-if="item && index < 2" :key="index">
 						<et-tag :title="item.tag_name" :backgroundColor="item.bg_color" :fontColor="item.text_color"></et-tag>
 					</view>

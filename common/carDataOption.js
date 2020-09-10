@@ -15,13 +15,18 @@ async function getBookListStockToData(docker_mac) {
 	await api.preOrderCheckStock({ 
 		filterItems: {idString, docker_mac},
 		}).then(res=>{
-			res.data.rows.map((item,index)=>{
-			carListArr.map((sitem,sindex)=>{
-				if(item.id === sitem.id){
-					carListArr[sindex].stockCount.totalOnlineUse = item.stockCount.totalOnlineUse;
-				}
-			})
-		})
+			console.log(res)
+			// 9/10修改
+			if(res.data.rows && res.data.rows.length > 0) {
+				res.data.rows.map((item,index)=>{
+					carListArr.map((sitem,sindex)=>{
+						if(item.id === sitem.id){
+							carListArr[sindex].stockCount.totalOnlineUse = item.stockCount.totalOnlineUse;
+						}
+					})
+				})
+			}
+			
 	}) 
 	// 数据插入
 	uni.setStorageSync('carListInfo', carListArr);

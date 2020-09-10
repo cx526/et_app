@@ -224,6 +224,8 @@ export default {
 	onShow() {
 		//更新tab
 		let bookCount = bookListData.cartBookCount();
+		// 更新老师推荐/书柜上新
+		this.getUpdateRecommend()
 	},
 	onLoad() {
 		this.checkAuth();
@@ -246,18 +248,17 @@ export default {
 		getUserInfo() {
 			let userInfo = uni.getStorageSync('userInfo') ? uni.getStorageSync('userInfo') : {};
 			let mobile = userInfo.mobile;
-			this.$api
-				.getCustom({
-					filterItems: { mobile }
+			this.$api.offlineUserDockerInfo({
+					mobile
 				})
 				.then(res => {
-					let dockerInfo = res.data[0].dockerInfo;
-					// 如果有绑定学校
-					if (dockerInfo && JSON.stringify(dockerInfo) != '{}') {
-						userInfo.docker_mac = dockerInfo.docker_mac;
-						uni.setStorageSync('userInfo', userInfo);
-					}
-					this.docker_mac = dockerInfo ? dockerInfo.docker_mac : '';
+					console.log(res.data)
+					// let dockerInfo = res.data[0].dockerInfo;
+					userInfo.card_no = res.data.card_no ? res.data.card_no : ''
+					userInfo.docker_mac = res.data.docker_mac ? res.data.docker_mac : ''				
+					uni.setStorageSync('userInfo', userInfo)
+					this.docker_mac = res.data.docker_mac ? res.data.docker_mac : '';
+					console.log(this.docker_mac)
 					// 获取老师推荐书籍
 					this.getHotBook('init');
 					// 获取书柜上新书籍
@@ -328,7 +329,6 @@ export default {
 		},
 		// 第一张banner
 		oneBannerUrl() {
-			console.log(this.oneBannerList.remark.indexOf('http'))
 			if(this.oneBannerList.remark.replace(/\s*/g, "") == '') {
 				return
 			}
@@ -436,6 +436,19 @@ export default {
 				this.newBookList = res.data;
 			});
 		},
+		// 更新老师推荐/书柜上新
+		getUpdateRecommend() {
+			// docker_mac为空默认不请求
+			let userInfoStorage = uni.getStorageSync("userInfo");
+			if(!userInfoStorage.docker_mac || userInfoStorage.docker_mac.replace(/\s*/g, '') == '') {
+				return
+			}else {
+				// 获取老师推荐
+				this.getHotBook()
+				// 获取新书推荐
+				this.getNewBook()
+			}
+		},
 		// 获取猜你喜欢书籍
 		getGuessBook(type) {
 			let param = {
@@ -458,6 +471,7 @@ export default {
 		},
 		// 老师推荐(更多)
 		toHotListData(type, bookList) {
+			console.log(bookList)
 			let name = ''
 			switch(type) {
 				case 'teacher':
@@ -470,12 +484,14 @@ export default {
 			let tabBars = [{ name: name }];
 			// noPull:是否允许上拉加载更多 selectID:当前选中tabBar索引 
 			// tabBars:tabBar名称 booksList:数据 pagesType:是否对库存为零的书籍进行隐藏
+			uni.setStorageSync("offlineRecommenBook", bookList)
 			uni.navigateTo({
-				url:
-					'./kindlist?pagesType=hotList&noPull=1&selectID=0&tabBars=' +
-					encodeURIComponent(JSON.stringify(tabBars)) +
-					'&bookList=' +
-					encodeURIComponent(JSON.stringify(bookList))
+				url: '/pages/library/offline-more?name='+name
+				// url:
+				// 	'./kindlist?pagesType=hotList&noPull=1&selectID=0&tabBars=' +
+				// 	encodeURIComponent(JSON.stringify(tabBars)) +
+				// 	'&bookList=' +
+				// 	encodeURIComponent(JSON.stringify(bookList))
 			});
 		},
 		

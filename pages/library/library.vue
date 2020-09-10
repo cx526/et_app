@@ -175,7 +175,7 @@ export default {
 			popUpWidth: 0,
 			typeList: [],
 			currentPage: 1, // 请求接口的当前页码
-			pageSize: 20, //接口每次返回几条数据
+			pageSize: 10, //接口每次返回几条数据
 			isType: true, //区别是全部上拉加载更多还是单个分类上拉加载更多
 			id: '', //请求分类的id
 			windowHeight: 0,
@@ -194,13 +194,17 @@ export default {
 		Popup
 	},
 	async onLoad(option) {
+		console.log('onLoad')
 		console.log(option)
+		// 检测是否有登录
+		this.getLogin()
 		// 从搜索页跳转过来
 		if (option.isSearch) {
 			this.isSearch = option.isSearch
 			// 获取用户个人账户信息
 			this.getUserInfo()
 			this.productList = JSON.parse(option.productList);
+			console.log(this.productList)
 			this.loadStatus = 'noMore';
 			
 		} else {
@@ -218,11 +222,13 @@ export default {
 		});
 	},
 	onShow() {
-		// 检测是否有登录
-		this.getLogin()
-		// 获取用户个人账户信息
-		this.getUserInfo();
+		// 每次进来都需要检测卡号和docket_mac
+		this.getCheckUserInfo()
 		this.len = uni.getStorageSync('offlineCartList').length;
+		
+		
+		
+		
 		
 	},
 	onReady() {
@@ -286,52 +292,122 @@ export default {
 				this.isLogin = true
 			}
 		},
+		// 检测用户的卡号和幼儿园信息
+		getCheckUserInfo() {
+			let userInfoStorage = uni.getStorageSync("userInfo")
+			if(!userInfoStorage.card_no ||
+			userInfoStorage.card_no.replace(/\s*/g , "") == '') {
+				// 显示绑卡弹窗
+				this.$refs.powerPopUp.open()
+				return
+			}
+			// 如果没有绑定幼儿园
+			else if(!userInfoStorage.docker_mac ||
+			userInfoStorage.docker_mac.replace(/\s*/g , "") == '') {
+				this.isLogin = false
+				uni.showToast({
+					title: '此幼儿园暂时不是合作用户',
+					icon: 'none',
+					duration:1500,
+					success: res => {
+						setTimeout(() => {
+							uni.switchTab({
+								url: '/pages/index/index'
+							})
+						}, 2000)			
+					}
+				})
+				return
+			}
+		},
 		// 获取用户个人账户信息
 		getUserInfo() {
 			// 有授权登录过才去请求个人信息
 			if(this.isLogin) {
 				let mobile = uni.getStorageSync("userInfo").mobile;
-				this.$api.getCustom({ 
-					filterItems: { mobile }
-					}).then(res => {
-					this.userInfo = res.data[0];
-					console.log(this.userInfo)
-					// 卡号为空
-					if(this.userInfo.card_no == '') {
+				this.$api.offlineUserDockerInfo({mobile}).then(res => {
+					this.userInfo = res.data
+					let data = res.data
+					console.log(data)
+					// 如果没有卡号
+					if(!data.card_no ||
+					data.card_no.replace(/\s*/g , "") == '') {
 						// 显示绑卡弹窗
 						this.$refs.powerPopUp.open()
-					}else {
-						// 如果绑定的幼儿园没有书柜
-						if(!this.userInfo.dockerInfo) {
-							this.isLogin = false
-							uni.showToast({
-								title: '此幼儿园暂时不是合作用户',
-								icon: 'none',
-								duration:1500,
-								success: res => {
-									setTimeout(() => {
-										uni.switchTab({
-											url: '/pages/index/index'
-										})
-									}, 2000)
-									
-								}
-							})
-							return
-						}
-						this.docker_mac = this.userInfo.dockerInfo.docker_mac 
-						this.coin = this.userInfo.coin ? this.userInfo.coin : '';//积分
-						this.shell = (+this.userInfo.shell).toFixed(2) ? (+this.userInfo.shell).toFixed(2) : ''; //五车贝
-						// 计算用户的免费次数
-						this.getUserFreeCount()
-						// 获取书籍分类
-						this.getBooksType();
-						// 获取所在幼儿园书柜的所有书籍(如果从搜索页跳转过来不调用)
-						!this.isSearch && this.getBooksList();
+						return
 					}
-					
-					
+					// 如果没有绑定幼儿园，跳转首页
+					else if(!data.docker_mac ||
+					data.docker_mac.replace(/\s*/g , "") == '') {
+						this.isLogin = false
+						uni.showToast({
+							title: '此幼儿园暂时不是合作用户',
+							icon: 'none',
+							duration:1500,
+							success: res => {
+								setTimeout(() => {
+									uni.switchTab({
+										url: '/pages/index/index'
+									})
+								}, 2000)			
+							}
+						})
+						return
+					}
+					this.docker_mac = data.docker_mac
+					this.coin = data.coin ? data.coin : 0 //积分
+					this.shell = data.shell ? data.shell : 0 //五车贝
+					// 计算用户的免费次数
+					this.getUserFreeCount()
+					// 获取书籍分类
+					this.getBooksType();
+					// 获取所在幼儿园书柜的所有书籍(如果从搜索页跳转过来不调用)
+					!this.isSearch && this.getBooksList();
 				})
+				
+				
+				
+				// this.$api.getCustom({ 
+				// 	filterItems: { mobile }
+				// 	}).then(res => {
+				// 	this.userInfo = res.data[0];
+				// 	console.log(this.userInfo)
+				// 	// 卡号为空
+				// 	if(this.userInfo.card_no == '') {
+				// 		// 显示绑卡弹窗
+				// 		this.$refs.powerPopUp.open()
+				// 	}else {
+				// 		// 如果绑定的幼儿园没有书柜
+				// 		if(!this.userInfo.dockerInfo) {
+				// 			this.isLogin = false
+				// 			uni.showToast({
+				// 				title: '此幼儿园暂时不是合作用户',
+				// 				icon: 'none',
+				// 				duration:1500,
+				// 				success: res => {
+				// 					setTimeout(() => {
+				// 						uni.switchTab({
+				// 							url: '/pages/index/index'
+				// 						})
+				// 					}, 2000)
+									
+				// 				}
+				// 			})
+				// 			return
+				// 		}
+				// 		this.docker_mac = this.userInfo.dockerInfo.docker_mac 
+				// 		this.coin = this.userInfo.coin ? this.userInfo.coin : '';//积分
+				// 		this.shell = (+this.userInfo.shell).toFixed(2) ? (+this.userInfo.shell).toFixed(2) : ''; //五车贝
+				// 		// 计算用户的免费次数
+				// 		this.getUserFreeCount()
+				// 		// 获取书籍分类
+				// 		this.getBooksType();
+				// 		// 获取所在幼儿园书柜的所有书籍(如果从搜索页跳转过来不调用)
+				// 		!this.isSearch && this.getBooksList();
+				// 	}
+					
+					
+				// })
 			}
 
 		},
@@ -350,7 +426,9 @@ export default {
 			});
 			this.$api.offlineGetBooksList({
 				filterItems: {
-					docker_mac: this.userInfo.dockerInfo.docker_mac,
+					docker_mac: this.docker_mac,
+					show_staus: "1"
+					// docker_mac: this.userInfo.dockerInfo.docker_mac,
 				},
 				pageSize: this.pageSize,
 				currentPage: this.currentPage

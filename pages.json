@@ -491,6 +491,10 @@
 							"navigationBarTitleText": "五车书绘本借阅"
 						}
         }
+        ,{
+            "path" : "pages/library/offline-more",
+            "style" : {}
+        }
     ],
 	"globalStyle": {
 		"navigationBarTextStyle": "black",

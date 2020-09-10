@@ -398,14 +398,12 @@ export default {
 	methods: {
 		// 获取个人信息
 		getUserInfo() {
-			let mobile = uni.getStorageSync("userInfo").mobile;
-			this.$api.getCustom({ filterItems: { mobile } })
+			let mobile = uni.getStorageSync("userInfo").mobile
+			this.$api.offlineUserDockerInfo({ mobile })
 			.then(res => {
-				this.card_no = res.data[0].card_no
-				// 如果不是合作用户不发送请求
-				res.data[0].dockerInfo &&
-				this.getOrderFail(res.data[0].id,res.data[0].dockerInfo.docker_mac)
-				
+				let data = res.data
+				this.card_no = data.card_no
+				data.docker_mac && this.getOrderFail(data.id, data.docker_mac)
 			})
 		},
 		// 获取逾期书单判断是否出现通知条
