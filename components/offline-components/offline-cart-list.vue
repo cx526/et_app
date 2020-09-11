@@ -64,7 +64,7 @@
 						<text>合共：</text>
 						<text style="color: #039EB9;">{{ len }}</text>
 						<text style="margin-right: 10rpx;">本</text>
-						<text>借书币：</text>
+						<text>五车贝：</text>
 						<text style="color: #039EB9;">{{ price }}</text>
 					</view>
 					<!-- 没选中时显示 -->
@@ -81,15 +81,15 @@
 		<!-- 借书币不足显示弹窗 -->
 		<uni-popup ref="popup" :maskClick="false">
 			<view class="balance-box" :style="{ width: popUpWidth }">
-				<view class="title"><text>借书币不足！</text></view>
+				<view class="title"><text>五车贝不足！</text></view>
 				<view class="notice">
 					<view>
-						<text>本次需要借书币：</text>
+						<text>本次需要五车贝：</text>
 						<text style="color: #12A4BD;">{{ price }}</text>
 					</view>
 					
 					<view>
-						<text>您的借书币：</text>
+						<text>您的五车贝：</text>
 						<text style="color: #12A4BD;">{{ shell }}</text>
 					</view>
 				</view>
@@ -219,6 +219,10 @@ export default {
 		},
 		// 更新库存
 		upDateStock() {
+			uni.showLoading({
+				title: '数据加载中',
+				mask: true
+			})
 			// 获取线下书篮书籍
 			let bookList = uni.getStorageSync('offlineCartList');
 			// 储存书篮所有书籍的id
@@ -238,6 +242,7 @@ export default {
 					docker_mac: this.docker_mac
 				}
 			}).then(res => {
+				uni.hideLoading()
 				if(res.data.rows.length == 0) {
 					this.isStock = false;
 					// 如果选中但没库存更改选中状态
@@ -478,7 +483,7 @@ export default {
 				});
 				// 更新所选商品本地缓存的库存数据
 				let goodsIDs = [];
-				this.chooseBookList && this.chooseBookList.forEach(item => {
+				this.chooseBookList && this.chooseBookList.forEach( item => {
 					goodsIDs.push(item.id);
 				});
 				// 价格升序
@@ -521,19 +526,23 @@ export default {
 				// 1.用户没有免费借阅次数或者积分/50小于1时(直接计算所选书籍累加的五车贝)
 				else if (this.free === 0 || this.integrate / 50 < 1 || len >= 2) {
 					result.map(item => {
-						amount = (+amount + +item.price).toFixed(2);
+						amount = (+amount + (+item.price)).toFixed(2);
 					});
 					this.price = amount
+					console.log(this.shell)
+					console.log(this.price)
+					console.log(this.deposit)
 					// 当前用户五车贝不足够或押金小于29时显示弹窗
-					if(Number(this.shell) < Number(this.deposit) || Number(this.deposit) < 29) {
-						if(Number(this.shell) < Number(this.deposit)) {
+					if(Number(this.shell) < Number(this.price) || Number(this.deposit) < 29) {
+						if(Number(this.shell) < Number(this.price)) {
 							// 显示借书币不足弹窗
 							this.$refs.popup.open();
-						}else {
+						}else if(Number(this.deposit) < 29){
 							// 显示押金不足弹窗··						
 							this.$refs.depositPopUp.open()
 						}
 					}else {
+						console.log('下单')
 						let goods_id = goodsIDs.join(',');
 						// // 下单
 						this.placeOrder(goods_id, 'shell');					

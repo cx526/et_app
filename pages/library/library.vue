@@ -71,7 +71,7 @@
 							<view class="title">
 								<text>{{ item.title }}</text>
 							</view>
-							<view class="price"><text>借书币：{{ item.price }}</text></view>
+							<view class="price"><text>五车贝：{{ item.price }}</text></view>
 							<view class="label">
 								<text v-for="(label, labelIndex) in item.tagInfo" :key="labelIndex" v-if="labelIndex < 2">{{ label.tag_name }}</text>
 							</view>
@@ -194,7 +194,6 @@ export default {
 		Popup
 	},
 	async onLoad(option) {
-		console.log('onLoad')
 		console.log(option)
 		// 检测是否有登录
 		this.getLogin()
@@ -296,7 +295,7 @@ export default {
 			let mobile = userInfoStorage.mobile;
 			this.$api.offlineUserDockerInfo({mobile}).then(res => {
 				let data = res.data
-				userInfoStorage.card_no = data.card_no ?data.card_no : ''
+				userInfoStorage.card_no = data.card_no ? data.card_no : ''
 				userInfoStorage.docker_mac = data.docker_mac ? data.docker_mac : ''
 				uni.setStorageSync('userInfo', userInfoStorage)
 				if(!data.card_no ||

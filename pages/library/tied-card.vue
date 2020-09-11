@@ -390,6 +390,17 @@
 					console.log(res)
 				})
 			},
+			// 保存卡号和docker_mac到本地
+			getCheckUserInfo() {
+				let userInfoStorage = uni.getStorageSync("userInfo")
+				let mobile = userInfoStorage.mobile;
+				this.$api.offlineUserDockerInfo({mobile}).then(res => {
+					let data = res.data
+					userInfoStorage.card_no = data.card_no ? data.card_no : ''
+					userInfoStorage.docker_mac = data.docker_mac ? data.docker_mac : ''
+					uni.setStorageSync('userInfo', userInfoStorage)
+				})
+			},
 			// 保存修改信息
 			saveInfo() {
 				let param = {
@@ -419,8 +430,11 @@
 					console.log(res)
 					
 					if(res.data.status == 'ok') {
+						
 						// 查询老师信息
 						this.checkTeacherInfo()
+						// 重置本地卡号和docker_mac
+						this.getCheckUserInfo()
 					}else {
 						uni.showToast({
 							title: res.data.msg,

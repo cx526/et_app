@@ -13,7 +13,7 @@
 			</view>
 			<view class="item">
 				<view class="label">
-					<text>充值借书币</text>
+					<text>充值五车贝</text>
 				</view>
 				<view class="ipt">
 					<input type="text" :value="value * 10" disabled />

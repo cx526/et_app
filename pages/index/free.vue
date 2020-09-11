@@ -1,6 +1,6 @@
 <template>
 	<view style="position: relative;">
-		<image :src="$aliImage + 'free-read.png'" mode="widthFix"  ></image>
+		<image :src="$aliImage + 'free-read-01.png'" mode="widthFix"  ></image>
 		<button  @tap="go"></button>
 	</view>
 </template>
@@ -37,7 +37,7 @@
 		position: absolute;
 		z-index: 12;
 		left: 50%;
-		top: 68%;
+		top: 58%;
 		background: transparent;
 		width: 240rpx;
 		height: 100rpx;

@@ -161,11 +161,11 @@
 								<view class="text spcial"
 								v-if="item.pay_type != 'shell'">
 									<view>
-										<text>积分：-100</text>
+										<text>积分：-50</text>
 										<text style="color: #f00;">（优惠{{ item.dockerInfo[0].price }}贝）</text>
 									</view>
 									<view style="font-weight: bold; color: #000;">
-										<text>实付：20</text>
+										<text>实付：0</text>
 									</view>
 								</view>
 								<!-- 五车贝支付 -->

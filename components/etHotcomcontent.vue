@@ -1,8 +1,8 @@
 <template>
 	<view class="btn-content" @tap="btnClick">
 		<view class="img-content">
-			<image :src="dataArr.forGoodsPic[0].url" class="img"></image>
-			<!-- <text class="book-count">{{bookCount}}本</text> -->
+			<image :src="dataArr.forGoodsPic[0].url" class="img"
+			></image>
 		</view>
 		
 		<text class="title">{{dataArr.title}}</text>

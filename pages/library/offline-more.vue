@@ -32,5 +32,9 @@
 </script>
 
 <style>
-
+ page {
+	 box-sizing: border-box;
+	 padding: 24rpx 0;
+	 background: #ebf7ff;
+ }
 </style>

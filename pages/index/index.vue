@@ -247,7 +247,7 @@ export default {
 		// 获取用户信息
 		getUserInfo() {
 			let userInfo = uni.getStorageSync('userInfo') ? uni.getStorageSync('userInfo') : {};
-			let mobile = userInfo.mobile;
+			let mobile = userInfo.mobile ? userInfo.mobile : '';
 			this.$api.offlineUserDockerInfo({
 					mobile
 				})
@@ -386,7 +386,10 @@ export default {
 		},
 		// 跳转书籍详情页
 		toBookDetail(bookID) {
-			uni.navigateTo({ url: 'bookdetail?bookID=' + JSON.stringify(bookID) });
+			uni.navigateTo({
+				url: '../library/offline-bookdetail?bookID=' + bookID
+			});
+			// uni.navigateTo({ url: 'bookdetail?bookID=' + JSON.stringify(bookID) });
 		},
 		// 跳转搜索页
 		toSearch() {
@@ -394,12 +397,27 @@ export default {
 		},
 		// 跳转子页面
 		toButtonUrl(toUrl) {
-			if(toUrl === '/pages/library/library') {
+			let userInfo = uni.getStorageSync("userInfo")
+			if(userInfo.name === 'guest' || !userInfo.name) {
+				uni.showModal({
+					title: '请先登录！',
+					content: '是否前往登录页面?',
+					success: (res) => {
+						if (res.confirm) {
+							uni.removeStorageSync('userInfo')
+							uni.reLaunch({url: '/pages/guide/guide'})
+						}
+					}
+				})
+				return
+			}
+			else if(toUrl === '/pages/library/library') {
 				uni.switchTab({
 					url: toUrl
 				})
 				return
-			}else if(toUrl === '/pages/my/myMember') {
+			}
+			else if(toUrl === '/pages/my/myMember') {
 				uni.showToast({
 					title: '敬请期待',
 					icon: 'none',
@@ -407,7 +425,9 @@ export default {
 				})
 				return
 			}
-			uni.navigateTo({ url: toUrl });
+			else {
+				uni.navigateTo({ url: toUrl });
+			}
 		},
 		// 监听轮播图发生改变
 		swiperChange(e) {
@@ -462,7 +482,19 @@ export default {
 			}
 			this.$api.getGuess(param).then(res => {
 				res.data.map(item => {
-					this.guessBookList.push(item);
+					// 如果线上书(stockCount.totalOnlineUse)
+					if(item.stockCount.totalOnlineUse == 0 && item.lineType == 1) { return }
+					// 如果线下书(stockCount.totalDockerUse)
+					else if(item.stockCount.totalDockerUse == 0 && item.lineType == 2) { return }
+					// 如果是线上/线下书(totalOnlineUse && totalDockerUse==0)
+					else if(item.lineType == 3 && item.stockCount.totalOnlineUse && item.stockCount.totalDockerUse) { return }
+					else if(item.stockCount.totalOnlineUse == 0) {
+						return
+					}
+					else {
+						this.guessBookList.push(item);
+					}
+					
 				});
 			});
 		},

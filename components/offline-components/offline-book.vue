@@ -4,9 +4,16 @@
 			<!-- 列表 -->
 			<view class="list" id="list">
 				<template v-if="bookList && bookList.length > 0">
-					<view class="item" v-for="(item, index) in bookList" :key="index" @tap="goDetail(item.id)" v-if="item.show_status == 1">
+					<view 
+					class="item" 
+					v-for="(item, index) in bookList" 
+					:key="index" 
+					@tap="goDetail(item.id)" 
+					v-if="item.show_status == 1 && item.stockCount.totalDockerUse !== 0"
+					>
 						<view >
-							<image :src="item.forGoodsPic[0].url" mode="" class="show"></image>
+							<image :src="item.forGoodsPic[0].url" 
+							mode="widthFix" class="show"></image>
 							<!-- 无库存显示totalDockerUse -->
 							<view class="none-stock" 
 							v-if="item.stockCount.totalDockerUse === 0">
@@ -18,7 +25,7 @@
 							<view class="title">
 								<text>{{ item.title }}</text>
 							</view>
-							<view class="price"><text>借书币：{{ item.price }}</text></view>
+							<view class="price"><text>五车贝：{{ item.price }}</text></view>
 							<view class="label">
 								<text v-for="(label, labelIndex) in item.tagInfo" :key="labelIndex" v-if="labelIndex < 2">{{ label.tag_name }}</text>
 							</view>
@@ -143,7 +150,12 @@
 					duration: 2000
 				});
 			},
-			
+			// 跳转至商品详情页
+			goDetail(id) {
+				uni.navigateTo({
+					url: '/pages/library/offline-bookdetail?bookID=' + id
+				});
+			},
 			// 跳转到书篮tabbar页面
 			goCart() {
 				uni.reLaunch({
@@ -159,7 +171,7 @@
 	.type-box {
 		box-sizing: border-box;
 		padding: 0 20rpx;
-		background: #ebf7ff;
+		
 	}
 	
 	/* list */
