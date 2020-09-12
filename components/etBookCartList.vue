@@ -227,18 +227,18 @@ export default {
 			userInfoDoc: ''
 		}
 	},
-	async created() {
-		//更新书本库存缓存
-		await this.getUserInfo()
+	// async created() {
+	// 	//更新书本库存缓存
+	// 	await this.getUserInfo()
 		
-		// await bookListData.getBookListStockToData(this.docker_mac);
-		this.getCustomerInfo();
-		//更新数据状态
-		this.statusUpdate();
-	},
+	// 	// await bookListData.getBookListStockToData(this.docker_mac);
+	// 	this.getCustomerInfo();
+	// 	//更新数据状态
+	// 	this.statusUpdate();
+	// },
 	async mounted() {
 		//更新书本库存缓存
-		await this.getUserInfo()
+		// await this.getUserInfo()
 		
 		// await bookListData.getBookListStockToData(this.docker_mac);
 		this.getCustomerInfo();
@@ -247,18 +247,19 @@ export default {
 	},
 	methods: {
 		// //更新书本库存缓存
-		getUserInfo() {
-			let mobile = uni.getStorageSync("userInfo").mobile ? uni.getStorageSync("userInfo").mobile : '' ;
-			this.$api.getCustom({ 
-				filterItems: { mobile }
-				}).then(res => {
-				this.userInfoDoc = res.data[0];
-				// this.docker_mac = this.userInfoDoc.dockerInfo.docker_mac
-				this.docker_mac = this.userInfoDoc.dockerInfo ? this.userInfoDoc.dockerInfo.docker_mac : ''
-				bookListData.getBookListStockToData(this.docker_mac)
-				
-			})
-		},
+		// getUserInfo() {
+		// 	let userInfo = uni.getStorageSync("userInfo");
+		// 	if (userInfo && userInfo.mobile ) {
+		// 		let mobile = userInfo.mobile
+		// 		this.$api.offlineUserDockerInfo({ mobile }).then(res => {
+		// 			this.userInfoDoc = res.data;
+		// 			// this.docker_mac = this.userInfoDoc.dockerInfo.docker_mac
+		// 			this.docker_mac = this.userInfoDoc.dockerInfo ? this.userInfoDoc.dockerInfo.docker_mac : ''
+		// 			bookListData.getBookListStockToData(this.docker_mac)
+					
+		// 		})
+		// 	}
+		// },
 		toKineUrl(){
 			// console.log(this.$props.optionData.optionType);
 			if(this.$props.optionData.optionType === 'kindlist'){
@@ -277,6 +278,9 @@ export default {
 			this.$api.getCustom({ filterItems: { mobile: this.userInfo.mobile } }).then(res=>{
 				this.coin = res.data[0].coin;
 				this.customerInfo = res.data[0];
+				
+				this.docker_mac = this.customerInfo.dockerInfo ? this.customerInfo.dockerInfo.docker_mac : ''
+				// bookListData.getBookListStockToData(this.docker_mac)
 				//获取历史订单信息
 				this.$api.checkExistOrder({ custom_id: this.customerInfo.id }).then(res=>{
 					this.hestoryOrderInfo = res.data;
