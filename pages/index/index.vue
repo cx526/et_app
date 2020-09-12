@@ -513,7 +513,7 @@ export default {
 					name = "书柜上新"
 					break
 			}
-			let tabBars = [{ name: name }];
+			// let tabBars = [{ name: name }];
 			// noPull:是否允许上拉加载更多 selectID:当前选中tabBar索引 
 			// tabBars:tabBar名称 booksList:数据 pagesType:是否对库存为零的书籍进行隐藏
 			uni.setStorageSync("offlineRecommenBook", bookList)

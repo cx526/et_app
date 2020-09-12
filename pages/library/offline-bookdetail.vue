@@ -215,8 +215,55 @@ export default {
 		push() {
 			// 获取当前添加书籍的数据
 			let add = this.bookInfo;
+			let userInfo = uni.getStorageSync("userInfo")
+			// 未登录提示登录
+			if(!userInfo.name || userInfo.name == 'guest') {
+				uni.showModal({
+					title: "请先登录！",
+					content: "是否前往登录页面?",
+					success: res => {
+						if(res.confirm) {
+							uni.reLaunch({
+								url: '/pages/guide/auth'
+							})
+						}
+					}
+				})
+				return
+			}
+			// 无卡号提示绑卡
+			else if(!userInfo.card_no || 
+			userInfo.card_no.replace(/\s*/g, "") == '') {
+				uni.showModal({
+					title: "您还未绑卡！",
+					content:"是否前往绑卡页面?",
+					success: res => {
+						if(res.confirm) {
+							uni.redirectTo({
+								url: '/pages/library/tied-card'
+							})
+						}else {
+							uni.showToast({
+								title: '加入书篮失败',
+								icon: 'none',
+								duration: 2000
+							})
+						}
+					}
+				})
+				return
+			}
+			// 所在学校没有书柜提示
+			else if(!userInfo.docker_mac || userInfo.docker_mac.replace(/\s*/g, '') == '') {
+				uni.showToast({
+					title: '您绑定的学校暂无书柜',
+					icon: 'none',
+					duration: 2000
+				})
+				return
+			}
 			// 如果没有库存return
-			if(add.stockCount.totalDockerUse === 0) {
+			else if(add.stockCount.totalDockerUse === 0) {
 				uni.showToast({
 					title: '书本暂时借完，请选择其他书本',
 					duration: 2000,

@@ -307,7 +307,7 @@ export default {
 				data.docker_mac.replace(/\s*/g , "") == '') {
 					this.isLogin = false
 					uni.showToast({
-						title: '此幼儿园暂时不是合作用户',
+						title: '您所绑定的幼儿园暂无书柜',
 						icon: 'none',
 						duration:1500,
 						success: res => {
@@ -346,7 +346,7 @@ export default {
 					data.docker_mac.replace(/\s*/g , "") == '') {
 						this.isLogin = false
 						uni.showToast({
-							title: '此幼儿园暂时不是合作用户',
+							title: '您所绑定的幼儿园暂无书柜',
 							icon: 'none',
 							duration:1500,
 							success: res => {

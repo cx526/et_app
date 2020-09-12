@@ -139,7 +139,7 @@
 		<!-- 选择老师弹窗 -->
 		
 			<uni-popup ref="teacherChoose" :maskClick="false">
-				<view class="popUp">
+				<view class="popUp" :style="{width: popUpWidth}">
 					<view class="title">
 						<text>请选择老师</text>
 					</view>
@@ -152,8 +152,9 @@
 										style="transform: scale(0.6);"
 										color="#00B7CC"/>
 								</view>
-								<view>{{item.name}}</view>
+								<view>{{item.teacherInfo.true_name}}</view>
 						</label>
+					
 					</radio-group>
 					<view class="btn">
 						<view @tap="chooseTeacher">
@@ -171,6 +172,7 @@
 	export default {
 		data() {
 			return {
+				popUpWidth: '',
 				isDisabled: true,
 				from: '',
 				$aliImage: this.$aliImage,//静态图片域名
@@ -210,7 +212,15 @@
 			console.log(this.from)
 			this.getId()
 			this.dataInit()
+			uni.getSystemInfo({
+				success: res => {
+					this.popUpWidth  = res.windowWidth * 0.8 + 'px'
+					console.log(this.popUpWidth)
+					console.log(res)
+				}
+			})
 		},
+		
 		methods: {
 			// 班级扫描
 			gradeScan() {	
@@ -528,9 +538,14 @@
 								}
 							})
 						},500)
+					}else {
+						uni.showToast({
+							title: res.data.msg,
+							icon: 'none',
+							duration: 2000
+						})
+						this.$refs.teacherChoose.close()
 					}
-					// 关闭弹窗
-					
 				})
 			},
 			// 暂不绑定
@@ -629,8 +644,10 @@
 	/* 弹窗 */
 	.popUp {
 		box-sizing: border-box;
-		width: 300px;
-		height: 400rpx;
+		/* width: 80%;
+		margin-left: 10%; */
+		padding: 0 0 36rpx 0;
+		/* height: 400rpx; */
 		background: #fff;
 		display: flex;
 		border-radius: 30rpx;
@@ -639,6 +656,9 @@
 	.popUp radio-group {
 		display: flex;
 		width: 100%;
+		flex-wrap: wrap;
+		box-sizing: border-box;
+		padding: 0 24rpx;
 	}
 	.popUp .title {
 		text-align: center;
@@ -649,10 +669,11 @@
 		color: #00B7CC;
 	}
 	.popUp radio-group label {
-		width: 40%;
-		text-align: center;
+		width: 30%;
+		/* text-align: center; */
 		display: flex;
 		align-items: center;
+		justify-content: center;
 		flex-wrap: wrap;
 		margin-bottom: 12rpx;
 	}

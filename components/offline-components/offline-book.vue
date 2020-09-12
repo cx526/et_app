@@ -9,7 +9,7 @@
 					v-for="(item, index) in bookList" 
 					:key="index" 
 					@tap="goDetail(item.id)" 
-					v-if="item.show_status == 1 && item.stockCount.totalDockerUse !== 0"
+					v-if="item.show_status == 1 && item.stockCount.totalDockerUse != 0"
 					>
 						<view >
 							<image :src="item.forGoodsPic[0].url" 
@@ -74,7 +74,7 @@
 				len: '', //书篮书籍数
 			}
 		},
-		mounted() {
+		created() {
 			this.len = uni.getStorageSync('offlineCartList').length;
 			console.log(this.len)
 		},
@@ -83,8 +83,24 @@
 			push(add) {
 				// 判断当前用户是否有绑卡
 				let userInfo = uni.getStorageSync("userInfo")
-				if(!userInfo.docker_mac || 
-				userInfo.docker_mac.replace(/\s*/g, "") == '') {
+				// 未登录提示登录
+				if(!userInfo.name || userInfo.name == 'guest') {
+					uni.showModal({
+						title: "请先登录！",
+						content: "是否前往登录页面?",
+						success: res => {
+							if(res.confirm) {
+								uni.reLaunch({
+									url: '/pages/guide/auth'
+								})
+							}
+						}
+					})
+					return
+				}
+				// 无卡号提示绑卡
+				else if(!userInfo.card_no || 
+				userInfo.card_no.replace(/\s*/g, "") == '') {
 					uni.showModal({
 						title: "您还未绑卡！",
 						content:"是否前往绑卡页面?",
@@ -101,6 +117,15 @@
 								})
 							}
 						}
+					})
+					return
+				}
+				// 所在学校没有书柜提示
+				else if(!userInfo.docker_mac || userInfo.docker_mac.replace(/\s*/g, '') == '') {
+					uni.showToast({
+						title: '您绑定的学校暂无书柜',
+						icon: 'none',
+						duration: 2000
 					})
 					return
 				}

@@ -178,7 +178,6 @@ export default {
 		},
 		// 获取用户的个人信息
 		getUserInfo() {
-			// 通知父组件隐藏页面
 			let mobile = uni.getStorageSync("userInfo").mobile;
 			this.$api.offlineUserDockerInfo({ mobile } )
 			.then(res => {
@@ -219,12 +218,18 @@ export default {
 		},
 		// 更新库存
 		upDateStock() {
-			uni.showLoading({
-				title: '数据加载中',
-				mask: true
-			})
+			// uni.showLoading({
+			// 	title: '数据加载中',
+			// 	mask: true
+			// })
 			// 获取线下书篮书籍
 			let bookList = uni.getStorageSync('offlineCartList');
+			// 如果线下书篮为空，默认不发请求
+			if(bookList.length == 0) {
+				// uni.hideLoading()
+				return
+			}
+			
 			// 储存书篮所有书籍的id
 			let goods_id = [];
 			let idString = '';
