@@ -382,19 +382,20 @@ export default {
 		}
 	},
 	onLoad() {
-		this.getOrderCount();
-		//更新tab
-		let bookCount = bookListData.cartBookCount();
-		this.getReadCount();
-	},
-	onShow() {
-		this.getOrderCount();
-		//更新tab
-		let bookCount = bookListData.cartBookCount();
-		this.getReadCount();
-		// 获取逾期书单判断是否出现通知条
 		this.getUserInfo()
+		// this.getOrderCount();
+		//更新tab
+		let bookCount = bookListData.cartBookCount();
+		// this.getReadCount();
 	},
+	// onShow() {
+	// 	this.getOrderCount();
+	// 	//更新tab
+	// 	let bookCount = bookListData.cartBookCount();
+	// 	this.getReadCount();
+	// 	// 获取逾期书单判断是否出现通知条
+	// 	this.getUserInfo()
+	// },
 	methods: {
 		// 获取个人信息
 		getUserInfo() {
@@ -404,6 +405,29 @@ export default {
 				let data = res.data
 				this.card_no = data.card_no
 				data.docker_mac && this.getOrderFail(data.id, data.docker_mac)
+				
+				
+				this.$api.getOrderCountWithCustomID({  custom_id: data.id }).then(sres=>{
+					sres.data.map((item,index) => {
+						this.myOrderInfo.allMenu.map((sitem,sindex) => {
+							if(item.status == sitem.status){
+								this.myOrderInfo.allMenu[sindex].count = item.order_total;
+							}
+						});
+					});
+					this.updateOrderInfo = true
+				});
+				
+				this.$api.getHistoryOrderCount({custom_id: data.id}).then(sres=>{
+					this.myReadInfo.allMenu.map((item,index)=>{
+						if(item.title === '累计已读'){
+							this.myReadInfo.allMenu[index].count = sres.data.readCount;
+						}else if(item.title === '在读'){
+							this.myReadInfo.allMenu[index].count = sres.data.currentReading;
+						}
+						
+					})
+				});
 			})
 		},
 		// 获取逾期书单判断是否出现通知条
@@ -457,42 +481,7 @@ export default {
 		vipBanner(){
 			toUrlFunction.toUrl('/pages/my/myMember');
 		},
-		getOrderCount(){
-			let guestStatus = checkLogin.checkLogin(true);
-			if(guestStatus){
-				this.updateOrderInfo = true
-				return;
-			}
-			this.$api.getCustom({ filterItems: { mobile: this.userInfo.mobile } }).then(res=>{
-				this.$api.getOrderCountWithCustomID({  custom_id: res.data[0].id }).then(sres=>{
-					sres.data.map((item,index) => {
-						this.myOrderInfo.allMenu.map((sitem,sindex) => {
-							if(item.status == sitem.status){
-								this.myOrderInfo.allMenu[sindex].count = item.order_total;
-							}
-						});
-					});
-					this.updateOrderInfo = true
-				});
-			});
-		},
-		getReadCount(){
-			if(this.userInfo.name === 'guest' || !this.userInfo.name){
-				return;
-			}
-			this.$api.getCustom({ filterItems: { mobile: this.userInfo.mobile } }).then(res=>{
-				this.$api.getHistoryOrderCount({custom_id: res.data[0].id}).then(sres=>{
-					this.myReadInfo.allMenu.map((item,index)=>{
-						if(item.title === '累计已读'){
-							this.myReadInfo.allMenu[index].count = sres.data.readCount;
-						}else if(item.title === '在读'){
-							this.myReadInfo.allMenu[index].count = sres.data.currentReading;
-						}
-						
-					})
-				});
-			});
-		},
+		
 		// 线下订单页跳转
 		goOffline(url) {
 			uni.navigateTo({

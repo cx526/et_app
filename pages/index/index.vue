@@ -224,19 +224,19 @@ export default {
 	onShow() {
 		//更新tab
 		let bookCount = bookListData.cartBookCount();
-		// 更新老师推荐/书柜上新
-		this.getUpdateRecommend()
+		
 	},
 	onLoad() {
 		this.checkAuth();
 		this.getSwiperData();
 		this.getUserInfo();
-		// this.getHotBook('init');
-		// this.getGuessBook('init');
+		
 		//更新tab
 		let bookCount = bookListData.cartBookCount();
 		this.showAD();
 		this.getBanner()
+		// 更新老师推荐/书柜上新
+		// this.getUpdateRecommend()
 	},
 	// 上拉加载更多,onReachBottom上拉触底函数
 	onReachBottom: function() {
