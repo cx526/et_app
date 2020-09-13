@@ -17,7 +17,7 @@
 			:src="$aliImage + 'rule-offline.png'" 
 			mode="widthFix"></image>
 			<image :src="$aliImage + 'service-code.png'" 
-			mode="widthFix" class="code" ></image>
+			mode="widthFix" class="code" @tap="save"></image>
 		</view>
 	</view>
 </template>
@@ -51,12 +51,12 @@
 						uni.showModal({
 							title: '是否确认保存图片?',
 							success: res => {
-								console.log(res)
 								if(res.confirm) {
+									console.log(this.$aliImage + 'service-code.png',)
 									uni.downloadFile({
 										url: this.$aliImage + 'service-code.png',
 										success: res => {
-											console.log(res)
+											console.log(res.tempFilePath)
 											if(res.statusCode == 200) {
 												uni.saveImageToPhotosAlbum({
 													filePath: res.tempFilePath,

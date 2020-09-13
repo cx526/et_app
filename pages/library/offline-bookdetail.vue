@@ -136,6 +136,7 @@ export default {
 	},
 	data() {
 		return {
+			docker_mac: '',
 			$aliImage: this.$aliImage, //静态图片路径
 			len: '',
 			bookInfo:{},
@@ -167,7 +168,8 @@ export default {
 		}
 	},
 	onLoad(option) {
-		this.bookID = JSON.parse(decodeURIComponent(option.bookID));
+		this.bookID = option.bookID;
+		console.log(this.bookID)
 		this.getUserInfo()
 	},
 	onShow() {
@@ -183,9 +185,16 @@ export default {
 				filterItems: { mobile }
 				}).then(res => {
 				this.userInfo = res.data[0];
-				let docker_mac = this.userInfo.dockerInfo.docker_mac
+				console.log(this.userInfo)
+				
+				console.log(JSON.stringify(this.userInfo.dockerInfo))
+				if(JSON.stringify(this.userInfo.dockerInfo)  == '{}' && this.userInfo.dockerInfo) {
+					console.log('entry')
+					this.docker_mac = this.userInfo.dockerInfo.docker_mac ? this.userInfo.dockerInfo.docker_mac : ''
+				}
+				console.log(this.docker_mac)
 				// 获取书籍详情
-				this.getBookData(docker_mac);
+				this.getBookData(this.docker_mac);
 			})
 		},
 		// 收藏功能
