@@ -218,7 +218,8 @@
 					deposit: this.userInfo.deposit >= 29 ? 0 : 29, //押金
 					totalMoney: this.totalMoney, // 充值金额+押金
 					event: "recharge"
-				}).then(res => {
+				})
+				.then(res => {
 					resData = res.data.finalRes.xml
 					order_no = res.data.order_no;
 				})

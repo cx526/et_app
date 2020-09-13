@@ -57,7 +57,8 @@
 				<text class="label">借书卡号</text>
 					<input type="text" placeholder="请扫码绑定童书卡"
 					placeholder-style="font-size: 30rpx; color: #999"
-					:value="card_no" disabled
+					 @input="getCardNumber" 
+					:disabled="isDisabled" v-model="card_no"
 					/>
 				<image 
 				:src="$aliImage + 'teacher-icon-02.png'" 
@@ -222,6 +223,25 @@
 		},
 		
 		methods: {
+			// 手动填写卡号
+			getCardNumber(event) {
+				let value = event.detail.value.replace(/\s*/g, '')
+				let prefix = value.substring(0,2)
+				let number = ''
+				if(value.length > 2) {
+					number = value.substring(2).replace(/[^\d]/g, '')
+				}
+				setTimeout(() => {
+					this.card_no = prefix + value.substring(2).replace(/[^\d]/g, '')
+				},50)
+				
+				console.log(this.card_no)
+				
+				// 去空
+				// this.card_no = event.detail.value
+				// console.log(this.card_no)
+			},
+			
 			// 班级扫描
 			gradeScan() {	
 				if(!this.isDisabled) {
@@ -285,7 +305,9 @@
 					
 					// 初始信息
 					this.schoolName = res.data[0].schoolInfo ? res.data[0].schoolInfo.name : ''
+					this.schoolId = res.data[0].schoolInfo ? res.data[0].schoolInfo.id : ''
 					this.gradeName = res.data[0].gradeInfo ? res.data[0].gradeInfo.name : ''
+					this.gradeId = res.data[0].gradeInfo ? res.data[0].gradeInfo.id : ''
 					this.className = res.data[0].childInfo ? res.data[0].childInfo.class : ''
 					this.card_no = res.data[0].card_no ? res.data[0].card_no : ''
 					this.name = res.data[0].childInfo ?
@@ -298,7 +320,7 @@
 					this.custom_id = res.data[0].id;
 					this.change_class_status = res.data[0].change_class_status
 					this.teacherInfo = res.data[0].teacherInfo
-					// 确认信息是否给修改
+					// 确认信息是否给修改(有绑定老师需要申请，没有随意)
 					if(this.change_class_status == 1  ) {
 						console.log('teacherInfo')
 						this.isDisabled = false
@@ -339,7 +361,8 @@
 				// 初始化班级
 				this.gradeArray = this.schoolArray[this.schoolIndex].classInfo
 				// 每次更改初始化班级索引
-				this.gradeIndex = 0
+				this.gradeIndex = ''
+				this.gradeName = ''
 			},
 			// 选择年级
 			bindradeChange(event) {
@@ -384,13 +407,6 @@
 			},
 			// 申请修改
 			applyForMod() {
-				// if(this.card_no.replace(/\s*/g,"") == '' || this.name.replace(/\s*/g,"") == '' || this.parent_name.replace(/\s*/g,"") == '' || this.birthDay == '请选择学生生日') {
-				// 	uni.showToast({
-				// 		title: '请补全信息再提交',
-				// 		icon: 'none'
-				// 	})
-				// 	return
-				// }
 				this.$api.applyChangeGrade({
 					custom_id: this.custom_id
 				}).then(res => {
@@ -413,45 +429,59 @@
 			},
 			// 保存修改信息
 			saveInfo() {
-				let param = {
-					custom_id:  this.custom_id,
-					parent_name: this.parent_name,
-					outer_code:  this.card_no,
-					name: this.name,
-					gender: this.gender,  //1:男  2：女 
-					birth_day: this.birthDay,
-					school_id: this.schoolId,
-					grade_id: this.gradeId,
-					class: this.className
-				}
-				if(this.card_no.replace(/\s*/g,"") == '' || this.name.replace(/\s*/g,"") == '' || this.parent_name.replace(/\s*/g,"") == '' || this.birthDay == '请选择学生生日') {
-					uni.showToast({
-						title: '请补全信息再提交',
-						icon: 'none'
-					})
-					return
-				}
-				uni.showLoading({
-					title: '提交资料中',
-					mask: true
-				})
-				this.$api.addStudentInfo(param).then(res => {
-					uni.hideLoading()
-					console.log(res)
-					
-					if(res.data.status == 'ok') {
-						
-						// 查询老师信息
-						this.checkTeacherInfo()
-						// 重置本地卡号和docker_mac
-						this.getCheckUserInfo()
-					}else {
+				// 检测卡号
+				if(this.checkCard(this.card_no)) {
+					console.log(true)
+					let param = {
+						custom_id:  this.custom_id,
+						parent_name: this.parent_name,
+						outer_code:  this.card_no,
+						name: this.name,
+						gender: this.gender,  //1:男  2：女 
+						birth_day: this.birthDay,
+						school_id: this.schoolId,
+						grade_id: this.gradeId,
+						class: this.className
+					}
+					if(this.card_no.replace(/\s*/g,"") == '' || this.name.replace(/\s*/g,"") == '' || this.parent_name.replace(/\s*/g,"") == '' || this.birthDay == '请选择学生生日' || !this.gradeName || !this.schoolName) {
 						uni.showToast({
-							title: res.data.msg,
+							title: '请补全信息再提交',
 							icon: 'none'
 						})
+						return
 					}
-				})
+					uni.showLoading({
+						title: '提交资料中',
+						mask: true
+					})
+					this.$api.addStudentInfo(param).then(res => {
+						uni.hideLoading()
+						console.log(res)
+						
+						if(res.data.status == 'ok') {
+							
+							// 查询老师信息
+							this.checkTeacherInfo()
+							// 重置本地卡号和docker_mac
+							this.getCheckUserInfo()
+						}else {
+							uni.showToast({
+								title: res.data.msg,
+								icon: 'none'
+							})
+						}
+					})
+				}else {
+					uni.showToast({
+						title: '卡号异常，请重新输入',
+						icon: 'none'
+					})
+				}
+				
+				
+				
+				
+				
 			},
 			// 审核中
 			applying() {
@@ -506,7 +536,7 @@
 							title: "绑卡成功!",
 							duration: 2000,
 							success: () => {
-								uni.switchTab({
+								uni.reLaunch({
 									url: '/pages/library/library'
 								})
 							}
@@ -532,7 +562,7 @@
 							uni.showToast({
 								title: '绑定教师成功',
 								success: () => {
-									uni.switchTab({
+									uni.reLaunch({
 										url: '/pages/library/library'
 									})
 								}

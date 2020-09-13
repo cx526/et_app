@@ -30,8 +30,12 @@
 					<view class="number">
 						<text>{{ deposit }}</text>
 					</view>
-					<view class="btn" @tap="goDeposit" v-if="deposit > 0">
+					<view class="btn" @tap="goDeposit" v-if="deposit >= 29"
+					style="background: #f00;">
 						<text>{{ refundInfo.status_text }}</text>
+					</view>
+					<view class="btn" v-if="deposit == 0" @tap="goDepositPay">
+						<text>立即充值</text>
 					</view>
 				</view>
 			</view>
@@ -50,10 +54,17 @@
 					<view class="main">
 						<view class="item">
 							<view class="topic">
-								<text>书柜借阅</text>
-								<text v-if="item.shell < 0">{{ item.shell }}</text>
-								<text v-else 
+								<text v-if="item.deposit == 0">书柜借阅</text>
+								<text v-else>充值押金</text>
+								<!-- 书柜借阅 -->
+								<text v-if="item.shell < 0 && item.deposit == 0">{{ item.shell }}</text>
+								<text v-if="item.shell >= 0 && item.deposit == 0"
 								style="color: #039EB9;">+{{ item.shell }}</text>
+								<!-- 退充押金 -->
+								<text style="color: #039EB9;"
+								v-if="item.deposit != 0 && item.totalMoney >= 0">
+								+{{ item.totalMoney }}</text>
+								<text v-if="item.deposit != 0 && item.totalMoney < 0">{{ item.totalMoney }}</text>
 							</view>
 							<view class="time">
 								<text style="margin-right: 12rpx;">创建时间：{{ item.handle_create_time }}</text>
@@ -73,6 +84,7 @@
 </template>
 
 <script>
+	const wxPay = require('@/common/wxPay')
 	import uniNavBar from "@/components/uni-nav-bar/uni-nav-bar.vue"
 	import uniLoadMore from '@/components/uni-load-more/uni-load-more.vue';
 	export default {
@@ -210,7 +222,7 @@
 						uni.showToast({ title: res.data.msg })
 					})
 				} else {
-					uni.showModal({ title: this.refundInfo.msg })
+					uni.showToast({ title: this.refundInfo.msg, icon: 'none' })
 				}
 			},
 			// 返回借阅页面
@@ -227,6 +239,79 @@
 						url: '/pages/cart/cart?flag=true'
 					})
 				}
+				
+			},
+			// 充值押金
+			async goDepositPay() {
+				uni.showLoading({
+					title: '订单提交中',
+					mask: true
+				})
+				let id = this.userInfo.id
+				let userInfo = uni.getStorageSync("userInfo")
+				userInfo.id = id
+				let resData = ''
+				let order_no = ''//订单号
+				await this.$api.offlinePayMent({
+					userInfo: userInfo,
+					shell: 0 , //五车贝
+					deposit: 29, //押金
+					totalMoney: 29, // 充值金额+押金
+					event: "rechargeDeposit"
+				})
+				.then(res => {
+					resData = res.data.finalRes.xml
+					order_no = res.data.order_no;
+					if(resData.return_code[0] === 'SUCCESS') {
+						// 获取微信签名
+						let { paySign, time, APPID, nonceStr } = wxPay.wxReSign(resData.prepay_id[0]);
+						// 调起微信支付
+						wxPay.wxPay(time, nonceStr, resData.prepay_id[0], paySign,
+							res => {
+								if(res.errMsg === "requestPayment:ok") {
+									this.$api.offlineUpdatePayMent({
+										userInfo: userInfo,//个人信息
+										event: "rechargeDeposit",//充值类型
+										order_no: order_no,//订单号
+										shell: 0, //充值金额
+										deposit: 29, //押金
+										totalMoney: 29, // 充值金额+押金
+									}).then(res => {
+										uni.hideLoading()
+										setTimeout(() => {
+											uni.showToast({
+												title: '充值成功',
+												duration: 2000,
+												success: () => {
+													// 重置当前用户信息
+													this.getUserInfo()
+												}
+											})
+										})
+										// 跳转到我的钱包页
+										// uni.redirectTo({
+										// 	url: './virtual'
+										// })
+									})
+								}
+							},
+							err => {
+								uni.hideLoading();
+								uni.showToast({
+									title: '支付失败',
+									icon: 'none',
+									duration: 2000
+								})
+								console.log(err)
+							}
+						)
+					}
+				})
+				
+				
+				
+				
+				
 				
 			},
 		}

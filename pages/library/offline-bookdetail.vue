@@ -191,6 +191,8 @@ export default {
 				if(JSON.stringify(this.userInfo.dockerInfo)  == '{}' && this.userInfo.dockerInfo) {
 					console.log('entry')
 					this.docker_mac = this.userInfo.dockerInfo.docker_mac ? this.userInfo.dockerInfo.docker_mac : ''
+				}else if(JSON.stringify(this.userInfo.dockerInfo)  != '{}' && this.userInfo.dockerInfo) {
+					this.docker_mac = this.userInfo.dockerInfo.docker_mac 
 				}
 				console.log(this.docker_mac)
 				// 获取书籍详情
