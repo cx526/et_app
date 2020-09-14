@@ -189,6 +189,7 @@
 		},
 		onShow() {
 			this.getUserInfo()
+			this.payRecordList = []
 		},
 		onReachBottom() {
 			if(this.isLoadingMore) {
@@ -204,13 +205,16 @@
 					icon: 'none'
 				})
 				let mobile = uni.getStorageSync("userInfo").mobile;
-				this.$api.getCustom({ filterItems: { mobile } }).then(res => {
+				this.$api.getCustom({ filterItems: { mobile } })
+				.then(res => {
 					uni.hideLoading()
 					this.userInfo = res.data[0];
 					//储存用户的五车贝;
-					this.shell = (+this.userInfo.shell).toFixed(2) ?  (+this.userInfo.shell).toFixed(2) : 0.00
+					this.shell = (+this.userInfo.shell).toFixed(2) ? 
+					(+this.userInfo.shell).toFixed(2) : 0.00
 					//储存用户的押金
-					this.deposit = (+this.userInfo.deposit).toFixed(2) ? (+this.userInfo.deposit).toFixed(2) : 0.00
+					this.deposit = (+this.userInfo.deposit).toFixed(2) ? 
+					(+this.userInfo.deposit).toFixed(2) : 0.00
 					this.id = this.userInfo.id
 					// 目前退还押金状态
 					this.getRefundInfo()
@@ -238,7 +242,12 @@
 						// 保存两位小数
 						item.shell = (Number(item.shell)).toFixed(2)
 					})
-					this.payRecordList = [...this.payRecordList, ...res.data.rows]
+					if(this.payRecordList.length == 0) {
+						this.payRecordList = res.data.rows
+					}else {
+						this.payRecordList=[...this.payRecordList,...res.data.rows]
+					}
+					
 					// 是否开启下拉加载更多
 					if(res.data.rows.length < this.pageSize) {
 						this.isLoadingMore = false;
@@ -359,8 +368,8 @@
 												duration: 2000,
 												success: () => {
 													// 重置当前充值记录信息
+													this.currentPage = 1;
 													this.payRecordList = [];
-													
 													this.getUserInfo()
 												}
 											})
