@@ -72,7 +72,7 @@
 			<view class="item">
 				<text>2.一元人民币可充值10五车贝（单次充值不低于10元）</text>
 			</view>
-			<view class="item">
+			<view class="item">sure
 				<text>3.充值后不可提现</text>
 			</view>
 			<view class="item">
@@ -172,36 +172,36 @@
 					})
 					return
 				}
-				// 没有支付过押金
-				else if(this.userInfo.deposit < 29) {
-					uni.showModal({
-						title: '您还没提交过押金(押金可退)',
-						content: '需要在充值金额上累加29元押金',
-						success: res => {
-							if(res.confirm) {
-								let deposit = this.userInfo.deposit >= 29 ? 0 : 29
-								this.totalMoney = deposit + this.value;
-								// 调起支付
-								this.goPay()
-							}else {
-								uni.showToast({
-									title: '支付失败',
-									icon: 'none',
-									duration: 2000
-								})
-							}
-						}
-					})
-					return
-				}
+				// 没有支付过押金(押金已有单独充值入口)
+				// else if(this.userInfo.deposit < 29) {
+				// 	uni.showModal({
+				// 		title: '您还没提交过押金(押金可退)',
+				// 		content: '需要在充值金额上累加29元押金',
+				// 		success: res => {
+				// 			if(res.confirm) {
+				// 				let deposit = this.userInfo.deposit >= 29 ? 0 : 29
+				// 				this.totalMoney = deposit + this.value;
+				// 				// 调起支付
+				// 				this.goPay()
+				// 			}else {
+				// 				uni.showToast({
+				// 					title: '支付失败',
+				// 					icon: 'none',
+				// 					duration: 2000
+				// 				})
+				// 			}
+				// 		}
+				// 	})
+				// 	return
+				// }
 				this.goPay()
 			},
 			// 充值
 			async goPay() {	
 				// 计算押金
-				let deposit = this.userInfo.deposit >= 29 ? 0 : 29
+				// let deposit = this.userInfo.deposit >= 29 ? 0 : 29
 				// 计算总金额
-				this.totalMoney = deposit + this.value;
+				this.totalMoney = this.value;
 				uni.showLoading({
 					title: '发起支付中',
 					mask: true
@@ -214,9 +214,9 @@
 				// 从后台读取订单号
 				await this.$api.offlinePayMent({
 					userInfo: userInfo,
-					shell: Number(this.value) * 10, //充值金额
-					deposit: this.userInfo.deposit >= 29 ? 0 : 29, //押金
-					totalMoney: this.totalMoney, // 充值金额+押金
+					shell: Number(this.value) * 10, //五车贝
+					deposit: 0, //押金
+					totalMoney: this.totalMoney, // 充值金额
 					event: "recharge"
 				})
 				.then(res => {

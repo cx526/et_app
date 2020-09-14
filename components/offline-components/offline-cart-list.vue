@@ -567,7 +567,7 @@ export default {
 		// 下单
 		placeOrder(goods_id, type) {
 			uni.showLoading({
-				title: '数据加载中',
+				title: '订单提交中',
 				mask: true
 			})
 			this.$api.offlinePlaceOrder({
