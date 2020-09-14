@@ -52,25 +52,80 @@
 			<view class="context">
 				<block v-for="(item, index) in payRecordList" :key="index">
 					<view class="main">
-						<view class="item">
+						<!--
+						 充值显示判断:
+						 1.event时候recharge，shell不为0，dep为0是充值五车贝 
+						 2.event为rechargeDeposit shell为0，dep不为0是充值押金 
+						 3.event为buyOfflineBook shell小于0为书柜借阅
+						 4.event为rechargeShellDeposit 
+						 shell与dep不为0是充值五车贝与押金(目前没有充值五车贝跟押金									一起，这种情况不做判断) 
+						 5.event为returnDeposit，dep小于0为退还押金 
+						 6.event为getBookFail shell大于0为逾期未取书
+						 -->
+						 <!-- 充值五车贝 -->
+						<view class="item" v-if="item.event == 'recharge' && item.shell != 0 && item.deposit == 0">
 							<view class="topic">
-								<text v-if="item.deposit == 0">书柜借阅</text>
-								<text v-else>充值押金</text>
-								<!-- 书柜借阅 -->
-								<text v-if="item.shell < 0 && item.deposit == 0">{{ item.shell }}</text>
-								<text v-if="item.shell >= 0 && item.deposit == 0"
-								style="color: #039EB9;">+{{ item.shell }}</text>
-								<!-- 退充押金 -->
-								<text style="color: #039EB9;"
-								v-if="item.deposit != 0 && item.totalMoney >= 0">
-								+{{ item.totalMoney }}</text>
-								<text v-if="item.deposit != 0 && item.totalMoney < 0">{{ item.totalMoney }}</text>
+									 <text>充值五车贝</text>
+									 <text style="color: #039EB9;">
+										 +{{ item.shell }}</text>
 							</view>
 							<view class="time">
-								<text style="margin-right: 12rpx;">创建时间：{{ item.handle_create_time }}</text>
-								<!-- <text>16:00:00</text> -->
+								<text style="margin-right: 12rpx;">
+									创建时间：{{ item.handle_create_time }}</text>
 							</view>
 						</view>
+						<!-- 充值押金 -->
+						<view class="item" v-if="item.event == 'rechargeDeposit' && item.shell == 0 && item.deposit != 0">
+							<view class="topic">
+								<text>充值押金</text>
+								<text style="color: #039EB9;">
+								+{{ item.totalMoney }}</text>
+							</view>
+							<view class="time">
+								<text style="margin-right: 12rpx;">
+									创建时间：{{ item.handle_create_time }}</text>
+							</view>
+						</view>
+						<!-- 书柜借阅 -->
+						<view class="item" 
+						v-if="item.event == 'buyOfflineBook' && item.shell < 0">
+							<view class="topic">
+									<text>书柜借阅</text>
+									<text>{{ item.shell }}</text>
+							</view>
+							<view class="time">
+								<text style="margin-right: 12rpx;">
+									创建时间：{{ item.handle_create_time }}</text>
+							</view>
+						</view>
+						
+						<!-- 书柜退还 -->
+						<view class="item"
+						v-if="item.event == 'getBookFail' && item.shell > 0">
+							<view class="topic">
+									<text>退还五车贝</text>
+									<text style="color: #039EB9;">+{{ item.shell }}</text>
+							</view>
+							<view class="time">
+								<text style="margin-right: 12rpx;">
+									创建时间：{{ item.handle_create_time }}</text>
+							</view>
+						</view>
+						
+						
+						<!-- 退还押金 -->
+						<view class="item" v-if="item.event == 'returnDeposit' && item.deposit < 0">
+							<view class="topic">
+								<text>退还押金</text>
+								<text style="color: #039EB9;">
+								+{{ item.deposit }}</text>
+							</view>
+							<view class="time">
+								<text style="margin-right: 12rpx;">
+									创建时间：{{ item.handle_create_time }}</text>
+							</view>
+						</view>
+						
 					</view>
 				</block>
 				
@@ -98,7 +153,7 @@
 				payRecordList: [],
 				pageSize: 10,
 				currentPage: 1,
-				loadStatus: 'loading',
+				loadStatus: 'more',
 				loadText: {
 					contentdown: '上拉加载更多',
 					contentrefresh: '加载中',
@@ -412,11 +467,12 @@
 	}
 	.pay-record .context .main {
 		box-sizing: border-box;
-		padding: 30rpx 22rpx 0 22rpx;
+		padding: 0 22rpx 0 22rpx;
 	}
 	.pay-record .context .item {
 		box-sizing: border-box;
 		border-bottom: 1px dashed #ADADAD;
+		padding-top: 30rpx;
 	}
 	.pay-record .context .main:last-child .item {
 		box-sizing: border-box;
