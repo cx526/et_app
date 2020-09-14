@@ -170,6 +170,7 @@ import uniNoticeBar from '@/components/uni-notice-bar/uni-notice-bar.vue'
 const toUrlFunction = require('@/common/toUrlFunction');
 const checkLogin = require('@/common/checkLogin');
 const bookListData = require('@/common/carDataOption');
+const packagejson = require('@/package.json');
 
 export default {
 	computed: {
@@ -387,6 +388,7 @@ export default {
 		//更新tab
 		let bookCount = bookListData.cartBookCount();
 		// this.getReadCount();
+		// console.log(packagejson.version);
 	},
 	// onShow() {
 	// 	this.getOrderCount();
@@ -453,7 +455,7 @@ export default {
 		// 重新登录
 		clearSessionAction() {
 			uni.showActionSheet({
-			    itemList: ['重新登录'],
+			    itemList: [ '重新登录', '版本号:' + packagejson.version ],
 			    success: res => {
 					if (res.tapIndex === 0) {
 						uni.removeStorageSync('userInfo')
