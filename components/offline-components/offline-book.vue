@@ -177,6 +177,21 @@
 			},
 			// 跳转至商品详情页
 			goDetail(id) {
+				let userInfo = uni.getStorageSync("userInfo")
+				if(!userInfo.name || userInfo.name == 'guest') {
+					uni.showModal({
+						title: '请先登录',
+						content: '是否前往登录页面?',
+						success: res => {
+							if(res.confirm) {
+								uni.redirectTo({
+									url: '/pages/guide/auth'
+								})
+							}
+						}
+					})
+					return
+				}
 				uni.navigateTo({
 					url: '/pages/library/offline-bookdetail?bookID=' + id
 				});

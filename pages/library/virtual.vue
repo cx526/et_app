@@ -30,10 +30,12 @@
 					<view class="number">
 						<text>{{ deposit }}</text>
 					</view>
-					<view class="btn" @tap="goDeposit" v-if="deposit >= 29"
+					<!-- 有押金显示退还 -->
+					<view class="btn" @tap="goDeposit" v-if="deposit > 0"
 					style="background: #f00;">
 						<text>{{ refundInfo.status_text }}</text>
 					</view>
+					<!-- 无押金显示充值 -->
 					<view class="btn" v-if="deposit == 0" @tap="goDepositPay">
 						<text>立即充值</text>
 					</view>
@@ -75,7 +77,7 @@
 							</view>
 						</view>
 						<!-- 充值押金 -->
-						<view class="item" v-if="item.event == 'rechargeDeposit' && item.shell == 0 && item.deposit != 0">
+						<view class="item" v-else-if="item.event == 'rechargeDeposit' && item.shell == 0 && item.deposit != 0" >
 							<view class="topic">
 								<text>充值押金</text>
 								<text style="color: #039EB9;">
@@ -88,7 +90,7 @@
 						</view>
 						<!-- 书柜借阅 -->
 						<view class="item" 
-						v-if="item.event == 'buyOfflineBook' && item.shell < 0">
+						v-else-if="item.event == 'buyOfflineBook' && item.shell < 0">
 							<view class="topic">
 									<text>书柜借阅</text>
 									<text>{{ item.shell }}</text>
@@ -101,7 +103,7 @@
 						
 						<!-- 书柜退还 -->
 						<view class="item"
-						v-if="item.event == 'getBookFail' && item.shell > 0">
+						v-else-if="item.event == 'getBookFail' && item.shell > 0">
 							<view class="topic">
 									<text>退还五车贝</text>
 									<text style="color: #039EB9;">+{{ item.shell }}</text>
@@ -114,11 +116,11 @@
 						
 						
 						<!-- 退还押金 -->
-						<view class="item" v-if="item.event == 'returnDeposit' && item.deposit < 0">
+						<view class="item" v-else-if="item.event == 'returnDeposit' && item.deposit < 0">
 							<view class="topic">
 								<text>退还押金</text>
 								<text style="color: #039EB9;">
-								+{{ item.deposit }}</text>
+								{{ item.deposit }}</text>
 							</view>
 							<view class="time">
 								<text style="margin-right: 12rpx;">
@@ -126,6 +128,18 @@
 							</view>
 						</view>
 						
+						<!-- 其他 -->
+						<view class="item" v-else>
+							<view class="topic">
+								<text>其他</text>
+								<text style="color: #039EB9;">
+								{{ item.totalMoney }}</text>
+							</view>
+							<view class="time">
+								<text style="margin-right: 12rpx;">
+									创建时间：{{ item.handle_create_time }}</text>
+							</view>
+						</view>
 					</view>
 				</block>
 				
@@ -162,6 +176,7 @@
 				isLoadingMore: true,
 				refundInfo: "",//储存押金状态
 				from: "",//区别页面从哪里跳转过来
+				price: 29
 			}
 		},
 		components: {
@@ -205,6 +220,10 @@
 			},
 			// 获取充值记录
 			getPayRecord() {
+				uni.showLoading({
+					title: '数据加载中',
+					mask: true
+				})
 				this.$api.offlinePayRecord({
           pageSize: this.pageSize,
           currentPage: this.currentPage,
@@ -212,6 +231,7 @@
             custom_id: this.id
           }
 				}).then(res => {
+					uni.hideLoading()
 					// 格式化时间
 					res.data.rows && res.data.rows.map(item => {
 						item.handle_create_time = this.handleTime(item.create_date)
@@ -310,8 +330,8 @@
 				await this.$api.offlinePayMent({
 					userInfo: userInfo,
 					shell: 0 , //五车贝
-					deposit: 29, //押金
-					totalMoney: 29, // 充值金额+押金
+					deposit: this.price, //押金
+					totalMoney: this.price, // 充值金额
 					event: "rechargeDeposit"
 				})
 				.then(res => {
@@ -328,9 +348,9 @@
 										userInfo: userInfo,//个人信息
 										event: "rechargeDeposit",//充值类型
 										order_no: order_no,//订单号
-										shell: 0, //充值金额
-										deposit: 29, //押金
-										totalMoney: 29, // 充值金额+押金
+										shell: 0, //充值五车贝
+										deposit: this.price, //押金
+										totalMoney: this.price, // 充值金额
 									}).then(res => {
 										uni.hideLoading()
 										setTimeout(() => {
@@ -338,7 +358,9 @@
 												title: '充值成功',
 												duration: 2000,
 												success: () => {
-													// 重置当前用户信息
+													// 重置当前充值记录信息
+													this.payRecordList = [];
+													
 													this.getUserInfo()
 												}
 											})

@@ -127,27 +127,27 @@ export default {
 .content {
 	position: relative;
 	width: 100%;
-	height: 2100upx;
-	background-image: url('https://et-pic-server.oss-cn-shenzhen.aliyuncs.com/app_img/sign_bg.png');
+	height: 1700upx;
+	background-image: url('https://et-pic-server.oss-cn-shenzhen.aliyuncs.com/app_img/sign_bg-01.png');
 	background-size: 100%;
 	background-repeat: no-repeat;
 	background-color: #EBF8FF;
 }
 .year {
-	padding-top: 150upx;
+	padding-top: 200upx;
 	text-align: center;
 	font-size: 28upx;
 }
 .week {
 	display: flex;
-	padding-left: 50upx;
+	padding-left: 60upx;
 	padding-top: 20upx;
 }
 .calendar {
 	display: flex;
 	padding-top: 20upx;
 	flex-wrap: wrap;
-	padding-left: 50upx;
+	padding-left: 60upx;
 }
 .day {
 	display: flex;
@@ -155,7 +155,7 @@ export default {
 	justify-content: center;
 	width: 65upx;
 	height: 65upx;
-	margin-left: 28upx;
+	margin-left: 24upx;
 	margin-top: 6upx;
 	font-size: 28upx;
 	text-align: center;
@@ -166,6 +166,7 @@ export default {
 	height: 240upx;
 }
 .sign-button {
+	margin-top: 24rpx;
 	display: flex;
 	align-items: center;
 	justify-content: center;

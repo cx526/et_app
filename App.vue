@@ -1,7 +1,10 @@
+
 <script>
+	// const car = require('@/common/carDataOption.js')
 	export default {
 		onLaunch: function() {
-			
+			// // 计算线上+线下书籍数显示tabbar
+			// car.countBookLength()
 		},
 		onShow: function() {
 			console.log('App Show')

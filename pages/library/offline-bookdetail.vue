@@ -16,8 +16,18 @@
 			<view class="detail-content-position">
 				<view class="detail-title-position">
 					<text>{{bookInfo.title}}</text>
-					<view class="book-count-style">
-						<text style="font-size: 30upx;">剩余: {{bookInfo.stockCount.totalDockerUse}} 本</text>
+					<!-- 判断docker_mac、card_no是否存在 -->
+					<view class="book-count-style" 
+					v-if="docker_mac && userInfo.card_no">
+						<text style="font-size: 30upx;">
+							剩余: {{bookInfo.stockCount.totalDockerUse}} 本</text>
+					</view>
+					<view class="book-count-style"  @tap="bindCard"
+					v-if="!userInfo.card_no ">
+						<text style="font-size: 30upx;">请先绑定童书卡</text>
+					</view>
+					<view class="book-count-style" v-if="userInfo.card_no && !docker_mac">
+						<text style="font-size: 30upx;">绑定学校暂无书柜</text>
 					</view>
 				</view>
 				
@@ -36,47 +46,9 @@
 					<text style="font-weight: bold;">出版社：</text>
 					<text>{{bookInfo.publisher}}</text>
 				</view>
-				
-				<!-- <view class="detail-grade-position">
-					<text>4.8分</text>
-					<image src="" mode=""></image>
-				</view> -->
-				
-				<!-- <view class="detail-people-position">
-					<et-peoplelist :imgInfo="imgInfo"></et-peoplelist>
-				</view> -->
 			</view>	
 		</view>
-		
 		<view class="grey-space"></view>
-		
-		<!-- <view class="out-position">
-			<view class="out-content" style="position-bottom:20upx;">
-				<text class="title-content-process">借阅流程</text>
-				<text class="link-content"  @tap='toProgressUrl'>详情 ></text>
-			</view>
-		</view> -->
-		
-		<!-- <view class="process-position">
-			<image class="out-img" :src="$aliImage + 'index_bookdetail_progress_borrow.png'" style="width: 750upx;" mode="widthFix"></image>
-		</view> -->
-	
-		
-		<!-- <view class="white-space"></view> -->
-		
-		<!-- <view class="out-position">
-			<view class="out-content" style="position-bottom:20upx;">
-				<text class="title-content-process">归还流程</text>
-			</view>
-		</view> -->
-		
-		<!-- <view class="process-position">
-			<image class="out-img" :src="$aliImage + 'index_bookdetail_progress_return.png'" style="width: 750upx;" mode="widthFix"></image>
-		</view> -->
-			
-		
-		<!-- <view class="white-space"></view> -->
-		
 		<view class="out-position">
 			<view class="out-content" style="position-bottom:15upx;">
 				<text class="title-content-process">商品简介</text>
@@ -197,6 +169,12 @@ export default {
 				console.log(this.docker_mac)
 				// 获取书籍详情
 				this.getBookData(this.docker_mac);
+			})
+		},
+		// 跳转到绑卡页面
+		bindCard() {
+			uni.redirectTo({
+				url: '/pages/library/tied-card'
 			})
 		},
 		// 收藏功能

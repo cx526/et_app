@@ -14,7 +14,7 @@
 			:src="$aliImage + 'rule-online.png'" 
 			mode="widthFix"></image>
 			<image v-if="currentIndex == 1"
-			:src="$aliImage + 'rule-offline.png'" 
+			:src="$aliImage + 'rule-offline-02.png'" 
 			mode="widthFix"></image>
 			<image :src="$aliImage + 'service-code.png'" 
 			mode="widthFix" class="code" @tap="save"></image>

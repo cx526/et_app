@@ -1,6 +1,5 @@
 <template>
 	<view class="index">
-		<view style="display: none;" class="sign-button" @tap="toSign"><text>签到</text></view>
 		<!-- 头部内容 -->
 		<view class="top-content">
 			<!-- 顶栏搜索框 -->
@@ -386,6 +385,21 @@ export default {
 		},
 		// 跳转书籍详情页
 		toBookDetail(bookID) {
+			let userInfo = uni.getStorageSync("userInfo")
+			if(!userInfo.name || userInfo.name == 'guest') {
+				uni.showModal({
+					title: '请先登录',
+					content: '是否前往登录页面?',
+					success: res => {
+						if(res.confirm) {
+							uni.redirectTo({
+								url: '/pages/guide/auth'
+							})
+						}
+					}
+				})
+				return
+			}
 			uni.navigateTo({
 				url: '../library/offline-bookdetail?bookID=' + bookID
 			});

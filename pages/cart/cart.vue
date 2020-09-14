@@ -1,5 +1,5 @@
 <template>
-	<view v-show="isShow">
+	<view>
 		<!-- tab切换线上/线下 -->
 		<view class="tab-box">
 			<view 
@@ -60,23 +60,24 @@ export default {
 			tabList: [
 				{
 					title: '书柜取还',
-					number: 2
+					number: 0
 				},
 				{
 					title: '快递取还',
-					number: 3
+					number: 0
 				}
 			],
 			offlineAllSelect: false,
 			offlineBooksList: [],
 			popUpWidth: 0,
-			isShow: true
 		}
 	},
 	onLoad(option){
+		console.log(option)
 		this.bookCatShow = true;
 		// 线下逻辑
 		this.flag = option.flag
+		console.log(this.flag)
 		// 获取屏幕高度
 		uni.getSystemInfo({
 			success: res => {
@@ -89,9 +90,8 @@ export default {
 	onShow(){
 		this.bookCatShow = true;
 		// 线下逻辑
-		this.isShow = true
-		// 判断当前页面显示线上 flag = false /线下 flag = true
-		if(this.flag) {
+		// 判断当前页面显示线上 flag = undefined /线下 flag = true
+		if(!this.flag) {
 			this.isStatus  = false;
 			this.currentIndex = 0
 		}else {
@@ -139,10 +139,7 @@ export default {
 		countChange() {
 			this.tabList[0].number = uni.getStorageSync("offlineCartList").length
 		},
-		// 监听页面做显示或者隐藏
-		pageHide(flag) {
-			this.isShow = flag
-		}
+		
 	}
 }
 </script>

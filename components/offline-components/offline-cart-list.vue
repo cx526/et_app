@@ -181,8 +181,6 @@ export default {
 			let mobile = uni.getStorageSync("userInfo").mobile;
 			this.$api.offlineUserDockerInfo({ mobile } )
 			.then(res => {
-				console.log('getUserInfo')
-				console.log(res.data)
 				this.userInfo = res.data;
 				// 如果不是合作幼儿园
 				if(!this.userInfo.dockerInfo) {	
@@ -534,9 +532,6 @@ export default {
 						amount = (+amount + (+item.price)).toFixed(2);
 					});
 					this.price = amount
-					console.log(this.shell)
-					console.log(this.price)
-					console.log(this.deposit)
 					// 当前用户五车贝不足够或押金小于29时显示弹窗
 					if(Number(this.shell) < Number(this.price) || Number(this.deposit) < 29) {
 						if(Number(this.shell) < Number(this.price)) {
@@ -547,7 +542,6 @@ export default {
 							this.$refs.depositPopUp.open()
 						}
 					}else {
-						console.log('下单')
 						let goods_id = goodsIDs.join(',');
 						// // 下单
 						this.placeOrder(goods_id, 'shell');					
@@ -555,11 +549,17 @@ export default {
 				}
 				// 2.用户有免费借阅次数且所选书籍小于2且积分/50大于等于1(免费)
 				else if (this.free && len < 2 && reality >= 1) {
-					let goods_id = goodsIDs.join(',');
-					amount = 0;
-					this.price = amount;
-					// 下单
-					this.placeOrder(goods_id, 'coin')
+					if(Number(this.deposit) < 29) {
+						// 显示押金不足弹窗··
+						this.$refs.depositPopUp.open()
+					}else {
+						let goods_id = goodsIDs.join(',');
+						amount = 0;
+						this.price = amount;
+						// 下单
+						this.placeOrder(goods_id, 'coin')
+					}
+					
 				}
 			}
 		

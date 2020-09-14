@@ -574,7 +574,7 @@ export default {
 		// 跳转到书篮tabbar页面
 		goCart() {
 			uni.reLaunch({
-				url: '../cart/cart?flag=true'
+				url: '../cart/cart'
 			});
 		},
 		// 跳转到搜索页
