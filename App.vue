@@ -1,12 +1,8 @@
 
 <script>
-	// const car = require('@/common/carDataOption.js')
 	export default {
 		onLaunch: function() {
-<<<<<<< HEAD
-			// // 计算线上+线下书籍数显示tabbar
-			// car.countBookLength()
-=======
+
 			const updateManager = uni.getUpdateManager();
 			
 			updateManager.onCheckForUpdate(function (res) {
@@ -31,7 +27,6 @@
 			updateManager.onUpdateFailed(function (res) {
 			  // 新的版本下载失败
 			});
->>>>>>> 7e7dff904c422c9ca2fce941da32eb2dae747127
 		},
 		onShow: function() {
 			console.log('App Show')
