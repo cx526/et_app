@@ -237,6 +237,16 @@ export default {
 		this.getBanner()
 		// 更新老师推荐/书柜上新
 		// this.getUpdateRecommend()
+		
+		// // #ifdef APP-PLUS
+		// plus.runtime.getProperty( plus.runtime.appid, function ( wgtinfo ) {
+		// 	//appid属性
+		// 	var wgtStr = "appid:" + wgtinfo.appid;
+		// 	//version属性
+		// 	wgtStr += "<br/>version:" + wgtinfo.version;
+		// 	console.log(wgtStr)
+		// });
+		// // #endif
 	},
 	// 上拉加载更多,onReachBottom上拉触底函数
 	onReachBottom: function() {
