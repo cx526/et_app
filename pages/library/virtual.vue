@@ -188,8 +188,10 @@
 			this.from = options.from
 		},
 		onShow() {
-			this.getUserInfo()
+			this.currentPage = 1
 			this.payRecordList = []
+			this.getUserInfo()
+			
 		},
 		onReachBottom() {
 			if(this.isLoadingMore) {
@@ -368,9 +370,9 @@
 												duration: 2000,
 												success: () => {
 													// 重置当前充值记录信息
-													this.currentPage = 1;
-													this.payRecordList = [];
-													this.getUserInfo()
+													// this.currentPage = 1;
+													// this.payRecordList = [];
+													// this.getUserInfo()
 												}
 											})
 										})

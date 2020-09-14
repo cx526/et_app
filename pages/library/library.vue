@@ -256,7 +256,7 @@ export default {
 					currentPage: this.currentPage
 				}).then(res => {
 					this.productList = [...this.productList, ...res.data.rows];
-					if (res.data.rows.length < this.pageSize) {
+					if (this.productList.length >= res.data.totalPage) {
 						this.loadStatus = 'noMore';
 					}
 				});
@@ -523,7 +523,7 @@ export default {
 			};
 			this.$api.offlineOrderCheckStock(param).then(res => {
 				this.productList = [...this.productList, ...res.data.rows];
-				if (res.data.rows < this.pageSize) {
+				if (this.productList.length >= res.data.totalPage) {
 					this.loadStatus = 'noMore';
 				}
 			});
