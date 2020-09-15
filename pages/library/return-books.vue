@@ -309,12 +309,12 @@
 		},
 		onReachBottom() {
 			// 待还书单上拉加载
-			if(this.waitOrderTotalPage > this.waitOrderList.length && this.tabList.currentIndex == 0) {
-				this.loadStatus = "loading"
-				this.waitOrderPage = this.waitOrderPage + 1;
-				this.getWaitOrderList()
-			}
-			else if(this.returnOrderTotalPage > this.returnOrderList.length && this.tabList.currentIndex == 1) {
+			// if(this.waitOrderTotalPage > this.waitOrderList.length && this.tabList.currentIndex == 0) {
+			// 	this.loadStatus = "loading"
+			// 	this.waitOrderPage = this.waitOrderPage + 1;
+			// 	this.getWaitOrderList()
+			// }
+			if(this.returnOrderTotalPage > this.returnOrderList.length && this.tabList.currentIndex == 1) {
 				this.loadStatus = "loading"
 				this.returnOrderPage = this.returnOrderPage + 1;
 				this.getReturnOrderList()
@@ -359,11 +359,12 @@
 			},
 			// 获取待归还书书单
 			getWaitOrderList() {
-				console.log('调用了getWaitOrderList')
+				uni.showLoading({
+					title: '数据加载中',
+					mask: true
+				})
 				// 如果不是合作用户不发送请求
 				this.userInfo.dockerInfo && this.$api.offlineUserOrderList({
-					// pageSize: this.waitOrderPageSize,
-					// currentPage: this.waitOrderPage,
 					docker_mac: this.userInfo.dockerInfo.docker_mac,
 					filterItems:{
 						custom_id: this.userInfo.id,
@@ -371,6 +372,7 @@
 					}
 				})
 				.then(res => {
+					uni.hideLoading()
 					// 储存订单总数
 					this.waitOrderTotalPage = res.data.totalPage
 					// 判断是否要生成二维码
@@ -397,7 +399,6 @@
 						}
 					})
 					this.waitOrderList = [...this.waitOrderList, ...res.data.rows]
-					console.log(this.waitOrderList)
 					// 判断是否改变加载组件状态
 					if(this.waitOrderTotalPage <= this.waitOrderList.length) {
 						this.loadStatus = "noMore"

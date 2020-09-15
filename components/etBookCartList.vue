@@ -1,9 +1,7 @@
 <template>
 	<view class="content-position">
-	<!-- <view :class="[listData.length < 3 ? 'content-position-one' : 'content-position-two']"> -->
 		<view class="backgroundStyle">
 			<view class="content">
-				 <!-- :style="{height: scrollViewHeight+'upx'}" -->
 				<scroll-view  scroll-y="true"  :style=" 'height:' + scrollViewHeight +'rpx'">
 					<view class="score-coontent-position">
 						<view class="white-space"></view>
@@ -347,9 +345,12 @@ export default {
 		},
 		// 删除所有选中的记录
 		delectSelect(){
+			
 			bookListData.deleteSelect();
 			this.$emit('delectSelect');
 			this.statusUpdate();
+			// 更新书篮书籍数量
+			bookListData.countBookLength()
 		},
 		//检查选项是否超出限制
 		checkListOut(){

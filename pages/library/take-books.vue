@@ -299,7 +299,8 @@
 			uniNavBar,
 			tkiQrcode
 		},
-		onLoad(option) {		
+		onLoad(option) {
+			console.log(option)
 			// 判断是从下单成功后跳转过来还是直接从我的页面跳转过来
 			this.from = option.from ? option.from : ''
 			if(option !== '{}') {
@@ -311,7 +312,6 @@
 					this.popUpWidth = res.windowWidth * 0.7 + 'px'
 				}
 			})
-			
 		},
 		onShow() {
 			// 获取当前的时间戳
@@ -326,20 +326,22 @@
 		},
 		// 上拉加载更多
 		onReachBottom() {
-			// 待取书单上拉加载更多
-			if(this.orderListPage > this.orderList.length && this.tabList.currentIndex == 0) {
-				// 每次上拉加载之前需要清除下定时器防止重复开启造成错乱
-				clearInterval(this.timer);
-				// 重置加载组件的加载状态
-				this.loadStatus = 'loading';
-				this.currentPage = this.currentPage + 1;
-				this.getUserOrderList()
-			}else if(this.failOrderListPage > this.failOrderList.length && this.tabList.currentIndex == 1){
+			// 待取书单上拉加载更多(页面在点开取书码时实时刷新更新当前订单,做不到上				拉加载更多)
+			// if(this.orderListPage > this.orderList.length && this.tabList.currentIndex == 0) {
+			// 	// 每次上拉加载之前需要清除下定时器防止重复开启造成错乱
+			// 	clearInterval(this.timer);
+			// 	// 重置加载组件的加载状态
+			// 	this.loadStatus = 'loading';
+			// 	this.currentPage = this.currentPage + 1;
+			// 	this.getUserOrderList()
+			// }
+			// 失效书单上拉加载更多
+			if(this.failOrderListPage > this.failOrderList.length && 
+			this.tabList.currentIndex == 1){
 				// 重置加载组件的加载状态
 				this.loadStatus = 'loading';
 				this.failCurrentPage = this.failCurrentPage + 1;
 				this.getFailOrderList()
-				
 			}
 		},
 		methods: {
@@ -367,17 +369,20 @@
 			},
 			// 获取待取书书单
 			getUserOrderList() {
-				console.log('调用了getUserOrderList')
+				uni.showLoading({
+					title: '数据加载中',
+					mask: true
+				})
 				// 如果不是合作用户不发送请求
 				this.userInfo.dockerInfo && this.$api.offlineUserOrderList({
-					// pageSize: this.pageSize,
-					// currentPage: this.currentPage,
 					docker_mac: this.userInfo.dockerInfo.docker_mac,
 					filterItems:{
 						custom_id: this.userInfo.id,
 						order_type: "0" //待取书单类型
 					}
-				}).then(res => {
+				})
+				.then(res => {
+					uni.hideLoading()
 					// 储存订单总数
 					this.orderListPage = res.data.totalPage
 					// 判断是否要生成二维码
@@ -566,20 +571,13 @@
 				}, 2000)
 				
 			},
-			// 关闭订单凭证弹窗
-			// changePopUp(e) {
-			// 	// console.log(e)
-			// 	if(!e.show) {
-			// 		clearInterval(this.requestTime) //清除刷新订单状态
-			// 	}
-				
-			// },
 			// 点击自定义导航栏左侧按钮事件
 			clickLeft() {
 				// 从下单成功跳转过来
 				if(this.from == 'placeOrder') {
 					uni.reLaunch({
-						url: '../cart/cart?flag=true'
+						// url: '../cart/cart?flag=true'
+						url: '../cart/cart'
 					})
 				}else {
 					uni.navigateBack({

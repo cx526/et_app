@@ -7,6 +7,10 @@
 			<text>剩余免费书本：</text>
 			<text>{{ free }}</text>
 		</view>
+		<view 
+		style="font-size: 30rpx;background: #fff;text-align: center;line-height: 40rpx;">
+		<text>1个订单只能用1本免费借阅额度哦</text>
+		</view>
 		<!-- 没有书籍时显示 -->
 		<view class="none-books" v-if="booksNumber == 0" @tap="chooseBooks">
 			<view class="none">
@@ -126,10 +130,38 @@
 				</view>
 			</view>
 		</uni-popup>
+		<!-- 确认支付弹窗 -->
+		<uni-popup ref="payPopUp" :maskClick="false">
+			<view class="balance-box" :style="{ width: popUpWidth }">
+				<view class="title"><text>订单确认</text></view>
+				<view class="notice">
+					<view >
+						<text>本次需要支付五车贝：</text>
+						<text style="color: #12A4BD;">{{price}}</text>
+					</view>
+					
+					<view>
+						<text>您的借阅书籍数量：</text>
+						<text style="color: #12A4BD;">{{len}}</text>
+					</view>
+				</view>
+				<view class="show">
+					<image  mode="widthFix" 
+					style="width: 300rpx; height: 375rpx;"
+					:src="$aliImage + 'library-pop-banner.png'"></image>
+				</view>
+				<view class="btn">
+					<view @tap="cancel('payPopUp')">取消</view>
+					<view @tap="surePay">确认支付</view>
+				</view>
+			</view>
+		</uni-popup>
+	
 	</view>
 </template>
 
 <script>
+const bookListData = require('@/common/carDataOption.js')
 import uniPopup from '@/components/uni-popup/uni-popup.vue';
 
 export default {
@@ -146,6 +178,7 @@ export default {
 
 	data() {
 		return {
+			goods_id: '', // 储存下单书籍的id,格式1,2,3
 			$aliImage: this.$aliImage,//静态图片域名
 			offlineAllSelect: false, //全选/反选
 			bookList: [], //储存书篮书籍
@@ -200,7 +233,7 @@ export default {
 					return
 				}
 				//储存用户积分;
-				this.integrate = this.userInfo.coin 
+				this.integrate = Number(this.userInfo.coin) 
 				//储存用户的五车贝;
 				this.shell = (+this.userInfo.shell).toFixed(2) 
 				//储存用户的押金
@@ -216,18 +249,12 @@ export default {
 		},
 		// 更新库存
 		upDateStock() {
-			// uni.showLoading({
-			// 	title: '数据加载中',
-			// 	mask: true
-			// })
 			// 获取线下书篮书籍
 			let bookList = uni.getStorageSync('offlineCartList');
 			// 如果线下书篮为空，默认不发请求
 			if(bookList.length == 0) {
-				// uni.hideLoading()
 				return
 			}
-			
 			// 储存书篮所有书籍的id
 			let goods_id = [];
 			let idString = '';
@@ -254,7 +281,6 @@ export default {
 							item.isSelect = false
 						}
 					})
-					
 					// 更新缓存
 					uni.setStorageSync('offlineCartList', bookList);
 					this.bookList = uni.getStorageSync('offlineCartList')
@@ -370,7 +396,8 @@ export default {
 						this.bookList = dataList;
 						// 更新缓存
 						uni.setStorageSync('offlineCartList', this.bookList);
-
+						// 更新tab书篮书籍数
+						bookListData.countBookLength()
 						// 提示父组件刷新当前书籍数目
 						this.$emit('countChange');
 						this.booksNumber = uni.getStorageSync('offlineCartList').length;
@@ -418,7 +445,9 @@ export default {
 							
 							this.bookList = dataList;
 							// 更新缓存
-							uni.setStorageSync('offlineCartList', this.bookList);
+							uni.setStorageSync('offlineCartList', this.bookList)
+							// 更新tab书篮书籍数
+							bookListData.countBookLength()
 							// 提示父组件刷新当前书籍数目
 							this.$emit('countChange');
 							this.booksNumber = uni.getStorageSync('offlineCartList').length;
@@ -481,7 +510,8 @@ export default {
 			this.getLogin();
 			if(this.isLogin) {
 				// 获取用户选中的书籍列表
-				this.chooseBookList = this.bookList && this.bookList.filter(item => {
+				this.chooseBookList = this.bookList && 
+				this.bookList.filter(item => {
 					return item.isSelect === true;
 				});
 				// 更新所选商品本地缓存的库存数据
@@ -490,15 +520,14 @@ export default {
 					goodsIDs.push(item.id);
 				});
 				// 价格升序
-				let result = this.chooseBookList && this.chooseBookList.sort(this.compare('price'));
+				// let result = this.chooseBookList && this.chooseBookList.sort(this.compare('price'));
 				// 实际免费借阅次数
-				let reality = this.integrate / 50; //(积分/50)
+				// let reality = Math.floor(this.integrate / 50); //(积分/50)
 				// 实际所需支付借书币
 				let amount = 0;
 				// 选中书籍的本书
 				let len = this.chooseBookList.length;
-				// 筛选选中书籍是否存在库存为零的情况
-					// 用户没有选中书籍
+				// 用户没有选中书籍
 				if (this.chooseBookList.length === 0) {
 					uni.showToast({
 						title: '请先选择需要借阅的书籍',
@@ -513,8 +542,8 @@ export default {
 						title: '每单借阅本书不能超过10本',
 						duration: 2000,
 						icon: 'none'
-					});
-					return;
+					})
+					return
 				}
 				// 所选书籍中存在没有库存的情况
 				else if (!this.isStock) {
@@ -522,14 +551,14 @@ export default {
 						title: '所选书籍存在库存不足的情况，请重新选择',
 						icon: 'none',
 						duration: 2000
-					});
-					return;
+					})
+					return
 				}
-				
-				// 1.用户没有免费借阅次数或者积分/50小于1时(直接计算所选书籍累加的五车贝)
-				else if (this.free === 0 || this.integrate / 50 < 1 || len >= 2) {
-					result.map(item => {
-						amount = (+amount + (+item.price)).toFixed(2);
+				// 1.用户没有免费借阅次数或者积分小于50或者借阅数量大于等于2本时(直接计算所选书籍累加的五车贝)
+				else if (this.free === 0 || this.integrate < 50 || len >= 2) {
+					this.chooseBookList.map(item => {
+						console.log(Number(amount) + Number(item.price))
+						amount = (Number(amount) + Number(item.price)).toFixed(2);
 					});
 					this.price = amount
 					// 当前用户五车贝不足够或押金小于29时显示弹窗
@@ -541,28 +570,45 @@ export default {
 							// 显示押金不足弹窗··						
 							this.$refs.depositPopUp.open()
 						}
-					}else {
-						let goods_id = goodsIDs.join(',');
-						// // 下单
-						this.placeOrder(goods_id, 'shell');					
+					}
+					else {
+						// 下单书籍的id
+						this.goods_id = goodsIDs.join(',')
+						// 订单确认弹窗
+						this.$refs.payPopUp.open()
+						// 下单
+						// this.placeOrder(goods_id, 'shell')					
 					}
 				}
 				// 2.用户有免费借阅次数且所选书籍小于2且积分/50大于等于1(免费)
-				else if (this.free && len < 2 && reality >= 1) {
+				else if (this.free && len < 2 && this.integrate >= 50) {
 					if(Number(this.deposit) < 29) {
 						// 显示押金不足弹窗··
 						this.$refs.depositPopUp.open()
 					}else {
-						let goods_id = goodsIDs.join(',');
-						amount = 0;
-						this.price = amount;
+						// 下单书籍的id
+						this.goods_id = goodsIDs.join(',')
+						this.price = 0
+						// 订单确认弹窗
+						this.$refs.payPopUp.open()
 						// 下单
-						this.placeOrder(goods_id, 'coin')
+						// this.placeOrder(goods_id, 'coin')
 					}
 					
 				}
 			}
 		
+		},
+		// 订单确认
+		surePay() {
+			let type = ''
+			if(this.price == 0) {
+				type = 'coin'
+			}else if (this.price > 0) {
+				type = 'shell'
+			}
+			console.log(type, this.goods_id)
+			this.placeOrder(this.goods_id, type)
 		},
 		// 下单
 		placeOrder(goods_id, type) {
@@ -584,13 +630,11 @@ export default {
 					uni.showToast({
 						title: res.data.msg,
 						icon: 'none',
-						duration: 1000,
-						success: () => {
-							// 跳转到取书页
-							uni.redirectTo({
-								url: '/pages/library/take-books?status=0&from=placeOrder'
-							})
-						}
+						duration: 1000
+					})
+					// 跳转到取书页
+					uni.redirectTo({
+						url: '/pages/library/take-books?status=0&from=placeOrder'
 					})
 				}else {
 					uni.showToast({
@@ -610,6 +654,8 @@ export default {
 				case 'depositPopUp':
 				this.$refs.depositPopUp.close();
 				break;
+				case 'payPopUp':
+				this.$refs.payPopUp.close()
 				default: 
 				return 
 			}

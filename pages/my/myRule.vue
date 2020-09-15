@@ -27,7 +27,7 @@
 		data() {
 			return {
 				$aliImage: this.$aliImage,
-				currentIndex: 0,
+				currentIndex: 1,
 				tabList: [
 					{
 						title: '邮寄借阅规则'

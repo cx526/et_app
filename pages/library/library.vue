@@ -30,11 +30,11 @@
 		<!-- banner -->
 		<view class="banner-box" id="banner">
 			<image :src="$aliImage + 'library-banner.png'" style="height: 300rpx;"></image>
-			<view class="name" v-if="userInfo.schoolInfo.name">
+			<view class="name" v-if="userInfo.school_name">
 				<uni-notice-bar 
 				scrollable="true" 
 				single="true" 
-				:text="userInfo.schoolInfo.name + '欢迎您！'" 
+				:text="userInfo.school_name + '欢迎您！'" 
 				color="#fff" 
 				backgroundColor="rgba(255,255,255,.3)" 
 				:single="true">
@@ -156,6 +156,7 @@ import uniPopup from '@/components/uni-popup/uni-popup.vue';
 import uniLoadMore from '@/components/uni-load-more/uni-load-more.vue';
 import uniNoticeBar from '@/components/uni-notice-bar/uni-notice-bar.vue';
 import Popup from '@/components/lvv-popup/lvv-popup.vue';
+const bookListData = require('@/common/carDataOption.js')
 export default {
 	data() {
 		return {
@@ -195,6 +196,7 @@ export default {
 	},
 	async onLoad(option) {
 		console.log(option)
+		console.log('onLoad')
 		// 检测是否有登录
 		this.getLogin()
 		// 从搜索页跳转过来
@@ -212,7 +214,7 @@ export default {
 		}
 		
 		// 读取书篮书籍的本数
-		this.len = uni.getStorageSync('offlineCartList').length;
+		// this.len = bookListData.countBookLength()
 		uni.getSystemInfo({
 			success: res => {
 				this.popUpWidth = res.windowWidth * 0.8 + 'px';
@@ -223,7 +225,7 @@ export default {
 	onShow() {
 		// 每次进来都需要检测卡号和docket_mac
 		this.getCheckUserInfo()
-		this.len = uni.getStorageSync('offlineCartList').length
+		this.len = bookListData.countBookLength()
 	},
 	onReady() {
 		// 设置分类弹窗的高度
@@ -332,8 +334,8 @@ export default {
 				let mobile = uni.getStorageSync("userInfo").mobile;
 				this.$api.offlineUserDockerInfo({mobile}).then(res => {
 					this.userInfo = res.data
+					console.log(this.userInfo)
 					let data = res.data
-					console.log(data)
 					// 如果没有卡号
 					if(!data.card_no ||
 					data.card_no.replace(/\s*/g , "") == '') {
@@ -547,8 +549,8 @@ export default {
 						icon: 'none',
 						success: () => {
 							arrList.unshift(add);
-							this.len = arrList.length;
 							uni.setStorageSync('offlineCartList', arrList);
+							this.len = bookListData.countBookLength()
 						}
 					});
 				} else {
@@ -565,8 +567,8 @@ export default {
 					icon: 'none',
 					success: () => {
 						arrList.push(add);
-						this.len = arrList.length;
 						uni.setStorageSync('offlineCartList', arrList);
+						this.len = bookListData.countBookLength()
 					}
 				});
 			}

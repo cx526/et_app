@@ -53,6 +53,8 @@ export default {
 		},
 		deleteData(){
 			bookListData.deleteToCart(this.bookID);
+			// 更新书篮书籍数量
+			bookListData.countBookLength()
 			this.$emit('deleteData');
 		}
 	}

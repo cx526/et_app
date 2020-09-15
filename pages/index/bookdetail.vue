@@ -103,13 +103,13 @@
 				</view>
 			</view>
 			<view class="bottom-button-position cart-book-count-father">
-				<view class="bottom-button" @tap="toCartUrl('/pages/cart/cart')">
+				<view class="bottom-button" @tap="goCar">
 					<image src="https://et-pic-server.oss-cn-shenzhen.aliyuncs.com/app_img/bookdetail_cart.png" class="bottom-image"></image>
 					<text style="font-size: 20upx;color: #2AAEC4;">书篮</text>
 				</view>
 				<!-- 跳转书篮按钮加上书篮书本数 -->
-				<view class="cart-book-count-style" v-if="cartBookCount != 0">
-					<text>{{cartBookCount}}</text>
+				<view class="cart-book-count-style" v-if="allBooks != 0">
+					<text>{{allBooks}}</text>
 				</view>
 			</view>
 			<view v-if="bookInfo.stockCount.totalOnlineUse !== 0" class="bottom-button-input" @tap="insertToCart">
@@ -137,6 +137,7 @@ export default {
 	},
 	data() {
 		return {
+			allBooks: '',
 			bookInfo:{},
 			bookID:	0,
 			swiperCurrent: 0,
@@ -167,20 +168,19 @@ export default {
 	onLoad(option) {
 		this.bookID = JSON.parse(decodeURIComponent(option.bookID));
 		this.getBookData();
-		// this.cartBookCountFun();
-		
+	},
+	// 每次进来重新计算书篮书籍总数
+	onShow() {
+		this.allBooks = insertBook.countBookLength()
+		console.log(this.allBooks)
 	},
 	methods: {
-		// cartBookCountFun(){
-		// 	let bookList = bookListData.getBookListData();
-		// 	let bookCount = '0';
-		// 	if(bookList.length > 99){
-		// 		bookCount = "99+";
-		// 	}else{
-		// 		bookCount = bookList.length;
-		// 	}
-		// 	this.cartBookCount = bookCount;
-		// },
+		// 跳转书篮
+		goCar() {
+			uni.reLaunch({
+				url: '/pages/cart/cart?flag=true'
+			})
+		},
 		toProgressUrl(){
 			toUrlFunction.toUrl('/pages/guide/borrowExplain');
 		},
@@ -219,9 +219,10 @@ export default {
 			let cartList = this.bookInfo;
 			cartList.select = false;
 			cartList.count = 1;
+			// 加入书篮操作
 			insertBook.insertToCart(cartList);
-			// this.cartBookCountFun();
-			
+			// 重新计算书篮书籍数量
+			this.allBooks =  insertBook.countBookLength()
 			this.cartBookCount = insertBook.cartBookCount();
 			try {
 			    let carListArr = uni.getStorageSync('carListInfo');

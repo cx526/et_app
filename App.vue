@@ -1,15 +1,16 @@
 
 <script>
+	const car = require('@/common/carDataOption.js')
 	export default {
 		onLaunch: function() {
-
+			// 计算书篮的总数量
+			car.countBookLength()
+			// 检测是否有新版本
 			const updateManager = uni.getUpdateManager();
-			
 			updateManager.onCheckForUpdate(function (res) {
 			  // 请求完新版本信息的回调
 			  console.log(res.hasUpdate);
 			});
-			
 			updateManager.onUpdateReady(function (res) {
 			  uni.showModal({
 			    title: '更新提示',

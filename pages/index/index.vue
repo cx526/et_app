@@ -125,7 +125,6 @@ import uniPopupDialog from '@/components/uni-popup/uni-popup-dialog.vue';
 
 const toUrlFunction = require('@/common/toUrlFunction');
 const bookListData = require('@/common/carDataOption');
-
 export default {
 	components: {
 		uniLoadMore,
@@ -221,9 +220,8 @@ export default {
 		};
 	},
 	onShow() {
-		//更新tab
-		let bookCount = bookListData.cartBookCount();
-		
+		// 每次进来重新计算书篮书籍总数(tab)
+		bookListData.countBookLength()
 	},
 	onLoad() {
 		this.checkAuth();

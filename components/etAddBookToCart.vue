@@ -62,7 +62,10 @@ export default {
 			// cartList.select = true;
 			cartList.select = false;
 			cartList.count = 1;
+			// 加入书篮操作
 			insertBook.insertToCart(cartList);
+			// 重新计算书篮书籍数量
+			insertBook.countBookLength()
 			try {
 			    let carListArr = uni.getStorageSync('carListInfo');
 			    console.log(carListArr);

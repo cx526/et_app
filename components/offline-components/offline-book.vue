@@ -62,21 +62,20 @@
 </template>
 
 <script>
+	const bookListData = require('@/common/carDataOption.js')
 	export default {
 		props: {
 			bookList: {
 				type: Array
+			},
+			len: {
+				type: [String, Number]
 			}
 		},
 		data() {
 			return {
 				$aliImage: this.$aliImage, //静态图片路径
-				len: '', //书篮书籍数
 			}
-		},
-		created() {
-			this.len = uni.getStorageSync('offlineCartList').length;
-			console.log(this.len)
 		},
 		methods: {
 			// 加入书篮
@@ -129,6 +128,7 @@
 					})
 					return
 				}
+			
 				let arrList = uni.getStorageSync('offlineCartList') ? uni.getStorageSync('offlineCartList') : [];
 				let arr = [];
 				if (arrList && arrList.length > 0) {
@@ -142,8 +142,9 @@
 							icon: 'none',
 							success: () => {
 								arrList.unshift(add);
-								this.len = arrList.length;
 								uni.setStorageSync('offlineCartList', arrList);
+								// 更新书篮书籍总数
+								this.$emit('upDateTab')
 							}
 						});
 					} else {
@@ -160,8 +161,9 @@
 						icon: 'none',
 						success: () => {
 							arrList.push(add);
-							this.len = arrList.length;
 							uni.setStorageSync('offlineCartList', arrList);
+							// 更新书篮书籍总数
+							this.$emit('upDateTab')
 						}
 					});
 				}
@@ -199,7 +201,7 @@
 			// 跳转到书篮tabbar页面
 			goCart() {
 				uni.reLaunch({
-					url: '../cart/cart?flag=true'
+					url: '../cart/cart'
 				});
 			},
 		}

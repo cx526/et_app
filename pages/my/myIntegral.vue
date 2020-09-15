@@ -36,7 +36,7 @@
 			</view>
 			
 			<view class="bottom-position">
-				<image src="https://et-pic-server.oss-cn-shenzhen.aliyuncs.com/app_img/my_integralExplain.png" mode="widthFix"></image>
+				<image src="https://et-pic-server.oss-cn-shenzhen.aliyuncs.com/app_img/my_integralExplain-01.png" mode="widthFix"></image>
 			</view>
 		</view>
 	</view>

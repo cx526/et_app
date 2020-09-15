@@ -150,6 +150,9 @@ api.offlinePlaceOrder = params => request.globalRequest('/api/offlineOrder/buyOf
 // 线下用户订单
 api.offlineUserOrderList = params => request.globalRequest('/api/offlineOrder/selOfflineOrder', 'POST', params)
 
+// 线下用户订单数
+api.offlineUserOrderCount = params => request.globalRequest('/api/offlineOrder/countCustomerOfflineOrder', 'POST', params)
+
 // 简化版getCustom
 api.offlineUserDockerInfo = params => request.globalRequest('/api/custom/getCustomWithDockerInfo', 'POST', params)
 

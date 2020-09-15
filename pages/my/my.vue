@@ -38,23 +38,8 @@
 							<text style="font-size: 20rpx;" 
 							v-if="false">会员到期日：2020.12.12</text>
 						</view>
-					</view>
-					<!-- right -->
-					<!-- <view class="user-right" @tap="goMember">
-						<image :src="$aliImage + 'menber-btn.png'"></image>
-						<image :src="$aliImage + 'member-icon-02.png'" 
-						v-if="false"></image>
-					</view> -->
-					
+					</view>				
 				</view>
-				<!-- 剩余借阅次数 -->
-				<!-- <view class="borrow-count">
-					<image :src="$aliImage + 'menber-icon-01.png'" 
-					mode="widthFix"></image>
-					<text style="font-weight: bold;">本月剩余借阅次数：</text>
-					<text>0次</text>
-					<text v-if="false">畅读年卡专享无限次借阅</text>
-				</view> -->
 			</view>
 			
 			
@@ -84,6 +69,11 @@
 								<view class="item" @tap="goOffline(item.url)">
 									<image :src="$aliImage + item.imgUrl" mode="widthFix"></image>
 									<text>{{ item.text }}</text>
+									<!-- Badge -->
+									<view class="badge" 
+									v-if="item.number && item.number != 0">
+										<text>{{ item.number }}</text>
+									</view>
 								</view>
 							</block>
 						</view>
@@ -156,9 +146,6 @@
 			</view>
 		</view>
 	</view>
-	<!-- <view v-else>
-		<Entry></Entry>
-	</view> -->
 </template>
 
 <script>
@@ -186,10 +173,11 @@ export default {
 	},
 	data() {
 		return {
+			id: '',
 			$aliImage: this.$aliImage,//静态图片域名
 			noticeText: '',
 			failLen: 0, //逾期单数
-			card_no: '',//卡号
+			card_no: uni.getStorageSync("userInfo").card_no,//卡号
 			updateOrderInfo: false,
 			test: '123456',
 			myOrderInfo: {
@@ -319,22 +307,26 @@ export default {
 				{
 					imgUrl: 'offline-icon-01.png',
 					text: '待取书',
-					url: '/pages/library/take-books?status=0'
+					url: '/pages/library/take-books?status=0',
+					number: 0
 				},
 				{
 					imgUrl: 'offline-icon-02.png',
 					text: '待还书',
-					url: '/pages/library/return-books?status=0'
+					url: '/pages/library/return-books?status=0',
+					number: 0
 				},
 				{
 					imgUrl: 'offline-icon-03.png',
 					text: '已归还',
-					url: '/pages/library/return-books?status=1'
+					url: '/pages/library/return-books?status=1',
+					number: 0
 				},
 				{
 					imgUrl: 'offline-icon-04.png',
 					text: '已失效',
-					url: '/pages/library/take-books?status=1'
+					url: '/pages/library/take-books?status=1',
+					number: 0
 				},
 			],
 			onlineOrderList: [
@@ -384,20 +376,15 @@ export default {
 	},
 	onLoad() {
 		this.getUserInfo()
-		// this.getOrderCount();
 		//更新tab
 		let bookCount = bookListData.cartBookCount();
-		// this.getReadCount();
-		// console.log(packagejson.version);
 	},
-	// onShow() {
-	// 	this.getOrderCount();
-	// 	//更新tab
-	// 	let bookCount = bookListData.cartBookCount();
-	// 	this.getReadCount();
-	// 	// 获取逾期书单判断是否出现通知条
-	// 	this.getUserInfo()
-	// },
+	onShow() {
+		// 实时更新个订单数
+		if(this.id && this.id != '') {
+			this.getOfflineOrderCount(this.id)
+		}
+	},
 	methods: {
 		// 获取个人信息
 		getUserInfo() {
@@ -405,10 +392,9 @@ export default {
 			this.$api.offlineUserDockerInfo({ mobile })
 			.then(res => {
 				let data = res.data
-				this.card_no = data.card_no
-				data.docker_mac && this.getOrderFail(data.id, data.docker_mac)
-				
-				
+				this.id = data.id
+				// 获取线下各订单数量
+				this.getOfflineOrderCount(data.id)
 				this.$api.getOrderCountWithCustomID({  custom_id: data.id }).then(sres=>{
 					sres.data.map((item,index) => {
 						this.myOrderInfo.allMenu.map((sitem,sindex) => {
@@ -432,19 +418,26 @@ export default {
 				});
 			})
 		},
-		// 获取逾期书单判断是否出现通知条
-		getOrderFail(id ,docker_mac) {
-				this.$api.offlineUserOrderList({
-					docker_mac: docker_mac,
-					filterItems:{
-						custom_id: id,
-						order_type: 5 //失效书单类型
-					}
-				}).then(res => {
-					
-					this.failLen = res.data.rows.length;
-					this.noticeText = `您有${this.failLen}笔订单将逾期，请移步至订单页及时处理`
-				})
+		// 获取线下各订单数量
+		getOfflineOrderCount(id) {
+			this.$api.offlineUserOrderCount({
+				custom_id: id
+			})
+			.then(res => {
+				let data = res.data.rows
+				// offlineOrderList
+				// 待取书订单数
+				this.offlineOrderList[0].number = data.waitGetBookCout
+				// 待还订单数
+				this.offlineOrderList[1].number = data.waitReturnBookCout
+				// 已归还订单数
+				this.offlineOrderList[2].number = data.isReturnBookCout
+				// 已失效订单数
+				this.offlineOrderList[3].number = data.failBookCout
+				// 逾期订单数
+				this.failLen = data.overTimeBookCout;
+				this.noticeText = `您有${this.failLen}笔订单将逾期，请移步至订单页及时处理`
+			})
 		},
 		// 跳转到会员页面
 		goMember() {
@@ -574,11 +567,25 @@ export default {
 	justify-content: center;
 	align-items: center;
 	color: #666;
-
+	position: relative;
 }
 .offline-box .offline-order .right .item image {
 	width: 60rpx;
 	height: 60rpx;
+}
+.offline-box .offline-order .right .item .badge {
+	position: absolute;
+	right: 16rpx;
+	top: 8rpx;
+	background: rgb(244,53,48);
+	color: #fff;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	width: 32rpx;
+	height: 32rpx;
+	border-radius: 50%;
+	font-size: 18rpx;
 }
 .offline-box .offline-order .online-right {
 	flex: 1;

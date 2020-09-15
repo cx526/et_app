@@ -101,6 +101,7 @@
 </template>
 
 <script>
+const bookListData = require('@/common/carDataOption.js')
 import etTag from '../../components/etTag.vue'
 export default {
 	components: {
@@ -141,13 +142,11 @@ export default {
 	},
 	onLoad(option) {
 		this.bookID = option.bookID;
-		console.log(this.bookID)
 		this.getUserInfo()
 	},
 	onShow() {
 		// 获取书籍列表的数目
-		this.len = uni.getStorageSync("offlineCartList").length;
-		console.log(this.len)
+		this.len = bookListData.countBookLength();
 	},
 	methods: {
 		// 获取个人信息
@@ -274,8 +273,9 @@ export default {
 							success: () => {
 								// 同步数据
 								arrList.unshift(add);
-								this.len = arrList.length;
+								
 								uni.setStorageSync('offlineCartList', arrList);
+								this.len = bookListData.countBookLength();
 							}
 						});
 					} else {
@@ -293,8 +293,9 @@ export default {
 						success: () => {
 							// 同步数据
 							arrList.push(add);
-							this.len = arrList.length;
+							
 							uni.setStorageSync('offlineCartList', arrList);
+							this.len =  bookListData.countBookLength();
 						}
 					});
 				}
@@ -304,7 +305,7 @@ export default {
 		// 跳转到书篮tabbar页面
 		goCart() {
 			uni.reLaunch({
-				url: '../cart/cart?flag=true'
+				url: '/pages/cart/cart?'
 			});
 		},
 	}

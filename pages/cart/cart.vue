@@ -40,6 +40,7 @@
 </template>
 
 <script>
+const bookListData = require('@/common/carDataOption.js')
 import etBookCartList from '../../components/etBookCartList.vue'
 import uniPopup from '@/components/uni-popup/uni-popup.vue'
 import offlineCartList from '@/components/offline-components/offline-cart-list.vue'
@@ -88,6 +89,8 @@ export default {
 		})
 	},
 	onShow(){
+		// 更新tab书篮书籍数
+		bookListData.countBookLength()
 		this.bookCatShow = true;
 		// 线下逻辑
 		// 判断当前页面显示线上 flag = undefined /线下 flag = true
@@ -102,8 +105,6 @@ export default {
 		this.tabList[0].number = uni.getStorageSync("offlineCartList").length;
 		this.tabList[1].number = uni.getStorageSync("carListInfo").length;
 		this.offlineBooksList =  uni.getStorageSync("offlineCartList");
-		
-		
 	},
 	onHide() {
 		this.bookCatShow = false;

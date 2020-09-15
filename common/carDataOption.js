@@ -219,44 +219,21 @@ function cartBookCount(){
 		bookCount = String(bookList.length);
 	}
 	
-	if(bookList.length === 0){
-		uni.removeTabBarBadge({
-			index:2
-		});
-	}else{
-		uni.setTabBarBadge({
-		  index: 2,
-		  text: bookCount
-		});
-		
-	}
+	// if(bookList.length === 0){
+	// 	uni.removeTabBarBadge({
+	// 		index:2
+	// 	});
+	// }else{
+	// 	uni.setTabBarBadge({
+	// 	  index: 2,
+	// 	  text: bookCount
+	// 	});
+	// }
 	
 	return bookCount;
 }
 
-// 计算书篮(tabbar)显示的书籍数(线上+线下)
-// function countBookLength() {
-// 	let onlineBooks = uni.getStorageSync("carListInfo").length ? uni.getStorageSync("carListInfo").length : 0
-// 	let offlineBooks = uni.getStorageSync("offlineCartList").length ? uni.getStorageSync("offlineCartList").length  : 0
-	
-// 	let allBooks = onlineBooks + offlineBooks
-// 	console.log(onlineBooks, offlineBooks, allBooks)
-// 	if(allBooks > 0 && allBooks < 100) {
-// 		uni.setTabBarBadge({
-// 			index:2,
-// 			text: String(allBooks)
-// 		})
-// 	}else if(allBooks == 0) {
-// 		uni.removeTabBarBadge({
-// 			title: 2
-// 		})
-// 	}else {
-// 		uni.setTabBarBadge({
-// 			index: 2,
-// 			text: "99+"
-// 		})
-// 	}
-// }
+
 
 
 // 计算书本量
@@ -281,8 +258,32 @@ function countBookDetail() {
 	return detail;
 }
 
+// 计算书篮(tabbar)显示的书籍数(线上+线下)
+function countBookLength() {
+	let onlineBooks = uni.getStorageSync("carListInfo").length ? uni.getStorageSync("carListInfo").length : 0
+	let offlineBooks = uni.getStorageSync("offlineCartList").length ? uni.getStorageSync("offlineCartList").length  : 0
+	
+	let allBooks = onlineBooks + offlineBooks
+	if(allBooks > 0 && allBooks < 100) {
+		uni.setTabBarBadge({
+			index:2,
+			text: String(allBooks)
+		})
+	}else if(allBooks == 0) {
+		uni.removeTabBarBadge({
+			index: 2
+		})
+	}else {
+		uni.setTabBarBadge({
+			index: 2,
+			text: "99+"
+		})
+	}
+	return allBooks
+}
+
 module.exports = {
-	// countBookLength,
+	countBookLength,
 	getBookListStockToData,
 	getBookListData,
 	insertToCart,
