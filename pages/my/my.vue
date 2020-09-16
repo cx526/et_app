@@ -424,19 +424,21 @@ export default {
 				custom_id: id
 			})
 			.then(res => {
-				let data = res.data.rows
-				// offlineOrderList
-				// 待取书订单数
-				this.offlineOrderList[0].number = data.waitGetBookCout
-				// 待还订单数
-				this.offlineOrderList[1].number = data.waitReturnBookCout
-				// 已归还订单数
-				this.offlineOrderList[2].number = data.isReturnBookCout
-				// 已失效订单数
-				this.offlineOrderList[3].number = data.failBookCout
-				// 逾期订单数
-				this.failLen = data.overTimeBookCout;
-				this.noticeText = `您有${this.failLen}笔订单将逾期，请移步至订单页及时处理`
+				if(res.data.status == 'ok') {
+					let data = res.data.rows
+					// 待取书订单数
+					this.offlineOrderList[0].number = data.waitGetBookCout
+					// 待还订单数
+					this.offlineOrderList[1].number = data.waitReturnBookCout
+					// 已归还订单数
+					this.offlineOrderList[2].number = data.isReturnBookCout
+					// 已失效订单数
+					this.offlineOrderList[3].number = data.failBookCout
+					// 逾期订单数
+					this.failLen = data.overTimeBookCout;
+					this.noticeText = `您有${this.failLen}笔订单将逾期，请移步至订单页及时处理`
+				}
+
 			})
 		},
 		// 跳转到会员页面

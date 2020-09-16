@@ -116,7 +116,8 @@
 			</view>
 		</view>
 		<!-- @tap="applyForMod" -->
-		<view class="btn" v-if="teacherInfo && JSON.stringify(teacherInfo) != '{}'">
+		<view class="btn" 
+		v-if="teacherInfo && JSON.stringify(teacherInfo) != '{}'">
 			<view @tap="applyForMod" v-if="change_class_status == 0">
 				<text>申请修改</text>
 			</view>
@@ -139,31 +140,31 @@
 		</view>
 		<!-- 选择老师弹窗 -->
 		
-			<uni-popup ref="teacherChoose" :maskClick="false">
-				<view class="popUp" :style="{width: popUpWidth}">
-					<view class="title">
-						<text>请选择老师</text>
-					</view>
-					<radio-group @change="radioChange">
-						<label
-						v-for="(item, index) in teacherList" 
-						:key="item.value">
-								<view style="margin-right: 12rpx;">
-										<radio :value="item.id" 
-										style="transform: scale(0.6);"
-										color="#00B7CC"/>
-								</view>
-								<view>{{item.teacherInfo.true_name}}</view>
-						</label>
-					
-					</radio-group>
-					<view class="btn">
-						<view @tap="chooseTeacher">
-							<text>确定</text>
-						</view>
+		<uni-popup ref="teacherChoose" :maskClick="false">
+			<view class="popUp" :style="{width: popUpWidth}">
+				<view class="title">
+					<text>请选择老师</text>
+				</view>
+				<radio-group @change="radioChange">
+					<label
+					v-for="(item, index) in teacherList" 
+					:key="item.value">
+							<view style="margin-right: 12rpx;">
+									<radio :value="item.id" 
+									style="transform: scale(0.6);"
+									color="#00B7CC"/>
+							</view>
+							<view>{{item.teacherInfo.true_name}}</view>
+					</label>
+				
+				</radio-group>
+				<view class="btn">
+					<view @tap="chooseTeacher">
+						<text>确定</text>
 					</view>
 				</view>
-			</uni-popup>
+			</view>
+		</uni-popup>
 		
 	</view>
 </template>
@@ -212,12 +213,10 @@
 			this.from = option.from ? option.from : ''
 			console.log(this.from)
 			this.getId()
-			this.dataInit()
+			// this.dataInit()
 			uni.getSystemInfo({
 				success: res => {
 					this.popUpWidth  = res.windowWidth * 0.8 + 'px'
-					console.log(this.popUpWidth)
-					console.log(res)
 				}
 			})
 		},
@@ -241,7 +240,6 @@
 				// this.card_no = event.detail.value
 				// console.log(this.card_no)
 			},
-			
 			// 班级扫描
 			gradeScan() {	
 				if(!this.isDisabled) {
@@ -302,24 +300,42 @@
 					filterItems: { mobile }
 				}).then(res => {
 					console.log(res)
-					
 					// 初始信息
-					this.schoolName = res.data[0].schoolInfo ? res.data[0].schoolInfo.name : ''
-					this.schoolId = res.data[0].schoolInfo ? res.data[0].schoolInfo.id : ''
-					this.gradeName = res.data[0].gradeInfo ? res.data[0].gradeInfo.name : ''
-					this.gradeId = res.data[0].gradeInfo ? res.data[0].gradeInfo.id : ''
-					this.className = res.data[0].childInfo ? res.data[0].childInfo.class : ''
-					this.card_no = res.data[0].card_no ? res.data[0].card_no : ''
+					this.schoolName = res.data[0].schoolInfo ? 
+					res.data[0].schoolInfo.name : '' //学校名称
+					
+					this.schoolId = res.data[0].schoolInfo ? 
+					res.data[0].schoolInfo.id : '' //学校id
+					
+					this.gradeName = res.data[0].gradeInfo ? 
+					res.data[0].gradeInfo.name : ''  //年级
+					
+					this.gradeId = res.data[0].gradeInfo ? 
+					res.data[0].gradeInfo.id : '' //年级id
+					
+					this.className = res.data[0].childInfo ? 
+					res.data[0].childInfo.class : '' //班级
+					
+					this.card_no = res.data[0].card_no ? 
+					res.data[0].card_no : '' //卡号
+					
 					this.name = res.data[0].childInfo ?
-					res.data[0].childInfo.name : ''
-				
-					this.birthDay = res.data[0].childInfo ? res.data[0].childInfo.birth_day : ''
-					this.parent_name = res.data[0].childInfo ? res.data[0].childInfo.parent_name : ''
-					this.sexIndex = JSON.stringify(res.data[0].childInfo) != "{}" ? res.data[0].childInfo.gender - 1 : 0
-					console.log(this.sexArray[this.sexIndex])
-					this.custom_id = res.data[0].id;
-					this.change_class_status = res.data[0].change_class_status
-					this.teacherInfo = res.data[0].teacherInfo
+					res.data[0].childInfo.name : '' //学生姓名
+		
+					this.birthDay = res.data[0].childInfo ? 
+					res.data[0].childInfo.birth_day : '' //学生生日
+					
+					this.parent_name = res.data[0].childInfo ? 
+					res.data[0].childInfo.parent_name : '' //家长姓名
+					
+					this.sexIndex = JSON.stringify(res.data[0].childInfo) != "{}" ? res.data[0].childInfo.gender - 1 : 0 //学生性别
+					
+					this.custom_id = res.data[0].id; //学生id
+					
+					this.change_class_status = res.data[0].change_class_status 
+					
+					this.teacherInfo = res.data[0].teacherInfo //教师信息
+					
 					// 确认信息是否给修改(有绑定老师需要申请，没有随意)
 					if(this.change_class_status == 1  ) {
 						console.log('teacherInfo')
@@ -329,22 +345,28 @@
 					}else {
 						this.isDisabled = true
 					}
-					console.log(this.custom_id, this.change_class_status, this.teacherInfo)
+					// 初始化学校列表
+					this.dataInit()
 				})
 			},
 			// 获取班级学校信息
 			dataInit() {
 				this.$api.getSchoolInfo().then(res => {
 					console.log(res.data)
-					this.schoolArray = res.data,
+					this.schoolArray = res.data //学校列表
+					if(this.schoolId && this.schoolId != '') {
+						if(this.schoolArray && this.schoolArray.length > 0) {
+							this.schoolArray.map((item,index) => {
+								if(item.id == this.schoolId) {
+									this.schoolIndex = index
+									// 初始化年级列表，防止没点学校直接点年级出现空白
+									this.gradeArray = this.schoolArray[index].classInfo
+								}
+							})
+						}
+					}
+					
 					// 初始化默认数据
-					// this.schoolId = this.schoolArray[this.schoolIndex].id
-					// this.gradeArray = this.schoolArray[this.schoolIndex].classInfo
-					// this.gradeId = this.schoolArray[this.schoolIndex].classInfo[this.gradeIndex].id
-					// this.class = this.classArray[this.classIndex]
-					// this.schoolName = this.schoolArray[this.schoolIndex].name
-					// this.gradeName = this.gradeArray[this.gradeIndex].name
-					// this.className = this.classArray[this.classIndex]
 					console.log(this.schoolId, this.gradeId,this.className)
 				})
 				for (let i=1; i < 51; i++) {
@@ -353,11 +375,9 @@
 			},
 			// 选择学校
 			bindSchoolChange(event) {
-				console.log(event)
 				this.schoolIndex = event.detail.value
 				this.schoolId = this.schoolArray[this.schoolIndex].id;
 				this.schoolName = this.schoolArray[this.schoolIndex].name
-				console.log(this.schoolId)
 				// 初始化班级
 				this.gradeArray = this.schoolArray[this.schoolIndex].classInfo
 				// 每次更改初始化班级索引
@@ -366,6 +386,14 @@
 			},
 			// 选择年级
 			bindradeChange(event) {
+				if(!this.schoolIndex || this.schoolIndex == '') {
+					uni.showToast({
+						title: '请先选择学校',
+						icon: 'none',
+						duration: 1000
+					})
+					return
+				}
 				this.gradeIndex = event.detail.value
 				this.gradeId = this.schoolArray[this.schoolIndex].classInfo[this.gradeIndex].id;
 				this.gradeName = this.gradeArray[this.gradeIndex].name
@@ -407,13 +435,21 @@
 			},
 			// 申请修改
 			applyForMod() {
-				this.$api.applyChangeGrade({
-					custom_id: this.custom_id
-				}).then(res => {
-					if(res.data.status == 'ok') {
-						this.change_class_status = 2
+				uni.showModal({
+					title: '是否申请转班?',
+					content: '转班后当前所在班级信息将清空',
+					success: res => {
+						if(res.confirm) {
+							this.$api.applyChangeGrade({
+								custom_id: this.custom_id
+							}).then(res => {
+								if(res.data.status == 'ok') {
+									this.change_class_status = 2
+								}
+								console.log(res)
+							})
+						}
 					}
-					console.log(res)
 				})
 			},
 			// 保存卡号和docker_mac到本地
@@ -431,7 +467,6 @@
 			saveInfo() {
 				// 检测卡号
 				if(this.checkCard(this.card_no)) {
-					console.log(true)
 					let param = {
 						custom_id:  this.custom_id,
 						parent_name: this.parent_name,

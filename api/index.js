@@ -183,4 +183,8 @@ api.applyChangeGrade = params => request.globalRequest('/api/customChild/changeC
 // 增加或修改学生信息
 api.addStudentInfo = params => request.globalRequest('/api/customChild/addOrModCustomChild','POST',params)
 
+// 会员开始
+// 获取会员协议
+api.getMemberAgreement = params => request.globalRequest('/api/contentManager/selData', 'POST', params)
+
 export default api

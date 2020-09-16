@@ -1,8 +1,12 @@
 {
 
 	"pages": [
-		
-
+		// {
+		// 	"path": "pages/member/member",
+		// 	"style": {
+		// 		"navigationBarTitleText": "会员购买"
+		// 	}
+		// },
 		{
 			"path": "pages/index/index",
 			"style": {
@@ -439,16 +443,6 @@
 				"navigationBarTitleText": "商品详情"
 			}
 		},
-		// {
-		// 	"path": "pages/library/offline-order",
-		// 	"style": {
-		// 		"navigationStyle": "custom",
-		// 		"app-plus": {
-		// 			"titleNView": false
-		// 		}
-
-		// 	}
-		// },
 		{
 			"path": "pages/library/offline-search",
 			"style": {
@@ -473,12 +467,7 @@
 				"navigationBarTitleText": "借阅流程"
 			}
 		},
-		// {
-		// 	"path": "pages/member/member",
-		// 	"style": {
-		// 		"navigationBarTitleText": "会员购买"
-		// 	}
-		// },
+
 			{
 				"path" : "pages/my/myRule",
 				"style" : {
