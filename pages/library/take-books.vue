@@ -66,10 +66,15 @@
 										</view>
 										
 										<view class="title">
-											{{ list.title }}
+											<view>{{ list.title }}</view>
+											<view style="margin-top: 10rpx; color: #68C1D4;">
+												{{ list.room_id }}号柜门
+											</view>
 										</view>
 										<view class="number">
-											<text style="margin-bottom: 20rpx;">{{ list.price }}贝</text>
+											<text style="margin-bottom: 20rpx;">
+											{{ list.price }}贝
+											</text>
 											<tetx>x1</tetx>
 										</view>
 									</view>
@@ -100,9 +105,15 @@
 								<view class="btn">
 									<view style="flex: 1;"></view>
 									<view class="btn-box">
+										<view class="borrow" @tap="cancelOrder(item)"
+										style="margin-right: 12rpx; 
+										background: transparent; color: #000;">
+											<text>取消</text>
+										</view>
 										<view class="borrow" @tap="open(item)">
 											<text>取书码</text>
 										</view>
+										
 									</view>
 										
 								</view>
@@ -569,6 +580,42 @@
 						})
 					}
 				}, 2000)
+				
+			},
+			// 取消订单
+			cancelOrder(item) {
+				console.log(item)
+				uni.showModal({
+					title: '是否确认取消此订单?',
+					success: res => {
+						if(res.confirm) {
+							let order_id = item.order_id
+							let params = {
+								id: order_id
+							}
+							this.$api.cancelOfflineOrder(params).then(res => {
+								console.log(res)
+								if(res.data.status == 'ok') {
+									uni.showToast({
+										title: res.data.msg,
+										icon: 'none',
+										duration: 1500
+									})
+									// 重置订单页面
+									this.orderList = []
+									clearInterval(this.timer) //重置定时器
+									this.getUserOrderList()	
+								}else {
+									uni.showToast({
+										title: res.data.msg,
+										icon: 'none',
+										duration: 1500
+									})
+								}
+							})
+						}
+					}
+				})
 				
 			},
 			// 点击自定义导航栏左侧按钮事件

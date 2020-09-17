@@ -38,8 +38,9 @@
 				:key="index">
 					<view class="item">
 						<view class="topic">
-							<view style="font-weight: bold;">订单号：{{ item.order_no }}</view>
-							<!-- 取书时间+5天-当前时间 > 0 ? 未逾期 ： 逾期 -->
+							<view style="font-weight: bold;">
+								订单号：{{ item.order_no }}</view>
+							
 							<view v-if="item.msg">
 								<view
 								class="status"
@@ -60,10 +61,15 @@
 									</view>
 									
 									<view class="title">
-										{{ list.title }}
+										<view>{{ list.title }}</view>
+										<view style="margin-top: 10rpx; color: #68C1D4;">
+											{{ list.room_id }}号柜门
+										</view>
 									</view>
 									<view class="number">
-										<text style="margin-bottom: 20rpx;">{{ list.price }}贝</text>
+										<text style="margin-bottom: 20rpx;">
+										{{ list.price }}贝
+										</text>
 										<tetx>x1</tetx>
 									</view>
 								</view>
@@ -73,6 +79,12 @@
 							<view class="left">
 								<view class="text">
 									<text>创建时间：{{ item.handle_create_time }}</text>
+								</view>
+								<view class="status" style="margin-top: 12rpx;display: flex;align-items: center;">
+										<text>请在</text>
+										<text style="margin: 0 6rpx; color: #68C1D4;">
+										{{ item.formatPreReturnBookTime }}</text>
+										<text>之前归还</text>
 								</view>
 								<!-- 积分支付 -->
 								<view class="text spcial" 
@@ -372,6 +384,7 @@
 					}
 				})
 				.then(res => {
+					console.log(res)
 					uni.hideLoading()
 					// 储存订单总数
 					this.waitOrderTotalPage = res.data.totalPage

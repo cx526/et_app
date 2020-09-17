@@ -162,6 +162,9 @@ api.offlineOrderCheckStock = params => request.globalRequest('/api/docker/getDoc
 // 线下书籍分类
 api.offlineBookType = params => request.globalRequest('/api/docker/getDockerBookTag', 'POST', params)
 
+// 线下取消订单
+api.cancelOfflineOrder = params => request.globalRequest('/api/offlineOrder/cancelOrder', 'POST', params)
+
 // 充值记录
 api.offlinePayRecord = params => request.globalRequest('/api/shell/selShellDetail', 'POST', params)
 

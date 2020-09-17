@@ -537,9 +537,9 @@ export default {
 					return;
 				}
 				// 每单借阅小于10本
-				else if (this.chooseBookList.length >= 10) {
+				else if (this.chooseBookList.length > 10) {
 					uni.showToast({
-						title: '每单借阅本书不能超过10本',
+						title: '每单借阅总数不能超过10本',
 						duration: 2000,
 						icon: 'none'
 					})
@@ -557,7 +557,6 @@ export default {
 				// 1.用户没有免费借阅次数或者积分小于50或者借阅数量大于等于2本时(直接计算所选书籍累加的五车贝)
 				else if (this.free === 0 || this.integrate < 50 || len >= 2) {
 					this.chooseBookList.map(item => {
-						console.log(Number(amount) + Number(item.price))
 						amount = (Number(amount) + Number(item.price)).toFixed(2);
 					});
 					this.price = amount
@@ -575,9 +574,7 @@ export default {
 						// 下单书籍的id
 						this.goods_id = goodsIDs.join(',')
 						// 订单确认弹窗
-						this.$refs.payPopUp.open()
-						// 下单
-						// this.placeOrder(goods_id, 'shell')					
+						this.$refs.payPopUp.open()			
 					}
 				}
 				// 2.用户有免费借阅次数且所选书籍小于2且积分/50大于等于1(免费)
@@ -591,8 +588,6 @@ export default {
 						this.price = 0
 						// 订单确认弹窗
 						this.$refs.payPopUp.open()
-						// 下单
-						// this.placeOrder(goods_id, 'coin')
 					}
 					
 				}
@@ -603,8 +598,10 @@ export default {
 		surePay() {
 			let type = ''
 			if(this.price == 0) {
+				// 免费次数借阅
 				type = 'coin'
 			}else if (this.price > 0) {
+				// 五车贝借阅
 				type = 'shell'
 			}
 			console.log(type, this.goods_id)

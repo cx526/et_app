@@ -46,8 +46,8 @@
 						</view>
 						<view class="rule">
 							<view class="agree">
-								<radio value="" style="transform: scale(0.6);" 
-								color="#2aaec4"/>
+								<radio style="transform: scale(0.6);" color="#2aaec4" 
+								 @tap="agreement" :checked="isChecked" />
 								<view>
 									<text style="color: #808080;">我已阅读并同意</text>
 									<text style="color: #2AAEC4;">会员权益协议</text>
@@ -55,7 +55,7 @@
 							</view>
 						</view>
 						<view class="btn">
-							<view><text>立即购买</text></view>
+							<view @tap="goBuy"><text>立即购买</text></view>
 						</view>
 					</view>
 					
@@ -72,6 +72,7 @@
 				$aliImage: this.$aliImage,
 				swiperHeight: '', //swiper高度
 				agreementContext: '',//会员协议内容
+				isChecked: false , //会员协议是否选中
 			}
 		},
 		onLoad() {
@@ -80,7 +81,6 @@
 		onReady() {
 			const query = uni.createSelectorQuery().in(this);
 			query.select('#card').boundingClientRect(data => {
-			  console.log(data)
 				this.swiperHeight = data.height + 'px'
 			}).exec();
 		},
@@ -96,10 +96,28 @@
 				}
 				this.$api.getMemberAgreement(params)
 				.then(res => {
-					console.log(res)
 					this.agreementContext = res.data.rows[0].content
-					console.log(this.agreementContext)
 				})
+			},
+			// 是否勾选协议
+			agreement() {
+				this.isChecked = !this.isChecked
+			},
+			// 立即购买
+			goBuy() {
+				if(!this.isChecked) {
+					uni.showToast({
+						title: '请先同意会员权益协议',
+						icon: 'none',
+						duration: 1500
+					})
+					return
+				}else {
+					// 跳转会员购买下单页面
+					uni.navigateTo({
+						url: '/pages/member/buy-member'
+					})
+				}
 			},
 		}
 	}

@@ -235,10 +235,6 @@
 				},50)
 				
 				console.log(this.card_no)
-				
-				// 去空
-				// this.card_no = event.detail.value
-				// console.log(this.card_no)
 			},
 			// 班级扫描
 			gradeScan() {	
@@ -293,7 +289,7 @@
 				this.bindTeacher()
 				
 			},
-			// 获取学生id
+			// 获取学生资料
 			getId() {
 				let mobile = uni.getStorageSync("userInfo").mobile;
 				this.$api.getCustom({
@@ -337,7 +333,7 @@
 					this.teacherInfo = res.data[0].teacherInfo //教师信息
 					
 					// 确认信息是否给修改(有绑定老师需要申请，没有随意)
-					if(this.change_class_status == 1  ) {
+					if(this.change_class_status == 1) {
 						console.log('teacherInfo')
 						this.isDisabled = false
 					}else if(JSON.stringify(res.data[0].teacherInfo) == "{}"){
@@ -386,7 +382,7 @@
 			},
 			// 选择年级
 			bindradeChange(event) {
-				if(!this.schoolIndex || this.schoolIndex == '') {
+				if(!this.gradeArray || this.gradeArray.length == 0) {
 					uni.showToast({
 						title: '请先选择学校',
 						icon: 'none',
@@ -478,6 +474,7 @@
 						grade_id: this.gradeId,
 						class: this.className
 					}
+					
 					if(this.card_no.replace(/\s*/g,"") == '' || this.name.replace(/\s*/g,"") == '' || this.parent_name.replace(/\s*/g,"") == '' || this.birthDay == '请选择学生生日' || !this.gradeName || !this.schoolName) {
 						uni.showToast({
 							title: '请补全信息再提交',

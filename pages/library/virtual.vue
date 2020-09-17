@@ -265,6 +265,18 @@
 					this.refundInfo = res.data
 				})
 			},
+			// 获取用户当前的订单状态
+			// getOfflineOrderCount(id) {
+			// 	this.$api.offlineUserOrderCount({
+			// 		custom_id: this.userInfo.id
+			// 	})
+			// 	.then(res => {
+			// 		if(res.data.status == 'ok') {
+			// 			let data = res.data.rows
+			// 			console.log(data)
+			// 		}
+			// 	})
+			// },
 			// 格式化时间
 			handleTime(time) {
 				let currentTime = new Date(time)
@@ -294,6 +306,10 @@
 			},
 			// 点击退还押金
 			goDeposit() {
+				// 判断用户有无存在订单,没有才给退(待还书，待取书，逾期未还)
+				
+				
+				
 				// 1 待退还 2 审批中 3已完成
 				if (this.refundInfo.status === 1) {
 					let param = { custom_id: this.userInfo.id, deposit: this.userInfo.deposit }
