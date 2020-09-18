@@ -420,7 +420,8 @@ export default {
 		// 跳转子页面
 		toButtonUrl(toUrl) {
 			let userInfo = uni.getStorageSync("userInfo")
-			if(userInfo.name === 'guest' || !userInfo.name) {
+			if(userInfo.name === 'guest' || !userInfo.name 
+			|| userInfo.mobiel == '') {
 				uni.showModal({
 					title: '请先登录！',
 					content: '是否前往登录页面?',

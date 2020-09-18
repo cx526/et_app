@@ -1,7 +1,7 @@
 <template>
 	<view>
 		<!-- tab切换线上/线下 -->
-		<view class="tab-box">
+		<!-- <view class="tab-box">
 			<view 
 			v-for="(item, index) in tabList" 
 			:key="index"
@@ -10,17 +10,17 @@
 				<text>{{ item.title }}</text>
 				<text v-if="item.number > 0">({{ item.number }})</text>
 			</view>
-		</view>
+		</view> -->
 		<view class="content">
 			
 			<!-- 线上部分 -->
-			<view style="width: 100%;" v-if="isStatus">
+			<!-- <view style="width: 100%;" v-if="isStatus">
 				<et-book-cart-list 
 				v-if="bookCatShow" 
 				:optionData="{optionType:'cart'}"
 				@deleteData="deleteData"
 				@delectSelect="delectSelect"></et-book-cart-list>
-			</view>
+			</view> -->
 			<!-- 线下部分 -->
 			<view class="offline-box" 
 			v-if="!isStatus" 
@@ -74,7 +74,6 @@ export default {
 		}
 	},
 	onLoad(option){
-		console.log(option)
 		this.bookCatShow = true;
 		// 线下逻辑
 		this.flag = option.flag
@@ -89,6 +88,8 @@ export default {
 		})
 	},
 	onShow(){
+		// 去除tab添加
+		this.offlineBooksList =  uni.getStorageSync("offlineCartList");
 		// 更新tab书篮书籍数
 		bookListData.countBookLength()
 		this.bookCatShow = true;
@@ -101,6 +102,7 @@ export default {
 			this.isStatus  = true;
 			this.currentIndex = 1
 		}
+		console.log(this.isStatus)
 		// 获取线上/线下书篮的书籍数量
 		this.tabList[0].number = uni.getStorageSync("offlineCartList").length;
 		this.tabList[1].number = uni.getStorageSync("carListInfo").length;
@@ -111,6 +113,8 @@ export default {
 		
 		// 线下逻辑
 		this.flag = ''
+		// 强制子组件刷新
+		this.isStatus = !this.isStatus
 	},
 	
 	methods: {

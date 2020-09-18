@@ -38,6 +38,16 @@ export default {
 	},
 	methods: {
 		insertToCart() {
+			// 临时关闭
+			uni.showToast({
+				title: '邮寄借阅系统升级中，暂不对外开放！',
+				icon: 'none',
+				duration:2000
+			})
+			return
+			
+			
+			
 			if(this.$props.bookInfo.stockCount.totalOnlineUse === 0){
 				uni.showToast({
 					title:"书本暂时借完，请选择其他书本",

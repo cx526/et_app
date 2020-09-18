@@ -165,6 +165,9 @@ api.offlineBookType = params => request.globalRequest('/api/docker/getDockerBook
 // 线下取消订单
 api.cancelOfflineOrder = params => request.globalRequest('/api/offlineOrder/cancelOrder', 'POST', params)
 
+// 查询线下是否存在未完成订单
+api.checkOfflineOrder = params => request.globalRequest('/api/refund/checkCanRefund', 'POST', params)
+
 // 充值记录
 api.offlinePayRecord = params => request.globalRequest('/api/shell/selShellDetail', 'POST', params)
 

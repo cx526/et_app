@@ -313,6 +313,8 @@
 			})
 		},
 		onShow() {
+			this.waitOrderList = []
+			this.returnOrderList = []
 			this.getLogin();
 			// 获取用户信息
 			this.getUserInfo();

@@ -262,6 +262,13 @@ export default {
 			this.cartBookCount = insertBook.cartBookCount();
 		},
 		openBookCartList(){
+			// 暂时关闭
+			uni.showToast({
+				title: '邮寄借阅系统升级中，暂不对外开放！',
+				icon: 'none',
+				duration:2000
+			})
+			return
 			this.$refs.popup.open();
 		},
 		toKineUrl(){

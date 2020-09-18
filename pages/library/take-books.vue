@@ -325,6 +325,8 @@
 			})
 		},
 		onShow() {
+			this.orderList = []
+			this.failOrderList = []
 			// 获取当前的时间戳
 			this.current_timestamp = new Date().getTime();
 			this.getLogin();

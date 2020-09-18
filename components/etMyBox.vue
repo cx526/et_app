@@ -72,8 +72,9 @@ export default {
 			})
 		},
 		btnClick(toUrl) {
-			console.log(toUrl)
-			if (this.userInfo.name === 'guest') {
+			console.log(this.userInfo)
+			let userInfo = uni.getStorageSync("userInfo")
+			if (userInfo.name === 'guest' || userInfo.mobile == '' ) {
 				//游客 发出提示
 				uni.showModal({
 					title: '请先登录',
@@ -95,6 +96,7 @@ export default {
 					
 					return;
 				}
+				// 会员页面
 				if(toUrl === '/pages/my/myMember') {
 					uni.showToast({
 						title: '敬请期待',
@@ -113,6 +115,15 @@ export default {
 						})
 						return
 					}
+				}
+				// 收货地址暂时关闭
+				if(toUrl === '/pages/cart/addressList') {
+					uni.showToast({
+						title: '邮寄系统升级，暂不对外开放提示！',
+						icon: 'none',
+						duration: 1500
+					})
+					return
 				}
 				uni.navigateTo({url: toUrl});
 				if (toUrl === '/pages/promote/promoteSummeryBook'){

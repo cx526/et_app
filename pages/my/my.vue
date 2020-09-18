@@ -481,18 +481,63 @@ export default {
 		
 		// 线下订单页跳转
 		goOffline(url) {
+			let userInfo = uni.getStorageSync("userInfo")
+			if(userInfo.name === 'guest' || userInfo.mobile == '') {
+				uni.showModal({
+					title: '请先登录',
+					content: '是否前往登录页',
+					success: res => {
+						if(res.confirm) {
+							uni.removeStorageSync("userInfo")
+							uni.redirectTo({
+								url: '/pages/guide/auth'
+							})
+						}
+					}
+				})
+				return
+			}
+			
 			uni.navigateTo({
 				url
 			})
 		},
 		// 线上订单页跳转
 		goOnline(url) {
+			uni.showToast({
+				title: '邮寄借阅系统升级中，暂不对外开放',
+				icon: 'none',
+				duration: 1500
+			})
+			return
+			let userInfo = uni.getStorageInfoSync("userInfo")
+			if(userInfo.name === 'guest' || userInfo.mobile == '') {
+				uni.showModal({
+					title: '请先登录',
+					content: '是否前往登录页',
+					success: res => {
+						if(res.confirm) {
+							uni.removeStorageSync("userInfo")
+							uni.redirectTo({
+								url: '/pages/guide/auth'
+							})
+						}
+					}
+				})
+				return
+			}
 			uni.navigateTo({
 				url
 			})
 		},
 		// 查看线上全部订单
 		goOnlineAll() {
+			uni.showToast({
+				title: '邮寄借阅系统升级中，暂不对外开放',
+				icon: 'none',
+				duration: 1500
+			})
+			return
 			uni.navigateTo({
 				url: '/pages/cart/orderList?status_text=全部'
 			})

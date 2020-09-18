@@ -33,7 +33,7 @@
 					<!-- 有押金显示退还 -->
 					<view class="btn" @tap="goDeposit" v-if="deposit > 0"
 					style="background: #f00;">
-						<text>{{ refundInfo.status_text }}</text>
+						<text>{{ refundInfoText }}</text>
 					</view>
 					<!-- 无押金显示充值 -->
 					<view class="btn" v-if="deposit == 0" @tap="goDepositPay">
@@ -174,7 +174,7 @@
 					contentnomore: '暂无更多数据'
 				},
 				isLoadingMore: true,
-				refundInfo: "",//储存押金状态
+				refundInfoText: "退还押金",//储存押金状态
 				from: "",//区别页面从哪里跳转过来
 				price: 29
 			}
@@ -259,24 +259,14 @@
 			},
 			// 目前退还押金状态
 			getRefundInfo() {
-				let param = { custom_id: this.userInfo.id }
-				this.$api.getRefund(param).then(res => {
-					console.log(res.data)
-					this.refundInfo = res.data
+				this.$api.checkOfflineOrder({ custom_id: this.userInfo.id })
+				.then(res => {
+					if(res.data.rows.refundInfo 
+					&& res.data.rows.refundInfo.length != 0) {
+						this.refundInfoText = "审批中"
+					}
 				})
 			},
-			// 获取用户当前的订单状态
-			// getOfflineOrderCount(id) {
-			// 	this.$api.offlineUserOrderCount({
-			// 		custom_id: this.userInfo.id
-			// 	})
-			// 	.then(res => {
-			// 		if(res.data.status == 'ok') {
-			// 			let data = res.data.rows
-			// 			console.log(data)
-			// 		}
-			// 	})
-			// },
 			// 格式化时间
 			handleTime(time) {
 				let currentTime = new Date(time)
@@ -306,26 +296,62 @@
 			},
 			// 点击退还押金
 			goDeposit() {
-				// 判断用户有无存在订单,没有才给退(待还书，待取书，逾期未还)
-				
-				
-				
-				// 1 待退还 2 审批中 3已完成
-				if (this.refundInfo.status === 1) {
-					let param = { custom_id: this.userInfo.id, deposit: this.userInfo.deposit }
-					this.$api.postRefund(param).then(res => {
-						this.refundInfo = {
-							canRefund: 1,
-							status: 2,
-							// status_text: '审批中',
-							// msg: '退还押金审批中，请您耐心等候！'
+				// 判断用户有无存在订单,没有才给退(0不给退,1给退)
+				this.$api.checkOfflineOrder({ custom_id: this.userInfo.id })
+				.then(res => {
+					let data = res.data.rows
+					console.log(data)
+					if(res.data.status == 'ok') {
+						// 存在订单，不给退押金
+						if(data.canRefundStatus == 0) {
+							// 存在订单
+							if(data.offlineOrder.length != 0 || 
+							data.onlineOrder.length != 0) {
+								uni.showToast({
+									title: '当前账户还有未完成订单,请先完成订单！',
+									icon: 'none',
+									duration: 2000
+								})
+								this.refundInfoText = "退还押金"
+							}
+							// 不存在订单但存在退押金审批状态
+							else if(data.refundInfo && data.refundInfo.length != 0){
+								uni.showToast({
+									title: '押金退还审批中，请耐心等待',
+									icon: 'none',
+									duration: 2000
+								})
+								this.refundInfoText = "审批中"
+							}
+							
+							
+						}else {
+							// 可以退换押金
+							let param = { 
+								custom_id: this.userInfo.id, 
+								deposit: this.deposit
+							}
+							this.$api.postRefund(param)
+							.then(res => {
+								uni.showToast({
+									title: res.data.msg,
+									icon: 'none',
+									duration: 1500
+								})
+								this.refundInfoText = "审批中"
+							})
 						}
-						this.getRefundInfo()
-						uni.showToast({ title: res.data.msg })
-					})
-				} else {
-					uni.showToast({ title: this.refundInfo.msg, icon: 'none' })
-				}
+					}else {
+						uni.showToast({
+							title: '发生未知错误,请稍后再试！',
+							icon: 'none',
+							duration:2000
+						})
+					}
+				})
+				return
+				// 1 待退还 2 审批中 3已完成
+				 
 			},
 			// 返回借阅页面
 			clickLeft() {
@@ -338,13 +364,15 @@
 				// 从押金不足弹窗进入
 				else {
 					uni.reLaunch({
-						url: '/pages/cart/cart?flag=true'
+						// url: '/pages/cart/cart?flag=true'
+						url: '/pages/cart/cart'
 					})
 				}
 				
 			},
 			// 充值押金
 			async goDepositPay() {
+				
 				uni.showLoading({
 					title: '订单提交中',
 					mask: true

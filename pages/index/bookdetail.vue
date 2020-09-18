@@ -177,6 +177,13 @@ export default {
 	methods: {
 		// 跳转书篮
 		goCar() {
+			// 暂时关闭
+			uni.showToast({
+				title: '邮寄借阅系统升级中，暂不对外开放！',
+				icon: 'none',
+				duration:2000
+			})
+			return
 			uni.reLaunch({
 				url: '/pages/cart/cart?flag=true'
 			})
@@ -206,6 +213,13 @@ export default {
 			const index = e.detail.current;
 		},
 		insertToCart() { 
+			// 暂时关闭
+			uni.showToast({
+				title: '邮寄借阅系统升级中，暂不对外开放！',
+				icon: 'none',
+				duration:2000
+			})
+			return
 			if(this.bookInfo.stock.usageCount === 0){
 				uni.showToast({
 					title:"书本暂时借完，请选择其他书本",
