@@ -477,7 +477,7 @@
 						class: this.className
 					}
 					console.log(param)
-					if(this.card_no.replace(/\s*/g,"") == '' || this.name.replace(/\s*/g,"") == '' || this.parent_name.replace(/\s*/g,"") == '' || this.birthDay == '请选择学生生日' || !this.gradeName || !this.schoolName) {
+					if(this.card_no.replace(/\s*/g,"") == '' || this.name.replace(/\s*/g,"") == '' || this.parent_name.replace(/\s*/g,"") == '' || this.birthDay == '请选择学生生日' || !this.gradeName || !this.schoolName ||this.className == '') {
 						uni.showToast({
 							title: '请补全信息再提交',
 							icon: 'none'

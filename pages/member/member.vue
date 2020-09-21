@@ -1,20 +1,25 @@
 <template>
 	<view>
 		<view class="bg"> </view>
-		<swiper :style="{'height': swiperHeight} ">
-			<swiper-item>
-				<view class="item" id="card">
+		<swiper 
+		:style="{'height': swiperHeight}"
+		>
+			<swiper-item v-for="(item,index) in memberCard" :key="index">
+				<view class="item card">
 					<view class="show">
-						<image :src="$aliImage + 'member-icon-04.png'" 
+						<image :src="item.img_url" 
+						v-if="item.img_url && item.img_url != ''"
+						mode="widthFix"></image>
+						<image :src="$aliImage + 'member-icon-04.png'" v-else
 						mode="widthFix"></image>
 					</view>
 					<view class="context">
 						<view class="title">
-							<view class="name"><text>畅读年卡</text></view>
+							<view class="name"><text>{{ item.name }}</text></view>
 							<view class="price">
 								<view>
 									<text style="font-size: 30rpx;margin-right: 6rpx;">									 ￥</text>
-									<text>328</text>
+									<text>{{ item.price }}</text>
 								</view>
 								<view><text>原价￥598</text></view>
 							</view>
@@ -25,8 +30,10 @@
 								<view class="demo-topic">
 									<text>权益说明</text>
 								</view>
-								<rich-text :nodes="agreementContext"></rich-text>
-								<!-- <view>1. 有效期1年</view> 
+								<view>
+									<rich-text :nodes="item.remark_power"></rich-text>
+								</view>
+							<!-- 	<view>1. 有效期1年</view> 
 								<view>2. 享童书馆无限次数借阅 </view>
 								<view>3. 享免押金借阅 </view>
 								<view>4. 书籍破损、丢失赔付优惠 </view>
@@ -37,35 +44,53 @@
 									<text>使用说明</text>
 								</view>
 								<view>
-									1. 会员卡产品购买以现金支付，购买后不能取消、退款</view> 
+									<rich-text :nodes="item.remark_use"></rich-text>
+								</view>
+							<!-- 	<view>
+									1. 会员卡产品购买以现金支付，购买后不能取消、退款
+								</view> 
 								<view>2. 会员卡权益购买后自动生效，有效期满自动失效</view>
 								<view>3. 会员卡仅限于绘本图书租赁，及平台指定商品</view>
 								<view>
-									4. 会员卡仅能在账户绑定学校童书馆使用，不能跨校使用</view>
+									4. 会员卡仅能在账户绑定学校童书馆使用，不能跨校使用
+								</view> -->
 							</view>
 						</view>
 						<view class="rule">
 							<view class="agree">
 								<radio style="transform: scale(0.6);" color="#2aaec4" 
-								 @tap="agreement" :checked="isChecked" />
+								 @tap="agreement(item)" :checked="item.isChecked" />
 								<view>
 									<text style="color: #808080;">我已阅读并同意</text>
-									<text style="color: #2AAEC4;">会员权益协议</text>
+									<text style="color: #2AAEC4;" @tap="checkMember">
+										会员权益协议</text>
 								</view>
 							</view>
 						</view>
 						<view class="btn">
-							<view @tap="goBuy"><text>立即购买</text></view>
+							<view @tap="goBuy(item)"><text>立即购买</text></view>
 						</view>
 					</view>
 					
 				</view>
 			</swiper-item>
 		</swiper>
+		<!-- 会员权益协议弹窗 -->
+		<uni-popup ref="memberPopUp">
+			<view class="memberPopUp" :style="{ width: popUpWidth }">
+				<view class="title">
+					<text>五车书会员权益协议说明</text>
+				</view>
+				<view class="context">
+					<rich-text :nodes="agreementContext"></rich-text>
+				</view>
+			</view>
+		</uni-popup>
 	</view>
 </template>
 
 <script>
+	import uniPopup from '@/components/uni-popup/uni-popup.vue'
 	export default {
 		data() {
 			return {
@@ -73,16 +98,33 @@
 				swiperHeight: '', //swiper高度
 				agreementContext: '',//会员协议内容
 				isChecked: false , //会员协议是否选中
+				popUpWidth: 0 , //会员协议弹窗高度
+				memberCard: [], //储存会员卡数据
 			}
 		},
+		components: {
+			uniPopup
+		},
 		onLoad() {
+			// 获取会员协议
 			this.getAgreement()
+			// 获取会员卡列表
+			this.getMemberCard()
+			// 设置会员协议弹唱宽度
+			uni.getSystemInfo({
+				success: data => {
+					this.popUpWidth = data.windowWidth * 0.8 + 'px'
+				}
+			})
 		},
 		onReady() {
-			const query = uni.createSelectorQuery().in(this);
-			query.select('#card').boundingClientRect(data => {
-				this.swiperHeight = data.height + 'px'
-			}).exec();
+			// 动态设置swiper高度(只能在onRead中调用)
+			setTimeout(()=> {
+				const query = uni.createSelectorQuery().in(this);
+				query.selectAll('.card').boundingClientRect(data => {
+					this.swiperHeight = data[0].height + 'px'
+				}).exec();
+			}, 100)
 		},
 		methods: {
 			// 获取会员协议
@@ -99,26 +141,54 @@
 					this.agreementContext = res.data.rows[0].content
 				})
 			},
+			// 获取会员卡
+			getMemberCard() {
+				this.$api.getMemberCard()
+				.then(res => {
+					this.memberCard = res.data.rows;
+					if(this.memberCard && this.memberCard.length > 0) {
+						this.memberCard.map(item => {
+							this.$set(item,'isChecked',false)
+						})
+					}
+					console.log(this.memberCard)
+				})
+			},
 			// 是否勾选协议
-			agreement() {
-				this.isChecked = !this.isChecked
+			agreement(item) {
+				// 排他
+				if(this.memberCard && this.memberCard.length > 0) {
+					this.memberCard.map(item => {
+						item.isChecked = false
+					})
+				}
+				item.isChecked = !item.isChecked
 			},
 			// 立即购买
-			goBuy() {
-				if(!this.isChecked) {
+			goBuy(item) {
+				if(!item.isChecked) {
 					uni.showToast({
 						title: '请先同意会员权益协议',
 						icon: 'none',
 						duration: 1500
 					})
-					return
 				}else {
+					let param = {
+						name: item.name,
+						price: item.price,
+						id: item.id
+					}
 					// 跳转会员购买下单页面
 					uni.navigateTo({
-						url: '/pages/member/buy-member'
+						url: '/pages/member/buy-member?param='+ JSON.stringify(param)
 					})
 				}
 			},
+			// 查看会员协议
+			checkMember() {
+				this.$refs.memberPopUp.open()
+			},
+			
 		}
 	}
 </script>
@@ -142,7 +212,7 @@
 	}
 	swiper-item {
 		box-sizing: border-box;
-		position: relative;
+		/* position: relative; */
 	}
 	swiper .item {
 		box-sizing: border-box;
@@ -240,5 +310,20 @@
 		border-radius: 60rpx;
 		text-align: center;
 		background-image: linear-gradient(to right, #67DCE6, #38B2D1);
+	}
+	/* 会员协议弹窗 */
+	.memberPopUp {
+		box-sizing: border-box;
+		background: #fff;
+		padding: 24rpx;
+		border-radius: 20rpx;
+		font-size: 28rpx;
+	}
+	.memberPopUp .title {
+		font-size: 32rpx;
+		color: #2aaec4;
+		font-weight: 700;
+		text-align: center;
+		margin-bottom: 12rpx;
 	}
 </style>

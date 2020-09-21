@@ -1,7 +1,12 @@
 {
 
 	"pages": [
-		
+		// {
+		// 	"path": "pages/member/member",
+		// 	"style": {
+		// 		"navigationBarTitleText": "会员"
+		// 	}
+		// },
 		{
 			"path": "pages/index/index",
 			"style": {
@@ -473,38 +478,38 @@
 			"style": {
 				"navigationBarTitleText": "借阅规则"
 			}
-		}, 
-		
+		},
+
 		{
 			"path": "pages/index/article",
 			"style": {
 				"navigationBarTitleText": "五车书绘本借阅"
 			}
-		}, 
+		},
 		{
 			"path": "pages/library/offline-more",
 			"style": {}
 		}
 		// 会员
-		// ,{
-		// 	"path": "pages/member/member",
-		// 	"style": {
-		// 		"navigationBarTitleText": "会员"
-		// 	}
-		// }
-		//   ,{
-		//       "path" : "pages/member/buy-member",
-		//       "style" : {
-		// 	"navigationBarTitleText": "会员购买"
-		// }
-		//   }
+		,{
+			"path": "pages/member/member",
+			"style": {
+				"navigationBarTitleText": "会员"
+			}
+		}
+		, {
+			"path": "pages/member/buy-member",
+			"style": {
+				"navigationBarTitleText": "会员购买"
+			}
+		}
 
-		//   ,{
-		//       "path" : "pages/member/member-success",
-		//       "style" : {
-		// 	"navigationBarTitleText": "购买成功"
-		// }
-		//   }
+		, {
+			"path": "pages/member/member-success",
+			"style": {
+				"navigationBarTitleText": "购买成功"
+			}
+		}
 	],
 	"globalStyle": {
 		"navigationBarTextStyle": "black",

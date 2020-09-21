@@ -421,7 +421,7 @@ export default {
 		toButtonUrl(toUrl) {
 			let userInfo = uni.getStorageSync("userInfo")
 			if(userInfo.name === 'guest' || !userInfo.name 
-			|| userInfo.mobiel == '') {
+			|| userInfo.mobiel == '' || !userInfo.name || !userInfo.mobile) {
 				uni.showModal({
 					title: '请先登录！',
 					content: '是否前往登录页面?',

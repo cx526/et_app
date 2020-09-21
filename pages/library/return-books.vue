@@ -378,7 +378,7 @@
 					mask: true
 				})
 				// 如果不是合作用户不发送请求
-				this.userInfo.dockerInfo && this.$api.offlineUserOrderList({
+				this.userInfo.dockerInfo && this.$api.selOfflineOrderByDocker({
 					docker_mac: this.userInfo.dockerInfo.docker_mac,
 					filterItems:{
 						custom_id: this.userInfo.id,

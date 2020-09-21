@@ -428,8 +428,8 @@ export default {
 					let data = res.data.rows
 					// 待取书订单数
 					this.offlineOrderList[0].number = data.waitGetBookCout
-					// 待还订单数
-					this.offlineOrderList[1].number = data.waitReturnBookCout
+					// 待还订单数(待还书+逾期数量)
+					this.offlineOrderList[1].number = Number(data.waitReturnBookCout) + Number(data.overTimeBookCout)
 					// 已归还订单数
 					this.offlineOrderList[2].number = data.isReturnBookCout
 					// 已失效订单数
@@ -482,7 +482,7 @@ export default {
 		// 线下订单页跳转
 		goOffline(url) {
 			let userInfo = uni.getStorageSync("userInfo")
-			if(userInfo.name === 'guest' || userInfo.mobile == '') {
+			if(userInfo.name === 'guest' || userInfo.mobile == '' || !userInfo.name || !userInfo.mobile) {
 				uni.showModal({
 					title: '请先登录',
 					content: '是否前往登录页',

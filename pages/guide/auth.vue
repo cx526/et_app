@@ -92,13 +92,13 @@ export default {
 			uni.reLaunch({ url: '../index/index' })
 		},
 		checkInfo(userInfo) {
-			this.$api.getCustom({ filterItems: { mobile: userInfo.mobile } }).then(res=>{
+			this.$api.getCustom({ filterItems: { mobile: userInfo.mobile }}).then(res=>{
 				console.log(res.data[0])
 				let childInfo = res.data[0].childInfo;
 				console.log(childInfo);
-				// if(JSON.stringify(childInfo) == "{}"){
-					// uni.navigateTo({ url: './register' });
-					if(res.data[0].card_no == ''){
+				console.log(res.data[0].mobile)
+				// 卡号不存在手机号存在跳转到绑卡页面
+					if(res.data[0].card_no == '' && res.data[0].mobile != ''){
 					uni.navigateTo({
 						url:'/pages/library/tied-card?from=home'
 					})

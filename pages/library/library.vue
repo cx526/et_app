@@ -195,8 +195,6 @@ export default {
 		Popup
 	},
 	async onLoad(option) {
-		console.log(option)
-		console.log('onLoad')
 		// 检测是否有登录
 		this.getLogin()
 		// 从搜索页跳转过来

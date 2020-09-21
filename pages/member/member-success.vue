@@ -9,7 +9,7 @@
 			<text>办理成功</text>
 		</view>
 		<view class="btn">
-			<view>立即借阅</view>
+			<view @tap="borrow">立即借阅</view>
 		</view>
 	</view>
 </template>
@@ -22,7 +22,12 @@
 			}
 		},
 		methods: {
-			
+			// 立即借阅
+			borrow() {
+				uni.switchTab({
+					url: '/pages/library/library'
+				})
+			}
 		}
 	}
 </script>

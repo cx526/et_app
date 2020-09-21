@@ -74,7 +74,7 @@ export default {
 		btnClick(toUrl) {
 			console.log(this.userInfo)
 			let userInfo = uni.getStorageSync("userInfo")
-			if (userInfo.name === 'guest' || userInfo.mobile == '' ) {
+			if (!userInfo.name || !userInfo.mobile || userInfo.name === 'guest' || userInfo.mobile == '' ) {
 				//游客 发出提示
 				uni.showModal({
 					title: '请先登录',
