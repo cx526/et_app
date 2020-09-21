@@ -23,7 +23,7 @@
 							<view class="topic">
 								<view style="font-weight: bold;">订单号：{{ item.order_no }}</view>
 								<view class="status" v-if="item.order_type == 0">
-									<text>{{ item.msg }}</text>
+									<text>请于{{ item.msg }}之前取书</text>
 								</view>
 								<view class="status" v-else><text>已失效</text></view>
 							</view>
@@ -91,9 +91,13 @@
 				<view v-if="failOrderList && failOrderList.length > 0">
 					<view class="order-list" v-for="(item, index) in failOrderList" :key="index">
 						<view class="item">
-							<view class="topic">
-								<view style="font-weight: bold;">订单号：{{ item.order_no }}</view>
-								<view class="status"><text style="color: #868686;">已失效</text></view>
+							<view class="topic" style="display: flex; justify-content: space-between">
+								<view style="font-weight: bold;">
+									订单号：{{ item.order_no }}
+								</view>
+								<view class="status" style="text-align: right;">
+									<text style="color: #868686;">已失效</text>
+								</view>
 							</view>
 							<view class="book-list">
 								<block v-for="(list, listIndex) in item.dockerInfo" :key="listIndex">
@@ -340,9 +344,10 @@ export default {
 						// 订单失效时间formatPreGetBookTime
 
 						item.formatPreGetBookTime = item.formatPreGetBookTime.replace(/-/g, '/');
-						item.fail_timestamp = (new Date(item.formatPreGetBookTime)).getTime();
-
+						item.fail_timestamp = (new Date(item.formatPreGetBookTime)).getTime() ;
+						console.log(item.fail_timestamp)
 						item.difference = item.fail_timestamp - this.current_timestamp
+						console.log(item.difference)
 					}
 
 				})
@@ -352,8 +357,8 @@ export default {
 					this.orderList && this.orderList.map(list => {
 						// 开启计时器
 						if(list.order_type == 0) {
-							list.difference = (+list.difference) - 1000;
-							list.msg =  this.countDown(list.difference);
+							list.fail_timestamp = (+list.fail_timestamp) - 1000;
+							list.msg =  this.countDown(list.fail_timestamp);
 						}
 
 					})
@@ -397,7 +402,7 @@ export default {
 		},
 		// 格式化时间
 		timestampToTime(timestamp) {
-			var date = new Date();
+			var date = new Date(timestamp);
 			var Y = date.getFullYear() + '-';
 			var M = (date.getMonth()+1 < 10 ? '0'+(date.getMonth()+1) : date.getMonth()+1) + '-';
 			var D = (date.getDate() < 10 ? '0'+date.getDate() : date.getDate()) + ' ';
@@ -413,17 +418,17 @@ export default {
 		countDown(time) {
 			let msg = '';
 			if (time > 0) {
-				let hours = parseInt(time / (1000 * 60 * 60 )) >= 10 ?	parseInt(time / (1000 * 60 * 60 )) : '0' + parseInt(time / (1000 * 60 * 60 ))
-				let minutes = parseInt((time % (1000 * 60 * 60)) / (1000 * 60)) >= 10 ?
-				parseInt((time % (1000 * 60 * 60)) / (1000 * 60))
-				:
-				'0' + parseInt((time % (1000 * 60 * 60)) / (1000 * 60));
-				let seconds = parseInt((time % (1000 * 60)) / 1000) >= 10 ?
-				parseInt((time % (1000 * 60)) / 1000)
-				:
-				'0' + parseInt((time % (1000 * 60)) / 1000);
-				msg = (`${hours}:${minutes}:${seconds}`)
-				// msg = this.timestampToTime(time)
+				// let hours = parseInt(time / (1000 * 60 * 60 )) >= 10 ?	parseInt(time / (1000 * 60 * 60 )) : '0' + parseInt(time / (1000 * 60 * 60 ))
+				// let minutes = parseInt((time % (1000 * 60 * 60)) / (1000 * 60)) >= 10 ?
+				// parseInt((time % (1000 * 60 * 60)) / (1000 * 60))
+				// :
+				// '0' + parseInt((time % (1000 * 60 * 60)) / (1000 * 60));
+				// let seconds = parseInt((time % (1000 * 60)) / 1000) >= 10 ?
+				// parseInt((time % (1000 * 60)) / 1000)
+				// :
+				// '0' + parseInt((time % (1000 * 60)) / 1000);
+				// msg = (`${hours}:${minutes}:${seconds}`)
+				msg = this.timestampToTime(time)
 				return msg
 
 			}else {
@@ -624,17 +629,17 @@ page {
 	border-radius: 20rpx;
 }
 .order-list .topic {
-	display: flex;
+	/* display: flex; */
 	padding: 0 24rpx;
 	border-bottom: 1px solid #eaeaea;
-	justify-content: space-between;
+	/* justify-content: space-between; */
 	font-size: 28rpx;
 	align-items: center;
 	line-height: 60rpx;
 }
 .order-list .topic .status {
 	color: #68c1d4;
-	text-align: right;
+	/* text-align: right; */
 }
 .order-list .topic .status.active {
 	color: #f00;

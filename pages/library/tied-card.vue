@@ -352,7 +352,16 @@
 						this.dataInit()
 					})
 				} else {
-					// 
+					uni.showToast({
+						title: '请先前往授权登录',
+						icon: 'none',
+						duration: 1500,
+						success: () => {
+							uni.redirectTo({
+								url: '/pages/guide/auth'
+							})
+						}
+					})
 				}
 			},
 			// 获取班级学校信息
