@@ -293,7 +293,7 @@
 			getId() {
 				let tmpUserInfo = uni.getStorageSync("userInfo");
 				let mobile = tmpUserInfo.mobile
-				if (!tmpUserInfo || !tmpUserInfo.mobile) {
+				if (tmpUserInfo && JSON.stringify(tmpUserInfo) != '{}' && tmpUserInfo.mobile && tmpUserInfo.mobile.replace(/\s*/g, '') != '') {
 					this.$api.getCustom({
 						filterItems: { 
 							mobile: mobile ,

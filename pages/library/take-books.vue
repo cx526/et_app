@@ -22,7 +22,8 @@
 						<view class="item">
 							<view class="topic">
 								<view style="font-weight: bold;">订单号：{{ item.order_no }}</view>
-								<view class="status" v-if="item.order_type == 0">
+								<view class="status" 
+								v-if="item.order_type == 0 && item.msg">
 									<text>请于{{ item.msg }}之前取书</text>
 								</view>
 								<view class="status" v-else><text>已失效</text></view>

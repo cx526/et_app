@@ -491,25 +491,25 @@
 			"style": {}
 		}
 		// 会员
-		,{
-			"path": "pages/member/member",
-			"style": {
-				"navigationBarTitleText": "会员"
-			}
-		}
-		, {
-			"path": "pages/member/buy-member",
-			"style": {
-				"navigationBarTitleText": "会员购买"
-			}
-		}
+		// ,{
+		// 	"path": "pages/member/member",
+		// 	"style": {
+		// 		"navigationBarTitleText": "会员"
+		// 	}
+		// }
+		// , {
+		// 	"path": "pages/member/buy-member",
+		// 	"style": {
+		// 		"navigationBarTitleText": "会员购买"
+		// 	}
+		// }
 
-		, {
-			"path": "pages/member/member-success",
-			"style": {
-				"navigationBarTitleText": "购买成功"
-			}
-		}
+		// , {
+		// 	"path": "pages/member/member-success",
+		// 	"style": {
+		// 		"navigationBarTitleText": "购买成功"
+		// 	}
+		// }
 	],
 	"globalStyle": {
 		"navigationBarTextStyle": "black",

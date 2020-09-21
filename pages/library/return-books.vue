@@ -234,7 +234,7 @@
 				<view class="title">
 					<text class="line" style="margin-right: 16rpx;"></text>
 					<text class="circle" style="margin-right: 20rpx;"></text>
-					<text>取书验证码</text>
+					<text>还书验证码</text>
 					<text class="circle" style="margin-left: 20rpx;"></text>
 					<text class="line" style="margin-left: 16rpx;"></text>
 				</view>
@@ -382,7 +382,7 @@
 					docker_mac: this.userInfo.dockerInfo.docker_mac,
 					filterItems:{
 						custom_id: this.userInfo.id,
-						order_type: 4 //待归还书单类型
+						order_type: "4" //待归还书单类型
 					}
 				})
 				.then(res => {
@@ -523,18 +523,19 @@
 					if(this.tabList.currentIndex == 0) {
 						console.log('开启了定时器')
 						this.userInfo.dockerInfo 
-						&& this.$api.offlineUserOrderList({
+						&& this.$api.selOfflineOrderByDocker({
 							// pageSize: this.waitOrderPageSize,
 							// currentPage: this.waitOrderPage,
 							docker_mac: this.userInfo.dockerInfo.docker_mac,
 							filterItems:{
 								custom_id: this.userInfo.id,
-								order_type: 4 //待归还书单类型
+								order_type: "4" //待归还书单类型
 							}
 						})
 						.then(res => {
 							if(res.data.rows.length != this.waitOrderList.length) {
-								console.log('entry')
+								console.log(res.data.rows.length)
+								console.log(this.waitOrderList.length)
 								// 重置当前页面时间戳
 								this.current_time_stamp = new Date().getTime();
 								// 重置数据
