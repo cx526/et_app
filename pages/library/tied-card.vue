@@ -291,61 +291,69 @@
 			},
 			// 获取学生资料
 			getId() {
-				let mobile = uni.getStorageSync("userInfo").mobile;
-				this.$api.getCustom({
-					filterItems: { mobile }
-				}).then(res => {
-					console.log(res)
-					// 初始信息
-					this.schoolName = JSON.stringify(res.data[0].schoolInfo 
-					!= '{}') ? res.data[0].schoolInfo.name : '' //学校名称
-					
-					this.schoolId = JSON.stringify(res.data[0].schoolInfo 
-					!= '{}') ? res.data[0].schoolInfo.id : '' //学校id
-					
-					this.gradeName = JSON.stringify(res.data[0].gradeInfo 
-					!= '{}') ? res.data[0].gradeInfo.name : ''  //年级
-					
-					this.gradeId = JSON.stringify(res.data[0].gradeInfo 
-					!= '{}') ? res.data[0].gradeInfo.id : '' //年级id
-					
-					this.className = JSON.stringify(res.data[0].childInfo) 
-					!= '{}' ? res.data[0].childInfo.class : '' //班级
-					
-					this.card_no = res.data[0].card_no ? 
-					res.data[0].card_no : '' //卡号
-					
-					this.name = JSON.stringify(res.data[0].childInfo) != '{}' ?
-					res.data[0].childInfo.name : '' //学生姓名
-					// 学生生日
-					this.birthDay = JSON.stringify(res.data[0].childInfo) 
-					!= '{}' ? res.data[0].childInfo.birth_day : '请选择学生生日' 
-					console.log(this.birthDay)
-					
-					this.parent_name = JSON.stringify(res.data[0].childInfo) 
-					!= '{}' ? res.data[0].childInfo.parent_name : '' //家长姓名
-					
-					this.sexIndex = JSON.stringify(res.data[0].childInfo) 
-					!= "{}" ? res.data[0].childInfo.gender - 1 : 0 //学生性别
-					
-					this.custom_id = res.data[0].id; //学生id
-					
-					this.change_class_status = res.data[0].change_class_status 
-					
-					this.teacherInfo = res.data[0].teacherInfo //教师信息
-					
-					// 确认信息是否给修改(有绑定老师需要申请，没有随意)
-					if(this.change_class_status == 1) {
-						console.log('teacherInfo')
-						this.isDisabled = false
-					}else if(JSON.stringify(res.data[0].teacherInfo) == "{}"){
-						this.isDisabled = false
-					}else {
-						this.isDisabled = true
-					}
-					// 初始化学校列表
-					this.dataInit()
-				})
+				let tmpUserInfo = uni.getStorageSync("userInfo");
+				let mobile = tmpUserInfo.mobile
+				if (!tmpUserInfo || !tmpUserInfo.mobile) {
+					this.$api.getCustom({
+						filterItems: { 
+							mobile: mobile ,
+						}
+					}).then(res => {
+						console.log(res)
+						let result = res.data[0]
+						// 初始信息
+						this.schoolName = JSON.stringify(result.schoolInfo 
+						!= '{}') ? result.schoolInfo.name : '' //学校名称
+						
+						this.schoolId = JSON.stringify(result.schoolInfo 
+						!= '{}') ? result.schoolInfo.id : '' //学校id
+						
+						this.gradeName = JSON.stringify(result.gradeInfo 
+						!= '{}') ? result.gradeInfo.name : ''  //年级
+						
+						this.gradeId = JSON.stringify(result.gradeInfo 
+						!= '{}') ? result.gradeInfo.id : '' //年级id
+						
+						this.className = JSON.stringify(result.childInfo) 
+						!= '{}' ? result.childInfo.class : '' //班级
+						
+						this.card_no = result.card_no ? 
+						result.card_no : '' //卡号
+						
+						this.name = JSON.stringify(result.childInfo) != '{}' ?
+						result.childInfo.name : '' //学生姓名
+						// 学生生日
+						this.birthDay = JSON.stringify(result.childInfo) 
+						!= '{}' ? result.childInfo.birth_day : '请选择学生生日' 
+						console.log(this.birthDay)
+						
+						this.parent_name = JSON.stringify(result.childInfo) 
+						!= '{}' ? result.childInfo.parent_name : '' //家长姓名
+						
+						this.sexIndex = JSON.stringify(result.childInfo) 
+						!= "{}" ? result.childInfo.gender - 1 : 0 //学生性别
+						
+						this.custom_id = result.id; //学生id
+						
+						this.change_class_status = result.change_class_status 
+						
+						this.teacherInfo = result.teacherInfo //教师信息
+						
+						// 确认信息是否给修改(有绑定老师需要申请，没有随意)
+						if(this.change_class_status == 1) {
+							console.log('teacherInfo')
+							this.isDisabled = false
+						}else if(JSON.stringify(result.teacherInfo) == "{}"){
+							this.isDisabled = false
+						}else {
+							this.isDisabled = true
+						}
+						// 初始化学校列表
+						this.dataInit()
+					})
+				} else {
+					// 
+				}
 			},
 			// 获取班级学校信息
 			dataInit() {
