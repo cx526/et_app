@@ -297,34 +297,36 @@
 				}).then(res => {
 					console.log(res)
 					// 初始信息
-					this.schoolName = res.data[0].schoolInfo ? 
-					res.data[0].schoolInfo.name : '' //学校名称
+					this.schoolName = JSON.stringify(res.data[0].schoolInfo 
+					!= '{}') ? res.data[0].schoolInfo.name : '' //学校名称
 					
-					this.schoolId = res.data[0].schoolInfo ? 
-					res.data[0].schoolInfo.id : '' //学校id
+					this.schoolId = JSON.stringify(res.data[0].schoolInfo 
+					!= '{}') ? res.data[0].schoolInfo.id : '' //学校id
 					
-					this.gradeName = res.data[0].gradeInfo ? 
-					res.data[0].gradeInfo.name : ''  //年级
+					this.gradeName = JSON.stringify(res.data[0].gradeInfo 
+					!= '{}') ? res.data[0].gradeInfo.name : ''  //年级
 					
-					this.gradeId = res.data[0].gradeInfo ? 
-					res.data[0].gradeInfo.id : '' //年级id
+					this.gradeId = JSON.stringify(res.data[0].gradeInfo 
+					!= '{}') ? res.data[0].gradeInfo.id : '' //年级id
 					
-					this.className = res.data[0].childInfo ? 
-					res.data[0].childInfo.class : '' //班级
+					this.className = JSON.stringify(res.data[0].childInfo) 
+					!= '{}' ? res.data[0].childInfo.class : '' //班级
 					
 					this.card_no = res.data[0].card_no ? 
 					res.data[0].card_no : '' //卡号
 					
-					this.name = res.data[0].childInfo ?
+					this.name = JSON.stringify(res.data[0].childInfo) != '{}' ?
 					res.data[0].childInfo.name : '' //学生姓名
-		
-					this.birthDay = res.data[0].childInfo ? 
-					res.data[0].childInfo.birth_day : '' //学生生日
+					// 学生生日
+					this.birthDay = JSON.stringify(res.data[0].childInfo) 
+					!= '{}' ? res.data[0].childInfo.birth_day : '请选择学生生日' 
+					console.log(this.birthDay)
 					
-					this.parent_name = res.data[0].childInfo ? 
-					res.data[0].childInfo.parent_name : '' //家长姓名
+					this.parent_name = JSON.stringify(res.data[0].childInfo) 
+					!= '{}' ? res.data[0].childInfo.parent_name : '' //家长姓名
 					
-					this.sexIndex = JSON.stringify(res.data[0].childInfo) != "{}" ? res.data[0].childInfo.gender - 1 : 0 //学生性别
+					this.sexIndex = JSON.stringify(res.data[0].childInfo) 
+					!= "{}" ? res.data[0].childInfo.gender - 1 : 0 //学生性别
 					
 					this.custom_id = res.data[0].id; //学生id
 					
@@ -474,7 +476,7 @@
 						grade_id: this.gradeId,
 						class: this.className
 					}
-					
+					console.log(param)
 					if(this.card_no.replace(/\s*/g,"") == '' || this.name.replace(/\s*/g,"") == '' || this.parent_name.replace(/\s*/g,"") == '' || this.birthDay == '请选择学生生日' || !this.gradeName || !this.schoolName) {
 						uni.showToast({
 							title: '请补全信息再提交',
