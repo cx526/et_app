@@ -30,16 +30,24 @@
 								<text>
 								{{userInfo.name === 'guest' ? '五车书游客, 您好！' : userInfo.name}}
 								</text>
-								<image mode="widthFix"  v-if="false"
-								:src="$aliImage + 'member-icon-03.png'"></image>
+								<!-- <image mode="widthFix" 
+								:src="$aliImage + 'member-icon-03.png'"></image> -->
 							</view>
-							<!-- <text style="font-size: 20rpx;">
-								您当前尚未开通会员服务</text> -->
-							<text style="font-size: 20rpx;" 
-							v-if="false">会员到期日：2020.12.12</text>
+							<!-- <text style="font-size: 20rpx;" v-if="!member_status">
+								您当前尚未开通会员服务</text>
+							<text style="font-size: 20rpx;" v-else>会员到期日：2020.12.12</text> -->
 						</view>
-					</view>				
+						
+					
+					</view>	
+					<!-- <view class="user-right">
+						<image :src="$aliImage + 'menber-btn.png'" mode=""></image>
+					</view> -->
 				</view>
+				<!-- <view class="borrow-count">
+					<image :src="$aliImage + 'menber-icon-01.png'" mode=""></image>
+					<text>畅读年卡专享无限次借阅</text>
+				</view> -->
 			</view>
 			
 			
@@ -99,8 +107,6 @@
 				
 				
 			</view>
-			
-			
 			<!-- 线上订单 -->
 			<view class="offline-box">
 				<view class="offline-order">
@@ -176,6 +182,8 @@ export default {
 	},
 	data() {
 		return {
+			member_status: 0, //区分会员
+			formatMemberDueDate: '',//会员到期日
 			id: '',
 			$aliImage: this.$aliImage,//静态图片域名
 			noticeText: '',
@@ -405,7 +413,11 @@ export default {
 			this.$api.offlineUserDockerInfo({ mobile: mobile })
 			.then(res => {
 				let data = res.data
+				console.log(data)
 				this.id = data.id
+				this.member_status = data.member_status
+				this.formatMemberDueDate = data.formatMemberDueDate.split(' ')[0].replace(/-/g, '.')
+				console.log(this.formatMemberDueDate)
 				// 获取线下各订单数量
 				this.getOfflineOrderCount(data.id)
 				this.$api.getOrderCountWithCustomID({  custom_id: data.id }).then(sres=>{
