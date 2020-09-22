@@ -54,7 +54,11 @@ export default {
 	methods: {
 		// 获取用户信息
 		getUserInfo() {
-			let mobile = uni.getStorageSync("userInfo").mobile
+			let tmpUserInfo = uni.getStorageSync("userInfo")
+			let mobile = tmpUserInfo.mobile
+			if(!tmpUserInfo || JSON.stringify(tmpUserInfo) == '{}' || !mobile || mobile.replace(/\s*/g, '') == '') {
+				return
+			}
 			this.$api.getCustom({
 				filterItems: { mobile }
 			}).then(res => {

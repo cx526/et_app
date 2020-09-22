@@ -72,7 +72,10 @@
 									<!-- Badge -->
 									<view class="badge" 
 									v-if="item.number && item.number != 0">
-										<text>{{ item.number }}</text>
+										<text v-if="item.number < 100">
+										{{ item.number }}
+										</text>
+										<text v-else>99+</text>
 									</view>
 								</view>
 							</block>
@@ -388,8 +391,18 @@ export default {
 	methods: {
 		// 获取个人信息
 		getUserInfo() {
-			let mobile = uni.getStorageSync("userInfo").mobile
-			this.$api.offlineUserDockerInfo({ mobile })
+			
+			let tmpUserInfo = uni.getStorageSync("userInfo")
+			let mobile = tmpUserInfo.mobile
+			if(!tmpUserInfo || JSON.stringify("tmpUserInfo") == '{}' || !mobile || mobile.replace(/\s*/g, '') == '') {
+				uni.showToast({
+					title: '请先登录',
+					icon: 'none',
+					duration: 1500
+				})
+				return
+			}
+			this.$api.offlineUserDockerInfo({ mobile: mobile })
 			.then(res => {
 				let data = res.data
 				this.id = data.id
@@ -436,7 +449,7 @@ export default {
 					this.offlineOrderList[3].number = data.failBookCout
 					// 逾期订单数
 					this.failLen = data.overTimeBookCout;
-					this.noticeText = `您有${this.failLen}笔订单将逾期，请移步至订单页及时处理`
+					this.noticeText = `您有${this.failLen}笔订单已逾期，请移步至待还书页面及时处理`
 				}
 
 			})

@@ -1,6 +1,6 @@
 <template>
 	<view>
-		<uni-nav-bar left-icon="back" title="待取书单" status-bar :shadow="false" @clickLeft="clickLeft"></uni-nav-bar>
+		<uni-nav-bar left-icon="back" title="待取书单" status-bar :shadow="false" @clickLeft="clickLeft" fixed></uni-nav-bar>
 		<!-- 
 			由于放在弹窗组件内生成不了二维码(具体原因未知);只能放到外边生成二维码保存路径到src上，点击订单凭证弹窗改变val的值重新生成二维码赋值给当前取书订单凭证二维码 
 		 -->
@@ -24,7 +24,9 @@
 								<view style="font-weight: bold;">订单号：{{ item.order_no }}</view>
 								<view class="status" 
 								v-if="item.order_type == 0 && item.msg">
-									<text>请于{{ item.msg }}之前取书</text>
+									<text>
+										请于{{ item.msg }}之前取书，超时未取书订单自动失效
+									</text>
 								</view>
 								<view class="status" v-else><text>已失效</text></view>
 							</view>
@@ -220,7 +222,7 @@ export default {
 			failCurrentPage: 1, // 失效书单当前页码
 			failOrderListPage: 0, //失效书单总数
 			current_timestamp: 0,
-			timer: null,
+			// timer: null, //倒计时定时器
 			from: '',
 			tabList: {
 				currentIndex: 0,
@@ -266,7 +268,7 @@ export default {
 		this.getUserInfo()
 	},
 	onUnload() {
-		clearInterval(this.timer)
+		// clearInterval(this.timer)
 		clearInterval(this.requestTime) //清除订单刷新状态
 	},
 	// 上拉加载更多
@@ -346,26 +348,23 @@ export default {
 
 						item.formatPreGetBookTime = item.formatPreGetBookTime.replace(/-/g, '/');
 						item.fail_timestamp = (new Date(item.formatPreGetBookTime)).getTime() ;
-						console.log(item.fail_timestamp)
-						item.difference = item.fail_timestamp - this.current_timestamp
-						console.log(item.difference)
+						item.msg = this.timestampToTime(item.fail_timestamp)
+						// item.difference = item.fail_timestamp - this.current_timestamp
 					}
-
 				})
 
 				// 开启定时器
-				this.timer = setInterval(() => {
-					this.orderList && this.orderList.map(list => {
-						// 开启计时器
-						if(list.order_type == 0) {
-							list.fail_timestamp = (+list.fail_timestamp) - 1000;
-							list.msg =  this.countDown(list.fail_timestamp);
-						}
+				// this.timer = setInterval(() => {
+				// 	this.orderList && this.orderList.map(list => {
+				// 		// 开启计时器
+				// 		if(list.order_type == 0) {
+				// 			list.fail_timestamp = (+list.fail_timestamp) - 1000;
+				// 			list.msg =  this.countDown(list.fail_timestamp);
+				// 		}
 
-					})
-				}, 1000)
+				// 	})
+				// }, 1000)
 				this.orderList = [...this.orderList, ...res.data.rows];
-				console.log(this.orderList)
 				// 判断是否改变加载组件状态
 				if(res.data.totalPage <= this.orderList.length) {
 					this.loadStatus = "noMore"
@@ -403,15 +402,19 @@ export default {
 		},
 		// 格式化时间
 		timestampToTime(timestamp) {
-			var date = new Date(timestamp);
-			var Y = date.getFullYear() + '-';
-			var M = (date.getMonth()+1 < 10 ? '0'+(date.getMonth()+1) : date.getMonth()+1) + '-';
-			var D = (date.getDate() < 10 ? '0'+date.getDate() : date.getDate()) + ' ';
-			var h = (date.getHours() < 10 ? '0'+date.getHours() : date.getHours()) + ':';
-			var m = (date.getMinutes() < 10 ? '0'+date.getMinutes() : date.getMinutes()) + ':';
-			var s = (date.getSeconds() < 10 ? '0'+date.getSeconds() : date.getSeconds());
-
-			var strDate = Y+M+D+h+m+s;
+			let date = new Date(timestamp);
+			let Y = date.getFullYear() + '年'
+			let M = (date.getMonth()+1 < 10 ? 
+			'0'+(date.getMonth()+1) : date.getMonth()+1) + '月'
+			let D = (date.getDate() < 10 ? 
+			'0'+date.getDate() : date.getDate()) + '日'
+			let h = (date.getHours() < 10 ? 
+			'0'+date.getHours() : date.getHours()) + '时'
+			let m = (date.getMinutes() < 10 ? 
+			'0'+date.getMinutes() : date.getMinutes()) + '分'
+			// let s = (date.getSeconds() < 10 ? 
+			// '0'+date.getSeconds() : date.getSeconds())
+			let strDate = Y+M+D+h+m
 			return strDate;
 			},
 
@@ -434,7 +437,6 @@ export default {
 
 			}else {
 				msg = '已失效';
-				// clearInterval(this.timer)
 				return msg
 			}
 		},
@@ -473,7 +475,7 @@ export default {
 		// tab切换
 		changTab(index) {
 			clearInterval(this.requestTime) //清除订单刷新状态
-			clearInterval(this.timer)
+			// clearInterval(this.timer)
 			this.tabList.currentIndex = index;
 			if(index == 0) {
 				this.orderList = ''
@@ -524,7 +526,7 @@ export default {
 							// 重置页面数据
 							this.orderList = []
 							// 清除倒计时计时器
-							clearInterval(this.timer);
+							// clearInterval(this.timer);
 							this.getUserOrderList()
 						}
 					})
@@ -553,7 +555,7 @@ export default {
 								})
 								// 重置订单页面
 								this.orderList = []
-								clearInterval(this.timer) //重置定时器
+								// clearInterval(this.timer) //重置定时器
 								this.getUserOrderList()
 							}else {
 								uni.showToast({

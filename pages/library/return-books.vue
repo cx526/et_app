@@ -70,7 +70,7 @@
 										<text style="margin-bottom: 20rpx;">
 										{{ list.price }}贝
 										</text>
-										<tetx>x1</tetx>
+										<text v-if="list.return_status">已归还</text>
 									</view>
 								</view>
 							</block>
@@ -386,7 +386,6 @@
 					}
 				})
 				.then(res => {
-					console.log(res)
 					uni.hideLoading()
 					// 储存订单总数
 					this.waitOrderTotalPage = res.data.totalPage
@@ -407,13 +406,38 @@
 						let day = Math.ceil(Math.abs(difference / (24 * 3600 * 1000))) 
 						if(difference >= 0) {
 							item.msg = `待归还${day}天`
-							// item.color = true
 						}else {
 							item.msg = `已逾期${day}天`
-							// item.color = false
 						}
+						// 匹配一张订单多本书时那本书已还
+						if(item.uuid && item.uuid != '') {
+							// 已还书籍的uuid
+							let returnBookUuid = item.uuid.split(',')
+							console.log(returnBookUuid)
+							if(item.dockerInfo && item.dockerInfo.length > 0) {
+								item.dockerInfo.map(list => {
+									if(list.goods_uuid && list.goods_uuid != '') {
+										let goods_uuid = list.goods_uuid.split(',')
+										for(let i = 0; i < returnBookUuid.length; i++) {
+											for(let j = 0;j < goods_uuid.length; j++) {
+												if(returnBookUuid[i] == goods_uuid[j]) {
+													list.return_status = "1"
+													break
+												}
+											}
+										}
+									}
+								})
+							}
+						}
+						console.log(this.waitOrderList)
+						
+						
+						
+						
 					})
-					this.waitOrderList = [...this.waitOrderList, ...res.data.rows]
+					this.waitOrderList = [...this.waitOrderList,...res.data.rows]
+					console.log(this.waitOrderList)
 					// 判断是否改变加载组件状态
 					if(this.waitOrderTotalPage <= this.waitOrderList.length) {
 						this.loadStatus = "noMore"
@@ -440,20 +464,10 @@
 						item.price = (+item.price).toFixed(2)
 						// 格式化订单创建时间
 						item.handle_create_time = this.handleTime(item.create_time)
-						// 计算借书时间是否逾期(取书时间+5天-现在时间做判断)
-						// item.handle_get_book = new Date(item.create_time).getTime() + (24 * 3600 * 1000 * 5);
-						// let difference = item.handle_get_book - this.current_time_stamp;
-						// 时间戳转为天计算
-						// let day = Math.ceil(Math.abs(difference / (24 * 3600 * 1000))) 
-						// if(difference >= 0) {
-						// 	item.msg = '已归还'
-						// }else {
-						// 	item.msg = `已逾期${day}天`
-						// }
 					})
 					this.returnOrderList = [...this.returnOrderList, ...res.data.rows]
 					// 判断是否改变加载组件状态
-					if(this.returnOrderTotalPage <= this.returnOrderList.length) {
+					if(this.returnOrderTotalPage <=this.returnOrderList.length) {
 						this.loadStatus = "noMore"
 					}
 				})
@@ -509,10 +523,6 @@
 						this.loadStatus = 'noMore';
 					}
 				}
-				// // 重置加载组件的加载状态
-				// this.loadStatus = 'loading';
-				// // 重置上拉加载的状态
-				// this.isLoadingMore = true
 			},
 			// 打开订单凭证弹窗
 			open(item) {
@@ -534,8 +544,6 @@
 						})
 						.then(res => {
 							if(res.data.rows.length != this.waitOrderList.length) {
-								console.log(res.data.rows.length)
-								console.log(this.waitOrderList.length)
 								// 重置当前页面时间戳
 								this.current_time_stamp = new Date().getTime();
 								// 重置数据

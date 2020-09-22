@@ -196,7 +196,7 @@
 				custom_id: '', //学生id
 				sexArray: ['男','女'],//学生性别
 				sexIndex: 0,
-				gender: 1,
+				gender: 1, // 1.男  2.女
 				change_class_status: '',//审核状态
 				teacherInfo: {},//老师信息
 				teacher_id: '',//老师id
@@ -487,7 +487,7 @@
 						parent_name: this.parent_name,
 						outer_code:  this.card_no,
 						name: this.name,
-						gender: this.gender,  //1:男  2：女 
+						gender: String(this.gender),  //1:男  2：女 
 						birth_day: this.birthDay,
 						school_id: this.schoolId,
 						grade_id: this.gradeId,

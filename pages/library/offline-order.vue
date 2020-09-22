@@ -51,32 +51,51 @@
 								<radio color="#2AAEC4" value="shell"></radio>
 								<text>五车贝</text>
 							</view>
-							<!-- <view class="radio-item">
+							<view class="radio-item" 
+							v-if="member_satus && member_satus == 1">
 								<radio color="#2AAEC4" value="member"></radio>
 								<text>会员</text>
-							</view> -->
+							</view>
 						</radio-group>
 					</view>
 				</view>
 				
-				<view class="notice">
+				<view class="notice-way">
 					<!-- 选择积分借阅显示 -->
 					<view>
-						<view>我的五车贝：{{ shell }}</view>
-						<block v-if="type == 'coin'">
-							<view>我的积分：{{ integrate }}</view>
-							<view>免费次数：{{ free }}</view>
-							<view>积分：-50</view>
-						</block>
+						<view>
+							<text class="label">我的五车贝：</text>
+							<text class="number">{{ shell }}</text>
+						</view>
+						<view>
+							<text class="label">本次借阅实付：</text>
+							<text class="number">{{ price }}</text>
+						</view>
+						<view v-if="type == 'coin'">
+							<view>
+								<text class="label">我的积分：</text>
+								<text class="number">{{ integrate }}</text>
+							</view>
+							<view>
+								<text class="label">免费次数：</text>
+								<text class="number">{{ free }}</text>
+							</view>
+							<view>
+								<text class="label">积分：</text>
+								<text class="number">-50</text>
+							</view>
+						</view>
+						<view v-else-if="type == 'member'">
+							<view>
+								<text class="label">最多同时借阅：</text>
+								<text class="number">5本</text>
+							</view>
+							<view>
+								<text class="label">当前已借阅：</text>
+								<text class="number">3本</text>
+							</view>
+						</view>
 					</view>
-					<!-- 选择五车贝借阅显示 -->
-					<!-- <view v-else-if="type == 'shell'">
-						<view>我的五车贝：{{ shell }}</view>
-					</view> -->
-					<!-- 选择会员借阅显示 -->
-					<!-- <view v-else-if="type == 'member'">
-						<view>我的五车贝：{{ shell }}</view>
-					</view> -->
 				</view>
 				
 				
@@ -167,6 +186,7 @@
 				userInfo: '', //储存用户账号个人信息
 				id: '', //用户id
 				goods_id: '', //储存书籍id(1,2,3)
+				member_satus: 0, //区分是否是会员
 			}
 		},
 		onLoad(option) {
@@ -206,7 +226,9 @@
 					? Number(data.free_bind) + Number(data.free_month) : 0
 					// 用户id
 					this.id = data.id
-					console.log(this.id,this.shell,this.deposit,this.integrate,this.free)
+					// 是否为会员
+					this.member_satus = data.member_status
+					console.log(this.id,this.shell,this.deposit,this.integrate,this.free, this.member_satus)
 				})
 			},
 			
@@ -259,6 +281,7 @@
 						this.placeOrder(this.goods_id, 'coin')
 					}
 					break
+					// 五车贝支付
 					case "shell":
 					this.chooseBookList.map(item => {
 						this.price = (+this.price + (+item.price)).toFixed(2)
@@ -273,6 +296,14 @@
 						this.placeOrder(this.goods_id, 'shell')
 					}
 					break
+					// 会员支付
+					case 'member':
+					this.price = 0
+					// 需要判断当前用户是否有用会员借超过5本
+					this.placeOrder(this.goods_id, 'member')
+					break
+					default: 
+					return
 				}
 			},
 			
@@ -467,12 +498,22 @@
 	.order-detail .pay .payWay radio {
 		transform: scale(0.6);
 	}
-	.order-detail .notice {
+	.order-detail .notice-way {
 		font-size: 24rpx;
 		text-align: right;
 	}
-	.order-detail .notice view {
+	.order-detail .notice-way view {
 		line-height: 50rpx;
+	}
+	.order-detail .notice-way .label {
+		width: 200rpx;
+		display: inline-block;
+	}
+	.order-detail .notice-way .number {
+		min-width: 70rpx;
+		display: inline-block;
+		color: #2AAEC4;
+		text-align: left;
 	}
 	.bottom {
 		position: fixed;

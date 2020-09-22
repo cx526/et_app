@@ -98,7 +98,7 @@ export default {
 				console.log(childInfo);
 				console.log(res.data[0].mobile)
 				// 卡号不存在手机号存在跳转到绑卡页面
-					if(res.data[0].card_no == '' && res.data[0].mobile != ''){
+				if(res.data[0].card_no == '' && res.data[0].mobile != ''){
 					uni.navigateTo({
 						url:'/pages/library/tied-card?from=home'
 					})

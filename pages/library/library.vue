@@ -186,6 +186,7 @@ export default {
 			free: 0,//免费借阅次数
 			docker_mac: '',
 			isSearch: false,
+			
 		};
 	},
 	components: {
@@ -203,16 +204,12 @@ export default {
 			// 获取用户个人账户信息
 			this.getUserInfo()
 			this.productList = JSON.parse(option.productList);
-			console.log(this.productList)
 			this.loadStatus = 'noMore';
 			
 		} else {
 			// 获取用户个人账户信息
 			this.getUserInfo();
 		}
-		
-		// 读取书篮书籍的本数
-		// this.len = bookListData.countBookLength()
 		uni.getSystemInfo({
 			success: res => {
 				this.popUpWidth = res.windowWidth * 0.8 + 'px';
@@ -223,6 +220,8 @@ export default {
 	onShow() {
 		// 每次进来都需要检测卡号和docket_mac
 		this.getCheckUserInfo()
+		// 实时更新用户账号余额和免费次数及积分
+		this.updateUserInfo()
 		this.len = bookListData.countBookLength()
 	},
 	onReady() {
@@ -321,18 +320,16 @@ export default {
 				}else {
 					this.$refs.powerPopUp.close()
 				}
-			})
-			
-			
+			})	
 		},
 		// 获取用户个人账户信息
 		getUserInfo() {
 			// 有授权登录过才去请求个人信息
 			if(this.isLogin) {
-				let mobile = uni.getStorageSync("userInfo").mobile;
-				this.$api.offlineUserDockerInfo({mobile}).then(res => {
+				let tmpUserInfo = uni.getStorageSync("userInfo")
+				let mobile = tmpUserInfo.mobile;
+				this.$api.offlineUserDockerInfo({mobile:mobile}).then(res => {
 					this.userInfo = res.data
-					console.log(this.userInfo)
 					let data = res.data
 					// 如果没有卡号
 					if(!data.card_no ||
@@ -369,52 +366,24 @@ export default {
 					// 获取所在幼儿园书柜的所有书籍(如果从搜索页跳转过来不调用)
 					!this.isSearch && this.getBooksList();
 				})
-				
-				
-				
-				// this.$api.getCustom({ 
-				// 	filterItems: { mobile }
-				// 	}).then(res => {
-				// 	this.userInfo = res.data[0];
-				// 	console.log(this.userInfo)
-				// 	// 卡号为空
-				// 	if(this.userInfo.card_no == '') {
-				// 		// 显示绑卡弹窗
-				// 		this.$refs.powerPopUp.open()
-				// 	}else {
-				// 		// 如果绑定的幼儿园没有书柜
-				// 		if(!this.userInfo.dockerInfo) {
-				// 			this.isLogin = false
-				// 			uni.showToast({
-				// 				title: '此幼儿园暂时不是合作用户',
-				// 				icon: 'none',
-				// 				duration:1500,
-				// 				success: res => {
-				// 					setTimeout(() => {
-				// 						uni.switchTab({
-				// 							url: '/pages/index/index'
-				// 						})
-				// 					}, 2000)
-									
-				// 				}
-				// 			})
-				// 			return
-				// 		}
-				// 		this.docker_mac = this.userInfo.dockerInfo.docker_mac 
-				// 		this.coin = this.userInfo.coin ? this.userInfo.coin : '';//积分
-				// 		this.shell = (+this.userInfo.shell).toFixed(2) ? (+this.userInfo.shell).toFixed(2) : ''; //五车贝
-				// 		// 计算用户的免费次数
-				// 		this.getUserFreeCount()
-				// 		// 获取书籍分类
-				// 		this.getBooksType();
-				// 		// 获取所在幼儿园书柜的所有书籍(如果从搜索页跳转过来不调用)
-				// 		!this.isSearch && this.getBooksList();
-				// 	}
-					
-					
-				// })
 			}
 
+		},
+		// 更新用户的余额
+		updateUserInfo() {
+			let userInfo = uni.getStorageSync("userInfo")
+			let mobile = userInfo.mobile
+			if(mobile && mobile.replace(/\s*/g, '') != '') {
+				this.$api.offlineUserDockerInfo({mobile:mobile})
+				.then(res => {
+					this.userInfo = res.data
+					this.coin = res.data.coin ? res.data.coin : 0 //积分
+					this.shell = res.data.shell ? res.data.shell : 0 //五车贝
+					// 计算用户的免费次数
+					this.getUserFreeCount()
+				})
+				
+			}
 		},
 		// 计算用户的免费次数
 		getUserFreeCount() {
@@ -442,7 +411,6 @@ export default {
 				uni.hideLoading();
 				this.totalPage = res.data.totalPage
 				this.productList = res.data.rows;
-				console.log(this.productList)
 				if (res.data.rows.length < this.pageSize || res.data.rows.length == 0) {
 					this.loadStatus = 'noMore';
 				}
@@ -609,6 +577,9 @@ export default {
 				url: '/pages/library/tied-card'
 			})
 		},
+		
+		
+		
 	}
 };
 </script>

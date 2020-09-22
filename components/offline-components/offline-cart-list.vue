@@ -22,7 +22,8 @@
 						<view class="left"><checkbox :checked="item.isSelect" style="transform: scale(0.7);" :disabled="item.stockCount.totalDockerUse === 0" @tap="selechBook(item)" /></view>
 						<view class="main">
 							<!-- 库存为零时显示 -->
-							<view class="none-stock" v-if="item.stockCount.totalDockerUse == 0">
+							<view class="none-stock" 
+							v-if="item.stockCount.totalDockerUse == 0">
 								<view class="none-notice">
 									<text>暂时</text>
 									<text>借完</text>
@@ -64,7 +65,18 @@
 					</view>
 					<!-- 没选中时显示 -->
 					<view v-else><text>合计：0本</text></view>
-					<view v-if="len"><text style="color: #999;font-size: 22rpx;">押金：29(可退)</text></view>
+					<view v-if="len">
+						<text style="color: #999;font-size: 22rpx;">
+							押金：29
+						</text>
+						<text v-if="deposit > 0 && !userInfo.member_status">
+						(已充值)
+						</text>
+						<text v-else-if="userInfo.member_status == 1"
+						style="color: #999;">
+						(会员免押)
+						</text>
+					</view>
 				</view>
 			</view>
 
@@ -544,48 +556,48 @@ export default {
 					return;
 				}
 
-				// else {
-				// 	uni.navigateTo({
-				// 		url: '/pages/library/offline-order?chooseBookList='
-				// 		+JSON.stringify(this.chooseBookList)
-				// 	})
-				// }
+				else {
+					uni.navigateTo({
+						url: '/pages/library/offline-order?chooseBookList='
+						+JSON.stringify(this.chooseBookList)
+					})
+				}
 
 				//1.用户没有免费借阅次数或者积分小于50或者借阅数量大于等于2本时(直接计算所选书籍累加的五车贝)
-				else if (this.free === 0 || this.integrate < 50 || len >= 2) {
-					this.chooseBookList.map(item => {
-						amount = (Number(amount) + Number(item.price)).toFixed(2);
-					});
-					this.price = amount;
-					// 当前用户五车贝不足够或押金小于29时显示弹窗
-					if (Number(this.shell) < Number(this.price) || Number(this.deposit) < 29) {
-						if (Number(this.shell) < Number(this.price)) {
-							// 显示借书币不足弹窗
-							this.$refs.popup.open();
-						} else if (Number(this.deposit) < 29) {
-							// 显示押金不足弹窗··
-							this.$refs.depositPopUp.open();
-						}
-					} else {
-						// 下单书籍的id
-						this.goods_id = goodsIDs.join(',');
-						// 订单确认弹窗
-						this.$refs.payPopUp.open();
-					}
-				}
+				// else if (this.free === 0 || this.integrate < 50 || len >= 2) {
+				// 	this.chooseBookList.map(item => {
+				// 		amount = (Number(amount) + Number(item.price)).toFixed(2);
+				// 	});
+				// 	this.price = amount;
+				// 	// 当前用户五车贝不足够或押金小于29时显示弹窗
+				// 	if (Number(this.shell) < Number(this.price) || Number(this.deposit) < 29) {
+				// 		if (Number(this.shell) < Number(this.price)) {
+				// 			// 显示借书币不足弹窗
+				// 			this.$refs.popup.open();
+				// 		} else if (Number(this.deposit) < 29) {
+				// 			// 显示押金不足弹窗··
+				// 			this.$refs.depositPopUp.open();
+				// 		}
+				// 	} else {
+				// 		// 下单书籍的id
+				// 		this.goods_id = goodsIDs.join(',');
+				// 		// 订单确认弹窗
+				// 		this.$refs.payPopUp.open();
+				// 	}
+				// }
 				//2.用户有免费借阅次数且所选书籍小于2且积分/50大于等于1(免费)
-				else if (this.free && len < 2 && this.integrate >= 50) {
-					if (Number(this.deposit) < 29) {
-						// 显示押金不足弹窗··
-						this.$refs.depositPopUp.open();
-					} else {
-						// 下单书籍的id
-						this.goods_id = goodsIDs.join(',');
-						this.price = 0;
-						// 订单确认弹窗
-						this.$refs.payPopUp.open();
-					}
-				}
+				// else if (this.free && len < 2 && this.integrate >= 50) {
+				// 	if (Number(this.deposit) < 29) {
+				// 		// 显示押金不足弹窗··
+				// 		this.$refs.depositPopUp.open();
+				// 	} else {
+				// 		// 下单书籍的id
+				// 		this.goods_id = goodsIDs.join(',');
+				// 		this.price = 0;
+				// 		// 订单确认弹窗
+				// 		this.$refs.payPopUp.open();
+				// 	}
+				// }
 			}
 		},
 		// 订单确认
@@ -598,7 +610,6 @@ export default {
 				// 五车贝借阅
 				type = 'shell';
 			}
-			console.log(type, this.goods_id);
 			this.placeOrder(this.goods_id, type);
 		},
 		// 下单
