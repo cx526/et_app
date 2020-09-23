@@ -1,12 +1,6 @@
 {
 
 	"pages": [
-		// {
-		// 	"path": "pages/member/member",
-		// 	"style": {
-		// 		"navigationBarTitleText": "会员"
-		// 	}
-		// },
 		{
 			"path": "pages/index/index",
 			"style": {
