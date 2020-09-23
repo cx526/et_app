@@ -51,13 +51,17 @@
 									<view class="text">
 										<text>创建时间：{{ item.hanlde_create_time }}</text>
 									</view>
-									<!-- 积分支付 -->
+									<!-- 积分/会员支付 -->
 									<view class="text spcial" v-if="item.pay_type != 'shell'">
-										<view>
+										<view v-if="item.pay_type == 'coin'">
 											<text>积分：-50</text>
-											<text style="color: #f00;">（优惠{{ item.dockerInfo[0].price }}贝）</text>
+											<text style="color: #f00;">
+												（优惠{{ item.dockerInfo[0].price }}贝）
+											</text>
 										</view>
-										<view style="font-weight: bold; color: #000;"><text>实付：0</text></view>
+										<view style="font-weight: bold; color: #000;">
+											<text>实付：0</text>
+										</view>
 									</view>
 									<!-- 五车贝支付 -->
 									<view class="text spcial" v-else>
@@ -122,11 +126,15 @@
 									</view>
 									<!-- 积分支付 -->
 									<view class="text spcial" v-if="item.pay_type != 'shell'">
-										<view>
+										<view v-if="item.pay_type == 'coin'">
 											<text>积分：-50</text>
-											<text style="color: #f00;">（优惠{{ item.dockerInfo[0].price }}贝）</text>
+											<text style="color: #f00;">
+												（优惠{{ item.dockerInfo[0].price }}贝）
+											</text>
 										</view>
-										<view style="font-weight: bold; color: #000;"><text>实付：0</text></view>
+										<view style="font-weight: bold; color: #000;">
+											<text>实付：0</text>
+										</view>
 									</view>
 									<!-- 五车贝支付 -->
 									<view class="text spcial" v-else>
@@ -245,7 +253,6 @@ export default {
 		tkiQrcode
 	},
 	onLoad(option) {
-		console.log(option)
 		// 判断是从下单成功后跳转过来还是直接从我的页面跳转过来
 		this.from = option.from ? option.from : ''
 		if(option !== '{}') {

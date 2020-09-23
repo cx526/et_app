@@ -156,19 +156,14 @@ export default {
 			toHotBookList: [],
 			groupList: [
 				{
-					// name: '选书',// toUrl: './kind'
 					name: '童书馆',
 					img: 'https://et-pic-server.oss-cn-shenzhen.aliyuncs.com/app_img/index_button_02.png',
 					toUrl: '/pages/library/library'	
 				},
 				{
-					// name: '规则',toUrl: '/pages/guide/borrowExplain'
 					name: '选绘本',
 					img: 'https://et-pic-server.oss-cn-shenzhen.aliyuncs.com/app_img/index_button_01.png',
 					toUrl: './kind'
-					// 'toUrl' : '/pages/promote/promotePictureBook',
-					
-					// 'toUrl' : '/pages/index/bookdetail?bookID=900'
 				},
 				{
 					name: '积分',
@@ -183,7 +178,7 @@ export default {
 				{
 					name: '会员',
 					img: 'https://et-pic-server.oss-cn-shenzhen.aliyuncs.com/app_img/index_button_05.png',
-					toUrl: '/pages/my/myMember'
+					toUrl: '/pages/member/member'
 				}
 			],
 			hotBookList: [],
@@ -229,7 +224,7 @@ export default {
 		this.getUserInfo();
 		
 		//更新tab
-		let bookCount = bookListData.cartBookCount();
+		// let bookCount = bookListData.cartBookCount();
 		this.showAD();
 		this.getBanner()
 		// 更新老师推荐/书柜上新
@@ -256,16 +251,14 @@ export default {
 			let userInfo = uni.getStorageSync('userInfo') ? uni.getStorageSync('userInfo') : {};
 			let mobile = userInfo.mobile ? userInfo.mobile : '';
 			this.$api.offlineUserDockerInfo({
-					mobile
+					mobile: mobile
 				})
 				.then(res => {
-					console.log(res.data)
-					// let dockerInfo = res.data[0].dockerInfo;
-					userInfo.card_no = res.data.card_no ? res.data.card_no : ''
-					userInfo.docker_mac = res.data.docker_mac ? res.data.docker_mac : ''				
+					let result = res.data
+					userInfo.card_no = result.card_no ? result.card_no : ''
+					userInfo.docker_mac = result.docker_mac ? result.docker_mac : ''
+					this.docker_mac = result.docker_mac ? result.docker_mac : ''
 					uni.setStorageSync('userInfo', userInfo)
-					this.docker_mac = res.data.docker_mac ? res.data.docker_mac : '';
-					console.log(this.docker_mac)
 					// 获取老师推荐书籍
 					this.getHotBook('init');
 					// 获取书柜上新书籍
@@ -321,7 +314,6 @@ export default {
 			}
 			this.$api.skipBanner(param).then(res => {
 				this.oneBannerList = res.data.rows[0]
-				console.log(this.oneBannerList)
 			})
 			let param2 = {
 				filterItems :
@@ -331,7 +323,6 @@ export default {
 			}
 			this.$api.skipBanner(param2).then(secondRes => {
 				this.twoBannerList = secondRes.data.rows[0]
-				console.log(this.twoBannerList)
 			})
 		},
 		// 第一张banner
@@ -385,8 +376,6 @@ export default {
 		},
 		// 点击swiper
 		toTargetUrl(item) {
-			// toUrlFunction.toUrl(url);
-			console.log(item);
 			uni.navigateTo({
 				url: item.target
 			})
@@ -440,14 +429,14 @@ export default {
 				})
 				return
 			}
-			else if(toUrl === '/pages/my/myMember') {
-				uni.showToast({
-					title: '敬请期待',
-					icon: 'none',
-					duration: 2000
-				})
-				return
-			}
+			// else if(toUrl === '/pages/member/member') {
+			// 	uni.showToast({
+			// 		title: '敬请期待',
+			// 		icon: 'none',
+			// 		duration: 2000
+			// 	})
+			// 	return
+			// }
 			else {
 				uni.navigateTo({ url: toUrl });
 			}
@@ -526,7 +515,6 @@ export default {
 		},
 		// 老师推荐(更多)
 		toHotListData(type, bookList) {
-			console.log(bookList)
 			let name = ''
 			switch(type) {
 				case 'teacher':

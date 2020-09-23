@@ -204,4 +204,7 @@ api.buyMemberCard = params => request.globalRequest('/api/memberWeChatPay/paymen
 
 // 更新会员卡购买
 api.updatePaymentCard = params => request.globalRequest('/api/memberWeChatPay/updatePayment', 'POST', params)
+
+// 获取会员在读数和能借阅数
+api.getMemberRead = params => request.globalRequest('/api/member/selectMemberCustomRead', 'POST', params)
 export default api

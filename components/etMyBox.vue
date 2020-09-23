@@ -43,7 +43,6 @@ export default {
 		}
 	},
 	created(){
-		console.log(this.myMenuInfo);
 		this.getUserInfo()
 	},
 	computed: {
@@ -63,7 +62,6 @@ export default {
 				filterItems: { mobile }
 			}).then(res => {
 				this.custom_type = res.data[0].custom_type
-				console.log(this.custom_type)
 			})
 		},
 		menuUrl(toUrl){
@@ -76,7 +74,6 @@ export default {
 			})
 		},
 		btnClick(toUrl) {
-			console.log(this.userInfo)
 			let userInfo = uni.getStorageSync("userInfo")
 			if (!userInfo.name || !userInfo.mobile || userInfo.name === 'guest' || userInfo.mobile == '' ) {
 				//游客 发出提示
@@ -101,14 +98,14 @@ export default {
 					return;
 				}
 				// 会员页面
-				if(toUrl === '/pages/my/myMember') {
-					uni.showToast({
-						title: '敬请期待',
-						duration: 2000,
-						icon: 'none'
-					})
-					return
-				}
+				// if(toUrl === '/pages/member/member') {
+				// 	// uni.showToast({
+				// 	// 	title: '敬请期待',
+				// 	// 	duration: 2000,
+				// 	// 	icon: 'none'
+				// 	// })
+				// 	return
+				// }
 				if(toUrl === '/pages/library/tied-card') {
 					// 如果是教师身份默认不给进修改信息页面
 					if(this.custom_type == 0 && this.custom_type != '') {

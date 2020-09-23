@@ -58,7 +58,7 @@
 		onLoad(option) {
 			let memberInfo = JSON.parse(option.param)
 			this.name = memberInfo.name //会员卡名称
-			this.price = memberInfo.price //会员卡价格
+			// this.price = memberInfo.price //会员卡价格
 			this.id = memberInfo.id //会员卡id
 			// 获取用户个人信息(id)
 			this.getUserInfo()

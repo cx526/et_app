@@ -17,7 +17,8 @@
 					<view class="user-left-position">
 						<!-- 头像 -->
 						<view class="user-right-position">
-							<view v-if="userInfo.name === 'guest'" @tap="goAuth">
+							<view @tap="goAuth"
+							 v-if="!userInfo.name || userInfo.name === 'guest'" >
 								<image src="https://et-pic-server.oss-cn-shenzhen.aliyuncs.com/app_img/avatar.png"></image>
 							</view>
 							<view v-else @tap="clearSessionAction">
@@ -27,27 +28,45 @@
 						<!-- 昵称 -->
 						<view class="userInfo-content">
 							<view class="userInfo-name" >
-								<text>
-								{{userInfo.name === 'guest' ? '五车书游客, 您好！' : userInfo.name}}
+								<text style="margin-right: 10rpx;">
+								{{!userInfo.name || userInfo.name === 'guest' ? '五车书游客, 您好！' : userInfo.name}}
 								</text>
-								<!-- <image mode="widthFix" 
-								:src="$aliImage + 'member-icon-03.png'"></image> -->
+								<image mode="widthFix" v-if="isLogin"
+								:src="$aliImage + 'member-icon-03.png'">
+								</image>
+								
 							</view>
-							<!-- <text style="font-size: 20rpx;" v-if="!member_status">
-								您当前尚未开通会员服务</text>
-							<text style="font-size: 20rpx;" v-else>会员到期日：2020.12.12</text> -->
+							<template v-if="isLogin">
+								<text style="font-size: 20rpx;" v-if="!member_status">
+									您当前尚未开通会员服务
+								</text>
+								<text style="font-size: 20rpx;" v-else>
+									会员到期日：{{ formatMemberDueDate }}
+								</text>
+							</template>
+							
+							
 						</view>
 						
 					
 					</view>	
-					<!-- <view class="user-right">
-						<image :src="$aliImage + 'menber-btn.png'" mode=""></image>
-					</view> -->
+					<view class="user-right" v-if="isLogin">
+						<image mode="widthFix"
+						:src="$aliImage + 'menber-btn.png'" 
+						v-if="!member_status"
+						@tap="goMember"></image>
+						<image @tap="goMember"
+						:src="$aliImage + 'member-icon-02.png'" 
+						mode="widthFix"
+						v-else>
+						</image>
+					</view>
 				</view>
-				<!-- <view class="borrow-count">
+				<view class="borrow-count" v-if="isLogin">
 					<image :src="$aliImage + 'menber-icon-01.png'" mode=""></image>
-					<text>畅读年卡专享无限次借阅</text>
-				</view> -->
+					<text v-if="!member_status">本月剩余借阅次数：{{ free }}次</text>
+					<text v-else>畅读年卡专享无限次借阅</text>
+				</view>
 			</view>
 			
 			
@@ -182,6 +201,8 @@ export default {
 	},
 	data() {
 		return {
+			isLogin: false, //区别用户是否登录
+			free: 0,//免费次数
 			member_status: 0, //区分会员
 			formatMemberDueDate: '',//会员到期日
 			id: '',
@@ -285,7 +306,7 @@ export default {
 					{
 						'imgSrc' : this.$aliImage + 'my2_6.png',
 						'title'	: '会员',
-						'toUrl'	: '/pages/my/myMember'
+						'toUrl'	: '/pages/member/member'
 					},
 					{
 						'imgSrc' : this.$aliImage + 'my2_7.png',
@@ -386,23 +407,20 @@ export default {
 		}
 	},
 	onLoad() {
-		this.getUserInfo()
 		//更新tab
-		let bookCount = bookListData.cartBookCount();
+		// let bookCount = bookListData.cartBookCount();
 	},
 	onShow() {
-		// 实时更新个订单数
-		if(this.id && this.id != '') {
-			this.getOfflineOrderCount(this.id)
-		}
+		// 实时更新会员信息和订单数目
+		this.getUserInfo()
 	},
 	methods: {
 		// 获取个人信息
 		getUserInfo() {
-			
 			let tmpUserInfo = uni.getStorageSync("userInfo")
 			let mobile = tmpUserInfo.mobile
 			if(!tmpUserInfo || JSON.stringify("tmpUserInfo") == '{}' || !mobile || mobile.replace(/\s*/g, '') == '') {
+				
 				uni.showToast({
 					title: '请先登录',
 					icon: 'none',
@@ -410,14 +428,18 @@ export default {
 				})
 				return
 			}
+			// 标识用户是否登录
+			this.isLogin = true
 			this.$api.offlineUserDockerInfo({ mobile: mobile })
 			.then(res => {
 				let data = res.data
-				console.log(data)
 				this.id = data.id
 				this.member_status = data.member_status
-				this.formatMemberDueDate = data.formatMemberDueDate.split(' ')[0].replace(/-/g, '.')
-				console.log(this.formatMemberDueDate)
+				this.free = Number(data.free_bind) + Number(data.free_month)
+				if(data.formatMemberDueDate && 
+				data.formatMemberDueDate.replace(/\s*/g, '') != '') {
+					this.formatMemberDueDate = data.formatMemberDueDate.split(' ')[0].replace(/-/g, '.')
+				}
 				// 获取线下各订单数量
 				this.getOfflineOrderCount(data.id)
 				this.$api.getOrderCountWithCustomID({  custom_id: data.id }).then(sres=>{
@@ -468,6 +490,22 @@ export default {
 		},
 		// 跳转到会员页面
 		goMember() {
+			let tmpUserInfo = uni.getStorageSync("userInfo")
+			let mobile = tmpUserInfo.mobile
+			if(!tmpUserInfo || JSON.stringify("tmpUserInfo") == '{}' || !mobile || mobile.replace(/\s*/g, '') == '') {
+				uni.showModal({
+					title: '请先登录',
+					success: res => {
+						if(res.confirm) {
+							uni.removeStorageSync("userInfo")
+							uni.redirectTo({
+								url: '/pages/guide/auth'
+							})
+						}
+					}
+				})
+				return
+			}
 			uni.navigateTo({
 				url: '/pages/member/member'
 			})

@@ -1,22 +1,25 @@
 <template>
 	<view>
 		<view class="order-box">
-			<view v-for="(item,index) in chooseBookList"
-				class="order" :key="index">
-				<view class="left">
-					<image :src="item.forGoodsPic[0].url" mode="widthFix">
-					</image>
-				</view>
-				<view class="right">
-					<view class="topic">
-						<text style="font-weight: 700;">{{ item.title }}</text>
-						<text style="color: #2AAEC4;">{{ item.price }}贝</text>
+			<scroll-view scroll-y style="max-height: 600rpx;">
+				<view v-for="(item,index) in chooseBookList"
+					class="order" :key="index">
+					<view class="left">
+						<image :src="item.forGoodsPic[0].url" mode="widthFix">
+						</image>
 					</view>
-					<view class="number">
-						<text>x1</text>
+					<view class="right">
+						<view class="topic">
+							<text style="font-weight: 700;">{{ item.title }}</text>
+							<text style="color: #2AAEC4;">{{ item.price }}贝</text>
+						</view>
+						<view class="number">
+							<text>x1</text>
+						</view>
 					</view>
 				</view>
-			</view>
+			</scroll-view>
+			
 		</view>
 		<view class="order-detail">
 			<view class="detail">
@@ -26,7 +29,7 @@
 				</view>
 				<view class="item">
 					<text class="label">学校</text>
-					<text class="way">林头幼儿园</text>
+					<text class="way">{{ school_name }}</text>
 				</view>
 				<view class="spcial">
 					<text class="label">借阅时间</text>
@@ -38,7 +41,7 @@
 				</view>
 				<!-- 支付方式 -->
 				<view class="pay">
-					<text>支付方式</text>
+					<text style="font-weight: 700;">支付方式</text>
 					<view class="payWay">
 						<radio-group @change="choosePayWay">
 							<view class="radio-item"
@@ -88,11 +91,15 @@
 						<view v-else-if="type == 'member'">
 							<view>
 								<text class="label">最多同时借阅：</text>
-								<text class="number">5本</text>
+								<text class="number">{{ readInfo.allCount }}本</text>
 							</view>
 							<view>
 								<text class="label">当前已借阅：</text>
-								<text class="number">3本</text>
+								<text class="number">{{ readInfo.orderCount }}本</text>
+							</view>
+							<view>
+								<text class="label">剩余可借阅：</text>
+								<text class="number">{{ readInfo.mayReadCount }}本</text>
 							</view>
 						</view>
 					</view>
@@ -185,14 +192,15 @@
 				deposit: 0, //押金
 				userInfo: '', //储存用户账号个人信息
 				id: '', //用户id
+				school_name: '', //用户所在的学校
 				goods_id: '', //储存书籍id(1,2,3)
 				member_satus: 0, //区分是否是会员
+				readInfo: '', //会员用户借阅情况
 			}
 		},
 		onLoad(option) {
 			this.chooseBookList = JSON.parse(option.chooseBookList)
 			this.len = this.chooseBookList.length
-			console.log(this.chooseBookList)
 			// 获取用户个人信息
 			this.getUserInfo()
 			// 获取屏幕高度
@@ -212,7 +220,6 @@
 				this.$api.offlineUserDockerInfo({ mobile })
 				.then(res => {
 					let data = res.data
-					console.log(data)
 					// 用户个人信息
 					this.userInfo = data
 					// 积分
@@ -226,15 +233,19 @@
 					? Number(data.free_bind) + Number(data.free_month) : 0
 					// 用户id
 					this.id = data.id
+					// 用户所在的学校
+					this.school_name = data.school_name
 					// 是否为会员
 					this.member_satus = data.member_status
-					console.log(this.id,this.shell,this.deposit,this.integrate,this.free, this.member_satus)
+					// 如果是会员才发起接口请求
+					if(this.member_satus == "1") {
+						this.getUserMemberRead(this.id)
+					}
 				})
 			},
 			
 			// 选择支付方式
 			choosePayWay(event) {
-				console.log(event)
 				this.type = event.detail.value
 				switch(this.type) {
 					// 积分借阅
@@ -249,8 +260,34 @@
 						})
 						this.price = amount
 						break
+					// 会员借阅
+					case 'member':
+						this.price = 0
+						break
+					default: 
+						return
 				}
 			},
+			
+			// 获取会员用户可借阅本数与在读本数
+			getUserMemberRead(id) {
+				let params = {
+					custom_id: String(id)
+				}
+				this.$api.getMemberRead(params)
+				.then(res => {
+					if(res.data.status === 'ok') {
+						this.readInfo = res.data.rows
+					}else {
+						uni.showToast({
+							title: res.data.msg,
+							icon: 'none',
+							duration: 1500
+						})
+					}
+				})
+			},
+			
 			
 			// 立即借阅
 			borrow() {
@@ -272,38 +309,56 @@
 				switch(this.type) {
 					// 积分借阅
 					case "coin":
-					if(this.deposit < 29) {
-						// 押金不足弹窗显示
-						this.$refs.depositPopUp.open()
-					}else {
-						this.price = 0
-						// 执行下单
-						this.placeOrder(this.goods_id, 'coin')
-					}
-					break
+						if(this.deposit < 29) {
+							// 押金不足弹窗显示
+							this.$refs.depositPopUp.open()
+						}else {
+							this.price = 0
+							// 执行下单
+							this.placeOrder(this.goods_id, 'coin')
+						}
+						break
 					// 五车贝支付
 					case "shell":
-					this.chooseBookList.map(item => {
-						this.price = (+this.price + (+item.price)).toFixed(2)
-					})
-					if(this.deposit < 29) {
-						// 押金不足弹窗显示
-						this.$refs.depositPopUp.open()
-					}else if(this.shell < this.price) {
-						// 五车贝不足弹窗显示
-						this.$refs.popup.open()
-					}else {
-						this.placeOrder(this.goods_id, 'shell')
-					}
-					break
+						this.chooseBookList.map(item => {
+							this.price = (+this.price + (+item.price)).toFixed(2)
+						})
+						if(this.deposit < 29) {
+							// 押金不足弹窗显示
+							this.$refs.depositPopUp.open()
+						}else if(this.shell < Number(this.price)) {
+							// 五车贝不足弹窗显示
+							this.$refs.popup.open()
+						}else {
+							this.placeOrder(this.goods_id, 'shell')
+						}
+						break
 					// 会员支付
 					case 'member':
-					this.price = 0
-					// 需要判断当前用户是否有用会员借超过5本
-					this.placeOrder(this.goods_id, 'member')
-					break
+						this.price = 0
+						// 需要判断当前用户是否有用会员借超过5本
+						let len = Number(this.chooseBookList.length)
+						let mayReadCount = Number(this.readInfo.mayReadCount)
+						if(len > mayReadCount) {
+							if(mayReadCount > 0) {
+								uni.showToast({
+									title: '当前最多只能再借阅'+mayReadCount+'本',
+									icon: 'none',
+									duration: 2000
+								})
+							}else {
+								uni.showToast({
+									title: '当前可借阅为'+mayReadCount+'本,请归还后再进行借阅',
+									icon: 'none',
+									duration: 2000
+								})
+							}
+							return
+						}
+						this.placeOrder(this.goods_id, 'member')
+						break
 					default: 
-					return
+						return
 				}
 			},
 			
@@ -318,7 +373,6 @@
 					type,
 					customer_id: this.userInfo.id,
 				}).then(res => {
-					uni.hideLoading()
 					// 下单成功
 					if(res.data.status == 'ok') {
 						uni.hideLoading()
@@ -334,6 +388,7 @@
 							url: '/pages/library/take-books?status=0&from=placeOrder'
 						})
 					}else {
+						uni.hideLoading()
 						uni.showToast({
 							title: res.data.msg,
 							icon: 'none',
@@ -388,12 +443,20 @@
 		box-sizing: border-box;
 		padding-bottom: 100rpx;
 	}
+	::-webkit-scrollbar {  
+	    display: none;  
+	    width: 0 !important;  
+	    height: 0 !important;  
+	    -webkit-appearance: none;  
+	    background: transparent;  
+	}
 </style>
 <style scoped>
 	/* 订单书籍 */
 	.order-box {
 		box-sizing: border-box;
 		padding: 34rpx 24rpx 0  24rpx;
+		margin-bottom: 24rpx;
 	}
 	.order {
 		box-sizing: border-box;

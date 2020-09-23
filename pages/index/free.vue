@@ -1,6 +1,6 @@
 <template>
 	<view style="position: relative;">
-		<image :src="$aliImage + 'free-read-01.png'" mode="widthFix"  ></image>
+		<image :src="$aliImage + 'index-free-02.png'" mode="widthFix"  ></image>
 		<button  @tap="go"></button>
 	</view>
 </template>

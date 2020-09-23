@@ -243,7 +243,7 @@ export default {
 		if (this.loadStatus !== 'noMore' && !this.isType) {
 			this.currentPage = this.currentPage + 1;
 			this.getMoreList(this.id);
-		} else {
+		} else if(this.loadStatus !== 'noMore' && this.isType){
 			if (this.totalPage > this.productList.length) {
 				this.currentPage = this.currentPage + 1;
 				this.$api.offlineGetBooksList({
@@ -432,6 +432,9 @@ export default {
 		},
 		// 获取全部书籍
 		getAllProductList() {
+			this.typeList.map(item => {
+				item.isSelect = false;
+			})
 			this.getBooksList();
 			this.isType = true;
 			this.showModel = false;
@@ -472,8 +475,8 @@ export default {
 				uni.hideLoading();
 				this.productList = [];
 				this.productList = res.data.rows;
-				// 返回数据小于20时默认不启动上拉加载更多
-				if (this.productList.length < this.pageSize) {
+				// 判断是否开启上拉加载更多
+				if (this.productList.length >= res.data.totalPage) {
 					this.loadStatus = 'noMore';
 				}	
 			});

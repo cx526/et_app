@@ -1,8 +1,9 @@
 <template>
 	<view>
-		<view class="bg"> </view>
+		<view class="bg" v-if="memberCard && memberCard.length > 0"></view>
 		<swiper 
 		:style="{'height': swiperHeight}"
+		v-if="memberCard && memberCard.length > 0"
 		>
 			<swiper-item v-for="(item,index) in memberCard" :key="index">
 				<view class="item card">
@@ -21,7 +22,7 @@
 									<text style="font-size: 30rpx;margin-right: 6rpx;">									 ￥</text>
 									<text>{{ item.price }}</text>
 								</view>
-								<view><text>原价￥598</text></view>
+								<view><text>原价￥{{ item.original_price }}</text></view>
 							</view>
 						</view>
 						<!-- 富文本区域 -->
@@ -75,42 +76,31 @@
 				</view>
 			</swiper-item>
 		</swiper>
-		<!-- 会员权益协议弹窗 -->
-		<uni-popup ref="memberPopUp">
-			<view class="memberPopUp" :style="{ width: popUpWidth }">
-				<view class="title">
-					<text>五车书会员权益协议说明</text>
-				</view>
-				<view class="context">
-					<rich-text :nodes="agreementContext"></rich-text>
-				</view>
-			</view>
-		</uni-popup>
+		<view v-else class="none">
+			<text>暂无会员卡信息</text>
+		</view>
+		
 	</view>
 </template>
 
 <script>
-	import uniPopup from '@/components/uni-popup/uni-popup.vue'
+	
 	export default {
 		data() {
 			return {
 				$aliImage: this.$aliImage,
-				swiperHeight: '', //swiper高度
-				agreementContext: '',//会员协议内容
+				swiperHeight: 0, //swiper高度
+				
 				isChecked: false , //会员协议是否选中
 				popUpWidth: 0 , //会员协议弹窗高度
 				memberCard: [], //储存会员卡数据
 			}
 		},
-		components: {
-			uniPopup
-		},
+		
 		onLoad() {
-			// 获取会员协议
-			this.getAgreement()
 			// 获取会员卡列表
 			this.getMemberCard()
-			// 设置会员协议弹唱宽度
+			// 设置会员协议弹窗宽度
 			uni.getSystemInfo({
 				success: data => {
 					this.popUpWidth = data.windowWidth * 0.8 + 'px'
@@ -119,39 +109,33 @@
 		},
 		onReady() {
 			// 动态设置swiper高度(只能在onRead中调用)
-			setTimeout(()=> {
-				const query = uni.createSelectorQuery().in(this);
-				query.selectAll('.card').boundingClientRect(data => {
-					this.swiperHeight = data[0].height + 'px'
-				}).exec();
-			}, 100)
+			try{
+				setTimeout(()=> {
+					const query = uni.createSelectorQuery().in(this);
+					query.selectAll('.card').boundingClientRect(data => {
+						this.swiperHeight = data[0].height + 'px'
+						console.log(this.swiperHeight)
+					}).exec();
+				}, 100)
+			}catch(err){
+				console.log(err)
+			}
 		},
 		methods: {
-			// 获取会员协议
-			getAgreement() {
-				let params = {
-					pageSize:"1",
-					currentPage:"1",
-					filterItems:{
-					name:"memberRuleContent"
-					}
-				}
-				this.$api.getMemberAgreement(params)
-				.then(res => {
-					this.agreementContext = res.data.rows[0].content
-				})
-			},
+			
+			
 			// 获取会员卡
 			getMemberCard() {
 				this.$api.getMemberCard()
 				.then(res => {
 					this.memberCard = res.data.rows;
 					if(this.memberCard && this.memberCard.length > 0) {
+						// 动态添加属性
 						this.memberCard.map(item => {
 							this.$set(item,'isChecked',false)
 						})
+						
 					}
-					console.log(this.memberCard)
 				})
 			},
 			// 是否勾选协议
@@ -186,7 +170,9 @@
 			},
 			// 查看会员协议
 			checkMember() {
-				this.$refs.memberPopUp.open()
+				uni.navigateTo({
+					url: '/pages/member/member-agreement'
+				})
 			},
 			
 		}
@@ -310,20 +296,5 @@
 		border-radius: 60rpx;
 		text-align: center;
 		background-image: linear-gradient(to right, #67DCE6, #38B2D1);
-	}
-	/* 会员协议弹窗 */
-	.memberPopUp {
-		box-sizing: border-box;
-		background: #fff;
-		padding: 24rpx;
-		border-radius: 20rpx;
-		font-size: 28rpx;
-	}
-	.memberPopUp .title {
-		font-size: 32rpx;
-		color: #2aaec4;
-		font-weight: 700;
-		text-align: center;
-		margin-bottom: 12rpx;
 	}
 </style>

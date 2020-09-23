@@ -89,9 +89,11 @@
 								<!-- 积分支付 -->
 								<view class="text spcial" 
 								v-if="item.pay_type != 'shell'">
-									<view>
+									<view v-if="item.pay_type == 'coin'">
 										<text>积分：-50</text>
-										<text style="color: #f00;">（优惠{{ item.dockerInfo[0].price }}贝）</text>
+										<text style="color: #f00;">
+											（优惠{{ item.dockerInfo[0].price }}贝）
+										</text>
 									</view>
 									<view style="font-weight: bold; color: #000;">
 										<text>实付：0</text>
@@ -172,7 +174,7 @@
 								<!-- 积分支付 -->
 								<view class="text spcial"
 								v-if="item.pay_type != 'shell'">
-									<view>
+									<view v-if="item.pay_type == 'coin'">
 										<text>积分：-50</text>
 										<text style="color: #f00;">（优惠{{ item.dockerInfo[0].price }}贝）</text>
 									</view>

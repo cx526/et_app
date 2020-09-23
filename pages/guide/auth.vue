@@ -40,7 +40,6 @@ export default {
 			wx.getUserInfo({
 				success: res => {
 					this.allInfo.userInfo = res.userInfo
-					console.log(this.allInfo)
 					uni.hideLoading()
 					this.weChatCheck = true
 					uni.showToast({
@@ -60,7 +59,6 @@ export default {
 				WxAuth.checkSession().then(code => {
 					this.allInfo.code = code
 					this.$api.getAuthData(this.allInfo).then(res => {
-						console.log(res.data)
 						if (res.data.status === 'ok') {
 							uni.setStorageSync('userInfo', res.data)
 							// uni.reLaunch({url: '../index/index'})
@@ -92,16 +90,28 @@ export default {
 			uni.reLaunch({ url: '../index/index' })
 		},
 		checkInfo(userInfo) {
-			this.$api.getCustom({ filterItems: { mobile: userInfo.mobile }}).then(res=>{
-				console.log(res.data[0])
+			if(!userInfo || JSON.stringify(userInfo) == '{}' || !userInfo.mobile 
+			|| userInfo.mobile.replace(/\s*/g, '') == '') {
+				uni.showToast({
+					title: '获取手机号失败,请重新授权登录',
+					icon: 'none',
+					duration: 2000
+				})
+				return
+			}
+			this.$api.getCustom({ filterItems: { mobile: userInfo.mobile }})
+			.then(res=>{
 				let childInfo = res.data[0].childInfo;
-				console.log(childInfo);
-				console.log(res.data[0].mobile)
+				let result = res.data[0]
+				console.log(result)
 				// 卡号不存在手机号存在跳转到绑卡页面
-				if(res.data[0].card_no == '' && res.data[0].mobile != ''){
-					uni.navigateTo({
-						url:'/pages/library/tied-card?from=home'
-					})
+				if(!result.card_no || result.card_no.replace(/\s*/g, '') == '' ){
+					if(result.mobile || result.mobile.replace(/\s*/g, '') != '') {
+						uni.navigateTo({
+							url:'/pages/library/tied-card?from=home'
+						})
+					}
+					
 				}else{
 					uni.switchTab({
 						url: '/pages/index/index'
