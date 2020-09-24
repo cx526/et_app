@@ -14,7 +14,10 @@
 							<text style="color: #2AAEC4;">{{ item.price }}贝</text>
 						</view>
 						<view class="number">
-							<text>x1</text>
+							<image :src="$aliImage + 'rubbish.png'" mode="widthFix"
+							 style="width: 24rpx;"
+							@tap="delBook(item.id)">
+							</image>
 						</view>
 					</view>
 				</view>
@@ -48,18 +51,21 @@
 							v-if="integrate >= 50 && free > 0 && 
 							chooseBookList.length == 1">
 							<template v-if="isTeacherFree">
-								<radio color="#2AAEC4" value="coin"></radio>
+								<radio color="#2AAEC4" value="coin" 
+								:checked="type == 'coin'"></radio>
 								<text>免费借阅</text>
 							</template>
 								
 							</view>
 							<view class="radio-item">
-								<radio color="#2AAEC4" value="shell"></radio>
+								<radio color="#2AAEC4" value="shell"
+								:checked="type == 'shell'"></radio>
 								<text>五车贝</text>
 							</view>
 							<view class="radio-item" 
 							v-if="member_status && member_status == 1">
-								<radio color="#2AAEC4" value="member"></radio>
+								<radio color="#2AAEC4" value="member"
+								:checked="type == 'member'"></radio>
 								<text>会员</text>
 							</view>
 						</radio-group>
@@ -227,7 +233,6 @@
 				this.$api.offlineUserDockerInfo({ mobile })
 				.then(res => {
 					let data = res.data
-					console.log(data)
 					// 用户个人信息
 					this.userInfo = data
 					// 积分
@@ -253,13 +258,27 @@
 					this.card_no = data.card_no
 					if(this.card_no && this.card_no.replace(/\s*/g, '') != '') {
 						this.card_type = this.checkCardType(this.card_no)
-						console.log(this.card_type)
 					}
 					// 如果是老师卡需要判断该老师当天是否已免费借过一次(一本) 1学生 0老师
 					if(data.custom_type == '0') {
 						this.checkTeacherTodayOfflineOrde(this.id)
-					} 
+					}
+					// 选择默认支付方式
+					this.chooseDefaultType()
 				})
+			},
+			
+			// 默认选择支付方式
+			chooseDefaultType() {
+				if(this.member_status == "1") {
+					this.type = "member"
+				}else {
+					if(this.free > 0 && this.integrate >= 50 && this.chooseBookList.length == 1) {
+						this.type = "coin"
+					}else {
+						this.type = "shell"
+					}
+				}
 			},
 			
 			// 选择支付方式
@@ -313,7 +332,6 @@
 				}
 				this.$api.checkTeacherTodayOfflineOrde(params)
 				.then(res => {
-					console.log(res)
 					if(res.data.status == 'ok') {
 						let freeBuyStatus = res.data.rows.freeBuyStatus
 						// 可以免费借阅

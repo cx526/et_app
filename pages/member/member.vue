@@ -213,8 +213,7 @@
 										name: item.name,
 										price: item.price,
 										id: item.id,
-										day: item.day,
-										formatCreateTime:item.formatCreateTime.replace(/-/g, '/')
+										day: item.day
 									}
 									// 跳转会员购买下单页面
 									uni.navigateTo({
@@ -236,8 +235,7 @@
 						name: item.name,
 						price: item.price,
 						id: item.id,
-						day: item.day,
-						formatCreateTime: item.formatCreateTime.replace(/-/g, '/')
+						day: item.day
 					}
 					// 跳转会员购买下单页面
 					uni.navigateTo({

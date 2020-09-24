@@ -42,7 +42,9 @@
 								</view>
 							</view>
 						</view>
-						<view class="right"><image src="../../static/cart/rubbish.png" mode="" @tap="delBook(item.id)"></image></view>
+						<view class="right">
+							<image :src="$aliImage + 'rubbish.png'" mode="" @tap="delBook(item.id)"></image>
+							</view>
 					</view>
 				</view>
 			</scroll-view>

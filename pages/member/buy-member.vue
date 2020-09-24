@@ -6,10 +6,10 @@
 					<text>商品名称</text>
 					<text>{{ name }}</text>
 				</view>
-				<!-- <view class="item">
+				<view class="item">
 					<text>会员到期日</text>
-					<text>2021-09-17</text>
-				</view> -->
+					<text>{{ formatMemberDueDate }}</text>
+				</view>
 				<view class="item">
 					<text>可借阅次数</text>
 					<text>有效期内无限次借阅</text>
@@ -53,16 +53,16 @@
 				id: '',//会员卡id
 				userInfo: uni.getStorageSync("userInfo"),//个人信息
 				order_no : '',//购买订单号
+				formatMemberDueDate: '', //会员到期日
 			}
 		},
 		onLoad(option) {
 			let memberInfo = JSON.parse(option.param)
-			console.log(memberInfo.formatCreateTime)
 			this.name = memberInfo.name //会员卡名称
 			this.price = memberInfo.price //会员卡价格
 			this.id = memberInfo.id //会员卡id
-			this.formatMemberDueDate = this.getDateDuration(memberInfo.formatCreateTime, memberInfo.day) //会员到期日
-			console.log(this.formatMemberDueDate)
+			let formatMemberDueDate = this.getDateDuration(memberInfo.day) 
+			this.formatMemberDueDate = this.handleTime(formatMemberDueDate)
 			// 获取用户个人信息(id)
 			this.getUserInfo()
 		},
@@ -90,14 +90,31 @@
 				}
 			},
 			// 计算会员卡时间
-			getDateDuration(today, n) {
-		　　//加上N天的时间
-				let time = new Date(today).getTime()
+			getDateDuration(n) {
+				let time = new Date().getTime()
 				let day = time + 3600 * 1000 * 24 * n
 				return day
-				// let s1 = today.getTime() + 3600 * 1000 * 24 * n
-				// let fillTime = formatDate(new Date(s1))
-				// return fillTime
+			},
+			// 格式化时间
+			handleTime(time) {
+				let currentTime = new Date(time)
+				let year = currentTime.getFullYear()
+				let month =  this.complement(currentTime.getMonth() + 1)
+				let day = this.complement(currentTime.getDate())
+				let hour = this.complement(currentTime.getHours())
+				let minute = this.complement(currentTime.getMinutes())
+				let second = this.complement(currentTime.getSeconds())
+				let create_time = `${year}-${month}-${day} ${hour}:${minute}:${second}`
+				
+				return create_time
+			},
+			// 补零
+			complement(value) {
+				if(value >= 10) {
+					return value
+				}else {
+					return '0' + value
+				}
 			},
 			// 购买会员
 			buyMemberCard() {
