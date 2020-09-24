@@ -31,7 +31,7 @@
 								<text style="margin-right: 10rpx;">
 								{{!userInfo.name || userInfo.name === 'guest' ? '五车书游客, 您好！' : userInfo.name}}
 								</text>
-								<image mode="widthFix" v-if="isLogin"
+								<image mode="widthFix" v-if="isLogin && member_status == 1"
 								:src="$aliImage + 'member-icon-03.png'">
 								</image>
 								
