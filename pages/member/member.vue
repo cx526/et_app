@@ -4,6 +4,7 @@
 		<swiper 
 		:style="{'height': swiperHeight}"
 		v-if="memberCard && memberCard.length > 0"
+		
 		>
 			<swiper-item v-for="(item,index) in memberCard" :key="index">
 				<view class="item card">
@@ -126,7 +127,13 @@
 			
 			// 获取会员卡
 			getMemberCard() {
-				this.$api.getMemberCard()
+				let params = {
+					filterItems: {
+						status: '1'
+					}
+				}
+				
+				this.$api.getMemberCard(params)
 				.then(res => {
 					this.memberCard = res.data.rows;
 					if(this.memberCard && this.memberCard.length > 0) {
