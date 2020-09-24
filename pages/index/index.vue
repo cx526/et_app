@@ -376,9 +376,17 @@ export default {
 		},
 		// 点击swiper
 		toTargetUrl(item) {
-			uni.navigateTo({
-				url: item.target
-			})
+			let target = item.target
+			console.log(target)
+			if(target.indexOf('http') == -1) {
+				uni.navigateTo({
+					url: item.target
+				})
+			}else {
+				uni.navigateTo({
+					url: '/pages/index/swiper-article?src='+encodeURIComponent(JSON.stringify(target))
+				})
+			}
 		},
 		// 跳转书籍详情页
 		toBookDetail(bookID) {

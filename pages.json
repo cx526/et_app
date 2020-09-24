@@ -510,6 +510,12 @@
 					"navigationBarTitleText": "会员权益协议说明"
 				}
 			}
+        ,{
+            "path" : "pages/index/swiper-article",
+            "style" : {
+							"navigationBarTitleText": "五车书绘本借阅"
+						}
+        }
     ],
 	"globalStyle": {
 		"navigationBarTextStyle": "black",
