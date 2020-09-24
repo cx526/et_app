@@ -47,15 +47,18 @@
 							<view class="radio-item"
 							v-if="integrate >= 50 && free > 0 && 
 							chooseBookList.length == 1">
+							<template v-if="isTeacherFree">
 								<radio color="#2AAEC4" value="coin"></radio>
 								<text>免费借阅</text>
+							</template>
+								
 							</view>
 							<view class="radio-item">
 								<radio color="#2AAEC4" value="shell"></radio>
 								<text>五车贝</text>
 							</view>
 							<view class="radio-item" 
-							v-if="member_satus && member_satus == 1">
+							v-if="member_status && member_status == 1">
 								<radio color="#2AAEC4" value="member"></radio>
 								<text>会员</text>
 							</view>
@@ -192,10 +195,13 @@
 				deposit: 0, //押金
 				userInfo: '', //储存用户账号个人信息
 				id: '', //用户id
+				card_no: '', //用户卡号
+				card_type: '', //用户卡号类型(学生/老师)
 				school_name: '', //用户所在的学校
 				goods_id: '', //储存书籍id(1,2,3)
-				member_satus: 0, //区分是否是会员
+				member_status: 0, //区分是否是会员
 				readInfo: '', //会员用户借阅情况
+				isTeacherFree: true ,//教师卡是否当天已使用过免费借阅
 			}
 		},
 		onLoad(option) {
@@ -220,6 +226,7 @@
 				this.$api.offlineUserDockerInfo({ mobile })
 				.then(res => {
 					let data = res.data
+					console.log(data)
 					// 用户个人信息
 					this.userInfo = data
 					// 积分
@@ -236,11 +243,21 @@
 					// 用户所在的学校
 					this.school_name = data.school_name
 					// 是否为会员
-					this.member_satus = data.member_status
+					this.member_status = data.member_status
 					// 如果是会员才发起接口请求
-					if(this.member_satus == "1") {
+					if(this.member_status == "1") {
 						this.getUserMemberRead(this.id)
 					}
+					// 卡号
+					this.card_no = data.card_no
+					if(this.card_no && this.card_no.replace(/\s*/g, '') != '') {
+						this.card_type = this.checkCardType(this.card_no)
+						console.log(this.card_type)
+					}
+					// 如果是老师卡需要判断该老师当天是否已免费借过一次(一本) 1学生 0老师
+					if(data.custom_type == '0') {
+						this.checkTeacherTodayOfflineOrde(this.id)
+					} 
 				})
 			},
 			
@@ -288,6 +305,48 @@
 				})
 			},
 			
+			// 检测老师当天是否使用过免费借阅次数
+			checkTeacherTodayOfflineOrde(id) {
+				let params = {
+					teacher_id: String(id)
+				}
+				this.$api.checkTeacherTodayOfflineOrde(params)
+				.then(res => {
+					console.log(res)
+					if(res.data.status == 'ok') {
+						let freeBuyStatus = res.data.rows.freeBuyStatus
+						// 可以免费借阅
+						if(freeBuyStatus == '0') {
+							this.isTeacherFree = true
+						}else {
+							this.isTeacherFree = false
+						}
+					}else {
+						uni.showToast({
+							title: res.data.msg,
+							icon: 'none',
+							duration: 1500
+						})
+					}
+				})
+			},
+			
+			// 区分老师教师卡
+			checkCardType(val) {
+				let prefix = val.substring(0, 2)
+				let cardType = val.substring(2, 3)
+				if (prefix === 'ET') {
+					if (cardType === '0') {
+						// 老师卡
+						return 'TEACHER_CARD'
+					} else if (cardType === '1') {
+						// 学生卡
+						return 'STUDENT_CARD'
+					}
+				}else {
+					return ''
+				}
+			},
 			
 			// 立即借阅
 			borrow() {
@@ -307,9 +366,9 @@
 				});
 				this.goods_id = goodsIDs.join(',')
 				switch(this.type) {
-					// 积分借阅
+					// 积分借阅(老师卡积分借阅不需要押金)
 					case "coin":
-						if(this.deposit < 29) {
+						if(this.deposit < 29 && this.card_type != 'TEACHER_CARD') {
 							// 押金不足弹窗显示
 							this.$refs.depositPopUp.open()
 						}else {
@@ -318,12 +377,9 @@
 							this.placeOrder(this.goods_id, 'coin')
 						}
 						break
-					// 五车贝支付
+					// 五车贝支付(老师借阅不需要押金)
 					case "shell":
-						this.chooseBookList.map(item => {
-							this.price = (+this.price + (+item.price)).toFixed(2)
-						})
-						if(this.deposit < 29) {
+						if(this.deposit < 29 && this.card_type != 'TEACHER_CARD') {
 							// 押金不足弹窗显示
 							this.$refs.depositPopUp.open()
 						}else if(this.shell < Number(this.price)) {
@@ -398,7 +454,7 @@
 				})
 			},
 			
-			// 下单成功后剔除书篮书籍
+			// 下单成功后剔除书篮中已下单过的书籍
 			handlePlaceBooks() {
 				let cacheBooksList = uni.getStorageSync("offlineCartList");
 				let chooseBooksList = this.chooseBookList;

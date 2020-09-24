@@ -204,9 +204,17 @@ export default {
 		},
 		// 获取用户的个人信息
 		getUserInfo() {
-			let mobile = uni.getStorageSync('userInfo').mobile;
-			this.$api
-				.offlineUserDockerInfo({ mobile })
+			let tmpUserInfo = uni.getStorageSync('userInfo');
+			let mobile = tmpUserInfo.mobile
+			if(!tmpUserInfo || JSON.stringify(tmpUserInfo) == '{}' || !mobile || mobile.replace(/\s*/g, '') == '') {
+				uni.showToast({
+					title: '请先登录',
+					icon: 'none',
+					duration: 1500
+				})
+				return
+			}
+			this.$api.offlineUserDockerInfo({ mobile })
 				.then(res => {
 					this.userInfo = res.data;
 					// 如果不是合作幼儿园
@@ -488,7 +496,7 @@ export default {
 		// 检测登录状态
 		getLogin() {
 			let userInfo = uni.getStorageSync('userInfo');
-			if (userInfo.name === 'guest' || !userInfo) {
+			if (!userInfo || !userInfo.name || userInfo.name === 'guest') {
 				uni.showModal({
 					title: '您还未登录！',
 					content: '是否前往登录页面?',
@@ -509,9 +517,7 @@ export default {
 			this.getLogin();
 			if (this.isLogin) {
 				// 获取用户选中的书籍列表
-				this.chooseBookList =
-					this.bookList &&
-					this.bookList.filter(item => {
+				this.chooseBookList = this.bookList && this.bookList.filter(item => {
 						return item.isSelect === true;
 					});
 				// 更新所选商品本地缓存的库存数据

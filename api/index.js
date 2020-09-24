@@ -207,4 +207,8 @@ api.updatePaymentCard = params => request.globalRequest('/api/memberWeChatPay/up
 
 // 获取会员在读数和能借阅数
 api.getMemberRead = params => request.globalRequest('/api/member/selectMemberCustomRead', 'POST', params)
+
+// 检测老师当天是否使用过一次免费借阅次数
+api.checkTeacherTodayOfflineOrde = params => request.globalRequest('/api/teacherInfo/checkTeacherTodayOfflineOrder', 'POST', params)
+
 export default api

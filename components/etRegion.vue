@@ -76,7 +76,6 @@ export default {
 			this.regionColChange({detail: {column:2, value: 2}})
 		},
 		regionColChange(e) {
-			// console.log(e)
 			let col = e.detail.column
 			let val = e.detail.value
 			console.log(col, val)

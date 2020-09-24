@@ -266,7 +266,7 @@ export default {
 		// 检测用户的登录状态
 		getLogin() {
 			let userInfo = uni.getStorageSync('userInfo');
-			if (userInfo.name === 'guest' || !userInfo) {
+			if (!userInfo || JSON.stringify(userInfo) == '{}' || !userInfo.name || userInfo.name === 'guest') {
 				uni.showModal({
 					title: '您还未登录！',
 					content: '是否前往登录页面?',

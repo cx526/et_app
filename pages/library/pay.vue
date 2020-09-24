@@ -72,7 +72,7 @@
 			<view class="item">
 				<text>2.一元人民币可充值10五车贝（单次充值不低于10元）</text>
 			</view>
-			<view class="item">sure
+			<view class="item">
 				<text>3.充值后不可提现</text>
 			</view>
 			<view class="item">
