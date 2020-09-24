@@ -63,7 +63,7 @@
 						<view class="rule">
 							<view class="agree">
 								<radio style="transform: scale(0.6);" color="#2aaec4" 
-								 @tap="agreement(item)" :checked="item.isChecked" />
+								 @tap="agreement(item, index)" :checked="item.isChecked" />
 								<view>
 									<text style="color: #808080;">我已阅读并同意</text>
 									<text style="color: #2AAEC4;" @tap="checkMember">
@@ -148,10 +148,13 @@
 				})
 			},
 			// 是否勾选协议
-			agreement(item) {
+			agreement(item, index) {
 				// 排他
 				if(this.memberCard && this.memberCard.length > 0) {
-					this.memberCard.map(item => {
+					this.memberCard.map((item, n) => {
+						if(n == index) {
+							return
+						}
 						item.isChecked = false
 					})
 				}

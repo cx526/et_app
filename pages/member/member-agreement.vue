@@ -42,5 +42,6 @@
 	.box {
 		box-sizing: border-box;
 		padding:  30rpx;
+		font-size: 32rpx;
 	}
 </style>
