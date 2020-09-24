@@ -62,11 +62,11 @@
 						</image>
 					</view>
 				</view>
-				<view class="borrow-count" v-if="isLogin">
+				<!-- <view class="borrow-count" v-if="isLogin">
 					<image :src="$aliImage + 'menber-icon-01.png'" mode=""></image>
 					<text v-if="!member_status">本月剩余借阅次数：{{ free }}次</text>
 					<text v-else>畅读年卡专享无限次借阅</text>
-				</view>
+				</view> -->
 			</view>
 			
 			
