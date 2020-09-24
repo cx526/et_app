@@ -4,9 +4,11 @@
 		<swiper 
 		:style="{'height': swiperHeight}"
 		v-if="memberCard && memberCard.length > 0"
-		
+		previous-margin = "60rpx"
+		next-margin = "60rpx"
 		>
-			<swiper-item v-for="(item,index) in memberCard" :key="index">
+			<swiper-item v-for="(item,index) in memberCard" :key="index" 
+			style="padding: 0 16rpx;">
 				<view class="item card">
 					<view class="show">
 						<image :src="item.img_url" 
@@ -200,7 +202,7 @@
 	}
 	swiper {
 		box-sizing: border-box;
-		padding: 0 65rpx;
+		/* padding: 0 65rpx; */
 		margin-top: -274rpx;
 	}
 	swiper-item {
