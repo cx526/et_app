@@ -49,7 +49,7 @@
 		data() {
 			return {
 				name: '',//会员卡名称
-				price: 0.01,//会员卡价格
+				price: 0,//会员卡价格
 				id: '',//会员卡id
 				userInfo: uni.getStorageSync("userInfo"),//个人信息
 				order_no : '',//购买订单号
@@ -58,7 +58,7 @@
 		onLoad(option) {
 			let memberInfo = JSON.parse(option.param)
 			this.name = memberInfo.name //会员卡名称
-			// this.price = memberInfo.price //会员卡价格
+			this.price = memberInfo.price //会员卡价格
 			this.id = memberInfo.id //会员卡id
 			// 获取用户个人信息(id)
 			this.getUserInfo()
