@@ -57,9 +57,12 @@
 		},
 		onLoad(option) {
 			let memberInfo = JSON.parse(option.param)
+			console.log(memberInfo.formatCreateTime)
 			this.name = memberInfo.name //会员卡名称
 			this.price = memberInfo.price //会员卡价格
 			this.id = memberInfo.id //会员卡id
+			this.formatMemberDueDate = this.getDateDuration(memberInfo.formatCreateTime, memberInfo.day) //会员到期日
+			console.log(this.formatMemberDueDate)
 			// 获取用户个人信息(id)
 			this.getUserInfo()
 		},
@@ -85,6 +88,16 @@
 						}
 					})
 				}
+			},
+			// 计算会员卡时间
+			getDateDuration(today, n) {
+		　　//加上N天的时间
+				let time = new Date(today).getTime()
+				let day = time + 3600 * 1000 * 24 * n
+				return day
+				// let s1 = today.getTime() + 3600 * 1000 * 24 * n
+				// let fillTime = formatDate(new Date(s1))
+				// return fillTime
 			},
 			// 购买会员
 			buyMemberCard() {

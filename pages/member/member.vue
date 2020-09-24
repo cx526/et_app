@@ -22,10 +22,13 @@
 							<view class="name"><text>{{ item.name }}</text></view>
 							<view class="price">
 								<view>
-									<text style="font-size: 30rpx;margin-right: 6rpx;">									 ￥</text>
+									<text style="font-size: 30rpx;margin-right: 6rpx;">									 			优惠价￥
+									</text>
 									<text>{{ item.price }}</text>
 								</view>
-								<view><text>原价￥{{ item.original_price }}</text></view>
+								<view style="text-align: right;">
+									<text>原价￥{{ item.original_price }}</text>
+								</view>
 							</view>
 						</view>
 						<!-- 富文本区域 -->
@@ -93,16 +96,20 @@
 			return {
 				$aliImage: this.$aliImage,
 				swiperHeight: 0, //swiper高度
-				
 				isChecked: false , //会员协议是否选中
 				popUpWidth: 0 , //会员协议弹窗高度
 				memberCard: [], //储存会员卡数据
+				userInfo: uni.getStorageSync("userInfo"),//个人信息
+				member_status: '',//表示用户是否开通过会员
+				formatMemberDueDate: '',//会员到期日
 			}
 		},
 		
 		onLoad() {
 			// 获取会员卡列表
 			this.getMemberCard()
+			// 获取用户个人信息
+			this.getUserInfo()
 			// 设置会员协议弹窗宽度
 			uni.getSystemInfo({
 				success: data => {
@@ -125,7 +132,33 @@
 			}
 		},
 		methods: {
-			
+			// 获取用户信息
+			getUserInfo() {
+				let mobile = this.userInfo.mobile
+				if(mobile && mobile != '') {
+					this.$api.offlineUserDockerInfo({ mobile })
+					.then(res => {
+						let result = res.data
+						this.member_status = result.member_status
+						if(result.formatMemberDueDate && result.formatMemberDueDate.replace(/\s*/g, '') != '') {
+							let date = result.formatMemberDueDate.split(' ')[0]
+							let time = date.split('-')
+							this.formatMemberDueDate =time[0]+'年'+time[1]+'月'+time[2]+'日'
+						}
+					})
+				}else {
+					uni.showToast({
+						title: '请前往授权登录',
+						icon: 'none',
+						duration: 1500,
+						success: () => {
+							uni.redirectTo({
+								url: '/pages/guide/auth'
+							})
+						}
+					})
+				}
+			},
 			
 			// 获取会员卡
 			getMemberCard() {
@@ -169,10 +202,42 @@
 						duration: 1500
 					})
 				}else {
+					// 判断当前用户是否有开通过会有，有的话提示会员到期日弹窗
+					if(this.member_status == "1") {
+						uni.showModal({
+							title: '您已开通过会员！',
+							content: '会员到期日为'+this.formatMemberDueDate+',是否再次续费?',
+							success: res => {
+								if(res.confirm) {
+									let param = {
+										name: item.name,
+										price: item.price,
+										id: item.id,
+										day: item.day,
+										formatCreateTime:item.formatCreateTime.replace(/-/g, '/')
+									}
+									// 跳转会员购买下单页面
+									uni.navigateTo({
+										url: '/pages/member/buy-member?param='+ JSON.stringify(param)
+									})
+								}else {
+									uni.showToast({
+										title: '取消购买',
+										icon: 'none',
+										duration: 1500
+									})
+								}
+							}
+						})
+						return
+					}
+					// 不是会员不显示提示
 					let param = {
 						name: item.name,
 						price: item.price,
-						id: item.id
+						id: item.id,
+						day: item.day,
+						formatCreateTime: item.formatCreateTime.replace(/-/g, '/')
 					}
 					// 跳转会员购买下单页面
 					uni.navigateTo({

@@ -119,7 +119,8 @@
 					<text style="font-weight: 700;color: #808080;">五车贝：</text>
 					<text style="color: #2AAEC4;">{{ price }}</text>
 				</view>
-				<view style="font-size: 22rpx; color: #808080;">
+				<view style="font-size: 22rpx; color: #808080;"
+				v-if="!member_status && card_type != 'TEACHER_CARD'">
 					<text>押金：29元（可退）</text>
 				</view>
 			</view>
@@ -348,7 +349,7 @@
 				}
 			},
 			
-			// 立即借阅
+			// 立即借阅(老师免押金，学生是会员免押金，不是需要会员)
 			borrow() {
 				// 没有选择支付类型
 				if(this.type == '') {
@@ -369,8 +370,15 @@
 					// 积分借阅(老师卡积分借阅不需要押金)
 					case "coin":
 						if(this.deposit < 29 && this.card_type != 'TEACHER_CARD') {
-							// 押金不足弹窗显示
-							this.$refs.depositPopUp.open()
+							// 如果不是会员(学生)
+							if(this.member_status != "1") {
+								// 押金不足弹窗显示
+								this.$refs.depositPopUp.open()
+							}else {
+								this.price = 0
+								// 执行下单
+								this.placeOrder(this.goods_id, 'coin')
+							}
 						}else {
 							this.price = 0
 							// 执行下单
@@ -380,8 +388,12 @@
 					// 五车贝支付(老师借阅不需要押金)
 					case "shell":
 						if(this.deposit < 29 && this.card_type != 'TEACHER_CARD') {
-							// 押金不足弹窗显示
-							this.$refs.depositPopUp.open()
+							if(this.member_status != "1") {
+								// 押金不足弹窗显示
+								this.$refs.depositPopUp.open()
+							}else {
+								this.placeOrder(this.goods_id, 'shell')
+							}
 						}else if(this.shell < Number(this.price)) {
 							// 五车贝不足弹窗显示
 							this.$refs.popup.open()
