@@ -51,7 +51,7 @@
 				<text class="circle" style="margin-left: 20rpx;"></text>
 				<text class="line" style="margin-left: 16rpx;"></text>
 			</view>
-			<view class="context">
+			<view class="context" v-if="payRecordList && payRecordList.length > 0">
 				<block v-for="(item, index) in payRecordList" :key="index">
 					<view class="main">
 						<!--
@@ -63,6 +63,7 @@
 						 shell与dep不为0是充值五车贝与押金(目前没有充值五车贝跟押金									一起，这种情况不做判断) 
 						 5.event为returnDeposit，dep小于0为退还押金 
 						 6.event为getBookFail shell大于0为逾期未取书
+						 7.event为give为赠送
 						 -->
 						 <!-- 充值五车贝 -->
 						<view class="item" v-if="item.event == 'recharge' && item.shell != 0 && item.deposit == 0">
@@ -127,7 +128,18 @@
 									创建时间：{{ item.handle_create_time }}</text>
 							</view>
 						</view>
-						
+						<!-- 赠送 -->
+						<view class="item" v-else-if="item.event == 'give' ">
+							<view class="topic">
+									 <text>系统赠送</text>
+									 <text style="color: #039EB9;">
+										 +{{ item.shell }}</text>
+							</view>
+							<view class="time">
+								<text style="margin-right: 12rpx;">
+									创建时间：{{ item.handle_create_time }}</text>
+							</view>
+						</view>
 						<!-- 其他 -->
 						<view class="item" v-else>
 							<view class="topic">

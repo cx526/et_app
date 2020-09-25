@@ -16,6 +16,7 @@
 						mode="widthFix"></image>
 						<image :src="$aliImage + 'member-icon-04.png'" v-else
 						mode="widthFix"></image>
+						<text style="font-size: 24rpx; position: absolute; right: 56rpx; bottom: 50rpx; color: #fff;">五车书校园智慧童书馆</text>
 					</view>
 					<view class="context">
 						<view class="title">

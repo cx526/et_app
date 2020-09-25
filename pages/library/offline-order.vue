@@ -228,7 +228,7 @@
 		},
 		methods: {
 			// 获取用户个人信息
-			getUserInfo() {
+			 getUserInfo() {
 				let mobile = uni.getStorageSync("userInfo").mobile;
 				this.$api.offlineUserDockerInfo({ mobile })
 				.then(res => {
@@ -270,13 +270,23 @@
 			
 			// 默认选择支付方式
 			chooseDefaultType() {
-				if(this.member_status == "1") {
+				if(this.member_status == "1" && this.readInfo.mayReadCount > 0) {
+					this.price = 0
 					this.type = "member"
 				}else {
 					if(this.free > 0 && this.integrate >= 50 && this.chooseBookList.length == 1) {
+						this.price = 0
 						this.type = "coin"
 					}else {
+						// 默认选择五车贝时需要计算价格
 						this.type = "shell"
+						if(this.chooseBookList && this.chooseBookList.length > 0) {
+							this.chooseBookList.map(item => {
+							this.price = (Number(this.price) + Number(item.price)).toFixed(2)
+							})
+							
+							console.log(this.price)
+						}
 					}
 				}
 			},
@@ -315,6 +325,8 @@
 				.then(res => {
 					if(res.data.status === 'ok') {
 						this.readInfo = res.data.rows
+						// 选择默认支付方式
+						this.chooseDefaultType()
 					}else {
 						uni.showToast({
 							title: res.data.msg,
@@ -367,6 +379,40 @@
 				}
 			},
 			
+			// 删除书籍
+			delBook(id) {
+				let dataList = this.chooseBookList;
+				if(dataList.length == 1) {
+					uni.showToast({
+						title: '每次下单不能少于一本！',
+						icon: 'none',
+						duration: 2000
+					})
+					return
+				}
+				uni.showModal({
+					title: '是否确认移除此书籍?',
+					success: res => {
+						if (res.confirm) {
+							dataList && dataList.map((item, index) => {
+								if (item.id === id) {
+									dataList.splice(index, 1);
+								}
+								this.chooseBookList = dataList
+								// 重新计算价格(只有五车贝时需要)
+								if(this.type == 'shell') {
+									this.price = 0
+									this.chooseBookList.map(item => {
+										this.price = (Number(this.price) + Number(item.price))
+										.toFixed(2)
+									})
+								}
+							});
+						}
+					}
+				});
+			},
+			
 			// 立即借阅(老师免押金，学生是会员免押金，不是需要会员)
 			borrow() {
 				// 没有选择支付类型
@@ -409,6 +455,9 @@
 							if(this.member_status != "1") {
 								// 押金不足弹窗显示
 								this.$refs.depositPopUp.open()
+							}else if(this.shell < Number(this.price)) {
+								// 五车贝不足弹窗显示
+								this.$refs.popup.open()
 							}else {
 								this.placeOrder(this.goods_id, 'shell')
 							}

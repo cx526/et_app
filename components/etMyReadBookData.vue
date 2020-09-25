@@ -1,6 +1,5 @@
 <template>
 	<view class="content">
-		
 		<view class="top-position">
 			<view class="top-content-position">
 				<view class="top-content">
@@ -19,7 +18,7 @@
 			v-for="(item,index) in myMenuInfo.allMenu"
 			:key="index">
 				<view class="menu-left">
-					<image src="../static/cart/blueRight.png" style="width: 40upx;" mode="widthFix"></image>
+					<image src="../static/cart/blueRight.png" style="width: 30upx;" mode="widthFix"></image>
 					<text style="margin-left: 10upx; font-weight: 600;">{{item.title}}</text>
 				</view>
 				<view class="menu-right">

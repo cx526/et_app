@@ -211,4 +211,7 @@ api.getMemberRead = params => request.globalRequest('/api/member/selectMemberCus
 // 检测老师当天是否使用过一次免费借阅次数
 api.checkTeacherTodayOfflineOrde = params => request.globalRequest('/api/teacherInfo/checkTeacherTodayOfflineOrder', 'POST', params)
 
+// 查看会员充值记录
+api.checkMemberRecord = params => request.globalRequest('/api/member/selDataMemberRecord', 'POST', params)
+
 export default api

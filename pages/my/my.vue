@@ -31,8 +31,9 @@
 								<text style="margin-right: 10rpx;">
 								{{!userInfo.name || userInfo.name === 'guest' ? '五车书游客, 您好！' : userInfo.name}}
 								</text>
-								<image mode="widthFix" v-if="isLogin && member_status == 1"
-								:src="$aliImage + 'member-icon-03.png'">
+								<!-- 后端返回 -->
+								<image mode="widthFix" v-if="isLogin && member_status == 1 && memberIcon && memberIcon != ''"
+								:src="memberIcon">
 								</image>
 								
 							</view>
@@ -62,11 +63,18 @@
 						</image>
 					</view>
 				</view>
-				<!-- <view class="borrow-count" v-if="isLogin">
-					<image :src="$aliImage + 'menber-icon-01.png'" mode=""></image>
-					<text v-if="!member_status">本月剩余借阅次数：{{ free }}次</text>
-					<text v-else>畅读年卡专享无限次借阅</text>
-				</view> -->
+				<view class="borrow-count" v-if="isLogin && member_status == '1'"
+				@tap="checkRecord">
+					<view style="flex: 1;">
+					</view>
+					<view class="right">
+						<text>查看会员记录</text>
+						<image :src="$aliImage + 'member-icon-05.png'" mode="widthFix">
+							
+						</image>
+					</view>
+					
+				</view>
 			</view>
 			
 			
@@ -201,6 +209,7 @@ export default {
 	},
 	data() {
 		return {
+			memberIcon: '', //会员卡类别标示图
 			isLogin: false, //区别用户是否登录
 			free: 0,//免费次数
 			member_status: 0, //区分会员
@@ -415,6 +424,7 @@ export default {
 		this.getUserInfo()
 	},
 	methods: {
+		
 		// 获取个人信息
 		getUserInfo() {
 			let tmpUserInfo = uni.getStorageSync("userInfo")
@@ -436,6 +446,7 @@ export default {
 				this.id = data.id
 				this.member_status = data.member_status
 				this.free = Number(data.free_bind) + Number(data.free_month)
+				this.memberIcon = data.memberIcon
 				if(data.formatMemberDueDate && 
 				data.formatMemberDueDate.replace(/\s*/g, '') != '') {
 					this.formatMemberDueDate = data.formatMemberDueDate.split(' ')[0].replace(/-/g, '.')
@@ -465,6 +476,7 @@ export default {
 				});
 			})
 		},
+		
 		// 获取线下各订单数量
 		getOfflineOrderCount(id) {
 			this.$api.offlineUserOrderCount({
@@ -488,6 +500,7 @@ export default {
 
 			})
 		},
+		
 		// 跳转到会员页面
 		goMember() {
 			let tmpUserInfo = uni.getStorageSync("userInfo")
@@ -510,6 +523,14 @@ export default {
 				url: '/pages/member/member'
 			})
 		},
+		
+		// 查看会员记录
+		checkRecord() {
+			uni.navigateTo({
+				url: '/pages/member/member-record'
+			})
+		},
+		
 		// 重新登录
 		clearSessionAction() {
 			uni.showActionSheet({
@@ -751,6 +772,7 @@ export default {
 	height: 472upx;
 	width: 100%;
 	padding: relative;
+	background: rgb(235, 248, 255);
 }
 .top-position .bg {
 	height: 472rpx;
@@ -770,6 +792,7 @@ export default {
 	flex-direction: column;
 	justify-content: center;
 	align-items: center;
+	background: rgb(235, 248, 255);
 }
 .top-position .context {
 	box-sizing: border-box;
@@ -831,14 +854,21 @@ export default {
 }
 .borrow-count {
 	color: #fff;
-	font-size: 24rpx;
+	font-size: 20rpx;
 	margin-top: 60rpx;
 	display: flex;
 	align-items: center;
+	text-align: right;
+	justify-content: space-between;
 }
-.borrow-count image {
-	width: 50rpx;
-	height: 44rpx;
+.borrow-count .right {
+	display: flex;
+	align-items: center;
+}
+.borrow-count .right image {
+	width: 12rpx;
+	height: 12rpx;
+	margin-left: 8rpx;
 }
 .my-box-position {
 	width: 94%;

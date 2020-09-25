@@ -132,7 +132,9 @@
 			<text>{{ len }}</text>
 		</view>
 		<!-- 加载组件 -->
-		<view style="background: #EBF7FF;"><uni-load-more :status="loadStatus" :content-text="loadText" /></view>
+		<view style="background: #EBF7FF;">
+			<uni-load-more :status="loadStatus" :content-text="loadText" />
+		</view>
 
 		<!-- 权限弹窗 -->
 		<uni-popup ref="powerPopUp" :maskClick="false">
