@@ -588,12 +588,6 @@ export default {
 		},
 		// 线上订单页跳转
 		goOnline(url) {
-			uni.showToast({
-				title: '邮寄借阅系统升级中，暂不对外开放',
-				icon: 'none',
-				duration: 1500
-			})
-			return
 			let userInfo = uni.getStorageInfoSync("userInfo")
 			if(userInfo.name === 'guest' || userInfo.mobile == '') {
 				uni.showModal({
@@ -610,9 +604,22 @@ export default {
 				})
 				return
 			}
-			uni.navigateTo({
-				url
-			})
+			if(url === '/pages/cart/orderList?status_text=待还书') {
+				uni.navigateTo({
+					url
+				})
+			}
+			else {
+				uni.showToast({
+					title: '邮寄借阅系统升级中，暂不对外开放',
+					icon: 'none',
+					duration: 1500
+				})
+			}
+			// console.log(url)
+			// uni.navigateTo({
+			// 	url
+			// })
 		},
 		// 查看线上全部订单
 		goOnlineAll() {

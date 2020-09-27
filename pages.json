@@ -261,7 +261,8 @@
 		{
 			"path": "pages/cart/orderList",
 			"style": {
-				"navigationBarTitleText": "订单列表",
+				// "navigationBarTitleText": "订单列表",
+				"navigationBarTitleText": "邮寄待归还",
 				"app-plus": {
 					"titleNView": false
 				}

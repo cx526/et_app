@@ -8,7 +8,7 @@
 				<view class="main">
 					<text class="use">使用中</text>
 					<view class="time">
-						<text>到期日期：{{ useMemberCard[0].formatUseTime }}</text>
+						<text>到期日期：{{ useMemberCard[0].formatDueTime }}</text>
 					</view>
 				</view>
 			</view>
@@ -33,7 +33,7 @@
 									预计生效日期：{{ item.formatUseTime }}
 								</text>
 								<text class="time" v-else-if="item.status == '1'">
-									到期日期：{{ item.formatUseTime }}
+									到期日期：{{ item.formatDueTime }}
 								</text>
 								<text class="time active" v-else>
 									失效日期：{{ item.formatDueTime }}

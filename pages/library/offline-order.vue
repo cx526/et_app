@@ -44,29 +44,33 @@
 				</view>
 				<!-- 支付方式 -->
 				<view class="pay">
-					<text style="font-weight: 700;">支付方式</text>
+					<text style="font-weight: 700;font-size: 30rpx;">支付方式</text>
 					<view class="payWay">
-						<radio-group @change="choosePayWay">
+						<radio-group @change="choosePayWay" >
 							<view class="radio-item"
 							v-if="integrate >= 50 && free > 0 && 
 							chooseBookList.length == 1">
 							<template v-if="isTeacherFree">
 								<radio color="#2AAEC4" value="coin" 
 								:checked="type == 'coin'"></radio>
-								<text>免费借阅</text>
+								<text 
+								style="font-weight: 700;font-size: 30rpx;">
+								免费借阅
+								</text>
 							</template>
 								
 							</view>
 							<view class="radio-item">
 								<radio color="#2AAEC4" value="shell"
 								:checked="type == 'shell'"></radio>
-								<text>五车贝</text>
+								<text
+								style="font-weight: 700;font-size: 30rpx;">五车贝</text>
 							</view>
 							<view class="radio-item" 
 							v-if="member_status && member_status == 1">
 								<radio color="#2AAEC4" value="member"
 								:checked="type == 'member'"></radio>
-								<text>会员</text>
+								<text style="font-weight: 700;font-size: 30rpx;">会员</text>
 							</view>
 						</radio-group>
 					</view>
@@ -694,8 +698,12 @@
 		align-items: center;
 		text-align: right;
 	}
+	.order-detail .pay .radio-item {
+		display: flex;
+		align-items: center;
+	}
 	.order-detail .pay .payWay radio {
-		transform: scale(0.6);
+		transform: scale(0.75);
 	}
 	.order-detail .notice-way {
 		font-size: 24rpx;

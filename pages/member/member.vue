@@ -8,7 +8,7 @@
 		next-margin = "60rpx"
 		>
 			<swiper-item v-for="(item,index) in memberCard" :key="index" 
-			style="padding: 0 16rpx;">
+			:style="{'height': swiperHeight}">
 				<view class="item card" :style="{'height': swiperHeight}">
 					<view class="show">
 						<image :src="item.img_url" 
@@ -23,7 +23,7 @@
 							<view class="name"><text>{{ item.name }}</text></view>
 							<view class="price">
 								<view>
-									<text style="font-size: 30rpx;margin-right: 6rpx;">									 			优惠价￥
+									<text style="font-size: 30rpx;margin-right: 6rpx;">									 			{{ item.price_name }}￥
 									</text>
 									<text>{{ item.price }}</text>
 								</view>
@@ -38,7 +38,7 @@
 								<view class="demo-topic">
 									<text>权益说明</text>
 								</view>
-								<view style="height: 150rpx; overflow-y: scroll;">
+								<view style="height: 200rpx; overflow-y: scroll;">
 									<rich-text :nodes="item.remark_power" style="overflow: hidden;"></rich-text>
 								</view>
 							<!-- 	<view>1. 有效期1年</view> 
@@ -51,7 +51,7 @@
 								<view class="demo-topic">
 									<text>使用说明</text>
 								</view>
-								<view style="height: 150rpx; overflow-y: scroll;">
+								<view style="height: 200rpx; overflow-y: scroll;">
 									<rich-text :nodes="item.remark_use" style="overflow: hidden;"></rich-text>
 								</view>
 							<!-- 	<view>
@@ -96,7 +96,7 @@
 		data() {
 			return {
 				$aliImage: this.$aliImage,
-				swiperHeight: 0, //swiper高度
+				swiperHeight: '1278rpx', //swiper高度
 				isChecked: false , //会员协议是否选中
 				popUpWidth: 0 , //会员协议弹窗高度
 				memberCard: [], //储存会员卡数据
@@ -116,8 +116,8 @@
 			uni.getSystemInfo({
 				success: data => {
 					this.popUpWidth = data.windowWidth * 0.8 + 'px'
-					this.swiperHeight = data.windowHeight - 60 + 'px'
-					console.log(this.swiperHeight)
+					// this.swiperHeight = data.windowHeight - 60 + 'px'
+					// console.log(this.swiperHeight)
 				}
 			})
 		},
@@ -267,15 +267,11 @@
 	swiper {
 		box-sizing: border-box;
 		/* padding: 0 65rpx; */
-		/* margin-top: -274rpx; */
-		position: absolute;
-		left: 0;
-		top: 80rpx;
-		width: 100%;
+		margin-top: -274rpx;
 	}
 	swiper-item {
 		box-sizing: border-box;
-		/* position: relative; */
+		padding: 0 16rpx;
 	}
 	swiper .item {
 		box-sizing: border-box;
@@ -299,15 +295,15 @@
 		position: relative;
 		width: 100%;
 		z-index: 8;
+		position: absolute;
+		padding-top: 156rpx;
+		left: 0;
+		top: 156rpx;
 		/* padding-top: 156rpx;
 		margin-top: -156rpx; */
 		border-radius: 30rpx;
 		box-shadow: 0px 3rpx 10rpx 0px rgba(0,0,0,0.16);
 		padding-bottom: 40rpx;
-		position: absolute;
-		top: 156rpx;
-		left: 0;
-		width: 100%;
 	}
 	swiper .context .title {
 		box-sizing: border-box;

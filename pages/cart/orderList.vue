@@ -7,11 +7,11 @@
 			</view> -->
 		</view>
 		
-		<view class="tabs-position">
+		<!-- <view class="tabs-position">
 			<cl-tabs class="tabs" :tab-bars="tabBars" :tab-index="tabCurrentIndex" @tabChange="tabChange" :sliderMargin="30"
 						 sliderColor="#FFFFFF" type="fill" selectColor="#2AAEC4" textColor="#FFFFFF" ref="tabs0" aniType="extend">
 			</cl-tabs>
-		</view>
+		</view> -->
 		
 		<view class="order-list-position" v-if="orderList.length > 0">
 			<view class="white-border" style="margin: 20upx 0;" v-for="(item,index) in orderList" :key="index">
@@ -41,6 +41,7 @@ export default {
 		return {
 			isLogin: false,
 			tabBars:['全部','待支付','待发货','待收货','待还书','待取件','待评价','逾期','退款'],	//订单tab
+			// tabBars: ['待还书'],
 			tabBarID:0,  //初始化标签数据库ID
 			tabCurrentIndex:-1,
 			money:"30",

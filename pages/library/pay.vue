@@ -341,7 +341,7 @@
 		position: absolute;
 		bottom: 0;
 		left: 0;
-		width: 200rpx;
+		width: 196rpx;
 		z-index: 10;
 	}
 	.money .item .img-bottom image {
