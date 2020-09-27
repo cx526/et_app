@@ -38,7 +38,7 @@
 								<view class="demo-topic">
 									<text>权益说明</text>
 								</view>
-								<view style="height: 100rpx; overflow-y: scroll;">
+								<view style="height: 150rpx; overflow-y: scroll;">
 									<rich-text :nodes="item.remark_power" style="overflow: hidden;"></rich-text>
 								</view>
 							<!-- 	<view>1. 有效期1年</view> 
@@ -51,7 +51,7 @@
 								<view class="demo-topic">
 									<text>使用说明</text>
 								</view>
-								<view style="height: 100rpx; overflow-y: scroll;">
+								<view style="height: 150rpx; overflow-y: scroll;">
 									<rich-text :nodes="item.remark_use" style="overflow: hidden;"></rich-text>
 								</view>
 							<!-- 	<view>
@@ -117,6 +117,7 @@
 				success: data => {
 					this.popUpWidth = data.windowWidth * 0.8 + 'px'
 					this.swiperHeight = data.windowHeight - 60 + 'px'
+					console.log(this.swiperHeight)
 				}
 			})
 		},
@@ -266,7 +267,11 @@
 	swiper {
 		box-sizing: border-box;
 		/* padding: 0 65rpx; */
-		margin-top: -274rpx;
+		/* margin-top: -274rpx; */
+		position: absolute;
+		left: 0;
+		top: 80rpx;
+		width: 100%;
 	}
 	swiper-item {
 		box-sizing: border-box;
@@ -294,11 +299,15 @@
 		position: relative;
 		width: 100%;
 		z-index: 8;
-		padding-top: 156rpx;
-		margin-top: -156rpx;
+		/* padding-top: 156rpx;
+		margin-top: -156rpx; */
 		border-radius: 30rpx;
 		box-shadow: 0px 3rpx 10rpx 0px rgba(0,0,0,0.16);
 		padding-bottom: 40rpx;
+		position: absolute;
+		top: 156rpx;
+		left: 0;
+		width: 100%;
 	}
 	swiper .context .title {
 		box-sizing: border-box;
