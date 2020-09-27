@@ -5,7 +5,7 @@
 			mode="widthFix"></image>
 		</view>
 		<view class="topic">
-			<text style="color: #2AAEC4;">畅读年卡</text>
+			<text style="color: #2AAEC4;">{{name}}</text>
 			<text>办理成功</text>
 		</view>
 		<view class="btn">
@@ -16,9 +16,13 @@
 
 <script>
 	export default {
+		onLoad(options) {
+			this.name = options.name
+		},
 		data() {
 			return {
-				$aliImage: this.$aliImage
+				$aliImage: this.$aliImage,
+				name: ''
 			}
 		},
 		methods: {

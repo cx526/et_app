@@ -565,9 +565,11 @@ export default {
 				}
 
 				else {
+					let offlinePlaceBook = this.chooseBookList
+					uni.setStorageSync("offlinePlaceBook", offlinePlaceBook)
 					uni.navigateTo({
-						url: '/pages/library/offline-order?chooseBookList='
-						+JSON.stringify(this.chooseBookList)
+						// url: '/pages/library/offline-order?chooseBookList='+JSON.stringify(this.chooseBookList)
+						url: '/pages/library/offline-order'
 					})
 				}
 

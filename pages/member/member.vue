@@ -9,7 +9,7 @@
 		>
 			<swiper-item v-for="(item,index) in memberCard" :key="index" 
 			style="padding: 0 16rpx;">
-				<view class="item card">
+				<view class="item card" :style="{'height': swiperHeight}">
 					<view class="show">
 						<image :src="item.img_url" 
 						v-if="item.img_url && item.img_url != ''"
@@ -34,12 +34,12 @@
 						</view>
 						<!-- 富文本区域 -->
 						<view class="rich-text">
-							<view class="demo">
+							<view class="demo" >
 								<view class="demo-topic">
 									<text>权益说明</text>
 								</view>
-								<view>
-									<rich-text :nodes="item.remark_power"></rich-text>
+								<view style="height: 100rpx; overflow-y: scroll;">
+									<rich-text :nodes="item.remark_power" style="overflow: hidden;"></rich-text>
 								</view>
 							<!-- 	<view>1. 有效期1年</view> 
 								<view>2. 享童书馆无限次数借阅 </view>
@@ -51,8 +51,8 @@
 								<view class="demo-topic">
 									<text>使用说明</text>
 								</view>
-								<view>
-									<rich-text :nodes="item.remark_use"></rich-text>
+								<view style="height: 100rpx; overflow-y: scroll;">
+									<rich-text :nodes="item.remark_use" style="overflow: hidden;"></rich-text>
 								</view>
 							<!-- 	<view>
 									1. 会员卡产品购买以现金支付，购买后不能取消、退款
@@ -103,6 +103,7 @@
 				userInfo: uni.getStorageSync("userInfo"),//个人信息
 				member_status: '',//表示用户是否开通过会员
 				formatMemberDueDate: '',//会员到期日
+				expireTime: '', //会员到期时间
 			}
 		},
 		
@@ -115,22 +116,12 @@
 			uni.getSystemInfo({
 				success: data => {
 					this.popUpWidth = data.windowWidth * 0.8 + 'px'
+					this.swiperHeight = data.windowHeight - 60 + 'px'
 				}
 			})
 		},
 		onReady() {
-			// 动态设置swiper高度(只能在onRead中调用)
-			try{
-				setTimeout(()=> {
-					const query = uni.createSelectorQuery().in(this);
-					query.selectAll('.card').boundingClientRect(data => {
-						this.swiperHeight = data[0].height + 'px'
-						console.log(this.swiperHeight)
-					}).exec();
-				}, 100)
-			}catch(err){
-				console.log(err)
-			}
+
 		},
 		methods: {
 			// 获取用户信息
@@ -140,7 +131,10 @@
 					this.$api.offlineUserDockerInfo({ mobile })
 					.then(res => {
 						let result = res.data
-						this.member_status = result.member_status
+						this.member_status = result.member_status //是否开通会员
+						
+						//会员到期时间
+						this.expireTime = result.formatMemberDueDate ? result.formatMemberDueDate.replace(/-/g, '/') : ''
 						if(result.formatMemberDueDate && result.formatMemberDueDate.replace(/\s*/g, '') != '') {
 							let date = result.formatMemberDueDate.split(' ')[0]
 							let time = date.split('-')
@@ -214,7 +208,8 @@
 										name: item.name,
 										price: item.price,
 										id: item.id,
-										day: item.day
+										day: item.day,
+										expireTime: this.expireTime ? this.expireTime : ''
 									}
 									// 跳转会员购买下单页面
 									uni.navigateTo({
@@ -236,7 +231,8 @@
 						name: item.name,
 						price: item.price,
 						id: item.id,
-						day: item.day
+						day: item.day,
+						expireTime: this.expireTime ? this.expireTime : ''
 					}
 					// 跳转会员购买下单页面
 					uni.navigateTo({
@@ -302,7 +298,7 @@
 		margin-top: -156rpx;
 		border-radius: 30rpx;
 		box-shadow: 0px 3rpx 10rpx 0px rgba(0,0,0,0.16);
-		padding-bottom: 112rpx;
+		padding-bottom: 40rpx;
 	}
 	swiper .context .title {
 		box-sizing: border-box;
@@ -352,7 +348,7 @@
 	
 	swiper .context .rule {
 		box-sizing: border-box;
-		padding: 56rpx 0;
+		padding: 30rpx 0;
 	}
 	swiper .context .rule .agree {
 		display: flex;

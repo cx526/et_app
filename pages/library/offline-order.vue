@@ -212,7 +212,8 @@
 			}
 		},
 		onLoad(option) {
-			this.chooseBookList = JSON.parse(option.chooseBookList)
+			this.chooseBookList = uni.getStorageSync("offlinePlaceBook")
+			// this.chooseBookList = JSON.parse(option.chooseBookList)
 			this.len = this.chooseBookList.length
 			// 获取用户个人信息
 			this.getUserInfo()

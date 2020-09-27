@@ -61,7 +61,7 @@
 			this.name = memberInfo.name //会员卡名称
 			this.price = memberInfo.price //会员卡价格
 			this.id = memberInfo.id //会员卡id
-			let formatMemberDueDate = this.getDateDuration(memberInfo.day) 
+			let formatMemberDueDate = this.getDateDuration(memberInfo.expireTime, memberInfo.day) 
 			this.formatMemberDueDate = this.handleTime(formatMemberDueDate)
 			// 获取用户个人信息(id)
 			this.getUserInfo()
@@ -73,7 +73,6 @@
 				if(mobile && mobile != '') {
 					this.$api.offlineUserDockerInfo({ mobile })
 					.then(res => {
-						console.log(res)
 						this.userInfo.id = res.data.id
 					})
 				}else {
@@ -90,8 +89,14 @@
 				}
 			},
 			// 计算会员卡时间
-			getDateDuration(n) {
-				let time = new Date().getTime()
+			getDateDuration(today, n) {
+				let time = ''
+				if(today == '') {
+					time = new Date().getTime()
+				}else {
+					time = new Date(today).getTime()
+				}
+				
 				let day = time + 3600 * 1000 * 24 * n
 				return day
 			},
@@ -129,7 +134,6 @@
 				}
 				this.$api.buyMemberCard(param).then(res => {
 					uni.hideLoading()
-					console.log(res)
 					let resData = res.data.finalRes.xml
 					this.order_no = res.data.order_no //订单号
 					if(resData.return_code[0] === 'SUCCESS') {
@@ -144,13 +148,11 @@
 					title: '发起支付',
 					mask: true
 				})
-				console.log(prepay_id)
 				// 获取微信签名
 				let {paySign, time, APPID, nonceStr}= wxPay.wxReSign(prepay_id)
 				wxPay.wxPay(time, nonceStr, prepay_id, paySign,
 					// 成功回调
 					res => {
-						console.log(res)
 						if(res.errMsg === "requestPayment:ok") {
 							let param = {
 								userInfo: {
@@ -160,7 +162,6 @@
 							}
 							this.$api.updatePaymentCard(param).then(res => {
 								uni.hideLoading()
-								console.log(res)
 								if(res.data.status === 'ok') {
 									uni.showToast({
 										title: '购买成功',
@@ -168,7 +169,7 @@
 									})
 									//成功支付后跳转页面
 									uni.redirectTo({
-										url: '/pages/member/member-success'
+										url: '/pages/member/member-success?name='+this.name
 									})
 								}else {
 									uni.showToast({
@@ -192,7 +193,7 @@
 			// 立即开通
 			open() {
 				this.buyMemberCard()
-				console.log(this.userInfo)
+				
 				
 			},
 		}

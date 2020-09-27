@@ -8,7 +8,7 @@
 				<view class="main">
 					<text class="use">使用中</text>
 					<view class="time">
-						<text>失效日期：{{ useMemberCard[0].formatDueTime }}</text>
+						<text>到期日期：{{ useMemberCard[0].formatUseTime }}</text>
 					</view>
 				</view>
 			</view>
@@ -29,8 +29,11 @@
 						<view class="item">
 							<view class="left">
 								<text class="title">{{item.memberName}}</text>
-								<text class="time" v-if="item.status != '2'">
+								<text class="time" v-if="item.status == '0'">
 									预计生效日期：{{ item.formatUseTime }}
+								</text>
+								<text class="time" v-else-if="item.status == '1'">
+									到期日期：{{ item.formatUseTime }}
 								</text>
 								<text class="time active" v-else>
 									失效日期：{{ item.formatDueTime }}
@@ -38,6 +41,7 @@
 							</view>
 							<view class="right">
 								<text v-if="item.status == '0'">未生效</text>
+								<text v-else-if="item.status == '1'">使用中</text>
 								<text v-else-if="item.status == '2'">已过期</text>
 							</view>
 						</view>
@@ -119,11 +123,12 @@
 				this.$api.checkMemberRecord(params)
 				.then(res => {
 					let result = res.data
-					this.totalPage = result.totalPage - 1 //总条数
+					this.totalPage = result.totalPage //总条数
+					let filterList = result.rows
 					// 剔除正在使用的会员卡
-					let filterList =  result.rows && result.rows.filter(item => {
-						return item.status != '1'
-					})
+					// let filterList =  result.rows && result.rows.filter(item => {
+					// 	return item.status != '1'
+					// })
 					// 保存正在使用会员卡的数据
 					this.useMemberCard = result.rows && result.rows.filter(item => {
 						return item.status == "1"
