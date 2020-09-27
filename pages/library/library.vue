@@ -57,8 +57,12 @@
 			<!-- 列表 -->
 			<view class="list" id="list">
 				<template v-if="productList && productList.length > 0">
-					<view class="item" v-for="(item, index) in productList" :key="index" @tap="goDetail(item.id)" v-if="item.show_status == 1">
-						<view >
+					<view class="item" 
+					v-for="(item, index) in productList" 
+					:key="index" 
+					@tap="goDetail(item.id)" 
+					v-if="item.show_status == 1 && item.stockCount.totalDockerUse !=0">
+						<view>
 							<image :src="item.forGoodsPic[0].url" mode="" class="show"></image>
 							<!-- 无库存显示totalDockerUse -->
 							<view class="none-stock" 

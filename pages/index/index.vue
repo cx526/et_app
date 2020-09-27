@@ -437,14 +437,14 @@ export default {
 				})
 				return
 			}
-			// else if(toUrl === '/pages/member/member') {
-			// 	uni.showToast({
-			// 		title: '敬请期待',
-			// 		icon: 'none',
-			// 		duration: 2000
-			// 	})
-			// 	return
-			// }
+			else if(toUrl === '/pages/member/member') {
+				uni.showToast({
+					title: '敬请期待',
+					icon: 'none',
+					duration: 2000
+				})
+				return
+			}
 			else {
 				uni.navigateTo({ url: toUrl });
 			}

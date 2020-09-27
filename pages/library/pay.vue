@@ -235,7 +235,7 @@
 									event: "recharge",//充值类型
 									order_no: order_no,//订单号
 									shell: this.value * 10, //充值金额
-									deposit: this.userInfo.deposit >= 29 ? 0 : 29, //押金
+									deposit: 0, //押金
 									totalMoney: this.totalMoney, // 充值金额+押金
 								}).then(res => {
 									uni.hideLoading()

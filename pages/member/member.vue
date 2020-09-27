@@ -23,7 +23,7 @@
 							<view class="name"><text>{{ item.name }}</text></view>
 							<view class="price">
 								<view>
-									<text style="font-size: 30rpx;margin-right: 6rpx;">									 			{{ item.price_name }}￥
+									<text style="font-size: 30rpx;margin-right: 6rpx;">									 			{{ item.price_name ? item.price : '' }}￥
 									</text>
 									<text>{{ item.price }}</text>
 								</view>

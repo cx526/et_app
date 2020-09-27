@@ -98,14 +98,14 @@ export default {
 					return;
 				}
 				// 会员页面
-				// if(toUrl === '/pages/member/member') {
-				// 	// uni.showToast({
-				// 	// 	title: '敬请期待',
-				// 	// 	duration: 2000,
-				// 	// 	icon: 'none'
-				// 	// })
-				// 	return
-				// }
+				if(toUrl === '/pages/member/member') {
+					uni.showToast({
+						title: '敬请期待',
+						duration: 2000,
+						icon: 'none'
+					})
+					return
+				}
 				if(toUrl === '/pages/library/tied-card') {
 					// 如果是教师身份默认不给进修改信息页面
 					if(this.custom_type == 0 && this.custom_type != '') {
