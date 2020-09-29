@@ -32,26 +32,26 @@
 								{{!userInfo.name || userInfo.name === 'guest' ? '五车书游客, 您好！' : userInfo.name}}
 								</text>
 								<!-- 后端返回 -->
-								<!-- <image mode="widthFix" v-if="isLogin && member_status == 1 && memberIcon && memberIcon != ''"
+								<image mode="widthFix" v-if="isLogin && member_status == 1 && memberIcon && memberIcon != ''"
 								:src="memberIcon">
-								</image> -->
+								</image>
 								
 							</view>
-							<!-- <template v-if="isLogin">
+							<template v-if="isLogin">
 								<text style="font-size: 20rpx;" v-if="!member_status">
 									您当前尚未开通会员服务
 								</text>
 								<text style="font-size: 20rpx;" v-else>
 									会员到期日：{{ formatMemberDueDate }}
 								</text>
-							</template> -->
+							</template>
 							
 							
 						</view>
 						
 					
 					</view>	
-					<!-- <view class="user-right" v-if="isLogin">
+					<view class="user-right" v-if="isLogin">
 						<image mode="widthFix"
 						:src="$aliImage + 'menber-btn.png'" 
 						v-if="!member_status"
@@ -61,9 +61,9 @@
 						mode="widthFix"
 						v-else>
 						</image>
-					</view> -->
+					</view>
 				</view>
-				<!-- <view class="borrow-count" v-if="isLogin && member_status == '1'"
+				<view class="borrow-count" v-if="isLogin && member_status == '1'"
 				@tap="checkRecord">
 					<view style="flex: 1;">
 					</view>
@@ -74,7 +74,7 @@
 						</image>
 					</view>
 					
-				</view> -->
+				</view>
 			</view>
 			
 			

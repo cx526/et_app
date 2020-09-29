@@ -98,14 +98,14 @@ export default {
 					return;
 				}
 				// 会员页面
-				if(toUrl === '/pages/member/member') {
-					uni.showToast({
-						title: '敬请期待',
-						duration: 2000,
-						icon: 'none'
-					})
-					return
-				}
+				// if(toUrl === '/pages/member/member') {
+				// 	uni.showToast({
+				// 		title: '敬请期待',
+				// 		duration: 2000,
+				// 		icon: 'none'
+				// 	})
+				// 	return
+				// }
 				if(toUrl === '/pages/library/tied-card') {
 					// 如果是教师身份默认不给进修改信息页面
 					if(this.custom_type == 0 && this.custom_type != '') {
@@ -118,14 +118,14 @@ export default {
 					}
 				}
 				// 收货地址暂时关闭
-				if(toUrl === '/pages/cart/addressList') {
-					uni.showToast({
-						title: '邮寄系统升级，暂不对外开放提示！',
-						icon: 'none',
-						duration: 1500
-					})
-					return
-				}
+				// if(toUrl === '/pages/cart/addressList') {
+				// 	uni.showToast({
+				// 		title: '邮寄系统升级，暂不对外开放提示！',
+				// 		icon: 'none',
+				// 		duration: 1500
+				// 	})
+				// 	return
+				// }
 				uni.navigateTo({url: toUrl});
 				if (toUrl === '/pages/promote/promoteSummeryBook'){
 					uni.switchTab({

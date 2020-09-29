@@ -139,6 +139,14 @@
 			},
 			// 改变充值金额
 			changeMoney(index) {
+				if(index == 2 || index == 3 || index == 4) {
+					uni.showToast({
+						title: '畅读年卡无限次会员借阅更优惠哦',
+						icon: 'none',
+						duration: 2000
+					})
+				}
+				// 点击index
 				this.moneyList.currentIndex = index;
 				if(index !== 5) {
 					this.value = this.moneyList.list[index].money;

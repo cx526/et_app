@@ -157,12 +157,12 @@ export default {
 			groupList: [
 				{
 					name: '童书馆',
-					img: 'https://et-pic-server.oss-cn-shenzhen.aliyuncs.com/app_img/index_button_02.png',
+					img: 'https://et-pic-server.oss-cn-shenzhen.aliyuncs.com/app_img/index-button-01.png',
 					toUrl: '/pages/library/library'	
 				},
 				{
 					name: '选绘本',
-					img: 'https://et-pic-server.oss-cn-shenzhen.aliyuncs.com/app_img/index_button_01.png',
+					img: 'https://et-pic-server.oss-cn-shenzhen.aliyuncs.com/app_img/index-button-02.png',
 					toUrl: './kind'
 				},
 				{
@@ -437,14 +437,14 @@ export default {
 				})
 				return
 			}
-			else if(toUrl === '/pages/member/member') {
-				uni.showToast({
-					title: '敬请期待',
-					icon: 'none',
-					duration: 2000
-				})
-				return
-			}
+			// else if(toUrl === '/pages/member/member') {
+			// 	uni.showToast({
+			// 		title: '敬请期待',
+			// 		icon: 'none',
+			// 		duration: 2000
+			// 	})
+			// 	return
+			// }
 			else {
 				uni.navigateTo({ url: toUrl });
 			}
