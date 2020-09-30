@@ -1,12 +1,16 @@
 <template>
 	<view class="offline-box" :style="{ 'min-height': minHeight }">
-		<view class="notice-box">
-			<text>我的五车贝：</text>
-			<text style="margin-right: 16rpx;">{{ shell }}</text>
-			<text>剩余免费书本：</text>
-			<text>{{ free }}</text>
+		<view style="margin-top: 20rpx;box-sizing: border-box;padding-bottom: 16rpx;background: #fff;">
+			<view class="notice-box">
+				<text>我的五车贝：</text>
+				<text style="margin-right: 16rpx;">{{ shell }}</text>
+				<text>剩余免费书本：</text>
+				<text>{{ free }}</text>
+			</view>
+			<view style="font-size: 30rpx;background: #fff;text-align: center;line-height: 40rpx"><text>1个订单只能用1本免费借阅额度哦</text></view>
 		</view>
-		<view style="font-size: 30rpx;background: #fff;text-align: center;line-height: 40rpx;"><text>1个订单只能用1本免费借阅额度哦</text></view>
+		
+		
 		<!-- 没有书籍时显示 -->
 		<view class="none-books" v-if="booksNumber == 0" @tap="chooseBooks">
 			<view class="none">
@@ -700,7 +704,7 @@ export default {
 	background: #fff;
 	color: #333;
 	line-height: 60rpx;
-	margin-top: 20rpx;
+	
 }
 .offline-box .notice-box text:nth-child(2) {
 	color: rgb(0, 128, 0);
@@ -736,7 +740,7 @@ export default {
 .offline-box .item {
 	background: #fff;
 	box-shadow: 0rpx 0rpx 12rpx #ddd;
-	border-radius: 16rpx;
+	border-radius: 20rpx;
 	margin-top: 24rpx;
 	padding: 20rpx 20rpx 20rpx 12rpx;
 	width: 98%;

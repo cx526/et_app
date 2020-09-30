@@ -118,7 +118,7 @@ export default {
 	background-color: #2AAEC4;
 	border-top-left-radius: 20upx;
 	border-bottom-left-radius: 20upx;
-	padding:5upx 10upx;
+	padding:5upx 14upx;
 	box-sizing: border-box;
 /* 	position: relative;
 	right: -20rpx; */

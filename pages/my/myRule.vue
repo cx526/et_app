@@ -10,6 +10,26 @@
 			</view>
 		</view>
 		<view class="bg">
+			<swiper :current=currentIndex @change="swiperChange" :style="{'height': swiperHeight}">
+				<swiper-item >
+						<image @load="onlineLoad"
+						:src="$aliImage + 'rule-online.png'" 
+						mode="widthFix"></image>
+						<image :src="$aliImage + 'service-code.png'"
+						mode="widthFix" class="code" @tap="save"></image>
+				</swiper-item>
+				<swiper-item>
+						<image @load="offflineLoad"
+						:src="$aliImage + 'rule-offline-02.png'" 
+						mode="widthFix"></image>
+						<image :src="$aliImage + 'service-code.png'"
+						mode="widthFix" class="code" @tap="save"></image>
+				</swiper-item>
+				
+			</swiper>
+			
+		</view>
+		<!-- <view class="bg">
 			<image v-if="currentIndex == 0"
 			:src="$aliImage + 'rule-online.png'" 
 			mode="widthFix"></image>
@@ -18,7 +38,7 @@
 			mode="widthFix"></image>
 			<image :src="$aliImage + 'service-code.png'" 
 			mode="widthFix" class="code" @tap="save"></image>
-		</view>
+		</view> -->
 	</view>
 </template>
 
@@ -26,6 +46,9 @@
 	export default {
 		data() {
 			return {
+				swiperHeight: 0,
+				onlineHeight: 0,
+				offflineHeight: 0,
 				$aliImage: this.$aliImage,
 				currentIndex: 1,
 				tabList: [
@@ -38,10 +61,28 @@
 				],
 			}
 		},
+		onReady() {
+			this.currentIndex == 0 ? this.swiperHeight = this.onlineHeight : this.swiperHeight = this.offflineHeight
+		},
 		methods: {
+			
 			// tab切换
 			changeTab(index) {
 				this.currentIndex = index;
+				this.currentIndex == 0 ? this.swiperHeight = this.onlineHeight : this.swiperHeight = this.offflineHeight
+			},
+			// 获取图片高度
+			onlineLoad(event) {
+				console.log(event)
+				this.onlineHeight = event.detail.height + 'rpx'
+			},
+			offflineLoad(event) {
+				this.offflineHeight = event.detail.height + 'rpx'
+				this.swiperHeight = this.offflineHeight
+			},
+			swiperChange(event) {
+				this.currentIndex = event.detail.current
+				this.currentIndex == 0 ? this.swiperHeight = this.onlineHeight : this.swiperHeight = this.offflineHeight
 			},
 			// 保存二维码图片
 			save() {

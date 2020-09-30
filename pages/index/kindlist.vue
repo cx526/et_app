@@ -10,12 +10,12 @@
 					@tabChange="tabChange"
 					:sliderMargin="30"
 					sliderColor="#FFFFFF"
-					type="fill"
 					selectColor="#2AAEC4"
-					textColor="#FFFFFF"
+					textColor="##000000"
 					ref="tabs0"
 					aniType="extend"
 				></cl-tabs>
+			
 			</view>
 
 			<!-- 数据列表 -->
@@ -43,7 +43,7 @@
 		<!-- 书篮浮窗 -->
 		<view class="book-cart-position" @tap="openBookCartList">
 			<view class="book-cart-content-position">
-				<view class="book-cart-style"><image src="https://et-pic-server.oss-cn-shenzhen.aliyuncs.com/app_img/bookdetail_cart.png" class="book-cart-img-style"></image></view>
+				<view class="book-cart-style"><image src="https://et-pic-server.oss-cn-shenzhen.aliyuncs.com/app_img/book-cart.png" class="book-cart-img-style"></image></view>
 				<view class="book-cart-count-style" v-if="cartBookCount != 0">
 					<text>{{ cartBookCount }}</text>
 				</view>
@@ -64,6 +64,7 @@
 
 <script>
 import clTabs from '../../components/cl-tabs/cl-tabs.vue';
+import vTabs from '../../components/v-tabs/v-tabs.vue';
 import etKindlist from '../../components/etKindlist.vue';
 import etImgbox from '../../components/etImgbox.vue';
 import etBookCartList from '../../components/etBookCartList.vue';
@@ -81,7 +82,8 @@ export default {
 		etBookCartList,
 		uniPopup,
 		uniPopupMessage,
-		uniPopupDialog
+		uniPopupDialog,
+		vTabs
 	},
 	data() {
 		return {
@@ -332,7 +334,7 @@ export default {
 	flex-wrap: wrap;
 	justify-content: space-between;
 	box-sizing: border-box;
-	padding: 0 30rpx;
+	padding: 24rpx 30rpx;
 }
 .list-content {
 	width: 45%;

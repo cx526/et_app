@@ -132,7 +132,7 @@
 		</view>
 		<!-- 书篮 -->
 		<view class="library-box" v-if="len" @tap="goCart">
-			<image :src="$aliImage + 'bookdetail_cart.png'" mode=""></image>
+			<image :src="$aliImage + 'book-cart.png'" mode=""></image>
 			<text>{{ len }}</text>
 		</view>
 		<!-- 加载组件 -->
@@ -750,7 +750,7 @@ page {
 	width: 48.5%;
 	margin-top: 20rpx;
 	box-shadow: 0rpx 0rpx 20rpx rgba(179, 179, 179, 0.3);
-	border-radius: 8rpx;
+	border-radius: 8px;
 	padding: 20rpx 30rpx;
 	display: flex;
 	justify-content: center;

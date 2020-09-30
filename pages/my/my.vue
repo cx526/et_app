@@ -81,7 +81,7 @@
 		</view>
 		
 		<view class="content-position">
-			<view class="white-space"></view>
+			<!-- <view class="white-space"></view> -->
 			<!-- 线下订单 -->
 			<view class="offline-box">
 				<view class="offline">

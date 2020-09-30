@@ -3,8 +3,10 @@
 		<scroll-view class="tab-bar" :scroll="false" scroll-x scroll-with-animation
 			:show-scrollbar="false" :scroll-into-view="scrollInto">
 			<view class="tab-box" id="tab-box" :style="{justifyContent: center?'center':'flex-start'}">
-				<view v-for="(item,index) in tabBars" class="tab" @tap="tapTab(index)" :id="`tab_${index}`" ref="tab" :key="index" >
+				<view v-for="(item,index) in tabBars" class="tab" @tap="tapTab(index)" :id="`tab_${index}`" ref="tab" :key="index" style="position: relative;">
 					<view :animation="animationData[index]" class="title" :id="`text_${index}`" :style="{color:index==tabIndex?selectColor:textColor,width:tabWidth}">{{item.tab||item}}</view>
+					<!-- line -->
+					<view v-if="index == tabIndex" class="line"></view>
 				</view>
 				<block v-if="type!='default'">
 					<view :class="[type]" :animation="animationSlider" ref="slider" id="slider" :style="sliderBgColor+sliderPosition"></view>
@@ -302,6 +304,15 @@
 </script>
 
 <style lang="scss" scoped>
+.line {
+	position: absolute;
+	left: 0;
+	bottom: 0;
+	height: 12rpx;
+	width: 100%;
+	background: #2AAEC4;
+	border-radius: 12rpx;
+}
 .tabs{
 	// width: 750rpx;
 	width: 100%;
@@ -309,8 +320,9 @@
 	flex-direction: row;
 	padding: 0 0;
 	align-items: center;
-	background-color: #2AAEC4;
-	border-radius: 40upx;
+	background-color: #EBF8FF;
+	// background-color: #2AAEC4;
+	// border-radius: 40upx;
 }
 .tab{
 	display: flex;

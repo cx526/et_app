@@ -18,7 +18,7 @@
 						mode="widthFix"></image>
 						<text style="font-size: 24rpx; position: absolute; right: 56rpx; bottom: 50rpx; color: #fff;">五车书校园智慧童书馆</text>
 					</view>
-					<view class="context">
+					<view class="context" style="height: 1100rpx;">
 						<view class="title">
 							<view class="name"><text>{{ item.name }}</text></view>
 							<view class="price">
@@ -38,7 +38,7 @@
 								<view class="demo-topic">
 									<text>权益说明</text>
 								</view>
-								<view style="height: 200rpx; overflow-y: scroll;">
+								<view style="max-height: 200rpx; overflow-y: scroll;">
 									<rich-text :nodes="item.remark_power" style="overflow: hidden;"></rich-text>
 								</view>
 							<!-- 	<view>1. 有效期1年</view> 
@@ -51,7 +51,7 @@
 								<view class="demo-topic">
 									<text>使用说明</text>
 								</view>
-								<view style="height: 200rpx; overflow-y: scroll;">
+								<view style="max-height: 200rpx; overflow-y: scroll;">
 									<rich-text :nodes="item.remark_use" style="overflow: hidden;"></rich-text>
 								</view>
 							<!-- 	<view>
@@ -64,20 +64,24 @@
 								</view> -->
 							</view>
 						</view>
-						<view class="rule">
-							<view class="agree">
-								<radio style="transform: scale(0.6);" color="#2aaec4" 
-								 @tap="agreement(item, index)" :checked="item.isChecked" />
-								<view>
-									<text style="color: #808080;">我已阅读并同意</text>
-									<text style="color: #2AAEC4;" @tap="checkMember">
-										会员权益协议</text>
+						<view style="position: absolute;bottom: 60rpx;left: 26rpx;width: 100%;box-sizing: border-box;">
+							<view class="rule">
+								<view class="agree">
+									<radio style="transform: scale(0.6);" color="#2aaec4" 
+									 @tap="agreement(item, index)" :checked="item.isChecked" />
+									<view>
+										<text style="color: #808080;">我已阅读并同意</text>
+										<text style="color: #2AAEC4;" @tap="checkMember">
+											会员权益协议</text>
+									</view>
 								</view>
 							</view>
+							<view class="btn">
+								<view @tap="goBuy(item)" style="width: 416rpx;"><text>立即购买</text></view>
+							</view>
 						</view>
-						<view class="btn">
-							<view @tap="goBuy(item)"><text>立即购买</text></view>
-						</view>
+						
+						
 					</view>
 					
 				</view>
@@ -266,8 +270,10 @@
 	}
 	swiper {
 		box-sizing: border-box;
-		/* padding: 0 65rpx; */
-		margin-top: -274rpx;
+		position: absolute;
+		left: 0;
+		top: 66rpx;
+		width: 100%;
 	}
 	swiper-item {
 		box-sizing: border-box;
