@@ -410,6 +410,7 @@
 						// 调起微信支付
 						wxPay.wxPay(time, nonceStr, resData.prepay_id[0], paySign,
 							res => {
+								console.log(res)
 								if(res.errMsg === "requestPayment:ok") {
 									this.$api.offlineUpdatePayMent({
 										userInfo: userInfo,//个人信息

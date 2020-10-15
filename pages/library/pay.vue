@@ -1,5 +1,6 @@
 <template>
 	<view class="context">
+		<image class="banner" mode="widthFix" :src="$aliImage + 'member-extand.png'" @tap="goMember"></image>
 		<view class="list">
 			<view class="item">
 				<view class="label">
@@ -75,9 +76,9 @@
 			<view class="item">
 				<text>3.充值后不可提现</text>
 			</view>
-			<view class="item">
+			<!-- <view class="item">
 				<text>4.首次线下借阅需要提交29元押金（线上已提交过且押金大于29元的不需要再次提交押金，押金可退）</text>
-			</view>
+			</view> -->
 		</view>
 		<!-- 充值按钮 -->
 		<view class="btn">
@@ -136,6 +137,12 @@
 			// 自定义输入金额
 			customMoney(event) {
 				this.value = (+event.detail.value);
+			},
+			// 跳转会员列表页
+			goMember() {
+				uni.navigateTo({
+					url: '/pages/member/member'
+				})
 			},
 			// 改变充值金额
 			changeMoney(index) {
@@ -285,6 +292,11 @@
 	.context {
 		box-sizing: border-box;
 		padding: 36rpx;
+	}
+	.banner {
+		display: block;
+		width: 100%;
+		margin-bottom: 20rpx;
 	}
 	.list {
 		box-sizing: border-box;

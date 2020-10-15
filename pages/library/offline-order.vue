@@ -249,6 +249,7 @@
 					// 免费次数
 					this.free = Number(data.free_bind) + Number(data.free_month)
 					? Number(data.free_bind) + Number(data.free_month) : 0
+					console.log(this.integrate, this.free)
 					// 用户id
 					this.id = data.id
 					// 用户所在的学校
@@ -264,8 +265,8 @@
 					if(this.card_no && this.card_no.replace(/\s*/g, '') != '') {
 						this.card_type = this.checkCardType(this.card_no)
 					}
-					// 如果是老师卡需要判断该老师当天是否已免费借过一次(一本) 1学生 0老师
-					if(data.custom_type == '0') {
+					// 如果是老师卡需要判断该老师/园长当天是否已免费借过一次(一本) 1学生 0老师
+					if(data.custom_type == '0' || data.custom_type == '2') {
 						this.checkTeacherTodayOfflineOrde(this.id)
 					}
 					// 选择默认支付方式
@@ -378,6 +379,9 @@
 					} else if (cardType === '1') {
 						// 学生卡
 						return 'STUDENT_CARD'
+					}else if (cardType === '2') {
+						// 园长卡
+						return 'LEADER_CARD'
 					}
 				}else {
 					return ''
@@ -436,9 +440,9 @@
 				});
 				this.goods_id = goodsIDs.join(',')
 				switch(this.type) {
-					// 积分借阅(老师卡积分借阅不需要押金)
+					// 积分借阅(老师卡/园长卡积分借阅不需要押金)
 					case "coin":
-						if(this.deposit < 29 && this.card_type != 'TEACHER_CARD') {
+						if(this.deposit < 29 && this.card_type != 'TEACHER_CARD' && this.card_type != 'LEADER_CARD') {
 							// 如果不是会员(学生)
 							if(this.member_status != "1") {
 								// 押金不足弹窗显示
@@ -454,9 +458,9 @@
 							this.placeOrder(this.goods_id, 'coin')
 						}
 						break
-					// 五车贝支付(老师借阅不需要押金)
+					// 五车贝支付(老师/园长借阅不需要押金)
 					case "shell":
-						if(this.deposit < 29 && this.card_type != 'TEACHER_CARD') {
+						if(this.deposit < 29 && this.card_type != 'TEACHER_CARD' && this.card_type != 'LEADER_CARD') {
 							if(this.member_status != "1") {
 								// 押金不足弹窗显示
 								this.$refs.depositPopUp.open()

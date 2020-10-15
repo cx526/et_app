@@ -905,21 +905,21 @@ page {
 	height: 120rpx;
 	right: 0;
 	bottom: 300rpx;
-	background: #fff;
+	/* background: #fff; */
 	z-index: 20;
-	box-shadow: 0rpx 0rpx 20rpx rgba(179, 179, 179, 1);
+	/* box-shadow: 0rpx 0rpx 20rpx rgba(179, 179, 179, 1); */
 	display: flex;
 	justify-content: center;
 	align-items: center;
 }
 .library-box image {
-	width: 80rpx;
-	height: 80rpx;
+	width: 100%;
+	height: 100%;
 }
 .library-box text {
 	position: absolute;
 	left: 60%;
-	top: 7%;
+	top: -12rpx;
 	width: 40rpx;
 	height: 40rpx;
 	border-radius: 50%;

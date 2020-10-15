@@ -108,9 +108,9 @@ export default {
 				// }
 				if(toUrl === '/pages/library/tied-card') {
 					// 如果是教师身份默认不给进修改信息页面
-					if(this.custom_type == 0 && this.custom_type != '') {
+					if(this.custom_type == '0' || this.custom_type == '2') {
 						uni.showToast({
-							title: "您的身份是老师，请前往老师端修改信息",
+							title: "您的身份不是学生，请前往老师端查看/修改信息",
 							icon: 'none',
 							duration: 2000
 						})
@@ -118,14 +118,14 @@ export default {
 					}
 				}
 				// 收货地址暂时关闭
-				// if(toUrl === '/pages/cart/addressList') {
-				// 	uni.showToast({
-				// 		title: '邮寄系统升级，暂不对外开放提示！',
-				// 		icon: 'none',
-				// 		duration: 1500
-				// 	})
-				// 	return
-				// }
+				if(toUrl === '/pages/cart/addressList') {
+					uni.showToast({
+						title: '邮寄系统升级，暂不对外开放提示！',
+						icon: 'none',
+						duration: 1500
+					})
+					return
+				}
 				uni.navigateTo({url: toUrl});
 				if (toUrl === '/pages/promote/promoteSummeryBook'){
 					uni.switchTab({

@@ -1,12 +1,6 @@
 {
 
 	"pages": [
-		  // {
-		  //     "path" : "pages/member/member-record",
-		  //     "style" : {
-				// 		"navigationBarTitleText": "会员开通记录"
-				// 	}
-		  // },
 		{
 			"path": "pages/index/index",
 			"style": {
@@ -374,7 +368,7 @@
 		{
 			"path": "pages/index/bookdetail",
 			"style": {
-				"navigationBarTitleText": "商品详情",
+				"navigationBarTitleText": "绘本详细",
 				"app-plus": {
 					"titleNView": false
 				}
@@ -446,7 +440,7 @@
 		}, {
 			"path": "pages/library/offline-bookdetail",
 			"style": {
-				"navigationBarTitleText": "商品详情"
+				"navigationBarTitleText": "绘本详细"
 			}
 		},
 		{
@@ -492,13 +486,12 @@
 			"style": {}
 		}
 		// 会员
-		,{
+		, {
 			"path": "pages/member/member",
 			"style": {
 				"navigationBarTitleText": "会员"
 			}
-		}
-		, {
+		}, {
 			"path": "pages/member/buy-member",
 			"style": {
 				"navigationBarTitleText": "会员购买"
@@ -510,26 +503,23 @@
 			"style": {
 				"navigationBarTitleText": "购买成功"
 			}
-		}
-		,{
-				"path" : "pages/member/member-agreement",
-				"style" : {
-					"navigationBarTitleText": "会员权益协议说明"
-				}
+		}, {
+			"path": "pages/member/member-agreement",
+			"style": {
+				"navigationBarTitleText": "会员权益协议说明"
 			}
-        ,{
-            "path" : "pages/index/swiper-article",
-            "style" : {
-							"navigationBarTitleText": "五车书绘本借阅"
-						}
-        }
-        ,{
-            "path" : "pages/member/member-record",
-            "style" : {
-							"navigationBarTitleText": "会员开通记录"
-						}
-        }
-    ],
+		}, {
+			"path": "pages/index/swiper-article",
+			"style": {
+				"navigationBarTitleText": "五车书绘本借阅"
+			}
+		}, {
+			"path": "pages/member/member-record",
+			"style": {
+				"navigationBarTitleText": "会员开通记录"
+			}
+		}
+	],
 	"globalStyle": {
 		"navigationBarTextStyle": "black",
 		"navigationBarBackgroundColor": "#FFFFFF",
