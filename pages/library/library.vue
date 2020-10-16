@@ -182,7 +182,7 @@ export default {
 			popUpWidth: 0,
 			typeList: [],
 			currentPage: 1, // 请求接口的当前页码
-			pageSize: 10, //接口每次返回几条数据
+			pageSize: 20, //接口每次返回几条数据
 			isType: true, //区别是全部上拉加载更多还是单个分类上拉加载更多
 			id: '', //请求分类的id
 			windowHeight: 0,
