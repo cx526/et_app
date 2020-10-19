@@ -51,7 +51,7 @@
 		<view class="grey-space"></view>
 		<view class="out-position">
 			<view class="out-content" style="position-bottom:15upx;">
-				<text class="title-content-process">商品简介</text>
+				<text class="title-content-process">绘本简介</text>
 			</view>
 		</view>
 		
@@ -60,9 +60,13 @@
 		</view>
 		
 		<view class="white-space"></view>
-		
-		<view class="process-position">
-			<image :src="bookInfo.detail" mode="widthFix"></image>
+		<!-- 商品详情图片 -->
+		<view class="process-position" v-if="detailArr && detailArr.length > 0" 
+		style="text-align: center;">
+			<block v-for="(item, index) in detailArr" :key="index">
+				<image :src="item" mode="widthFix" style="width: 100%;"></image>
+			</block>
+			
 		</view>
 		
 		<view class="white-space"></view>
@@ -137,7 +141,8 @@ export default {
 				{
 					'imgUrl' : "../static/bookdetail/people.png"
 				}
-			]
+			],
+			detailArr: [] , //商品详情图片
 		}
 	},
 	onLoad(option) {
@@ -192,8 +197,17 @@ export default {
 				filterItems: {'id': this.bookID} ,
 				docker_mac: docker_mac
 			}).then(res => {
+				uni.hideLoading();
 			   this.bookInfo = res.data.rows[0];
-			   uni.hideLoading();
+				 console.log(this.bookInfo)
+				 // 处理商品详情图片
+				 if(this.bookInfo.detailArr && this.bookInfo.detailArr.length > 0) {
+					 this.bookInfo.detailArr.map(item => {
+						 this.detailArr.push(item.url)
+					 })
+				 }
+				 console.log(this.detailArr)
+			   
 			})
 		},
 		swiperChange(e) {
@@ -311,7 +325,12 @@ export default {
 	}
 }
 </script>
-
+<style>
+	page {
+		box-sizing: border-box;
+		padding-bottom: 120rpx;
+	}
+</style>
 <style scoped>
 .grey-space {
 	background-color: #E6E6E6;
@@ -411,8 +430,11 @@ export default {
 	width: 100%;
 	height: auto;
 	display: flex;
+	flex-wrap: wrap;
 	align-items: center;
 	justify-content: center;
+	box-sizing: border-box;
+	padding: 0 5%;
 }
 .out-img {
 	/* height: 180upx; */

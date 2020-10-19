@@ -43,7 +43,9 @@
 		<!-- 书篮浮窗 -->
 		<view class="book-cart-position" @tap="openBookCartList">
 			<view class="book-cart-content-position">
-				<view class="book-cart-style"><image src="https://et-pic-server.oss-cn-shenzhen.aliyuncs.com/app_img/book-cart.png" class="book-cart-img-style"></image></view>
+				<view class="book-cart-style">
+					<image src="https://et-pic-server.oss-cn-shenzhen.aliyuncs.com/app_img/book-cart.png" class="book-cart-img-style"></image>
+				</view>
 				<view class="book-cart-count-style" v-if="cartBookCount != 0">
 					<text>{{ cartBookCount }}</text>
 				</view>
@@ -350,11 +352,13 @@ export default {
 	align-items: center;
 }
 .book-cart-content-position {
-	width: 90upx;
-	height: 90upx;
+	/* width: 90upx;
+	height: 90upx; */
+	width: 120rpx;
+	height: 120rpx;
 	border-radius: 50%;
-	padding: 10upx;
-	background-color: rgba(196, 198, 206, 0.7);
+	/* padding: 10upx; */
+	/* background-color: rgba(196, 198, 206, 0.7); */
 	position: relative;
 
 	display: flex;
@@ -363,8 +367,8 @@ export default {
 	align-items: center;
 }
 .book-cart-img-style {
-	width: 70upx;
-	height: 70upx;
+	width: 120rpx;
+	height: 120rpx;
 }
 .book-cart-count-style {
 	position: absolute;

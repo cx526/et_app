@@ -146,7 +146,7 @@
 			},
 			// 改变充值金额
 			changeMoney(index) {
-				if(index == 2 || index == 3 || index == 4) {
+				if(index == 1 || index == 2 || index == 3 || index == 4) {
 					uni.showToast({
 						title: '畅读年卡无限次会员借阅更优惠哦',
 						icon: 'none',

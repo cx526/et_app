@@ -31,8 +31,7 @@
 						<text>{{ deposit }}</text>
 					</view>
 					<!-- 有押金显示退还 -->
-					<view class="btn" @tap="goDeposit" v-if="deposit > 0"
-					style="background: #f00;">
+					<view class="btn" @tap="goDeposit" v-if="deposit > 0">
 						<text>{{ refundInfoText }}</text>
 					</view>
 					<!-- 无押金显示充值 -->
