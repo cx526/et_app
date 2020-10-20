@@ -91,7 +91,7 @@
 		<!-- 商品详情图 -->
 		<view class="process-position" v-if="detailArr && detailArr.length > 0" style="text-align: center;">
 			<block v-for="(item, index) in detailArr" :key="index">
-				<image :src="item" mode="widthFix" style="width: 100%;"></image>
+				<image :src="item" mode="widthFix" style="width: 100%; margin-bottom: 10rpx;"></image>
 			</block>
 			
 		</view>
