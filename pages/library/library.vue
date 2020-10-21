@@ -192,7 +192,7 @@ export default {
 			free: 0,//免费借阅次数
 			docker_mac: '',
 			isSearch: false,
-			
+			tempFilePaths: ''
 		};
 	},
 	components: {
@@ -269,6 +269,7 @@ export default {
 		}
 	},
 	methods: {
+		
 		// 检测用户的登录状态
 		getLogin() {
 			let userInfo = uni.getStorageSync('userInfo');
