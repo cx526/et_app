@@ -8,6 +8,24 @@
 			:class="currentIndex == index ? 'active' : ''">
 				<text>{{ item.title }}</text>
 			</view>
+			
+		</view>
+		<view class="notice">
+			<view class="item">
+				<text>标记</text>
+				<image :src="$aliImage + 'book-logo-02.png'" mode="widthFix"></image>
+				<text>的书本仅可童书馆借阅，在学校智能书柜取书/还书</text>
+			</view>
+			<view class="item">
+				<text>标记</text>
+				<image :src="$aliImage + 'book-logo-01.png'" mode="widthFix"></image>
+				<text>的书本仅可邮寄借阅，通过快递取书/还书</text>
+			</view >
+			<view class="item">
+				<text>标记</text>
+				<image :src="$aliImage + 'book-logo-03.png'" mode="widthFix"></image>
+				<text>的书本可童书馆借阅或邮寄借阅</text>
+			</view>
 		</view>
 		<view class="bg">
 			<swiper :current=currentIndex @change="swiperChange" :style="{'height': swiperHeight}">
@@ -29,16 +47,7 @@
 			</swiper>
 			
 		</view>
-		<!-- <view class="bg">
-			<image v-if="currentIndex == 0"
-			:src="$aliImage + 'rule-online.png'" 
-			mode="widthFix"></image>
-			<image v-if="currentIndex == 1"
-			:src="$aliImage + 'rule-offline-02.png'" 
-			mode="widthFix"></image>
-			<image :src="$aliImage + 'service-code.png'" 
-			mode="widthFix" class="code" @tap="save"></image>
-		</view> -->
+		
 	</view>
 </template>
 
@@ -169,5 +178,23 @@
 		bottom: 260rpx;
 		left: 50%;
 		transform: translateX(-50%);
+	}
+	.notice {
+		box-sizing: border-box;
+		padding: 0 10rpx;
+	}
+	.notice .item {
+		/* display: flex; */
+	/* 	flex-wrap: wrap;
+		align-items: center; */
+		font-size: 26rpx;
+		line-height: 60rpx;
+		text-align: center;
+	}
+	.notice .item image {
+		width: 60rpx;
+		margin: 0 10rpx;
+		position: relative;
+		top: 6rpx;
 	}
 </style>
