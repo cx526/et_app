@@ -4,7 +4,7 @@
 			<view class="notice-box">
 				<text>我的五车贝：</text>
 				<text style="margin-right: 16rpx;">{{ shell }}</text>
-				<text>剩余免费书本：</text>
+				<text>剩余免费次数：</text>
 				<text>{{ free }}</text>
 			</view>
 			<view style="font-size: 30rpx;background: #fff;text-align: center;line-height: 40rpx"><text>1个订单只能用1本免费借阅额度哦</text></view>
@@ -284,17 +284,21 @@ export default {
 				.then(res => {
 					uni.hideLoading();
 					if (res.data.rows.length == 0) {
+						console.log('entry')
 						this.isStock = false;
 						// 如果选中但没库存更改选中状态
 						bookList &&
 							bookList.map(item => {
-								if (item.stockCount.totalDockerUse == 0 && item.isSelect) {
-									item.isSelect = false;
-								}
+								item.stockCount.totalDockerUse = 0
+								item.isSelect = false
+								// if (item.stockCount.totalDockerUse == 0 && item.isSelect) {
+								// 	item.isSelect = false;
+								// }
 							});
 						// 更新缓存
 						uni.setStorageSync('offlineCartList', bookList);
-						this.bookList = uni.getStorageSync('offlineCartList');
+						this.price = 0
+						// this.bookList = uni.getStorageSync('offlineCartList');
 						// 若有选中计算价格
 						this.coungPrice();
 						return;
@@ -383,11 +387,12 @@ export default {
 			this.offlineAllSelect = !this.offlineAllSelect;
 			this.bookList &&
 				this.bookList.map(item => {
+					console.log(item.stockCount.totalDockerUse)
 					// 如果库存数为0,依然不给选
 					if (item.stockCount.totalDockerUse) {
 						item.isSelect = this.offlineAllSelect;
 					} else {
-						item.isSelect = this.offlineAllSelect;
+						item.isSelect = false
 					}
 				});
 			this.coungPrice();
@@ -522,10 +527,12 @@ export default {
 			// 检测是否有登录
 			this.getLogin();
 			if (this.isLogin) {
+				console.log(this.bookList)
 				// 获取用户选中的书籍列表
 				this.chooseBookList = this.bookList && this.bookList.filter(item => {
-						return item.isSelect === true;
-					});
+					return item.isSelect === true;
+				});
+				console.log(this.chooseBookList)
 				// 更新所选商品本地缓存的库存数据
 				let goodsIDs = [];
 				this.chooseBookList &&
@@ -771,8 +778,8 @@ export default {
 	height: 180rpx;
 	background: rgba(157, 160, 174, 0.6);
 	position: absolute;
-	left: 0;
-	top: 0;
+	left: 12rpx;
+	top: 12rpx;
 	z-index: 12;
 	display: flex;
 	justify-content: center;

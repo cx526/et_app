@@ -47,10 +47,11 @@
 					<text style="font-weight: 700;font-size: 30rpx;">支付方式</text>
 					<view class="payWay">
 						<radio-group @change="choosePayWay" >
+							<!-- 学生免费借阅才需要积分，教师和园长不需要 -->
 							<view class="radio-item"
-							v-if="integrate >= 50 && free > 0 && 
-							chooseBookList.length == 1">
-							<template v-if="isTeacherFree">
+							v-if="free > 0 && chooseBookList.length == 1">
+							<!-- 学生免费借阅需要积分 -->
+							<template v-if="isTeacherFree && integrate >= 50 && data.custom_type === '1'">
 								<radio color="#2AAEC4" value="coin" 
 								:checked="type == 'coin'"></radio>
 								<text 
@@ -58,7 +59,15 @@
 								免费借阅
 								</text>
 							</template>
-								
+							<!-- 教师/园长免费借阅不需要积分 -->
+							<template v-if="isTeacherFree  && data.custom_type !== '1'">
+								<radio color="#2AAEC4" value="coin" 
+								:checked="type == 'coin'"></radio>
+								<text 
+								style="font-weight: 700;font-size: 30rpx;">
+								免费借阅
+								</text>
+							</template>	
 							</view>
 							<view class="radio-item">
 								<radio color="#2AAEC4" value="shell"
@@ -88,7 +97,8 @@
 							<text class="number">{{ price }}</text>
 						</view>
 						<view v-if="type == 'coin'">
-							<view>
+							<!-- 学生免费借阅才显示 -->
+							<view v-if="data.custom_type === '1'">
 								<text class="label">我的积分：</text>
 								<text class="number">{{ integrate }}</text>
 							</view>
@@ -96,7 +106,8 @@
 								<text class="label">免费次数：</text>
 								<text class="number">{{ free }}</text>
 							</view>
-							<view>
+							<!-- 学生免费借阅才显示 -->
+							<view v-if="data.custom_type === '1'">
 								<text class="label">积分：</text>
 								<text class="number">-50</text>
 							</view>

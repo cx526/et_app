@@ -1,7 +1,5 @@
 {
-
-	"pages": [
-		{
+	"pages": [{
 			"path": "pages/index/index",
 			"style": {
 				"navigationBarTitleText": "校园智慧童书馆",
@@ -11,11 +9,12 @@
 			}
 		},
 		{
-			"path": "pages/library/offline-order",
+			"path": "pages/circle/reading-circles",
 			"style": {
-				"navigationBarTitleText": "订单详情"
+				"navigationBarTitleText": "悦读圈"
 			}
 		},
+
 
 		// {
 		// 	"path": "pages/promote/promoteSummeryBook",
@@ -442,6 +441,11 @@
 			"style": {
 				"navigationBarTitleText": "绘本详情"
 			}
+		}, {
+			"path": "pages/library/offline-order",
+			"style": {
+				"navigationBarTitleText": "订单详情"
+			}
 		},
 		{
 			"path": "pages/library/offline-search",
@@ -519,6 +523,8 @@
 				"navigationBarTitleText": "会员开通记录"
 			}
 		}
+		
+		// 悦读圈
 	],
 	"globalStyle": {
 		"navigationBarTextStyle": "black",
@@ -536,12 +542,12 @@
 				"selectedIconPath": "static/index-active.png",
 				"text": "首页"
 			},
-			// {
-			// 	"pagePath": "pages/promote/promoteSummeryBook",
-			// 	"iconPath": "static/guide.png",
-			// 	"selectedIconPath": "static/guide-active.png",
-			// 	"text": "暑假上新"
-			// },
+			{
+				"pagePath": "pages/circle/reading-circles",
+				"iconPath": "static/guide.png",
+				"selectedIconPath": "static/guide-active.png",
+				"text": "悦读圈"
+			},
 			{
 				"pagePath": "pages/library/library",
 				"iconPath": "static/library.png",
