@@ -6,12 +6,22 @@
 		</view>
 		
 		<view class="right-position" @tap="insertToCart">
-			<view class="right-content" v-if="bookInfo.stockCount.totalOnlineUse !== 0">
-				<text>加入书篮</text>
-			</view>
-			<view class="right-content" style="background-color:#ccc; color: #fff;" v-else>
-				<text>加入书篮</text>
-			</view>
+			<block v-if="type === 'online'">
+				<view class="right-content" v-if="bookInfo.stockCount.totalOnlineUse !== 0">
+					<text>加入书篮</text>
+				</view>
+				<view class="right-content" style="background-color:#ccc; color: #fff;" v-else>
+					<text>加入书篮</text>
+				</view>
+			</block>
+			<block v-else>
+				<view class="right-content" v-if="bookInfo.stockCount.totalDockerUse !== 0">
+					<text>加入书篮</text>
+				</view>
+				<view class="right-content" style="background-color:#ccc; color: #fff;" v-else>
+					<text>加入书篮</text>
+				</view>
+			</block>
 		</view>
 	</view>
 </template>
@@ -27,7 +37,8 @@ export default {
 	},
 	props: {
 		peopleCount: String,
-		bookInfo:Object
+		bookInfo:Object,
+		type: String
 	},
 	created() {
 		uni.getSystemInfo({
@@ -37,7 +48,58 @@ export default {
 		})
 	},
 	methods: {
+		push(add) {
+			if(this.bookInfo.stockCount.totalDockerUse === 0){
+				uni.showToast({
+					title:"书本暂时借完，请选择其他书本",
+					duration:2000,
+					icon:"none"
+				})
+				return;
+			}
+			let arrList = uni.getStorageSync('offlineCartList') ? uni.getStorageSync('offlineCartList') : [];
+			let arr = [];
+			if (arrList && arrList.length > 0) {
+				arrList.map(obj => {
+					arr.push(obj.id);
+				});
+				if (arr.indexOf(add.id) === -1) {
+					uni.showToast({
+						title: '加入书篮成功',
+						duration: 2000,
+						icon: 'none',
+						success: () => {
+							arrList.unshift(add);
+							uni.setStorageSync('offlineCartList', arrList);
+							this.len = insertBook.countBookLength()
+						}
+					});
+				} else {
+					uni.showToast({
+						title: '相同图书请不要重复添加',
+						duration: 2000,
+						icon: 'none'
+					});
+				}
+			} else {
+				uni.showToast({
+					title: '加入书篮成功',
+					duration: 2000,
+					icon: 'none',
+					success: () => {
+						arrList.push(add);
+						uni.setStorageSync('offlineCartList', arrList);
+						this.len = insertBook.countBookLength()
+					}
+				});
+			}
+		},
 		insertToCart() {
+			console.log(this.type)
+			// 线下加入书篮
+			if(this.type === 'offline') {
+				this.push(this.bookInfo)
+			}else {
 			// 临时关闭
 			uni.showToast({
 				title: '邮寄借阅系统升级中，暂不对外开放！',
@@ -45,9 +107,6 @@ export default {
 				duration:2000
 			})
 			return
-			
-			
-			
 			if(this.$props.bookInfo.stockCount.totalOnlineUse === 0){
 				uni.showToast({
 					title:"书本暂时借完，请选择其他书本",
@@ -56,7 +115,6 @@ export default {
 				})
 				return;
 			}
-			
 			uni.showLoading();
 			// 处理数据
 			// let cartList = {
@@ -83,6 +141,7 @@ export default {
 			    console.log(carListArr);
 			}
 			this.$emit('insertBookToCart');
+			}
 		}
 	}
 }

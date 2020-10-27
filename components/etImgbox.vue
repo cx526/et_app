@@ -7,12 +7,22 @@
 				<!-- <view class="book-count-style" v-if="bookInfo.stock.usageCount > 0">
 						<text>{{bookInfo.stock.usageCount}}本</text>
 					</view> -->
-				<view class="book-zero-count-style" v-if="bookInfo.stock.usageCount === 0">
-					<view class="book-zero-content-style">
-						<text>暂时</text>
-						<text>借完</text>
+				<block v-if="type === 'online'">
+					<view class="book-zero-count-style" v-if="bookInfo.stock.usageCount === 0">
+						<view class="book-zero-content-style">
+							<text>暂时</text>
+							<text>借完</text>
+						</view>
 					</view>
-				</view>
+				</block>
+				<block v-if="type === 'offline'">
+					<view class="book-zero-count-style" v-if="bookInfo.stockCount.totalDockerUse === 0">
+						<view class="book-zero-content-style">
+							<text>暂时</text>
+							<text>借完</text>
+						</view>
+					</view>
+				</block>
 			</view>
 
 			<view class="font-content">
@@ -29,7 +39,12 @@
 		</view>
 		<!-- 推荐 -->
 		<view class="content-buttom-position" :style="{'width' : width}">
-			<et-add-book-to-cart :peopleCount="bookInfo.peopleCount" :bookInfo="bookInfo" @insertBookToCart="insertBookToCart"></et-add-book-to-cart>
+			<et-add-book-to-cart 
+			:peopleCount="bookInfo.peopleCount" 
+			:bookInfo="bookInfo" 
+			:type="type"
+			@insertBookToCart="insertBookToCart">
+			</et-add-book-to-cart>
 		</view>
 		<!-- 区分书籍标识 -->
 		<image v-if="bookInfo.lineType == 1 || lineType == 1"
@@ -70,6 +85,11 @@ export default {
 		lineType: {
 			type: String,
 			default: ""
+		},
+		// 首页显示线下书籍，分类显示线上书籍
+		type: {
+			type: String,
+			default: 'online'
 		}
 	},
 	created() {
@@ -81,7 +101,14 @@ export default {
 	},
 	methods: {
 		toBookDetail() {
-			uni.navigateTo({ url: 'bookdetail?bookID=' + encodeURIComponent(JSON.stringify(this.$props.bookInfo.id)) });
+			if(this.type === 'online') {
+				uni.navigateTo({ url: 'bookdetail?bookID=' + encodeURIComponent(JSON.stringify(this.$props.bookInfo.id)) });
+			}else {
+				uni.navigateTo({
+					url: '/pages/library/offline-bookdetail?bookID=' + this.bookInfo.id
+				});
+			}
+			
 		},
 		insertBookToCart() {
 			this.$emit('insertBookToCart');

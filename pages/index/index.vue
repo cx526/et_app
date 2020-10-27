@@ -82,7 +82,9 @@
 		<!-- <view class="white-space" style="height: 6upx;"></view> -->
 
 		<!-- 书籍分类 -->
-		<view class="book-cat"><et-bookcat v-for="(item, i) in bookCat" :key="i" :title="item.name" :img="item.img" @clickBookCat="clickBookCat(item.name)"></et-bookcat></view>
+		<view class="book-cat">
+			<et-bookcat v-for="(item, i) in bookCat" :key="i" :title="item.name" :img="item.img" @clickBookCat="clickBookCat(item.name)"></et-bookcat>
+		</view>
 
 		<view class="white-space" style="height: 20upx;"></view>
 
@@ -97,7 +99,10 @@
 			<et-titlenavigation title="猜你喜欢" img="../static/index/start.png" @clickHandle="btnGroupClick"></et-titlenavigation>
 
 			<!-- 内容 -->
-			<view class="guess-content"><et-imgbox v-for="(item, i) in guessBookList" :key="i" :bookInfo="item" @insertBookToCart="insertBookToCart"></et-imgbox></view>
+			<view class="guess-content">
+				<et-imgbox v-for="(item, i) in guessBookList" :key="i" :bookInfo="item" @insertBookToCart="insertBookToCart" type="offline">
+				</et-imgbox>
+			</view>
 			<uni-load-more :status="loadStatus" :content-text="loadText" />
 			<view class="white-space"></view>
 
@@ -211,7 +216,8 @@ export default {
 			guessBookList: [],
 			docker_mac: '',
 			oneBannerList: '',
-			twoBannerList: ''
+			twoBannerList: '',
+			currentPage: 1
 		};
 	},
 	onShow() {
@@ -243,7 +249,7 @@ export default {
 	// 上拉加载更多,onReachBottom上拉触底函数
 	onReachBottom: function() {
 		this.status = 'more';
-		this.getGuessBook('push');
+		this.getGuessBook('push')
 	},
 	methods: {
 		// 获取用户信息
@@ -501,19 +507,24 @@ export default {
 				return;
 			}
 			this.$api.getGuess(param).then(res => {
+				console.log(res)
 				res.data.map(item => {
-					// 如果线上书(stockCount.totalOnlineUse)
-					if(item.stockCount.totalOnlineUse == 0 && item.lineType == 1) { return }
-					// 如果线下书(stockCount.totalDockerUse)
-					else if(item.stockCount.totalDockerUse == 0 && item.lineType == 2) { return }
-					// 如果是线上/线下书(totalOnlineUse && totalDockerUse==0)
-					else if(item.lineType == 3 && item.stockCount.totalOnlineUse && item.stockCount.totalDockerUse) { return }
-					else if(item.stockCount.totalOnlineUse == 0) {
+				// 	// 如果线上书(stockCount.totalOnlineUse)
+				// 	// if(item.stockCount.totalOnlineUse == 0 && item.lineType == 1) { return }
+				// 	// // 如果线下书(stockCount.totalDockerUse)
+				// 	// else if(item.stockCount.totalDockerUse == 0 && item.lineType == 2) { return }
+				// 	// // 如果是线上/线下书(totalOnlineUse && totalDockerUse==0)
+				// 	// else if(item.lineType == 3 && item.stockCount.totalOnlineUse && item.stockCount.totalDockerUse) { return }
+				// 	// else if(item.stockCount.totalOnlineUse == 0) {
+				// 	// 	return
+				// 	// }
+				// 	// else {
+					// 如果线下书籍书库为零，默认不加入
+					if(item.stockCount.totalDockerUse == 0) {
 						return
 					}
-					else {
-						this.guessBookList.push(item);
-					}
+					this.guessBookList.push(item)
+				// }
 					
 				});
 			});

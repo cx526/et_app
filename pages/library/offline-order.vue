@@ -51,7 +51,7 @@
 							<view class="radio-item"
 							v-if="free > 0 && chooseBookList.length == 1">
 							<!-- 学生免费借阅需要积分 -->
-							<template v-if="isTeacherFree && integrate >= 50 && data.custom_type === '1'">
+							<template v-if="isTeacherFree && integrate >= 50 && userInfo.custom_type === '1'">
 								<radio color="#2AAEC4" value="coin" 
 								:checked="type == 'coin'"></radio>
 								<text 
@@ -60,7 +60,7 @@
 								</text>
 							</template>
 							<!-- 教师/园长免费借阅不需要积分 -->
-							<template v-if="isTeacherFree  && data.custom_type !== '1'">
+							<template v-if="isTeacherFree  && userInfo.custom_type !== '1'">
 								<radio color="#2AAEC4" value="coin" 
 								:checked="type == 'coin'"></radio>
 								<text 
@@ -98,7 +98,7 @@
 						</view>
 						<view v-if="type == 'coin'">
 							<!-- 学生免费借阅才显示 -->
-							<view v-if="data.custom_type === '1'">
+							<view v-if="userInfo.custom_type === '1'">
 								<text class="label">我的积分：</text>
 								<text class="number">{{ integrate }}</text>
 							</view>
@@ -107,7 +107,7 @@
 								<text class="number">{{ free }}</text>
 							</view>
 							<!-- 学生免费借阅才显示 -->
-							<view v-if="data.custom_type === '1'">
+							<view v-if="userInfo.custom_type === '1'">
 								<text class="label">积分：</text>
 								<text class="number">-50</text>
 							</view>
@@ -251,6 +251,7 @@
 					let data = res.data
 					// 用户个人信息
 					this.userInfo = data
+					console.log(this.userInfo.custom_type)
 					// 积分
 					this.integrate= Number(data.coin) ? Number(data.coin) : 0
 					// 押金

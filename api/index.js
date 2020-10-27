@@ -67,9 +67,9 @@ api.getRecommend = params => request.globalRequest('/api/frontend/getRecommend',
 // 获取老师推荐/书柜上新书籍
 api.getNewBook = params => request.globalRequest('/api/frontend/getRecommendDockerBook', 'POST', params)
 
-// 猜你喜欢
-api.getGuess= params => request.globalRequest('/api/frontend/getGuess', 'POST', params)
-
+// 猜你喜欢(由原来的线上转为线下)
+// api.getGuess= params => request.globalRequest('/api/frontend/getGuess', 'POST', params)
+api.getGuess= params => request.globalRequest('/api/frontend/getRecommendDockerBook', 'POST', params)
 // 获取签到信息
 api.getSign = params => request.globalRequest('/api/frontend/sign', 'POST', params)
 

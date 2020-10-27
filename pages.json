@@ -1,5 +1,12 @@
 {
-	"pages": [{
+	"pages": [
+		{
+			"path": "pages/circle/reading-circles",
+			"style": {
+				"navigationBarTitleText": "悦读圈"
+			}
+		},
+		{
 			"path": "pages/index/index",
 			"style": {
 				"navigationBarTitleText": "校园智慧童书馆",
@@ -8,12 +15,7 @@
 				}
 			}
 		},
-		{
-			"path": "pages/circle/reading-circles",
-			"style": {
-				"navigationBarTitleText": "悦读圈"
-			}
-		},
+		
 
 
 		// {
@@ -522,10 +524,16 @@
 			"style": {
 				"navigationBarTitleText": "会员开通记录"
 			}
+		},{
+			"path" : "pages/index/swiper-member",
+			"style" : {
+				"navigationBarTitleText": "会员计划"
+			}
 		}
 		
 		// 悦读圈
-	],
+	    
+    ],
 	"globalStyle": {
 		"navigationBarTextStyle": "black",
 		"navigationBarBackgroundColor": "#FFFFFF",
