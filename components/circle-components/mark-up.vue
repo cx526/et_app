@@ -1,7 +1,7 @@
 <template>
 	<view class="card-box">
 		<view class="card">
-			<view class="title">
+			<view class="title" v-if="title">
 				<view class="left">
 					<image :src="$aliImage + 'read-line.png'" mode="" class="line"></image>
 					<text>热门打卡</text>
@@ -12,7 +12,7 @@
 				</view>
 			</view>
 			<scroll-view class="list" style="max-height: 1000rpx;" scroll-y>
-				<view class="item" v-for="n in 3" :key="n">
+				<view class="item" v-for="n in 1" :key="n">
 					<view class="user">
 						<view class="show">
 							<image :src="userInfo.avatar" mode=""></image>
@@ -64,6 +64,13 @@
 
 <script>
 	export default {
+		props: {
+			// 控制是否显示标题
+			title: {
+				type: Boolean,
+				default: true
+			}
+		},
 		data() {
 			return {
 				$aliImage: this.$aliImage,
@@ -83,10 +90,21 @@
 					}
 				],
 			}
+		},
+		created() {
+			console.log(this.title)
 		}
 	}
 </script>
-
+<style>
+	::-webkit-scrollbar {
+		display: none;  
+		width: 0 !important;  
+		height: 0 !important;  
+		-webkit-appearance: none;  
+		background: transparent;  
+	}
+</style>
 <style scoped>
 	.card-box {
 		box-sizing: border-box;

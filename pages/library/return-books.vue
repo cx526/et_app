@@ -57,13 +57,16 @@
 							:key="listIndex">
 								<view class="book-item">
 									<view class="show">
-										<image :src="list.pic"></image>
+										<image :src="list.forGoodsPic[0].url"></image>
 									</view>
 									
 									<view class="title">
 										<view>{{ list.title }}</view>
-										<view style="margin-top: 10rpx; color: #68C1D4;">
+										<view style="margin-top: 10rpx; color: #68C1D4;" v-if="list.room_id != 9999">
 											{{ list.room_id }}号柜门
+										</view>
+										<view style="margin-top: 10rpx;font-size: 26rpx; color: #868686;" v-else >
+											<text>此书已下架，请放于回收箱中</text>
 										</view>
 									</view>
 									<view class="number">
@@ -153,7 +156,7 @@
 							:key="listIndex">
 								<view class="book-item">
 									<view class="show">
-										<image :src="list.pic"></image>
+										<image :src="list.forGoodsPic[0].url"></image>
 									</view>
 									
 									<view class="title">
@@ -629,7 +632,7 @@
 		padding: 0 24rpx;
 		border-bottom: 1px solid #EAEAEA;
 		justify-content: space-between;
-		font-size: 28rpx;
+		font-size: 26rpx;
 		align-items: center;
 		line-height: 60rpx;
 		
@@ -673,7 +676,7 @@
 	}
 	.order-list .book-item .number {
 		flex-shrink: 0;
-		margin-left: 80rpx;
+		/* margin-left: 80rpx; */
 		font-size: 26rpx;
 		display: flex;
 		flex-direction: column;

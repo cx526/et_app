@@ -532,7 +532,18 @@
 		}
 		
 		// 悦读圈
-	    
+		,{
+				"path" : "pages/circle/vigour",
+				"style" : {
+					"navigationBarTitleText": "活力榜"
+				}
+			}
+        ,{
+            "path" : "pages/circle/topic-detail",
+            "style" : {
+							"navigationBarTitleText": "话题详情"
+						}
+        }
     ],
 	"globalStyle": {
 		"navigationBarTextStyle": "black",

@@ -3,15 +3,15 @@
 		<!-- 个人信息 -->
 		<userInfo />
 		<!-- 活力排版 -->
-		<typesetting />
+		<typesetting @checkVigourDetail="checkVigourDetail" />
 		<!-- 通告栏 -->
 		<message />
 		<!-- 阅读统计 -->
 		<stat />
 		<!-- 话题 -->
-		<topic />
+		<topic @checkTopicDetail="checkTopicDetail" />
 		<!-- 热门打卡 -->
-		<punchCard />
+		<markUp />
 	</view>
 </template>
 
@@ -21,6 +21,7 @@
 	import message from '@/components/circle-components/message.vue'
 	import stat from '@/components/circle-components/stat.vue'
 	import topic from '@/components/circle-components/topic.vue'
+	import markUp from '@/components/circle-components/mark-up.vue'
 	import punchCard from '@/components/circle-components/punch-card.vue'
 	export default {
 		data() {
@@ -33,10 +34,23 @@
 			typesetting,
 			message,
 			stat,
-			topic
+			topic,
+			markUp,
+			punchCard
 		},
 		methods: {
-			
+			// 查看活力榜
+			checkVigourDetail() {
+				uni.navigateTo({
+					url: '/pages/circle/vigour'
+				})
+			},
+			// 查看话题详情
+			checkTopicDetail() {
+				uni.navigateTo({
+					url: '/pages/circle/topic-detail'
+				})
+			}
 		}
 	}
 </script>
@@ -44,6 +58,7 @@
 	page {
 		box-sizing: border-box;
 		background: #EBF8FF;
+		padding-bottom: 80rpx;
 	}
 </style>
 <style scoped>

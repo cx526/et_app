@@ -33,12 +33,17 @@
 							<view class="book-list" v-if="item.dockerInfo && item.dockerInfo.length > 0">
 								<block v-for="(list, listIndex) in item.dockerInfo" :key="listIndex">
 									<view class="book-item">
-										<view class="show"><image :src="list.pic"></image></view>
+										<view class="show"><image :src="list.forGoodsPic[0].url"></image></view>
 
 										<view class="title">
 											<view>{{ list.title }}</view>
-											<view style="margin-top: 10rpx; color: #68C1D4;">{{ list.room_id }}号柜门</view>
+											<view style="margin-top: 10rpx; color: #68C1D4;" v-if="list.room_id != 9999">
+											{{ list.room_id }}号柜门</view>
+											<view style="margin-top: 10rpx;font-size: 26rpx; color: #868686;" v-else >
+												<text>此书已下架，请放于回收箱中</text>
+											</view>
 										</view>
+										
 										<view class="number">
 											<text style="margin-bottom: 20rpx;">{{ list.price }}贝</text>
 											<tetx>x1</tetx>
@@ -109,7 +114,7 @@
 							<view class="book-list">
 								<block v-for="(list, listIndex) in item.dockerInfo" :key="listIndex">
 									<view class="book-item">
-										<view class="show"><image :src="list.pic"></image></view>
+										<view class="show"><image :src="list.forGoodsPic[0].url"></image></view>
 
 										<view class="title">{{ list.title }}</view>
 										<view class="number">
@@ -643,7 +648,7 @@ page {
 	padding: 0 24rpx;
 	border-bottom: 1px solid #eaeaea;
 	/* justify-content: space-between; */
-	font-size: 28rpx;
+	font-size: 26rpx;
 	align-items: center;
 	line-height: 60rpx;
 }
@@ -686,7 +691,7 @@ page {
 }
 .order-list .book-item .number {
 	flex-shrink: 0;
-	margin-left: 80rpx;
+
 	font-size: 26rpx;
 	display: flex;
 	flex-direction: column;

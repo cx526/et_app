@@ -37,7 +37,7 @@
 	}
 	.message {
 		height: 60rpx;
-		background: #fffbe6;
+		background: #fff;
 		border-radius: 30rpx;
 		box-shadow: 0px 2rpx 5rpx 0px rgba(0,0,0,0.16); 
 		display: flex;

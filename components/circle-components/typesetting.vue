@@ -1,6 +1,6 @@
 <template>
 	<view class="typesetting-box">
-		<view class="typesetting">
+		<view class="typesetting" @tap="handleClick">
 			<view class="item" v-for="n in 3" :key="n">
 				<view class="top">
 					<image :src="userInfo.avatar" mode="widthFix" class="header"></image>
@@ -24,6 +24,11 @@
 			return {
 				$aliImage: this.$aliImage,
 				userInfo: uni.getStorageSync('userInfo')
+			}
+		},
+		methods: {
+			handleClick() {
+				this.$emit('checkVigourDetail')
 			}
 		}
 	}

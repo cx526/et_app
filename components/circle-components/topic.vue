@@ -14,7 +14,27 @@
 				<scroll-view scroll-y style="max-height: 812rpx;" @scrolltolower="loadMore">
 					<swiper :style="{'height' : swiperHeight}" circle @change="swiperChange" :current="currentIndex">
 						<swiper-item>
-							<view class="item" v-for="(item, index) in allTopic" :key="index">
+							<view class="item" v-for="(item, index) in allTopic" :key="index" @tap="handleClick">
+								<view class="show">
+									<image :src="$aliImage + 'read-demo.png'"></image>
+								</view>
+								<view class="context">
+									<view class="title">
+										<text>21天养成阅读习惯</text>
+										<!-- 根据话题类型展示对应的图片 -->
+										<image :src="$aliImage + 'read-topic-01.png'" mode=""></image>
+									</view>
+									<view class="detail">
+										<text>通过五车书小程序完成21天阅读打卡任务</text>
+									</view>
+									<view class="time">
+										<text>话题周期：2020.10.20-2020.11.25</text>
+									</view>
+								</view>
+							</view>
+						</swiper-item>
+						<swiper-item>
+							<view class="item" v-for="(item, index) in schoolTopic" :key="index"  @tap="handleClick">
 								<view class="show">
 									<image :src="$aliImage + 'read-demo.png'"></image>
 								</view>
@@ -33,26 +53,7 @@
 							</view>
 						</swiper-item>
 						<swiper-item>
-							<view class="item" v-for="(item, index) in schoolTopic" :key="index">
-								<view class="show">
-									<image :src="$aliImage + 'read-demo.png'"></image>
-								</view>
-								<view class="context">
-									<view class="title">
-										<text>21天养成阅读习惯</text>
-										<image :src="$aliImage + 'read-topic-01.png'" mode=""></image>
-									</view>
-									<view class="detail">
-										<text>通过五车书小程序完成21天阅读打卡任务</text>
-									</view>
-									<view class="time">
-										<text>话题周期：2020.10.20-2020.11.25</text>
-									</view>
-								</view>
-							</view>
-						</swiper-item>
-						<swiper-item>
-							<view class="item" v-for="(item, index) in gradeTopic" :key="index">
+							<view class="item" v-for="(item, index) in gradeTopic" :key="index"  @tap="handleClick">
 								<view class="show">
 									<image :src="$aliImage + 'read-demo.png'"></image>
 								</view>
@@ -116,12 +117,13 @@
 			},
 			// 话题加载更多
 			loadMore() {
+				let test = [1,3,4]
 				console.log('loadMore')
 				setTimeout(() => {
-					let test = [1,3,4]
-					this.arr = [...this.arr, ...this.test]
-					this.swiperHeight = this.itemHeight * this.arr.length + 'px'
-				})
+				
+					this.allTopic = [...this.allTopic, ...test]
+					this.swiperHeight = this.itemHeight * this.allTopic.length + 'px'
+				}, 1000)
 			},
 			// 监听swiper改变
 			swiperChange(event) {
@@ -145,7 +147,10 @@
 			changeType(index) {
 				this.currentIndex = index
 				// 获取数据跟充值swiper高度
-			}
+			},
+			handleClick() {
+				this.$emit('checkTopicDetail')
+			},
 		}
 	}
 </script>
