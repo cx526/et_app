@@ -1,7 +1,7 @@
 <template>
 	<view>
 		<!-- 个人信息 -->
-		<userInfo />
+		<userInfo @checkTopicRecord="checkTopicRecord" />
 		<!-- 活力排版 -->
 		<typesetting @checkVigourDetail="checkVigourDetail" />
 		<!-- 通告栏 -->
@@ -11,7 +11,7 @@
 		<!-- 话题 -->
 		<topic @checkTopicDetail="checkTopicDetail" />
 		<!-- 热门打卡 -->
-		<markUp />
+		<markUp @comment="comment" />
 	</view>
 </template>
 
@@ -22,7 +22,6 @@
 	import stat from '@/components/circle-components/stat.vue'
 	import topic from '@/components/circle-components/topic.vue'
 	import markUp from '@/components/circle-components/mark-up.vue'
-	import punchCard from '@/components/circle-components/punch-card.vue'
 	export default {
 		data() {
 			return {
@@ -35,10 +34,15 @@
 			message,
 			stat,
 			topic,
-			markUp,
-			punchCard
+			markUp
 		},
 		methods: {
+			// 查看话题记录
+			checkTopicRecord() {
+				uni.navigateTo({
+					url: '/pages/circle/topic-record'
+				})
+			},
 			// 查看活力榜
 			checkVigourDetail() {
 				uni.navigateTo({
@@ -50,7 +54,13 @@
 				uni.navigateTo({
 					url: '/pages/circle/topic-detail'
 				})
-			}
+			},
+			// 查看打卡评论
+			comment() {
+				uni.navigateTo({
+					url: '/pages/circle/comment'
+				})
+			},
 		}
 	}
 </script>

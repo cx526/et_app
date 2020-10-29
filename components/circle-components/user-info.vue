@@ -14,7 +14,7 @@
 				</view>
 			</view>
 			<view class="right">
-				<view class="vitality">
+				<view class="vitality" @tap="checkTopicRecord">
 					<view class="topic">
 						<image :src="$aliImage + 'read-vitality.png'" mode="widthFix"></image>
 						<text>活力值</text>
@@ -37,6 +37,12 @@
 				userInfo: uni.getStorageSync('userInfo')
 			}
 		},
+		methods: {
+			// 查看话题记录
+			checkTopicRecord() {
+				this.$emit('checkTopicRecord')
+			}
+		}
 	}
 </script>
 

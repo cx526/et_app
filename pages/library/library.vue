@@ -201,6 +201,7 @@ export default {
 		uniNoticeBar,
 		Popup
 	},
+	
 	async onLoad(option) {
 		// 检测是否有登录
 		this.getLogin()

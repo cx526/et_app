@@ -111,6 +111,15 @@ export default {
 	components: {
 		etTag
 	},
+	onShareAppMessage(res) {
+		console.log(this.bookInfo)
+		if(res.from === 'menu') {
+			return {
+				title: this.bookInfo.title,
+				path: '/pages/library/offline-bookdetail?bookID='+this.bookID
+			}
+		}
+	},
 	data() {
 		return {
 			docker_mac: '',

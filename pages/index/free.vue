@@ -11,6 +11,14 @@
 			console.log(option.imgURL)
 			this.src = option.imgURL
 		},
+		onShareAppMessage(res) {
+			if(res.from === 'menu') {
+				return {
+					title: '专享免费借阅',
+					path: '/pages/index/free'
+				}
+			}
+		},
 		data() {
 			return {
 				$aliImage: this.$aliImage, //静态图片路径

@@ -12,6 +12,14 @@
 				$aliImage: this.$aliImage, //静态图片路径
 			}
 		},
+		onShareAppMessage(res) {
+			if(res.from === 'menu') {
+				return {
+					title: '开学有礼',
+					path: '/pages/index/banner-borrow'
+				}
+			}
+		},
 		methods: {
 			go() {
 				uni.switchTab({

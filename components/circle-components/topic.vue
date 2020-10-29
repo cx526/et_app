@@ -25,7 +25,7 @@
 										<image :src="$aliImage + 'read-topic-01.png'" mode=""></image>
 									</view>
 									<view class="detail">
-										<text>通过五车书小程序完成21天阅读打卡任务</text>
+										<text>通过五车书小程序完成21天阅读打卡任务通过五车书小程序完成21天阅读打卡任务</text>
 									</view>
 									<view class="time">
 										<text>话题周期：2020.10.20-2020.11.25</text>
@@ -233,6 +233,7 @@
 	.topic .list .item .context {
 		flex: 1;
 		box-sizing: border-box;
+		overflow: hidden;
 	}
 	.topic .list .item .title {
 		width: 100%;
@@ -249,6 +250,9 @@
 		margin-top: 10rpx;
 		font-size: 22rpx;
 		font-weight: 500;
+		white-space: nowrap;
+		overflow: hidden;
+		text-overflow: ellipsis;
 	}
 	.topic .list .item .time {
 		margin-top: 22rpx;

@@ -71,7 +71,7 @@
 				<text>1.五车贝为五车书平台虚拟货币，仅适用于平台借阅消费或购买教育产品</text>
 			</view>
 			<view class="item">
-				<text>2.一元人民币可充值10五车贝（单次充值不低于10元）</text>
+				<text>2.一元人民币可充值10五车贝（单次充值不低于50元）</text>
 			</view>
 			<view class="item">
 				<text>3.充值后不可提现</text>
@@ -94,22 +94,10 @@
 			return {
 				$aliImage: this.$aliImage,
 				flag: true,
-				value: 10, //充值金额
+				value: 50, //充值金额
 				moneyList: {
 					currentIndex: 0,
 					list: [
-						{
-							value: 100,
-							money: 10
-						},
-						{
-							value: 200,
-							money: 20
-						},
-						{
-							value: 300,
-							money: 30
-						},
 						{
 							value: 500,
 							money: 50
@@ -117,6 +105,18 @@
 						{
 							value: 1000,
 							money: 100
+						},
+						{
+							value: 1500,
+							money: 150
+						},
+						{
+							value: 2000,
+							money: 200
+						},
+						{
+							value: 5000,
+							money: 500
 						},
 						{
 							value: '其他',
@@ -180,9 +180,9 @@
 					return
 				}
 				// 充值金额小于10
-				else if(this.value < 10) {
+				else if(this.value < 50) {
 					uni.showToast({
-						title: '充值金额不能小于10元',
+						title: '充值金额不能小于50元',
 						icon: 'none'
 					})
 					return

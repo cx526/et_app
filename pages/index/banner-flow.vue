@@ -12,6 +12,7 @@
 				$aliImage: this.$aliImage, //静态图片路径
 			}
 		},
+		
 		methods: {
 			go() {
 				uni.switchTab({

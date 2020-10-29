@@ -73,7 +73,7 @@
 										<text style="margin-bottom: 20rpx;">
 										{{ list.price }}贝
 										</text>
-										<text v-if="list.return_status">已归还</text>
+										<text v-if="list.returnStatus == 1">已归还</text>
 									</view>
 								</view>
 							</block>
@@ -415,34 +415,36 @@
 							item.msg = `已逾期${day}天`
 						}
 						// 匹配一张订单多本书时那本书已还
-						if(item.uuid && item.uuid != '') {
-							// 已还书籍的uuid
-							let returnBookUuid = item.uuid.split(',')
-							console.log(returnBookUuid)
-							if(item.dockerInfo && item.dockerInfo.length > 0) {
-								item.dockerInfo.map(list => {
-									if(list.goods_uuid && list.goods_uuid != '') {
-										let goods_uuid = list.goods_uuid.split(',')
-										for(let i = 0; i < returnBookUuid.length; i++) {
-											for(let j = 0;j < goods_uuid.length; j++) {
-												if(returnBookUuid[i] == goods_uuid[j]) {
-													list.return_status = "1"
-													break
-												}
-											}
-										}
-									}
-								})
-							}
-						}
-						console.log(this.waitOrderList)
+						// if(item.uuid && item.uuid != '') {
+						// 	// 已还书籍的uuid
+						// 	let returnBookUuid = item.uuid.split(',')
+						// 	console.log(returnBookUuid)
+						// 	if(item.dockerInfo && item.dockerInfo.length > 0) {
+						// 		item.dockerInfo.map(list => {
+						// 			console.log(list.goods_uuid)
+						// 			if(list.goods_uuid && list.goods_uuid != '') {
+						// 				console.log('entry')
+						// 				let goods_uuid = list.goods_uuid.split(',')
+						// 				for(let i = 0; i < returnBookUuid.length; i++) {
+						// 					for(let j = 0;j < goods_uuid.length; j++) {
+						// 						if(returnBookUuid[i] == goods_uuid[j]) {
+						// 							list.return_status = "1"
+						// 							break
+						// 						}
+						// 					}
+						// 				}
+						// 			}
+						// 		})
+						// 	}
+						// }
+				
 						
 						
 						
 						
 					})
 					this.waitOrderList = [...this.waitOrderList,...res.data.rows]
-					console.log(this.waitOrderList)
+					
 					// 判断是否改变加载组件状态
 					if(this.waitOrderTotalPage <= this.waitOrderList.length) {
 						this.loadStatus = "noMore"

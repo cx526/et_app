@@ -1,6 +1,5 @@
 {
-	"pages": [
-		{
+	"pages": [{
 			"path": "pages/circle/reading-circles",
 			"style": {
 				"navigationBarTitleText": "悦读圈"
@@ -15,7 +14,7 @@
 				}
 			}
 		},
-		
+
 
 
 		// {
@@ -524,24 +523,39 @@
 			"style": {
 				"navigationBarTitleText": "会员开通记录"
 			}
-		},{
-			"path" : "pages/index/swiper-member",
-			"style" : {
+		}, {
+			"path": "pages/index/swiper-member",
+			"style": {
 				"navigationBarTitleText": "会员计划"
 			}
 		}
-		
+
 		// 悦读圈
-		,{
-				"path" : "pages/circle/vigour",
-				"style" : {
-					"navigationBarTitleText": "活力榜"
-				}
+		, {
+			"path": "pages/circle/vigour",
+			"style": {
+				"navigationBarTitleText": "活力榜"
 			}
-        ,{
-            "path" : "pages/circle/topic-detail",
+		}, {
+			"path": "pages/circle/topic-detail",
+			"style": {
+				"navigationBarTitleText": "话题详情"
+			}
+		}, {
+			"path": "pages/circle/comment",
+			"style": {
+				"navigationBarTitleText": "评论"
+			}
+		}, {
+			"path": "pages/circle/topic-record",
+			"style": {
+				"navigationBarTitleText": "话题记录"
+			}
+		}
+	    ,{
+            "path" : "pages/circle/award-list",
             "style" : {
-							"navigationBarTitleText": "话题详情"
+							"navigationBarTitleText": "获奖名单"
 						}
         }
     ],

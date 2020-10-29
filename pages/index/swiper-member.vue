@@ -12,6 +12,14 @@
 				$aliImage: this.$aliImage
 			}
 		},
+		onShareAppMessage(res) {
+			if(res.from === 'menu') {
+				return {
+					title: '会员计划',
+					path: '/pages/index/swiper-member'
+				}
+			}
+		},
 		methods: {
 			goMember() {
 				uni.navigateTo({

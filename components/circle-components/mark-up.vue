@@ -42,16 +42,16 @@
 						<text>我今天和爸爸一起看了《巴巴和圣诞老人》</text>
 					</view>
 					<view class="photo">
-						<image :src="$aliImage + 'read-upload.png'" mode=""></image>
-						<image :src="$aliImage + 'read-upload.png'" mode=""></image>
-						<image :src="$aliImage + 'read-upload.png'" mode=""></image>
-						<image :src="$aliImage + 'read-upload.png'" mode=""></image>
+						<image :src="$aliImage + 'read-upload.png'"></image>
+						<image :src="$aliImage + 'read-upload.png'"></image>
+						<image :src="$aliImage + 'read-upload.png'"></image>
+						<image :src="$aliImage + 'read-upload.png'"></image>
 					</view>
 					<view class="comment">
 						<text class="time">2020-10-28 10:06</text>
 						<view class="detail">
-							<view class="comment-item" v-for="(item, index) in commentList" :key="index">
-								<image :src="$aliImage + item.imgUrl" mode=""></image>
+							<view class="comment-item" v-for="(item, index) in commentList" :key="index" @tap="handleClick(index)">
+								<image :src="$aliImage + item.imgUrl"></image>
 								<text>{{ item.title }}</text>
 							</view>
 						</view>
@@ -91,9 +91,25 @@
 				],
 			}
 		},
-		created() {
-			console.log(this.title)
+		methods: {
+			// 点赞、评论、分享打卡
+			handleClick(index) {
+				switch(index) {
+					case 0:
+					console.log('点赞')
+					break
+					case 1:
+					this.$emit('comment')
+					break
+					case 2:
+					console.log('分享')
+					break
+					default:
+					return
+				}
+			},
 		}
+		
 	}
 </script>
 <style>
