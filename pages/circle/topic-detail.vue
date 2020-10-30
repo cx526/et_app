@@ -2,10 +2,10 @@
 	<view>
 		<view style="margin-bottom: 25rpx;">
 			<!-- 话题简介 -->
-			<topicOutline />
+			<topicOutline @checkMoreDetail="checkMoreDetail" />
 			
 		</view>
-		<markUp :title="false" @comment="comment" />
+		<markUp :title="false" @comment="comment"  @handleComment="handleComment" />
 		<!-- 话题内容详细弹窗 -->
 		<uni-popup ref="contextDetail" >
 			<view :style="{'width': propUpWidth}" class="popUp">通过五车书小程序完成21天阅读打卡任务…通过五车书小程序完成21天阅读打卡任务…通过五车书小程序完成21天阅读打卡任务…</view>
@@ -49,6 +49,25 @@
 			comment() {
 				uni.navigateTo({
 					url: '/pages/circle/comment'
+				})
+			},
+			// 举报/删除打卡
+			handleComment() {
+				uni.showActionSheet({
+					itemList:['举报','删除'],
+					success: res => {
+						console.log(res)
+						// 举报
+						if(res.tapIndex === 0) {
+							uni.navigateTo({
+								url: '/pages/circle/report'
+							})
+						}else if(res.tapIndex === 1) {
+							console.log('删除')
+						}else {
+							return
+						}
+					}
 				})
 			},
 		}

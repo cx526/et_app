@@ -66,7 +66,7 @@
 											{{ list.room_id }}号柜门
 										</view>
 										<view style="margin-top: 10rpx;font-size: 26rpx; color: #868686;" v-else >
-											<text>此书已下架，请放于回收箱中</text>
+											<text>此书已下架，请还入书柜屏幕下方还书箱</text>
 										</view>
 									</view>
 									<view class="number">

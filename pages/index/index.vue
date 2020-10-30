@@ -508,6 +508,7 @@ export default {
 			}
 			this.$api.getGuess(param).then(res => {
 				console.log(res)
+				if(res.data && res.data.length > 0) {
 				res.data.map(item => {
 				// 	// 如果线上书(stockCount.totalOnlineUse)
 				// 	// if(item.stockCount.totalOnlineUse == 0 && item.lineType == 1) { return }
@@ -527,6 +528,9 @@ export default {
 				// }
 					
 				});
+				}else {
+					this.loadStatus = 'noMore'
+				}
 			});
 		},
 		toSign() {

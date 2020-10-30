@@ -1,7 +1,7 @@
 <template>
 	<view class="user-box">
 		<view class="user">
-			<view class="left">
+			<view class="left" @tap="checkMyRemark">
 				<!-- 根据身份显示不同的标识，没有登录显示默认头像 -->
 				<image :src="$aliImage + 'read-student.png'" class="identity" mode="widthFix"></image>
 				<image :src="userInfo.avatar" class="header"></image>
@@ -14,15 +14,18 @@
 				</view>
 			</view>
 			<view class="right">
-				<view class="vitality" @tap="checkTopicRecord">
+				<!-- 只有首页应用才展示 -->
+				<view class="vitality" @tap="checkTopicRecord" v-if="parent === 'index'">
 					<view class="topic">
 						<image :src="$aliImage + 'read-vitality.png'" mode="widthFix"></image>
 						<text>活力值</text>
 					</view>
 					<view class="number">28</view>
 				</view>
-				<view class="message">
+				<view class="message" @tap="chooseItem">
 					<image :src="$aliImage + 'read-message.png'" mode="widthFix"></image>
+					<!-- 只有在我的打卡页面才显示 -->
+					<text v-if="parent !== 'index'">新建话题</text>
 				</view>
 			</view>
 		</view>
@@ -31,6 +34,12 @@
 
 <script>
 	export default {
+		props: {
+			parent: {
+				type: String,
+				default: 'index'
+			}
+		},
 		data() {
 			return {
 				$aliImage: this.$aliImage,
@@ -41,6 +50,20 @@
 			// 查看话题记录
 			checkTopicRecord() {
 				this.$emit('checkTopicRecord')
+			},
+			// 查看我的打卡记录
+			checkMyRemark() {
+				// 只有点击首页头像才可进入
+				if(this.parent === 'index') {
+					this.$emit('checkMyRemark')
+				}else {
+					return
+				}
+				
+			},
+			// 点击message图标
+			chooseItem() {
+				this.$emit('chooseItem')
 			}
 		}
 	}
@@ -120,13 +143,18 @@
 	}
 	.right .message {
 		box-sizing: border-box;
-		width: 70rpx;
-		height: 64rpx;
+		/* width: 70rpx;
+		height: 64rpx; */
 		margin-left: 36rpx;
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		color: #2AAEC4;
+		font-size: 18rpx;
 	}
 	.right .message image {
-		width: 100%;
-		height: 100%;
+		width: 70rpx;
+		height: 64rpx;
 		display: block;
 	}
 </style>

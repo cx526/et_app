@@ -4,7 +4,7 @@
 		<view class="swiper-position" style="position: relative;">
 			<swiper class="carousel" indicator-dots="ture" indicator-color="rgba(230,230,230,.3)"  indicator-active-color="rgba(230,230,230,1)" circular autoplay @change="swiperChange">
 				<swiper-item v-for="(item, i) in bookInfo.forGoodsPic" :key="i" class="carousel-item">
-					<image :src="item.url" />
+					<image :src="item.url" @tap="preview(item.url)" />
 				</swiper-item>
 			</swiper>
 			<view class="white-space"></view>
@@ -64,7 +64,7 @@
 		<view class="process-position" v-if="detailArr && detailArr.length > 0" 
 		style="text-align: center;">
 			<block v-for="(item, index) in detailArr" :key="index">
-				<image :src="item" mode="widthFix" style="width: 100%; margin-bottom: 10rpx;"></image>
+				<image :src="item" mode="widthFix" style="width: 100%; margin-bottom: 10rpx;" @tap="preview(item)"></image>
 			</block>
 			
 		</view>
@@ -331,6 +331,13 @@ export default {
 				url: '/pages/cart/cart?'
 			});
 		},
+		// 预览图片
+		preview(url) {
+			console.log(url)
+			uni.previewImage({
+				urls: [url]
+			})
+		}
 	}
 }
 </script>

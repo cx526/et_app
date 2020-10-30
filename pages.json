@@ -551,14 +551,28 @@
 			"style": {
 				"navigationBarTitleText": "话题记录"
 			}
+		}, {
+			"path": "pages/circle/award-list",
+			"style": {
+				"navigationBarTitleText": "获奖名单"
+			}
+		}, {
+			"path": "pages/circle/my-remark",
+			"style": {
+				"navigationBarTitleText": "打卡记录"
+			}
+		}, {
+			"path": "pages/circle/add-topic",
+			"style": {
+				"navigationBarTitleText": "新建话题"
+			}
+		}, {
+			"path": "pages/circle/report",
+			"style": {
+				"navigationBarTitleText": "举报"
+			}
 		}
-	    ,{
-            "path" : "pages/circle/award-list",
-            "style" : {
-							"navigationBarTitleText": "获奖名单"
-						}
-        }
-    ],
+	],
 	"globalStyle": {
 		"navigationBarTextStyle": "black",
 		"navigationBarBackgroundColor": "#FFFFFF",

@@ -26,7 +26,7 @@
 										<text>24</text>
 									</view>
 								</view>
-								<view class="right">
+								<view class="right" @tap="handleComment">
 									<image :src="$aliImage + 'read-ellipsis.png'" mode=""></image>
 								</view>
 							</view>
@@ -108,6 +108,10 @@
 					return
 				}
 			},
+			// 点击缩略点
+			handleComment() {
+				this.$emit('handleComment')
+			}
 		}
 		
 	}

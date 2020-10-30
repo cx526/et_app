@@ -13,7 +13,7 @@
 				</view>
 			</view>
 			<!-- 话题详情页才显示，获奖名单页不显示 -->
-			<view class="right" v-if="parent === 'topic-detail'">
+			<view class="right" v-if="parent !== 'award-list'">
 				<image :src="$aliImage + 'read-message.png'" mode="widthFix"></image>
 				<text>新建打卡</text>
 			</view>
@@ -76,6 +76,12 @@
 			return {
 				$aliImage: this.$aliImage,
 				userInfo: uni.getStorageSync('userInfo')
+			}
+		},
+		methods: {
+			// 查看话题更多内容
+			checkMoreDetail() {
+				this.$emit('checkMoreDetail')
 			}
 		}
 	}

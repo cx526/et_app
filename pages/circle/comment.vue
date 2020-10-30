@@ -13,7 +13,7 @@
 						<text>共8条</text>
 					</view>
 				</view>
-				<view class="item" v-for="n in 5" :key="n">
+				<view class="item" v-for="n in 5" :key="n" @tap="handleComment">
 					<view class="left">
 						<image :src="userInfo.avatar" mode="widthFix"></image>
 					</view>
@@ -53,7 +53,25 @@
 			markUp
 		},
 		methods: {
-			
+			// 举报/删除打卡
+			handleComment() {
+				uni.showActionSheet({
+					itemList:['举报','删除'],
+					success: res => {
+						console.log(res)
+						// 举报
+						if(res.tapIndex === 0) {
+							uni.navigateTo({
+								url: '/pages/circle/report'
+							})
+						}else if(res.tapIndex === 1) {
+							console.log('删除')
+						}else {
+							return
+						}
+					}
+				})
+			},
 		}
 	}
 </script>
