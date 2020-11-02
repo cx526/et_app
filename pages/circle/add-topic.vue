@@ -4,9 +4,13 @@
 			<!-- 话题类型 -->
 			<view class="item">
 				<text class="label">话题类型</text>
-				<picker :range="topicType" range-key="title" @change="changeTopicType">
-					<text>{{ topicType[topicTypeIndex].title }}</text>
-				</picker>
+				<view class="type">
+					<picker :range="topicType" range-key="title" @change="changeTopicType">
+						<text>{{ topicType[topicTypeIndex].title }}</text>
+					</picker>
+					<image :src="$aliImage + 'read-icon-gray-right.png'"></image>
+				</view>
+				
 			</view>
 			<!-- 话题标题 -->
 			<view class="item">
@@ -42,13 +46,28 @@
 				<text class="label">奖励</text>
 				<input placeholder="请输入话题奖励" @input="getTopicReward" />
 			</view>
+			<!-- 是否开启评论 -->
+			<view class="item">
+				<text class="label">开启评论</text>
+				<view class="type">
+					<picker :range="comment"  @change="changeTopicPower">
+						<text>{{ comment[commentIndex] }}</text>
+					</picker>
+					<image :src="$aliImage + 'read-icon-gray-right.png'" mode="widthFix"></image>
+				</view>
+				
+			</view>
 			<!-- 话题公开范围 -->
 			<!-- 园长可选"所有公开" "本园公开" ，老师可选"所有公开" "本园公开" "本班公开"。 -->
 			<view class="item">
 				<text class="label">话题范围</text>
-				<picker :range="topicScope" range-key="title" @change="changeTopicScope">
-					<text>{{ topicScope[topicScopeIndex].title }}</text>
-				</picker>
+				<view class="type">
+					<picker :range="topicScope" range-key="title" @change="changeTopicScope">
+						<text>{{ topicScope[topicScopeIndex].title }}</text>
+					</picker>
+					<image :src="$aliImage + 'read-icon-gray-right.png'" mode="widthFix"></image>
+				</view>
+				
 			</view>
 			<!-- 话题封面 -->
 			<view class="item cover">
@@ -112,6 +131,8 @@
 				data: null ,//个人信息
 				coverImgUrl: '', //话题封面
 				tempFilePaths: '',
+				comment: ['是', '否'], //是否开启话题评论
+				commentIndex: 0,
 				canvasWidth: 0, // canvas长度
 				canvasHeight: 0, //canvas高度
 				ctx: null, //定义画布
@@ -179,6 +200,11 @@
 			changeTopicScope(event) {
 				let index = Number(event.detail.value)
 				this.topicScopeIndex = index
+			},
+			// 是否开启评论
+			changeTopicPower(event) {
+				let index = event.detail.value
+				this.commentIndex = index
 			},
 			// 根据身份获取话题可见范围
 			getTopicScope(custom_type) {
@@ -255,12 +281,11 @@
 				});
 			},
 			compressImg(path) {
-				var that = this;
+				let that = this;
 				uni.compressImage({
 					src: path,
 					quality: 30, // 压缩质量
 					success(e) {
-						// that.tempFilePaths = e.tempFilePath;
 						that.coverImgUrl = e.tempFilePath
 						console.log(that.coverImgUrl);
 					},
@@ -280,6 +305,7 @@
 			
 			
 			
+			
 		}
 	}
 </script>
@@ -287,7 +313,7 @@
 <style>
 	page {
 		background: #EBF8FF;
-		padding: 25rpx 25rpx 0 25rpx;
+		padding: 25rpx;
 		box-sizing: border-box;
 	}
 </style>
@@ -316,6 +342,15 @@
 		font-weight: 700;
 		flex-shrink: 0;
 		margin-right: 160rpx;
+	}
+	.list .item .type {
+		display: flex;
+		align-items: center;
+	}
+	.list .item .type image {
+		width: 20rpx;
+		height: 20rpx;
+		margin-left: 4rpx;
 	}
 	.list .item.spcial {
 		min-height: 80rpx; 

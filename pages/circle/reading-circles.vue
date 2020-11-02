@@ -79,6 +79,9 @@
 							})
 						}else if(res.tapIndex === 1) {
 							// 跳转打卡页面
+							uni.navigateTo({
+								url: '/pages/circle/add-remark?from=index'
+							})
 						}else {
 							return
 						}

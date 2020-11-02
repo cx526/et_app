@@ -507,9 +507,10 @@ export default {
 				return;
 			}
 			this.$api.getGuess(param).then(res => {
-				console.log(res)
+				
 				if(res.data && res.data.length > 0) {
 				res.data.map(item => {
+					
 				// 	// 如果线上书(stockCount.totalOnlineUse)
 				// 	// if(item.stockCount.totalOnlineUse == 0 && item.lineType == 1) { return }
 				// 	// // 如果线下书(stockCount.totalDockerUse)
@@ -521,7 +522,7 @@ export default {
 				// 	// }
 				// 	// else {
 					// 如果线下书籍书库为零，默认不加入
-					if(item.stockCount.totalDockerUse == 0) {
+					if(item.stockCount.totalDockerUse == 0 || item.show_status === '0') {
 						return
 					}
 					this.guessBookList.push(item)

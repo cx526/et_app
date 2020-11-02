@@ -4,7 +4,7 @@
 			<view class="item">
 				<text class="label">举报原因</text>
 				<view style="display: flex;align-items: center;">
-					<picker :range="reason" range-key="title">
+					<picker :range="reason" range-key="title" @change="changeReason">
 						<text>{{ reason[reasonIndex].title }}</text>
 					</picker>
 					<image :src="$aliImage + 'read-icon-gray-right.png'"></image>
@@ -50,7 +50,11 @@
 			}
 		},
 		methods: {
-			
+			// 改变举报原因
+			changeReason(event) {
+				let index = event.detail.value
+				this.reasonIndex = index
+			}
 		}
 	}
 </script>

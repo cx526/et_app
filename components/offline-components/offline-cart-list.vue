@@ -284,45 +284,57 @@ export default {
 				.then(res => {
 					uni.hideLoading();
 					if (res.data.rows.length == 0) {
-						console.log('entry')
 						this.isStock = false;
 						// 如果选中但没库存更改选中状态
 						bookList &&
 							bookList.map(item => {
 								item.stockCount.totalDockerUse = 0
 								item.isSelect = false
-								// if (item.stockCount.totalDockerUse == 0 && item.isSelect) {
-								// 	item.isSelect = false;
-								// }
 							});
 						// 更新缓存
 						uni.setStorageSync('offlineCartList', bookList);
 						this.price = 0
-						// this.bookList = uni.getStorageSync('offlineCartList');
 						// 若有选中计算价格
 						this.coungPrice();
 						return;
 					} else {
+						let onlineArr = []
 						// 实时更新本地书籍的缓存
 						res.data.rows.map((item, index) => {
-							bookList &&
-								bookList.map((list, listIndex) => {
-									if (item.id === list.id) {
-										bookList[listIndex].stockCount.totalDockerUse = item.stockCount.totalDockerUse;
-									}
+							bookList && bookList.map((list, listIndex) => {
+								if (item.id === list.id) {
+									// 更新线下库存和后台是否做了书本隐藏/下架操作
+									bookList[listIndex].stockCount.totalDockerUse = item.stockCount.totalDockerUse;
+									bookList[listIndex].show_status = item.show_status
+									onlineArr.push(bookList[listIndex])
 									// 选中书籍存在无库存情况
-									if (!bookList[listIndex].stockCount.totalDockerUse && bookList[listIndex].isSelect) {
+									if (!bookList[listIndex].stockCount.totalDockerUse && bookList[listIndex].isSelect){
 										this.isStock = false;
 									}
 									// 如果选中但没库存更改选中状态
 									if (bookList[listIndex].stockCount.totalDockerUse == 0 && bookList[listIndex].isSelect) {
 										bookList[listIndex].isSelect = false;
 									}
-								});
-						});
+								}
+							})
+						})
 						// 更新缓存
-						uni.setStorageSync('offlineCartList', bookList);
+						// 去除隐藏书籍
+						let arr = []
+						if(onlineArr && onlineArr.length > 0) {
+							onlineArr.map(item => {
+								if(item.show_status === '0') {
+									return
+								}else {
+									arr.push(item)
+								}
+							})
+						}
+						this.booksNumber = arr.length
+						uni.setStorageSync('offlineCartList', arr);
 						this.bookList = uni.getStorageSync('offlineCartList');
+						// 更新tab书篮书籍数
+						bookListData.countBookLength();
 						// 若有选中计算价格
 						this.coungPrice();
 					}
@@ -369,6 +381,9 @@ export default {
 		},
 		// 选择书本(点击复选框)
 		selechBook(item) {
+			console.log(item)
+			console.log(this.bookList)
+	
 			// 判断全选复选框是否选中
 			let flag = true;
 			item.isSelect = !item.isSelect;

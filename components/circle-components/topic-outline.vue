@@ -13,7 +13,7 @@
 				</view>
 			</view>
 			<!-- 话题详情页才显示，获奖名单页不显示 -->
-			<view class="right" v-if="parent !== 'award-list'">
+			<view class="right" v-if="parent !== 'award-list'" @tap="addRemark">
 				<image :src="$aliImage + 'read-message.png'" mode="widthFix"></image>
 				<text>新建打卡</text>
 			</view>
@@ -25,7 +25,7 @@
 					<text>分享</text>
 				</view>
 				<view class="title">
-					<text>#21天养成阅读习惯#</text>
+					<text>{{ title }}</text>
 					<!-- 根据话题类型显示对应的图片 -->
 					<image :src="$aliImage + 'read-topic-03.png'" mode="widthFix"></image>
 				</view>
@@ -75,13 +75,17 @@
 		data() {
 			return {
 				$aliImage: this.$aliImage,
-				userInfo: uni.getStorageSync('userInfo')
+				userInfo: uni.getStorageSync('userInfo'),
+				title: '#21天养成阅读习惯#'
 			}
 		},
 		methods: {
 			// 查看话题更多内容
 			checkMoreDetail() {
 				this.$emit('checkMoreDetail')
+			},
+			addRemark() {
+				this.$emit('addRemark', this.title)
 			}
 		}
 	}

@@ -1,7 +1,7 @@
 <template>
 	<view class="btn-content" @tap="btnClick">
 		<view class="img-content">
-			<image :src="dataArr.forGoodsPic[0].url" class="img"
+			<image :src="dataArr.forGoodsPic[0].url" class="img" v-if="dataArr.show_status === '1'"
 			></image>
 		</view>
 		

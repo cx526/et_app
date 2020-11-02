@@ -2,7 +2,7 @@
 	<view>
 		<view style="margin-bottom: 25rpx;">
 			<!-- 话题简介 -->
-			<topicOutline @checkMoreDetail="checkMoreDetail" />
+			<topicOutline @checkMoreDetail="checkMoreDetail" @addRemark="addRemark" />
 			
 		</view>
 		<markUp :title="false" @comment="comment"  @handleComment="handleComment" />
@@ -68,6 +68,13 @@
 							return
 						}
 					}
+				})
+			},
+			// 跳转打卡页面
+			addRemark(title) {
+				console.log(title)
+				uni.navigateTo({
+					url: '/pages/circle/add-remark?from=topicDetail&title='+title
 				})
 			},
 		}

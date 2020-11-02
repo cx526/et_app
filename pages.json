@@ -1,10 +1,11 @@
 {
-	"pages": [{
-			"path": "pages/circle/reading-circles",
-			"style": {
-				"navigationBarTitleText": "悦读圈"
-			}
-		},
+	"pages": [
+		// {
+		// 	"path": "pages/circle/reading-circles",
+		// 	"style": {
+		// 		"navigationBarTitleText": "悦读圈"
+		// 	}
+		// },
 		{
 			"path": "pages/index/index",
 			"style": {
@@ -571,6 +572,11 @@
 			"style": {
 				"navigationBarTitleText": "举报"
 			}
+		}, {
+			"path": "pages/circle/add-remark",
+			"style": {
+				"navigationBarTitleText": "新建打卡"
+			}
 		}
 	],
 	"globalStyle": {
@@ -589,12 +595,12 @@
 				"selectedIconPath": "static/index-active.png",
 				"text": "首页"
 			},
-			{
-				"pagePath": "pages/circle/reading-circles",
-				"iconPath": "static/guide.png",
-				"selectedIconPath": "static/guide-active.png",
-				"text": "悦读圈"
-			},
+			// {
+			// 	"pagePath": "pages/circle/reading-circles",
+			// 	"iconPath": "static/guide.png",
+			// 	"selectedIconPath": "static/guide-active.png",
+			// 	"text": "悦读圈"
+			// },
 			{
 				"pagePath": "pages/library/library",
 				"iconPath": "static/library.png",
