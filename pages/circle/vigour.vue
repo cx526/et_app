@@ -11,6 +11,10 @@
 						<image :src="$aliImage+ 'read-vitality.png'" mode=""></image>
 						<text>活力值：30</text>
 					</view>
+					<view class="time">
+						<!-- 读取后台返回的时间往前推一周(七天) -->
+						<text>统计日期：2020-10-27</text>
+					</view>
 				</view>
 			</view>
 			<view class="right">
@@ -131,6 +135,11 @@
 		width: 17rpx;
 		height: 26rpx;
 		margin-right: 6rpx;
+	}
+	.user .left .time {
+		color: #fff;
+		font-size: 24rpx;
+		margin-top: 4rpx
 	}
 	.user .right image {
 		width: 100%;

@@ -11,7 +11,7 @@
 					<image :src="$aliImage + 'read-reload.png'" mode=""></image>
 				</view>
 			</view>
-			<scroll-view class="list" style="max-height: 1000rpx;" scroll-y>
+			<scroll-view class="list" style="max-height: 1000rpx;" scroll-y @scrolltolower="loadingMore">
 				<view class="item" v-for="n in 1" :key="n">
 					<view class="user">
 						<view class="show">
@@ -57,19 +57,32 @@
 						</view>
 					</view>
 				</view>
+				
 			</scroll-view>
+			<view style="line-height: 60px;" v-if="loadMore">
+				<uni-load-more :status="loadStatus" :content-text="loadText" />
+			</view>
 		</view>
 	</view>
 </template>
 
 <script>
+	import uniLoadMore from '@/components/uni-load-more/uni-load-more.vue';
 	export default {
 		props: {
 			// 控制是否显示标题
 			title: {
 				type: Boolean,
 				default: true
+			},
+			// 控制是否开启下拉加载更多功能
+			loadMore: {
+				type: Boolean,
+				default: false
 			}
+		},
+		components: {
+			uniLoadMore
 		},
 		data() {
 			return {
@@ -89,6 +102,15 @@
 						title: '分享'
 					}
 				],
+				loadText: {
+					contentdown: '上拉加载更多',
+					contentrefresh: '加载中',
+					contentnomore: '暂无更多数据'
+				},
+				loadStatus: 'noMore',
+				pageSize: '10',
+				currentPage: 1,
+				totalPage: 0, //总条数
 			}
 		},
 		methods: {
@@ -111,7 +133,11 @@
 			// 点击缩略点
 			handleComment() {
 				this.$emit('handleComment')
-			}
+			},
+			// 上拉加载更多
+			loadingMore() {
+				console.log(loadingMore)
+			},
 		}
 		
 	}

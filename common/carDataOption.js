@@ -266,16 +266,16 @@ function countBookLength() {
 	let allBooks = onlineBooks + offlineBooks
 	if(allBooks > 0 && allBooks < 100) {
 		uni.setTabBarBadge({
-			index:2,
+			index:3,
 			text: String(allBooks)
 		})
 	}else if(allBooks == 0) {
 		uni.removeTabBarBadge({
-			index: 2
+			index: 3
 		})
 	}else {
 		uni.setTabBarBadge({
-			index: 2,
+			index: 3,
 			text: "99+"
 		})
 	}

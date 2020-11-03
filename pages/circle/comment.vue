@@ -28,13 +28,16 @@
 						</view>
 					</view>
 				</view>
+				<view style="line-height: 60px;">
+					<uni-load-more :status="loadStatus" :content-text="loadText" />
+				</view>
 			</scroll-view>
 		</view>
 		<!-- 评论框 -->
 		<view class="comment-input">
 			<view class="input">
-				<input type="text" placeholder="评论" placeholder-style="font-size: 26rpx" />
-				<button type="primary">提交</button>
+				<input type="text" placeholder="评论" placeholder-style="font-size: 26rpx" @input="getComment" :value="context"  />
+				<button type="primary" @tap="submit">提交</button>
 			</view>
 		</view>
 	</view>
@@ -42,15 +45,32 @@
 
 <script>
 	import markUp from '@/components/circle-components/mark-up.vue'
+	import uniLoadMore from '@/components/uni-load-more/uni-load-more.vue'
 	export default {
 		data() {
 			return {
 				$aliImage: this.$aliImage,
-				userInfo: uni.getStorageSync('userInfo')
+				userInfo: uni.getStorageSync('userInfo'),
+				context:'',
+				access_token: '',
+				pageSize: '10',
+				currentPage: 1,
+				totalPage: 0, //总条数
+				loadStatus: 'noMore',
+				loadText: {
+					contentdown: '上拉加载更多',
+					contentrefresh: '加载中',
+					contentnomore: '暂无更多数据'
+				},
 			}
 		},
 		components: {
-			markUp
+			markUp,
+			uniLoadMore
+		},
+		onLoad() {
+			// 获取access_token
+			this.getAccessToken()
 		},
 		methods: {
 			// 举报/删除打卡
@@ -68,6 +88,62 @@
 							console.log('删除')
 						}else {
 							return
+						}
+					}
+				})
+			},
+			// 获取评论框输入的内容
+			getComment(event) {
+				this.context = event.detail.value
+			},
+			// 提交评论
+			submit() {
+				this.checkText(this.context)
+			},
+			// 获取access_token
+			getAccessToken() {
+				let data = uni.getStorageSync('access_token')
+				// access_token过期重新请求一次
+				if(data[0] === '' || !data[0] || new Date().getTime() >= data[1]) {
+					uni.request({
+						url: 'https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&appid=wx4d51a694ef6697ff&secret=fb869bba0e93006943752050004f3c83',
+						method: 'GET',
+						success: res => {
+							let arr = []
+							arr[0] = res.data.access_token
+							arr[1] = new Date().getTime() + (7200 * 1000)
+							console.log(arr)
+							uni.setStorageSync('access_token', arr)
+						}
+					})
+				}else {
+					// access_token还在有效期内
+					let data = uni.getStorageSync('access_token')
+					this.access_token = data[0]
+					console.log(this.access_token)
+				}
+			},
+			// 文本检测
+			checkText(text) {
+				uni.request({
+					url: 'https://api.weixin.qq.com/wxa/msg_sec_check?access_token='+this.access_token,
+					method: 'POST',
+					data: {
+						content: text
+					},
+					success: res => {
+						console.log(res)
+						if(res.data.errcode === 87014) {
+							uni.showToast({
+								title: '您输入的内容带有敏感词，请重新输入',
+								icon: 'none',
+								duration: 1500,
+								success: () => {
+									this.context = ''
+								}
+							})
+						}else {
+							// 提交评论请求
 						}
 					}
 				})

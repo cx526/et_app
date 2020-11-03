@@ -381,9 +381,6 @@ export default {
 		},
 		// 选择书本(点击复选框)
 		selechBook(item) {
-			console.log(item)
-			console.log(this.bookList)
-	
 			// 判断全选复选框是否选中
 			let flag = true;
 			item.isSelect = !item.isSelect;
@@ -402,7 +399,6 @@ export default {
 			this.offlineAllSelect = !this.offlineAllSelect;
 			this.bookList &&
 				this.bookList.map(item => {
-					console.log(item.stockCount.totalDockerUse)
 					// 如果库存数为0,依然不给选
 					if (item.stockCount.totalDockerUse) {
 						item.isSelect = this.offlineAllSelect;
@@ -542,12 +538,10 @@ export default {
 			// 检测是否有登录
 			this.getLogin();
 			if (this.isLogin) {
-				console.log(this.bookList)
 				// 获取用户选中的书籍列表
 				this.chooseBookList = this.bookList && this.bookList.filter(item => {
 					return item.isSelect === true;
 				});
-				console.log(this.chooseBookList)
 				// 更新所选商品本地缓存的库存数据
 				let goodsIDs = [];
 				this.chooseBookList &&

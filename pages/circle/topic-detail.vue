@@ -5,7 +5,12 @@
 			<topicOutline @checkMoreDetail="checkMoreDetail" @addRemark="addRemark" />
 			
 		</view>
-		<markUp :title="false" @comment="comment"  @handleComment="handleComment" />
+		<!-- 只有阅读PK话题才显示，显示统计类型根据该话题的公开范围进行对应的前端显示。 -->
+		<view style="box-sizing: border-box;padding: 0 25rpx;">
+			<readChart />
+		</view>
+		
+		<markUp :title="false" @comment="comment"  @handleComment="handleComment" :loadMore="true" />
 		<!-- 话题内容详细弹窗 -->
 		<uni-popup ref="contextDetail" >
 			<view :style="{'width': propUpWidth}" class="popUp">通过五车书小程序完成21天阅读打卡任务…通过五车书小程序完成21天阅读打卡任务…通过五车书小程序完成21天阅读打卡任务…</view>
@@ -18,6 +23,7 @@
 	import markUp from '@/components/circle-components/mark-up.vue'
 	import uniPopup from '@/components/uni-popup/uni-popup.vue'
 	import topicOutline from '@/components/circle-components/topic-outline.vue'
+	import readChart from '@/components/circle-components/read-chart.vue'
 	export default {
 		data() {
 			return {
@@ -29,7 +35,8 @@
 		components: {
 			markUp,
 			uniPopup,
-			topicOutline
+			topicOutline,
+			readChart
 		},
 		onLoad() {
 			uni.getSystemInfo({

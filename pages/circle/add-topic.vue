@@ -12,15 +12,16 @@
 				</view>
 				
 			</view>
+			
 			<!-- 话题标题 -->
 			<view class="item">
 				<text class="label">话题标题</text>
-				<input type="text" placeholder="请输入话题标题" @input="getTopicTitle" />
+				<input type="text" placeholder="请输入话题标题" @input="getTopicTitle" @blur="blurTitle" :value="title" />
 			</view>
 			<!-- 活力值(只有活力打卡才存在) -->
 			<view class="item" v-if="topicTypeIndex === 0">
 				<text class="label">目标活力值</text>
-				<input type="number" placeholder="请输入话题的目标值" @input="getTopicVigour" />
+				<input type="number" placeholder="请输入话题的目标值" @input="getTopicVigour" :value="topicVigour" />
 			</view>
 			<!-- 开始时间 -->
 			<view class="item">
@@ -39,12 +40,12 @@
 			<!-- 话题简介 -->
 			<view class="item spcial">
 				<text class="label">简介</text>
-				<textarea placeholder="请输入话题简介" auto-height @input="getTopicContext"></textarea>
+				<textarea placeholder="请输入话题简介" auto-height @input="getTopicContext" @blur="blurContext":value="topicContext"></textarea>
 			</view>
 			<!-- 话题奖励 -->
 			<view class="item" v-if="topicScopeIndex !== 3">
 				<text class="label">奖励</text>
-				<input placeholder="请输入话题奖励" @input="getTopicReward" />
+				<input placeholder="请输入话题奖励" @input="getTopicReward" @blur="blurReward" :value="topicReward" />
 			</view>
 			<!-- 是否开启评论 -->
 			<view class="item">
@@ -58,7 +59,7 @@
 				
 			</view>
 			<!-- 话题公开范围 -->
-			<!-- 园长可选"所有公开" "本园公开" ，老师可选"所有公开" "本园公开" "本班公开"。 -->
+			<!-- 园长可选 "本园公开","本班公开","本级公开"，老师可选"本级公开""本班公开"。 -->
 			<view class="item">
 				<text class="label">话题范围</text>
 				<view class="type">
@@ -66,9 +67,54 @@
 						<text>{{ topicScope[topicScopeIndex].title }}</text>
 					</picker>
 					<image :src="$aliImage + 'read-icon-gray-right.png'" mode="widthFix"></image>
-				</view>
-				
+				</view>	
 			</view>
+			<!-- 老师/园长身份 -->
+			<block v-if="userInfo.openId !== 'oUume4hcYaqvcF6OEwPcIsNivTIw'">
+				<!-- 年级 -->
+				<view class="item" v-if="data.custom_type === '2' && topicScopeIndex !== 0 || data.custom_type === '0'">
+					<text class="label">年级</text>
+					<view class="type">
+						<picker :range="gradeList" @change="changeGrade">
+							<input placeholder="请选择年级" :value="gradeList[gradeListIndex]" disabled />
+						</picker>
+						<image :src="$aliImage + 'read-icon-gray-right.png'" mode="widthFix"></image>
+					</view>	
+				</view>
+				<!-- 班级 -->
+				<view class="item" v-if="data.custom_type === '2' && topicScopeIndex !== 0 || data.custom_type === '0'">
+					<text class="label">班级</text>
+					<view class="type">
+						<picker :range="classList" @change="changeClass">
+							<input placeholder="请选择班级" :value="classList[classListIndex]" disabled />
+						</picker>
+						<image :src="$aliImage + 'read-icon-gray-right.png'" mode="widthFix"></image>
+					</view>	
+				</view>
+			</block>
+			<!-- admin身份 -->
+			<block v-else>
+				<!-- 年级 -->
+				<view class="item" v-if="topicScopeIndex == '2' || topicScopeIndex == '3'">
+					<text class="label">年级</text>
+					<view class="type">
+						<picker :range="gradeList" @change="changeGrade">
+							<input placeholder="请选择年级" :value="gradeList[gradeListIndex]" disabled />
+						</picker>
+						<image :src="$aliImage + 'read-icon-gray-right.png'" mode="widthFix"></image>
+					</view>	
+				</view>
+				<!-- 班级 -->
+				<view class="item" v-if="topicScopeIndex == '2' || topicScopeIndex == '3'">
+					<text class="label">班级</text>
+					<view class="type">
+						<picker :range="classList" @change="changeClass">
+							<input placeholder="请选择班级" :value="classList[classListIndex]" disabled />
+						</picker>
+						<image :src="$aliImage + 'read-icon-gray-right.png'" mode="widthFix"></image>
+					</view>	
+				</view>
+			</block>
 			<!-- 话题封面 -->
 			<view class="item cover">
 				<text class="label">话题封面</text>
@@ -88,6 +134,7 @@
 		<canvas canvas-id='attendCanvasId' :style="{'width': canvasWidth + 'px', 'height' : canvasHeight + 'px'}" class="canvas"></canvas>
 		
 	</view>
+	
 </template>
 
 <script>
@@ -119,15 +166,23 @@
 				topicReward: '', //话题奖励
 				topicScope: [
 					{
-						title: '所有公开',
+						title: '本园公开',
 						value: 1
 					},
 					{
-						title: '本园公开',
+						title: '本级公开',
 						value: 2
-					}
+					},
+					{
+						title: '本班公开',
+						value: 3
+					},
 				],
 				topicScopeIndex: 0, //话题范围
+				gradeList: ['小小班','中班','大班'],
+				gradeIndex: '',
+				classList: ['1','2','3','4'],
+				classIndex: '',
 				data: null ,//个人信息
 				coverImgUrl: '', //话题封面
 				tempFilePaths: '',
@@ -136,11 +191,14 @@
 				canvasWidth: 0, // canvas长度
 				canvasHeight: 0, //canvas高度
 				ctx: null, //定义画布
+				access_token: '',
 			}
 		},
 		onLoad() {
 			// 获取用户个人信息
 			this.getUserInfo(this.userInfo)
+			// 获取access_token
+			this.getAccessToken()
 		},
 		methods: {
 			// 获取用户个人信息
@@ -169,6 +227,10 @@
 			getTopicTitle(event) {
 				// 去空
 				this.title = event.detail.value.replace(/\s*/g, '')
+			},
+			// 监听表单失去焦点事件
+			blurTitle() {
+				this.checkText('title',this.title)
 				console.log(this.title)
 			},
 			// 获取话题活力目标值
@@ -189,17 +251,36 @@
 			// 获取话题内容
 			getTopicContext(event) {
 				this.topicContext = event.detail.value
+			},
+			// 表单失去焦点事件
+			blurContext() {
+				this.checkText('context',this.topicContext)
 				console.log(this.topicContext)
 			},
 			// 获取话题奖励
 			getTopicReward(event) {
 				this.topicReward = event.detail.value
+				
+			},
+			// 监听表单失去焦点事件
+			blurReward() {
+				this.checkText('reward', this.topicReward)
 				console.log(this.topicReward)
 			},
 			// 改变话题可见范围
 			changeTopicScope(event) {
 				let index = Number(event.detail.value)
 				this.topicScopeIndex = index
+			},
+			// 选择年级
+			changeGrade(event) {
+				let index = event.detail.value
+				this.gradeIndex = index
+			},
+			// 选择班级
+			changeClass(event) {
+				let index = event.detail.value
+				this.classIndex = index
 			},
 			// 是否开启评论
 			changeTopicPower(event) {
@@ -208,12 +289,23 @@
 			},
 			// 根据身份获取话题可见范围
 			getTopicScope(custom_type) {
+				
+				// 教师身份可选的话题公开范围
 				let params = [
-					{title: '本园公开', value: 1},
-					{title: '本校公开', value: 2},
-					{title: '本班公开', value: 3},
+					{title: '本级公开', value: 1},
+					{title: '本班公开', value: 2},
 				]
-				if(custom_type === '0') {
+				// admin身份可选的话题公开范围
+				if(this.userInfo.openId === 'oUume4hcYaqvcF6OEwPcIsNivTIw') {
+					console.log('entry')
+					this.topicScope = [
+						{title: '所有公开',value: 1},
+						{title: '本园公开',value: 2},
+						{title: '本级公开',value: 3},
+						{title: '本班公开',value: 4}
+					]
+					
+				}else if(custom_type === '0') {
 					this.topicScope = params
 				}else {
 					return
@@ -236,15 +328,15 @@
 					}
 				});
 			},
-			// 压缩图片
+			// 缩放操作
 			getCanvasImg(tempFiles) {
 				var that = this;
 				// 获取图片信息来设置canvas的长高
 				uni.getImageInfo({
 					src: tempFiles[0].path,
 					success(res) {
-						var maxWidth = 400; // 最大长度
-						var maxHeight = 400; // 最大高度
+						var maxWidth = 600; // 最大长度
+						var maxHeight = 600; // 最大高度
 						var ratio = res.width / res.height; // 获取图片长高比例
 						if (res.width > maxWidth || res.height > maxHeight) {
 							if (res.width >= res.height) {
@@ -280,11 +372,12 @@
 					}
 				});
 			},
+			// 压缩图片
 			compressImg(path) {
 				let that = this;
 				uni.compressImage({
 					src: path,
-					quality: 30, // 压缩质量
+					quality: 70, // 压缩质量
 					success(e) {
 						that.coverImgUrl = e.tempFilePath
 						console.log(that.coverImgUrl);
@@ -302,8 +395,64 @@
 			publish() {
 				console.log('发布话题')
 			},
-			
-			
+			// 获取access_token
+			getAccessToken() {
+				let data = uni.getStorageSync('access_token')
+				// access_token过期重新请求一次
+				if(data[0] === '' || !data[0] || new Date().getTime() >= data[1]) {
+					uni.request({
+						url: 'https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&appid=wx4d51a694ef6697ff&secret=fb869bba0e93006943752050004f3c83',
+						method: 'GET',
+						success: res => {
+							let arr = []
+							arr[0] = res.data.access_token
+							arr[1] = new Date().getTime() + (7200 * 1000)
+							console.log(arr)
+							uni.setStorageSync('access_token', arr)
+						}
+					})
+				}else {
+					// access_token还在有效期内
+					let data = uni.getStorageSync('access_token')
+					this.access_token = data[0]
+					console.log(this.access_token)
+				}
+			},
+			// 检测文本内容
+			checkText(ele,text) {
+				uni.request({
+					url: 'https://api.weixin.qq.com/wxa/msg_sec_check?access_token='+this.access_token,
+					method: 'POST',
+					data: {
+						content: text
+					},
+					success: res => {
+						console.log(res)
+						if(res.data.errcode === 87014) {
+							uni.showToast({
+								title: '您输入的内容带有敏感词，请重新输入',
+								icon: 'none',
+								duration: 1500,
+								success: () => {
+									switch(ele) {
+										case 'title':
+										this.title = ''
+										break
+										case 'context':
+										this.topicContext = ''
+										break
+										case 'reward':
+										this.topicReward = ''
+										break
+										default:
+										return
+									}
+								}
+							})
+						}
+					}
+				})
+			},
 			
 			
 		}
@@ -385,6 +534,6 @@
 		position: relative;
 		left: 50%;
 		transform: translateX(-50%);
-		margin-top: 36rpx;
+		margin-top: 80rpx;
 	}
 </style>

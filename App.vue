@@ -39,7 +39,6 @@
 			upDateStock() {
 				// 获取线下书篮书籍
 				let bookList = uni.getStorageSync('offlineCartList');
-				console.log(bookList)
 				// 如果线下书篮为空，默认不发请求
 				if (bookList.length == 0) {
 					return;
@@ -66,7 +65,6 @@
 					.then(res => {
 						uni.hideLoading();
 						if (res.data.rows.length == 0) {
-							console.log('entry')
 							this.isStock = false;
 							// 如果选中但没库存更改选中状态
 							bookList &&
@@ -87,9 +85,9 @@
 								bookList && bookList.map((list, listIndex) => {
 									if (item.id === list.id) {
 										// 更新线下库存和后台是否做了书本隐藏/下架操作
-										onlineArr.push(item)
 										bookList[listIndex].stockCount.totalDockerUse = item.stockCount.totalDockerUse;
 										bookList[listIndex].show_status = item.show_status
+										onlineArr.push(bookList[listIndex])
 										// 选中书籍存在无库存情况
 										if (!bookList[listIndex].stockCount.totalDockerUse && bookList[listIndex].isSelect){
 											this.isStock = false;
@@ -117,7 +115,6 @@
 							this.bookList = uni.getStorageSync('offlineCartList');
 							// 更新tab书篮书籍数
 							bookListData.countBookLength();
-							console.log(this.bookList)
 						}
 					});
 			},

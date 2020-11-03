@@ -14,7 +14,7 @@
 				<scroll-view scroll-y style="max-height: 812rpx;" @scrolltolower="loadMore">
 					<swiper :style="{'height' : swiperHeight}" circle @change="swiperChange" :current="currentIndex">
 						<swiper-item>
-							<view class="item" v-for="(item, index) in allTopic" :key="index" @tap="handleClick">
+							<view class="item" v-for="(item, index) in allTopic" :key="index" @tap="handleClick" :class="index+1 === allTopic.length ? 'no-border' : ''">
 								<view class="show">
 									<image :src="$aliImage + 'read-demo.png'"></image>
 								</view>
@@ -32,9 +32,10 @@
 									</view>
 								</view>
 							</view>
+							
 						</swiper-item>
 						<swiper-item>
-							<view class="item" v-for="(item, index) in schoolTopic" :key="index"  @tap="handleClick">
+							<view class="item" v-for="(item, index) in schoolTopic" :key="index"  @tap="handleClick" :class="index + 1 === 'schoolTopic.length' ? 'no-border' : ''">
 								<view class="show">
 									<image :src="$aliImage + 'read-demo.png'"></image>
 								</view>
@@ -53,7 +54,7 @@
 							</view>
 						</swiper-item>
 						<swiper-item>
-							<view class="item" v-for="(item, index) in gradeTopic" :key="index"  @tap="handleClick">
+							<view class="item" v-for="(item, index) in gradeTopic" :key="index"  @tap="handleClick" :class="index + 1 === 'gradeTopic.length' ? 'no-border' : ''">
 								<view class="show">
 									<image :src="$aliImage + 'read-demo.png'"></image>
 								</view>
@@ -71,7 +72,11 @@
 								</view>
 							</view>
 						</swiper-item>
+						
 					</swiper>
+					<view style="line-height: 60px;">
+						<uni-load-more :status="loadStatus" :content-text="loadText" />
+					</view>
 				</scroll-view>
 			</view>
 		</view>
@@ -79,12 +84,13 @@
 </template>
 
 <script>
+	import uniLoadMore from '@/components/uni-load-more/uni-load-more.vue';
 	export default {
 		data() {
 			return {
 				$aliImage: this.$aliImage,
 				//模拟话题数据
-				allTopic: [1,2,3,4,5],
+				allTopic: [],
 				schoolTopic: [1,2,3],
 				gradeTopic: [1,2],
 				navList: [
@@ -94,15 +100,29 @@
 				],
 				swiperHeight: 0, //定义swiper1的高度
 				currentIndex: 0, 
-				itemHeight: 0
+				itemHeight: 0,
+				pageSize: '10',
+				currentPage: 1,
+				totalPage: 0, //总条数
+				loadStatus: 'noMore',
+				loadText: {
+					contentdown: '上拉加载更多',
+					contentrefresh: '加载中',
+					contentnomore: '暂无更多数据'
+				},
+				
 			}
 		},
-		created() {
-		
+		components: {
+			uniLoadMore
 		},
 		mounted() {
 			// 首次进来swiper高度默认取决与全部话题数据累加高度
-			this.getEleRect()
+			// this.getEleRect()
+			setTimeout(() => {
+				this.allTopic = [1,2,3,4]
+				this.getEleRect()
+			},2000)
 		},
 		methods: {
 			// 获取元素节点
@@ -110,25 +130,26 @@
 				const query = uni.createSelectorQuery().in(this);
 				setTimeout(() => {
 					query.selectAll('.item').boundingClientRect(data => {
-						this.itemHeight = data[0].height
-						this.swiperHeight = this.itemHeight * this.allTopic.length + 'px'
+						if(data && data.length > 0) {
+							this.itemHeight = data[0].height
+							this.swiperHeight = this.itemHeight * this.allTopic.length + 'px'
+							console.log(this.swiperHeight)
+						}else {
+							this.swiperHeight = 60 + 'px'
+						}
+						
 					}).exec();
 				}, 200)
 			},
 			// 话题加载更多
 			loadMore() {
 				let test = [1,3,4]
-				console.log('loadMore')
-				setTimeout(() => {
 				
-					this.allTopic = [...this.allTopic, ...test]
-					this.swiperHeight = this.itemHeight * this.allTopic.length + 'px'
-				}, 1000)
 			},
 			// 监听swiper改变
 			swiperChange(event) {
 				this.currentIndex = event.detail.current
-				// 获取数据跟充值swiper高度
+				// 刷新数据跟重置swiper高度
 				switch(event.detail.current) {
 					case 0:
 					this.swiperHeight = this.itemHeight * this.allTopic.length + 'px'
@@ -146,7 +167,7 @@
 			// 改变话题分类
 			changeType(index) {
 				this.currentIndex = index
-				// 获取数据跟充值swiper高度
+				// 刷新数据跟重置swiper高度
 			},
 			handleClick() {
 				this.$emit('checkTopicDetail')
@@ -258,5 +279,8 @@
 		margin-top: 22rpx;
 		font-size: 20rpx;
 		color: #808080;
+	}
+	.no-border {
+		border-bottom: none !important;
 	}
 </style>

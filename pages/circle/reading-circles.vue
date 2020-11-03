@@ -11,7 +11,7 @@
 		<!-- 话题 -->
 		<topic @checkTopicDetail="checkTopicDetail" />
 		<!-- 热门打卡 -->
-		<markUp @comment="comment" @handleComment="handleComment" />
+		<markUp @comment="comment" @handleComment="handleComment" :loadMore="true" />
 	</view>
 </template>
 

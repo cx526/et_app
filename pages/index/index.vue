@@ -338,7 +338,7 @@ export default {
 			}
 			else if(this.oneBannerList.remark.indexOf('http') != -1) {
 				uni.navigateTo({
-					url: '/pages/index/article?src='+this.oneBannerList.target_usage
+					url: '/pages/index/article?from='+this.oneBannerList.target_usage
 				})
 			}
 			else if(this.oneBannerList.remark.indexOf('/pages') != -1) {

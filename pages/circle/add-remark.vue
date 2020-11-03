@@ -14,17 +14,17 @@
 				<!-- 从话题详情页进入显示 -->
 				<text v-if="comeFrom === 'topicDetail'">{{ title }}</text>
 			</view>
-			<view class="context"><textarea value="" placeholder="请输入这一刻的想法…" placeholder-style="color: #808080;font-size:28rpx" /></view>
+			<view class="context"><textarea value="" placeholder="请输入这一刻的想法…" placeholder-style="color: #808080;font-size:28rpx" @input="getContext" @blur="blurContext" :value="context"/></view>
 			<!-- 图片上传 -->
 			<view class="picture">
 				<!-- 图片展示 -->
-				<block v-if="imgShow && imgShow.length > 0">
-					<view class="upload" v-for="(item, index) in imgShow" :key="index">
+				<block v-if="tempFilePaths && tempFilePaths.length > 0">
+					<view class="upload" v-for="(item, index) in tempFilePaths" :key="index">
 						<image :src="item" class="show" @tap="preview(index)"></image>
-						<icon type="clear" size="12" style="position: absolute;right: 0;top: 0;"></icon>
+						<icon type="clear" size="12" style="position: absolute;right: 0;top: 0;" @tap="del(index)"></icon>
 					</view>
 				</block>
-				<view class="add" v-if="imgShow.length < 6" @tap="select_more">
+				<view class="add" v-if="tempFilePaths.length < 6" @tap="select_more">
 					<view class="row-line"></view>
 					<view class="column-line"></view>
 				</view>
@@ -33,6 +33,9 @@
 			<block v-for="(item, index) in tempFilePathsMore" :key="item" >
 				<canvas :canvas-id="'attendCanvasId'+index" class='myCanvas' :style="{ width: item.canvasWidth + 'px', height: item.canvasHeight + 'px' }" ></canvas>
 			</block>
+		</view>
+		<view class="btn" @tap="submit">
+			<text>发表打卡</text>
 		</view>
 	</view>
 </template>
@@ -49,22 +52,35 @@ export default {
 			// https://et-pic-server.oss-cn-shenzhen.aliyuncs.com/app_img/read-demo.png
 			//储存用户上传的图片
 			tempFilePathsMore: [],
-			imgShow: [],
+			tempFilePaths: [], //储存未经过压缩图片的路径
+			imgShow: [], //储存经过压缩后图片的路径
 			canvasWidth: 0, // canvas长度
 			canvasHeight: 0, //canvas高度
 			ctx: null, //定义画布
+			access_token: '',
+			context: ''
 		};
 	},
 	onLoad(options) {
 		this.comeFrom = options.from;
 		this.title = options.title;
 		console.log(options);
+		// 获取access_token
+		this.getAccessToken()
 	},
 	methods: {
 		// 选择话题
 		changeTopic(event) {
 			let index = event.detail.value;
 			this.topicListIndex = index;
+		},
+		// 获取文本输入内容
+		getContext(event) {
+			this.context = event.detail.value
+		},
+		// 监听表单失去焦点事件
+		blurContext() {
+			this.checkText(this.context)
 		},
 		// 选择图片
 		select_more() {
@@ -83,6 +99,8 @@ export default {
 				success: res => {
 					console.log(res)
 					let tempFilePaths = res.tempFilePaths;
+					this.tempFilePaths = [...this.tempFilePaths, ...tempFilePaths]
+					console.log(this.tempFilePaths)
 					for (let i = 0; i < tempFilePaths.length; i++) {
 						this.tempFilePathsMore[i] = {};
 						this.tempFilePathsMore[i].path = '';
@@ -173,12 +191,65 @@ export default {
 			console.log(index)
 			console.log(this.imgShow[index])
 			uni.previewImage({
-				urls: this.imgShow,
+				urls: this.tempFilePaths,
 				current: index
-				
 			})
 		},
-		
+		// 删除图片
+		del(index) {
+			this.tempFilePaths.splice(index, 1)
+			this.imgShow.splice(index, 1)
+		},
+		// 获取access_token
+		getAccessToken() {
+			let data = uni.getStorageSync('access_token')
+			// access_token过期重新请求一次
+			if(data[0] === '' || !data[0] || new Date().getTime() >= data[1]) {
+				uni.request({
+					url: 'https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&appid=wx4d51a694ef6697ff&secret=fb869bba0e93006943752050004f3c83',
+					method: 'GET',
+					success: res => {
+						let arr = []
+						arr[0] = res.data.access_token
+						arr[1] = new Date().getTime() + (7200 * 1000)
+						console.log(arr)
+						uni.setStorageSync('access_token', arr)
+					}
+				})
+			}else {
+				// access_token还在有效期内
+				let data = uni.getStorageSync('access_token')
+				this.access_token = data[0]
+				console.log(this.access_token)
+			}
+		},
+		// 检测文本内容
+		checkText(text) {
+			uni.request({
+				url: 'https://api.weixin.qq.com/wxa/msg_sec_check?access_token='+this.access_token,
+				method: 'POST',
+				data: {
+					content: text
+				},
+				success: res => {
+					console.log(res)
+					if(res.data.errcode === 87014) {
+						uni.showToast({
+							title: '您输入的内容带有敏感词，请重新输入',
+							icon: 'none',
+							duration: 1500,
+							success: () => {
+								this.context = ''
+							}
+						})
+					}
+				}
+			})
+		},
+		// 发表打卡
+		submit() {
+			console.log('submit')
+		},
 	}
 };
 </script>
@@ -286,4 +357,20 @@ page {
 	left: -10000px;
 	top: -10000px;
 }
+.btn {
+		box-sizing: border-box;
+		height: 90rpx;
+		width: 416rpx;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		font-size: 28rpx;
+		color: #fff;
+		background-image: linear-gradient(to right, #67DCE5, #3CB5D2);
+		border-radius: 60rpx;
+		position: relative;
+		left: 50%;
+		transform: translateX(-50%);
+		margin-top: 36rpx;
+	}
 </style>
