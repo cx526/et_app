@@ -14,7 +14,7 @@
 				<scroll-view scroll-y style="max-height: 812rpx;" @scrolltolower="loadMore">
 					<swiper :style="{'height' : swiperHeight}" circle @change="swiperChange" :current="currentIndex">
 						<swiper-item>
-							<view class="item" v-for="(item, index) in allTopic" :key="index" @tap="handleClick" :class="index+1 === allTopic.length ? 'no-border' : ''">
+							<view class="item" v-for="(item, index) in allTopic" :key="index" @tap="handleClick" >
 								<view class="show">
 									<image :src="$aliImage + 'read-demo.png'"></image>
 								</view>
@@ -35,7 +35,7 @@
 							
 						</swiper-item>
 						<swiper-item>
-							<view class="item" v-for="(item, index) in schoolTopic" :key="index"  @tap="handleClick" :class="index + 1 === 'schoolTopic.length' ? 'no-border' : ''">
+							<view class="item" v-for="(item, index) in schoolTopic" :key="index"  @tap="handleClick">
 								<view class="show">
 									<image :src="$aliImage + 'read-demo.png'"></image>
 								</view>
@@ -54,7 +54,7 @@
 							</view>
 						</swiper-item>
 						<swiper-item>
-							<view class="item" v-for="(item, index) in gradeTopic" :key="index"  @tap="handleClick" :class="index + 1 === 'gradeTopic.length' ? 'no-border' : ''">
+							<view class="item" v-for="(item, index) in gradeTopic" :key="index"  @tap="handleClick">
 								<view class="show">
 									<image :src="$aliImage + 'read-demo.png'"></image>
 								</view>

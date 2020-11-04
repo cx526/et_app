@@ -216,23 +216,7 @@ export default {
 				return;
 			}
 		},
-		// 选择老师
-		radioChange(event) {
-			console.log(event);
-			this.teacher_id = event.detail.value;
-			console.log(this.teacher_id);
-		},
-		// 确定老师
-		chooseTeacher() {
-			if (this.teacher_id == '') {
-				uni.showToast({
-					title: '请选择老师',
-					icon: 'none'
-				});
-				return;
-			}
-			this.bindTeacher();
-		},
+	
 		// 获取学生资料
 		getId() {
 			let tmpUserInfo = uni.getStorageSync('userInfo');
@@ -518,10 +502,13 @@ export default {
 				uni.hideLoading();
 				this.teacherList = res.data.rows;
 				console.log(this.teacherList);
-				if (this.teacherList && this.teacherList.length > 0) {
+				if (this.teacherList && this.teacherList.length > 1) {
 					// 显示选择老师弹窗
 					this.$refs.teacherChoose.open();
-				} else {
+				}else if(this.teacherList && this.teacherList.length == 1) {
+					this.teacher_id = this.teacherList[0].id
+					this.bindTeacher()
+				}else {
 					uni.showToast({
 						title: '绑卡成功!',
 						duration: 2000,
@@ -533,6 +520,22 @@ export default {
 					});
 				}
 			});
+		},
+		// 选择老师
+		radioChange(event) {
+			this.teacher_id = event.detail.value;
+			console.log(this.teacher_id);
+		},
+		// 确定老师
+		chooseTeacher() {
+			if (this.teacher_id == '') {
+				uni.showToast({
+					title: '请选择老师',
+					icon: 'none'
+				});
+				return;
+			}
+			this.bindTeacher();
 		},
 		// 绑定老师
 		bindTeacher() {

@@ -1,6 +1,6 @@
 <template>
 	<view>
-		<userInfo parent="my-remark" @chooseItem="chooseItem" />
+		<userInfo parent="my-remark" @chooseItem="chooseItem" :custom_type="custom_type" />
 		<view class="list">
 			<scroll-view scroll-y style="max-height: 1000rpx;">
 				<view class="item" v-for="n in 10" :key="n" @tap="checkTopicDetail">
@@ -25,10 +25,14 @@
 		data() {
 			return {
 				$aliImage: this.$aliImage,
+				custom_type: ''
 			}
 		},
 		components: {
 			userInfo
+		},
+		onLoad(options) {
+			this.custom_type = options.custom_type
 		},
 		methods: {
 			// 查看话题详情

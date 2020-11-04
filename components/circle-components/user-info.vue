@@ -22,7 +22,7 @@
 					</view>
 					<view class="number">28</view>
 				</view>
-				<view class="message" @tap="chooseItem">
+				<view class="message" @tap="chooseItem" v-if="custom_type !== '1'">
 					<image :src="$aliImage + 'read-message.png'" mode="widthFix"></image>
 					<!-- 只有在我的打卡页面才显示 -->
 					<text v-if="parent !== 'index'">新建话题</text>
@@ -38,7 +38,8 @@
 			parent: {
 				type: String,
 				default: 'index'
-			}
+			},
+			custom_type: String
 		},
 		data() {
 			return {

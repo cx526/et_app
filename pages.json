@@ -1,11 +1,6 @@
 {
 	"pages": [
-		{
-			"path": "pages/circle/reading-circles",
-			"style": {
-				"navigationBarTitleText": "悦读圈"
-			}
-		},
+	
 		{
 			"path": "pages/index/index",
 			"style": {
@@ -15,7 +10,12 @@
 				}
 			}
 		},
-
+		{
+			"path": "pages/circle/reading-circles",
+			"style": {
+				"navigationBarTitleText": "悦读圈"
+			}
+		},
 
 
 		// {

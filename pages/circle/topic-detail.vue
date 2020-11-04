@@ -2,7 +2,7 @@
 	<view>
 		<view style="margin-bottom: 25rpx;">
 			<!-- 话题简介 -->
-			<topicOutline @checkMoreDetail="checkMoreDetail" @addRemark="addRemark" />
+			<topicOutline @checkMoreDetail="checkMoreDetail" @addRemark="addRemark" :custom_type="custom_type" />
 			
 		</view>
 		<!-- 只有阅读PK话题才显示，显示统计类型根据该话题的公开范围进行对应的前端显示。 -->
@@ -29,7 +29,8 @@
 			return {
 				$aliImage: this.$aliImage,
 				userInfo: uni.getStorageSync('userInfo'),
-				propUpWidth: 0
+				propUpWidth: 0,
+				custom_type: ''
 			}
 		},
 		components: {
@@ -38,7 +39,8 @@
 			topicOutline,
 			readChart
 		},
-		onLoad() {
+		onLoad(options) {
+			this.custom_type = options.custom_type
 			uni.getSystemInfo({
 				success: res => {
 					console.log(res)

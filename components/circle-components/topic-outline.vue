@@ -13,7 +13,7 @@
 				</view>
 			</view>
 			<!-- 话题详情页才显示，获奖名单页不显示 -->
-			<view class="right" v-if="parent !== 'award-list'" @tap="addRemark">
+			<view class="right" v-if="parent !== 'award-list' && custom_type !== '1'" @tap="addRemark" >
 				<image :src="$aliImage + 'read-message.png'" mode="widthFix"></image>
 				<text>新建打卡</text>
 			</view>
@@ -70,7 +70,8 @@
 			parent: {
 				type: String,
 				default: 'topic-detail'
-			}
+			},
+			custom_type: String
 		},
 		data() {
 			return {

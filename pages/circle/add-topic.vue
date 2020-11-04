@@ -76,7 +76,7 @@
 					<text class="label">年级</text>
 					<view class="type">
 						<picker :range="gradeList" @change="changeGrade">
-							<input placeholder="请选择年级" :value="gradeList[gradeListIndex]" disabled />
+							<input placeholder="请选择年级" :value="gradeList[gradeIndex]" disabled />
 						</picker>
 						<image :src="$aliImage + 'read-icon-gray-right.png'" mode="widthFix"></image>
 					</view>	
@@ -86,7 +86,7 @@
 					<text class="label">班级</text>
 					<view class="type">
 						<picker :range="classList" @change="changeClass">
-							<input placeholder="请选择班级" :value="classList[classListIndex]" disabled />
+							<input placeholder="请选择班级" :value="classList[classIndex]" disabled />
 						</picker>
 						<image :src="$aliImage + 'read-icon-gray-right.png'" mode="widthFix"></image>
 					</view>	
@@ -99,7 +99,7 @@
 					<text class="label">年级</text>
 					<view class="type">
 						<picker :range="gradeList" @change="changeGrade">
-							<input placeholder="请选择年级" :value="gradeList[gradeListIndex]" disabled />
+							<input placeholder="请选择年级" :value="gradeList[gradeIndex]" disabled />
 						</picker>
 						<image :src="$aliImage + 'read-icon-gray-right.png'" mode="widthFix"></image>
 					</view>	
@@ -109,7 +109,7 @@
 					<text class="label">班级</text>
 					<view class="type">
 						<picker :range="classList" @change="changeClass">
-							<input placeholder="请选择班级" :value="classList[classListIndex]" disabled />
+							<input placeholder="请选择班级" :value="classList[classIndex]" disabled />
 						</picker>
 						<image :src="$aliImage + 'read-icon-gray-right.png'" mode="widthFix"></image>
 					</view>	
@@ -271,6 +271,19 @@
 			changeTopicScope(event) {
 				let index = Number(event.detail.value)
 				this.topicScopeIndex = index
+				if(this.userInfo.openId === 'oUume4hcYaqvcF6OEwPcIsNivTIw') {
+					if(this.topicScopeIndex === 0 || this.topicScopeIndex === 1) {
+						this.gradeIndex = ''
+						this.classIndex = ''
+					}
+				}else if(this.data.custom_type === '2') {
+					if(this.topicScopeIndex === 0) {
+						this.gradeIndex = ''
+						this.classIndex = ''
+					}
+				}else {
+					return
+				}
 			},
 			// 选择年级
 			changeGrade(event) {
@@ -297,7 +310,6 @@
 				]
 				// admin身份可选的话题公开范围
 				if(this.userInfo.openId === 'oUume4hcYaqvcF6OEwPcIsNivTIw') {
-					console.log('entry')
 					this.topicScope = [
 						{title: '所有公开',value: 1},
 						{title: '本园公开',value: 2},

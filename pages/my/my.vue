@@ -106,7 +106,7 @@
 									<text>{{ item.text }}</text>
 									<!-- Badge -->
 									<view class="badge" 
-									v-if="item.number && item.number != 0">
+									v-if="item.number && item.number != 0 && index != 2 && index != 3 ">
 										<text v-if="item.number < 100">
 										{{ item.number }}
 										</text>

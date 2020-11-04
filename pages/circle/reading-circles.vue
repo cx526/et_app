@@ -1,7 +1,7 @@
 <template>
-	<view>
+	<view v-if="isLogin">
 		<!-- 个人信息 -->
-		<userInfo @checkTopicRecord="checkTopicRecord" @checkMyRemark="checkMyRemark" @chooseItem="chooseItem" />
+		<userInfo @checkTopicRecord="checkTopicRecord" @checkMyRemark="checkMyRemark" @chooseItem="chooseItem" :custom_type = "data.custom_type" />
 		<!-- 活力排版 -->
 		<typesetting @checkVigourDetail="checkVigourDetail" />
 		<!-- 通告栏 -->
@@ -25,7 +25,9 @@
 	export default {
 		data() {
 			return {
-				
+				userInfo: uni.getStorageSync('userInfo'),
+				isLogin: false,
+				data: null
 			}
 		},
 		components: {
@@ -36,7 +38,67 @@
 			topic,
 			markUp
 		},
+		onLoad() {
+			// 检测登录状态
+			this.checkLogin()
+			// 获取个人信息
+			this.getUserInfo()
+		},
 		methods: {
+			// 检测登录状态
+			checkLogin() {
+				let userInfo = this.userInfo
+				if(!userInfo.name || userInfo.name === 'guest' || !userInfo.mobile || userInfo.mobile == '') {
+					this.isLogin = false
+					uni.showModal({
+						title: '请先登录！',
+						content: '是否前往登录页面?',
+						success: res => {
+							if(res.confirm) {
+								uni.navigateTo({
+									url: '/pages/guide/auth'
+								})
+							}else {
+								uni.switchTab({
+									url: '/pages/index/index'
+								})
+							}
+						}
+						
+					})
+				}else if(!userInfo.card_no || userInfo.card_no === '') {
+					this.isLogin = false
+					uni.showModal({
+						title: '暂未绑卡！',
+						content:'是否前往绑卡页面',
+						success: res => {
+							if(res.confirm) {
+								uni.navigateTo({
+									url: '/pages/library/tied-card'
+								})
+							}else {
+								uni.switchTab({
+									url: '/pages/index/index'
+								})
+							}
+						}
+						
+					})
+				}else {
+					this.isLogin = true
+				}
+			},
+			// 获取个人信息
+			getUserInfo() {
+				if(!this.userInfo.mobile || this.userInfo.mobile === '') { return }
+				let params = {
+					mobile: this.userInfo.mobile
+				}
+				this.$api.offlineUserDockerInfo(params).then(res => {
+					this.data = res.data
+					console.log(this.data)
+				})
+			},
 			// 查看话题记录
 			checkTopicRecord() {
 				uni.navigateTo({
@@ -52,7 +114,7 @@
 			// 查看话题详情
 			checkTopicDetail() {
 				uni.navigateTo({
-					url: '/pages/circle/topic-detail'
+					url: '/pages/circle/topic-detail?custom_type='+this.data.custom_type
 				})
 			},
 			// 查看打卡评论
@@ -64,7 +126,7 @@
 			// 查看我的打卡记录
 			checkMyRemark() {
 				uni.navigateTo({
-					url: '/pages/circle/my-remark'
+					url: '/pages/circle/my-remark?custom_type='+this.data.custom_type
 				})
 			},
 			chooseItem() {
