@@ -1,7 +1,7 @@
 <template>
 	<view class="stat-box">
 		<view class="stat">
-			<view class="item" v-for="item in dataList" :key="index">
+			<view class="item" v-for="(item, index) in dataList" :key="index" @tap="checkReadingDetail(index)">
 				<image :src="$aliImage + item.path" mode="widthFix" class="bg"></image>
 				<view class="data">
 					<view>
@@ -12,8 +12,6 @@
 					<view style="font-size: 24rpx;color: rgba(255,255,255,.6);">{{ item.title }}</view>
 				</view>
 			</view>
-			
-			
 		</view>
 	</view>
 </template>
@@ -37,6 +35,11 @@
 						title: '班级阅读累计'
 					}
 				]
+			}
+		},
+		methods: {
+			checkReadingDetail(index) {
+				this.$emit('checkReadingDetail', index)
 			}
 		}
 	}

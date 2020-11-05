@@ -578,7 +578,16 @@
 				"navigationBarTitleText": "新建打卡"
 			}
 		}
-	],
+	    ,{
+            "path" : "pages/circle/read-data",
+            "style" :                                                                                    
+            {
+                "navigationBarTitleText": "",
+                "enablePullDownRefresh": false
+            }
+            
+        }
+    ],
 	"globalStyle": {
 		"navigationBarTextStyle": "black",
 		"navigationBarBackgroundColor": "#FFFFFF",

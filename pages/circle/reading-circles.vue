@@ -7,7 +7,7 @@
 		<!-- 通告栏 -->
 		<message />
 		<!-- 阅读统计 -->
-		<stat />
+		<stat @checkReadingDetail="checkReadingDetail" />
 		<!-- 话题 -->
 		<topic @checkTopicDetail="checkTopicDetail" />
 		<!-- 热门打卡 -->
@@ -109,6 +109,13 @@
 			checkVigourDetail() {
 				uni.navigateTo({
 					url: '/pages/circle/vigour'
+				})
+			},
+			// 查看阅读数据
+			checkReadingDetail(index) {
+				console.log(index)
+				uni.navigateTo({
+					url: '/pages/circle/read-data?index='+index
 				})
 			},
 			// 查看话题详情

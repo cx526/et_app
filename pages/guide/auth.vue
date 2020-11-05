@@ -55,6 +55,7 @@ export default {
 		 */
 		getPhoneNumber(e) {
 			if (this.allInfo.userInfo && Object.keys(this.allInfo.userInfo).length > 0) {
+				console.log(e)
 				this.allInfo.detail = e.detail
 				WxAuth.checkSession().then(code => {
 					this.allInfo.code = code

@@ -1,5 +1,10 @@
 <template>
 	<view class="index">
+		<!-- 提示添加到我的小程序 -->
+		<!-- <view class="add-notice">
+			<view class="triangle"></view>
+			<text>添加小程序 发现好绘本</text>
+		</view> -->
 		<!-- 头部内容 -->
 		<view class="top-content">
 			<!-- 顶栏搜索框 -->
@@ -751,5 +756,34 @@ export default {
 	height: 120upx;
 	border-radius: 60upx;
 	background: #ccc;
+}
+
+/* 提示添加小程序 */
+.add-notice {
+	position: absolute;
+	right: 20rpx;
+	top: 20rpx;
+	height: 60rpx;
+	background: #007AFF;
+	z-index: 100;
+	font-size: 30rpx;
+	color: #fff;
+	box-sizing: border-box;
+	padding: 0 10rpx;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	border-radius: 8rpx;
+}
+.add-notice .triangle {
+	position: absolute;
+	left: 50%;
+	top: -34rpx;
+	width: 0;
+	height: 0;
+	border-left: 16rpx solid transparent;
+	border-right: 16rpx solid transparent;
+	border-top: 16rpx solid transparent;
+	border-bottom: 24rpx solid #007AFF;
 }
 </style>

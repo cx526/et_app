@@ -29,7 +29,8 @@
 			  // 新的版本下载失败
 			});
 		},
-		onShow: function() {
+		onShow: function(options) {
+			console.log(options)
 			console.log('App Show')
 		},
 		onHide: function() {
