@@ -28,10 +28,18 @@
 			updateManager.onUpdateFailed(function (res) {
 			  // 新的版本下载失败
 			});
+			
+			
 		},
 		onShow: function(options) {
-			console.log(options)
 			console.log('App Show')
+			// 记录用户第几次进入小程序
+			let count = uni.getStorageSync('record') ? uni.getStorageSync('record') : 0
+			if(count > 3) {
+				return
+			}else {
+				uni.setStorageSync('record', count + 1)
+			}
 		},
 		onHide: function() {
 			console.log('App Hide')

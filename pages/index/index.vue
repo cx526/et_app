@@ -1,10 +1,11 @@
 <template>
 	<view class="index">
 		<!-- 提示添加到我的小程序 -->
-		<!-- <view class="add-notice">
+		<view class="add-notice" v-if="record === 3 && isRecord">
 			<view class="triangle"></view>
+			<image :src="$aliImage + 'icon-notice.png'" mode="widthFix"></image>
 			<text>添加小程序 发现好绘本</text>
-		</view> -->
+		</view>
 		<!-- 头部内容 -->
 		<view class="top-content">
 			<!-- 顶栏搜索框 -->
@@ -149,6 +150,8 @@ export default {
 	},
 	data() {
 		return {
+			record: 0, //获取用户第几次进入小程序
+			isRecord: true,
 			$aliImage: this.$aliImage, //静态图片路径
 			popupData: {},
 			swiperCurrent: 0,
@@ -225,32 +228,29 @@ export default {
 			currentPage: 1
 		};
 	},
-	onShow() {
-		// 每次进来重新计算书篮书籍总数(tab)
-		bookListData.countBookLength()
-	},
 	onLoad() {
+		
 		this.checkAuth();
 		this.getSwiperData();
 		this.getUserInfo();
-		
-		//更新tab
-		// let bookCount = bookListData.cartBookCount();
 		this.showAD();
 		this.getBanner()
-		// 更新老师推荐/书柜上新
-		// this.getUpdateRecommend()
-		
-		// // #ifdef APP-PLUS
-		// plus.runtime.getProperty( plus.runtime.appid, function ( wgtinfo ) {
-		// 	//appid属性
-		// 	var wgtStr = "appid:" + wgtinfo.appid;
-		// 	//version属性
-		// 	wgtStr += "<br/>version:" + wgtinfo.version;
-		// 	console.log(wgtStr)
-		// });
-		// // #endif
 	},
+	onShow() {
+		this.record = uni.getStorageSync('record')
+		if(this.record === 3) {
+			setTimeout(() => {
+				this.isRecord = false
+			}, 3000)
+		}
+		// 每次进来重新计算书篮书籍总数(tab)
+		bookListData.countBookLength()
+	},
+	// onReady() {
+	// 	setTimeout(() => {
+	// 		this.isRecord = false
+	// 	}, 3000)
+	// },
 	// 上拉加载更多,onReachBottom上拉触底函数
 	onReachBottom: function() {
 		this.status = 'more';
@@ -777,7 +777,7 @@ export default {
 }
 .add-notice .triangle {
 	position: absolute;
-	left: 50%;
+	left: 60%;
 	top: -34rpx;
 	width: 0;
 	height: 0;
@@ -785,5 +785,9 @@ export default {
 	border-right: 16rpx solid transparent;
 	border-top: 16rpx solid transparent;
 	border-bottom: 24rpx solid #007AFF;
+}
+.add-notice image {
+	width: 30rpx;
+	margin-right: 6rpx;
 }
 </style>

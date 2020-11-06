@@ -199,6 +199,7 @@ export default {
 		del(index) {
 			this.tempFilePaths.splice(index, 1)
 			this.imgShow.splice(index, 1)
+			console.log(this.imgShow)
 		},
 		// 获取access_token
 		getAccessToken() {
