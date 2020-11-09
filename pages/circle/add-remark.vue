@@ -195,6 +195,19 @@ export default {
 				current: index
 			})
 		},
+		// 上传图片
+		upLoadImg(url) {
+			for(let i = 0; i < imgShow.length; i++) {
+				uni.uploadFile({
+					url: url,
+					filePath: imgShow[i],
+					name: 'file',
+					success: res => {
+						console.log(res)
+					}
+				})
+			}
+		},
 		// 删除图片
 		del(index) {
 			this.tempFilePaths.splice(index, 1)

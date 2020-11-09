@@ -39,10 +39,13 @@
 			markUp
 		},
 		onLoad() {
-			// 检测登录状态
-			this.checkLogin()
+			
 			// 获取个人信息
 			this.getUserInfo()
+		},
+		onShow() {
+			// 检测登录状态
+			this.checkLogin()
 		},
 		methods: {
 			// 检测登录状态

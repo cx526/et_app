@@ -246,11 +246,7 @@ export default {
 		// 每次进来重新计算书篮书籍总数(tab)
 		bookListData.countBookLength()
 	},
-	// onReady() {
-	// 	setTimeout(() => {
-	// 		this.isRecord = false
-	// 	}, 3000)
-	// },
+	
 	// 上拉加载更多,onReachBottom上拉触底函数
 	onReachBottom: function() {
 		this.status = 'more';
