@@ -1,16 +1,28 @@
-# offlineAPI
-
-- 五车贝部分
 ```
   /***
-     * 充值五车贝
-     * path：/api/shellWeChatPay/payment
+     * 创建话题
+     * path：/api/reading/addReadingTopic
       {
-          "userInfo": {},
-          "shell":  "3",
-          "deposit": "29",
-          "totalMoney": "32",
-          "event": "recharge"
+          "custom_id": "61",
+          "type": "vitality",   话题类型 vitality：活力打卡，chat：轻松畅聊，pk：阅读PK 
+          "title": "话题名称",
+          "description": "话题描述",
+          "reward_shell": "5",
+          "reward_free": "2",
+          "reward_coin": "50",
+          "reward_gift": "礼物",
+          "reward_vitality": "1",
+          "target_vitality": "30",
+          "start_time": "2020-10-03 00:00:00",
+          "end_time": "2020-10-09 00:00:00",
+          "day_mark_count": "2",
+          "status": "1", 话题状态：0:未开始 1:进行中，2：已结束
+          "show_status": "2",  0:不显示，1：显示， 2：审核中 3：违规
+          "show_comment": "0" 0:不显示评论，1：显示评论
+          "show_range":  "school", 范围：(school:学校，grade：年级，class：班，all：全站)
+          "school_id": "2",
+          "grade_id": "1",
+          "class": "3"
       }
      * 
      */
@@ -18,17 +30,28 @@
 
 ```
   /***
-     * 五车贝充值支付成功回调
-     * path：/api/shellWeChatPay/updatePayment
-      {
-          "userInfo": {
-            "id": "46"
-          },
-          "shell":  "3",
-          "deposit": "29",
-          "totalMoney": "32",
-          "event": "recharge",
-          "order_no": "shell1597044741229"
+     * 编辑话题
+     * path：/api/reading/modReadingTopic
+      {   
+          "id": "1",
+          "custom_id": "61",
+          "type": "vitality",   话题类型 vitality：活力打卡，chat：轻松畅聊，pk：阅读PK 
+          "title": "话题名称",
+          "description": "话题描述",
+          "reward_shell": "5",
+          "reward_free": "2",
+          "reward_coin": "50",
+          "reward_gift": "礼物",
+          "reward_vitality": "1",
+          "target_vitality": "30",
+          "start_time": "2020-10-03 00:00:00",
+          "end_time": "2020-10-09 00:00:00",
+          "day_mark_count": "2",
+          "show_comment": "0" 0:不显示评论，1：显示评论
+          "show_range":  "school", 范围：(school:学校，grade：年级，class：班，all：全站)
+          "school_id": "2",
+          "grade_id": "1",
+          "class": "3"
       }
      * 
      */
@@ -36,92 +59,251 @@
 
 ```
   /***
-     * 五车贝充值记录
-     * path：/api/shell/selShellDetail
+     * 查看话题
+     * path：/api/reading/selReadingTopic
       {
           "pageSize":"10",
           "currentPage":"1",
           "filterItems":{
-            "custom_id": "1"
+            "id": "1"
+            "custom_id": "61",
+            "type": "vitality",   话题类型 vitality：活力打卡，chat：轻松畅聊，pk：阅读PK 
+            "title": "话题名称",
+            "show_comment": "0" 0:不显示评论，1：显示评论
+            "show_range":  "school", 范围：(school:学校，grade：年级，class：班，all：全站)
+            "school_id": "2",
+            "grade_id": "1",
+            "class": "3"
           }
       }
-     */
      * 
      */
 ```
 
--智能书柜部分
 ```
   /***
-     * 获取柜子商品
-     * path：/api/docker/getDockerBook
-     *{
-          "pageSize":"2",
-          "currentPage":"1",
-          "filterItems":{
-            "docker_mac": "74EE2A542FBA",
-              "isbn13": "123456",
-              "id":"1098",
-              "title":"小王子",
-              "idString":"'1009','1843'",
-              "tags": '16',
-              "search": '关键字搜索'
-            }
+     * 创建打卡
+     * path：/api/reading/addReadingMark
+      {
+          "custom_id": "61",
+          "content": "打卡内容",   话题类型 vitality：活力打卡，chat：轻松畅聊，pk：阅读PK 
+          "topic_id": "1",
+          "show_status": "2",  0:不显示，1：显示， 2：审核中 3：违规
+          "show_comment": "0" 0:不显示评论，1：显示评论
       }
+     * 
      */
 ```
 
 ```
- /***
-     * 获取柜子所有书本的标签
-     * path：/api/docker/getDockerBookTag
-     * {
-     *   docker_mac: 74EE2A542FBA
-     * }
-     */
-```
-
-
-
--线下订单部分
-
-```
-  /****
-     * 新增订单（线下业务下单）
-     * path：/api/offlineOrder/buyOfflineBooks
-      {	
-        "customer_id":"46",
-        "type":"shell/coin" shell:五车贝支付  coin：积分支付
-        "goods_id":"1320,1055"
+  /***
+     * 修改打卡
+     * path：/api/reading/modReadingMark
+      {
+          "id": "1",
+          "content": "打卡内容",   话题类型 vitality：活力打卡，chat：轻松畅聊，pk：阅读PK 
+          "show_comment": "0" 0:不显示评论，1：显示评论
       }
+     * 
      */
 ```
+
 ```
-  /****
-     * 查看订单情况
-     * path：/api/offlineOrder/selOfflineOrder
+  /***
+     * 删除打卡
+     * path：/api/reading/delReadingMark
+      {   
+          "id": "7"
+      }
+     * 
+     */
+```
+
+```
+  /***
+     * 查看打卡
+     * path：/api/reading/selReadingMark
       {
           "pageSize":"10",
           "currentPage":"1",
-          "docker_mac":"74EE2A542FBA",
           "filterItems":{
-            "order_no":"20200812120124689OF65",
-            "custom_id":"65",
-            "pay_type":"coin：积分/shell：五车贝",
-            "get_book_code":"026752",
-            "get_book_qrcoode":"279467663603167802675209261752",
-            "order_type":"0:待取书  1：订单完成   2：取书完成   3：订单失效   4：待还书  5：逾期"
+            "id": "1"
+            "custom_id": "61",
+            "topic_id": "2",
+            "content": "test",
+            "show_status": "0" 0:不显示，1：显示， 2：审核中 3：违规
+            "show_comment":  "1" 0:不显示评论，1：显示评论
           }
       }
+     * 
      */
 ```
+
 ```
-  /****
-     * 还书
-     * path：/api/offlineOrder/returnOfflineBooks
-      {	
-        "order_no":"20200812113823466OF65",
-        "uuid":"9787534293122000000"
+/***
+     * 创建评论
+     * path：/api/reading/addReadingComment
+      {
+          "custom_id": "61",
+          "content": "打卡内容",   话题类型 vitality：活力打卡，chat：轻松畅聊，pk：阅读PK 
+          "topic_id": "1",
+          "mark_id": "2",
+          "show_status": "2",  0:不显示，1：显示， 2：审核中 3：违规
       }
+     * 
+     */
+```
+
+```
+/***
+     * 删除评论
+     * path：/api/reading/delReadingComment
+      {   
+          "id": "7"
+      }
+     * 
+     */
+```
+
+```
+/***
+     * 查看评论
+     * path:/api/reading/selReadingComment
+      {
+          "pageSize":"10",
+          "currentPage":"1",
+          "filterItems":{
+            "id": "1"
+            "custom_id": "61",
+            "topic_id": "2",
+            "mark_id": "2",
+            "content": "test",
+            "show_status": "0" 0:不显示，1：显示， 2：审核中 3：违规
+          }
+      }
+     * 
+     */
+```
+
+```
+/***
+     * 创建或删除点赞
+     * path:/api/reading/addOrDelReadingLike
+      {
+          "custom_id": "61",
+          "topic_id": "1",
+          "mark_id": "2"
+      }
+     * 
+     */
+```
+
+```
+/***
+     * 查看点赞
+     * path:/api/reading/selReadingLike
+      {
+          "pageSize":"10",
+          "currentPage":"1",
+          "filterItems":{
+            "id": "1"
+            "custom_id": "61",
+            "topic_id": "2",
+            "mark_id": "2"
+          }
+      }
+     * 
+     */
+```
+
+```
+/***
+     * 查看奖励
+     * path:/api/reading/selReadingReward
+      {
+          "pageSize":"10",
+          "currentPage":"1",
+          "filterItems":{
+            "id": "1"
+            "custom_id": "61",
+            "topic_id": "2",
+            "status": "1" (0:已获得未领取，1：已获得已领取，2：已核销)
+          }
+      }
+     * 
+     */
+```
+
+```
+/***
+     * 创建举报
+     * path:/api/reading/addReadingReport
+      {
+          "custom_id": "61",
+          "type": "topic", 
+          "content": "举报内容",  
+          "topic_id": "1",
+          "mark_id": "2",
+          "comment_id": "3"
+      }
+     * 
+     */
+```
+
+```
+/***
+     * 查看举报
+     * path:/api/reading/selReadingReport
+      {
+          "pageSize":"10",
+          "currentPage":"1",
+          "filterItems":{
+            "id": "1"
+            "custom_id": "61",
+            "type": "topic",
+            "topic_id": "2",
+            "mark_id": "1",
+            "comment_id": "3",
+            "content": "test",
+            "show_status": "0" 0:不显示，1：显示， 2：审核中 3：违规
+          }
+      }
+     * 
+     */
+```
+
+```
+/***
+     * 查看活力值详细
+     * path:/api/reading/selReadingVitalityDetail
+      {
+          "pageSize":"10",
+          "currentPage":"1",
+          "filterItems":{
+            "id": "1"
+            "custom_id": "46",
+            "topic_id":  "3",
+            "mark_id": "1",
+            "event": "addReadingMark"
+          }
+      }
+     * 
+     */
+```
+
+```
+/***
+     * 查看周排名
+     * path:/api/reading/selReadingVitalityCount
+      {
+          "pageSize":"10",
+          "currentPage":"1",
+          "filterItems":{
+            "id": "1"
+            "custom_id": "46",
+            "sort":  "3"
+          }
+      }
+     * 
      */
 ```
