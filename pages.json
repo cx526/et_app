@@ -1,11 +1,11 @@
 {
 	"pages": [
 		{
-			"path": "pages/circle/add-topic",
+			"path": "pages/circle/reading-circles",
 			"style": {
-				"navigationBarTitleText": "新建话题"
+				"navigationBarTitleText": "悦读圈"
 			}
-		}, 
+		},
 		{
 			"path": "pages/index/index",
 			"style": {
@@ -15,12 +15,12 @@
 				}
 			}
 		},
-		{
-			"path": "pages/circle/reading-circles",
-			"style": {
-				"navigationBarTitleText": "悦读圈"
-			}
-		},
+		// {
+		// 	"path": "pages/circle/reading-circles",
+		// 	"style": {
+		// 		"navigationBarTitleText": "悦读圈"
+		// 	}
+		// },
 
 
 		// {
@@ -568,12 +568,12 @@
 				"navigationBarTitleText": "打卡记录"
 			}
 		}, 
-		// {
-		// 	"path": "pages/circle/add-topic",
-		// 	"style": {
-		// 		"navigationBarTitleText": "新建话题"
-		// 	}
-		// }, 
+		{
+			"path": "pages/circle/add-topic",
+			"style": {
+				"navigationBarTitleText": "新建话题"
+			}
+		}, 
 		{
 			"path": "pages/circle/report",
 			"style": {

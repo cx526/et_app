@@ -215,6 +215,12 @@ api.checkTeacherTodayOfflineOrde = params => request.globalRequest('/api/teacher
 api.checkMemberRecord = params => request.globalRequest('/api/member/selDataMemberRecord', 'POST', params)
 
 // 阅读圈开始
-// 
+// 新建话题
+api.addReadingTopic = params => request.globalRequest('/api/reading/addReadingTopic', 'POST', params)
 
+// 查看话题
+api.selReadingTopic = params => request.globalRequest('/api/reading/selReadingTopic', 'POST', params)
+
+// 上传图片的回调
+api.addUploadPic = params => request.globalRequest('/api/upload/addUploadPic', 'POST', params)
 export default api

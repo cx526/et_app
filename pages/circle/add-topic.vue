@@ -21,7 +21,7 @@
 			<!-- 活力值(只有活力打卡才存在) -->
 			<view class="item" v-if="topicTypeIndex === 0">
 				<text class="label">目标活力值</text>
-				<input type="number" placeholder="请输入话题的目标值" @input="getTopicVigour" :value="topicVigour" />
+				<input type="number" placeholder="请输入话题的目标值" @input="getTopicVigour" :value="target_vitality" />
 			</view>
 			<!-- 开始时间 -->
 			<view class="item">
@@ -43,7 +43,7 @@
 				<textarea placeholder="请输入话题简介" auto-height @input="getTopicContext" @blur="blurContext":value="topicContext"></textarea>
 			</view>
 			<!-- 话题奖励 -->
-			<view class="item" v-if="topicScopeIndex !== 3">
+			<view class="item" v-if="topicTypeIndex !== 2">
 				<text class="label">奖励</text>
 				<input placeholder="请输入话题奖励" @input="getTopicReward" @blur="blurReward" :value="topicReward" />
 			</view>
@@ -204,6 +204,7 @@
 				canvasHeight: 0, //canvas高度
 				ctx: null, //定义画布
 				access_token: '',
+				targetId: '', //新建话题id
 			}
 		},
 		onLoad() {
@@ -263,15 +264,20 @@
 				switch(this.type) {
 					case 'vitality':
 					this.day_mark_count = '1'
+					this.target_vitality = ''
 					break
 					case 'pk':
 					this.day_mark_count = '2'
+					this.target_vitality = '0'
 					break
 					case 'chat':
-					this.data_mark_count = '20'
+					this.day_mark_count = '20'
+					this.target_vitality = '0'
+					this.reward_gift = ''
 					break
 					default:
 					this.day_mark_count = '1'
+					this.target_vitality = ''
 					return
 				}
 				console.log(this.day_mark_count)
@@ -288,7 +294,8 @@
 			},
 			// 获取话题活力目标值
 			getTopicVigour(event) {
-				this.target_vitality = event.detail.value
+				let value = event.detail.value.replace(/\s*/g, '')
+				this.target_vitality = value
 				console.log(this.target_vitality)
 			},
 			// 获取话题开始时间
@@ -303,7 +310,7 @@
 			},
 			// 获取话题内容
 			getTopicContext(event) {
-				this.description = event.detail.value
+				this.description = event.detail.value.replace(/\s*/g, '')
 			},
 			// 表单失去焦点事件
 			blurContext() {
@@ -312,7 +319,7 @@
 			},
 			// 获取话题奖励
 			getTopicReward(event) {
-				this.reward_gift = event.detail.value
+				this.reward_gift = event.detail.value.replace(/\s*/g, '')
 				
 			},
 			// 监听表单失去焦点事件
@@ -385,6 +392,7 @@
 					count: 1,
 					success(res) {
 						if (res.tempFiles.length > 0) {
+							console.log(res.tempFilePaths[0])
 							that.getCanvasImg(res.tempFiles); // 通过canvas进行缩放
 						}else {
 							uni.showToast({
@@ -422,7 +430,8 @@
 									uni.canvasToTempFilePath({
 										canvasId: 'attendCanvasId',
 										success(res) {
-											that.compressImg(res.tempFilePath); // 缩放成功后压缩
+											that.coverImgUrl = res.tempFilePath
+											console.log(that.coverImgUrl)
 										},
 										fail(res) {
 											uni.showToast({ title: 'canvas缩放失败', icon: 'none' });
@@ -431,29 +440,14 @@
 								}, 200);
 							});
 						} else {
-							// 图片最长边未超过1440，无需进行缩放，直接掉起压缩方法
+							// 未超出最大尺度，不用压缩
 							that.canvasWidth = res.width;
 							that.canvasHeight = res.height;
-							that.compressImg(res.path);
 						}
 					}
 				});
 			},
-			// 压缩图片
-			compressImg(path) {
-				let that = this;
-				uni.compressImage({
-					src: path,
-					quality: 70, // 压缩质量
-					success(e) {
-						that.coverImgUrl = e.tempFilePath
-						console.log(that.coverImgUrl);
-					},
-					fail() {
-						uni.showToast({ title: '压缩失败', icon: 'none' });
-					}
-				});
-			},
+			
 			// 删除图片
 			del() {
 				this.coverImgUrl = ''
@@ -461,7 +455,7 @@
 			// 发布话题
 			publish() {
 				// userInfo.openId !== 'oUume4hcYaqvcF6OEwPcIsNivTIw'
-				// 必填项
+				// 必填项(测试默认封面可有可无，上线需要 this.coverImgUrl)
 				if(this.custom_id == '' || this.title == '' || this.description == '' || this.target_vitality == '' || this.start_time == '' || this.end_time == '') {
 					uni.showToast({
 						title: '请填全必要信息',
@@ -503,10 +497,57 @@
 					grade_id: this.grade_id,//年级id
 					class: this.class_id ,//班级
 				}
-					console.log(params)
-				
-				
-				
+				console.log(params)
+				// 新建话题
+				this.addReadingTopic(params)
+			},
+			// 新建话题
+			addReadingTopic(params) {
+				this.$api.addReadingTopic(params).then(res => {
+					if(res.data.status === 'ok') {
+						this.targetId = res.data.rows.insertId //新建话题id
+						uni.switchTab({
+							url: '/pages/circle/reading-circles'
+						})
+						if(this.coverImgUrl != '') {
+							// 上传图片
+							this.upLoadFile(this.coverImgUrl)
+						}
+					}
+				})
+			},
+			// 上传话题封面
+			upLoadFile(coverImgUrl) {
+				uni.uploadFile({
+					url:'https://www.52diyike.com/api/api/upload/uploadPicToAliyun',
+					filePath: coverImgUrl,
+					name: 'file',
+					success: res => {
+						let result = JSON.parse(res.data)
+						console.log(result)
+						let params = {
+							targetId: String(this.targetId),
+							usage: "reading_topic",
+							res: result
+						}
+						console.log(params)
+						this.addUploadPic(params)
+					}
+				})
+			},
+			// 上传图片到阿里云后的回调
+			addUploadPic(params) {
+				this.$api.addUploadPic(params).then(res => {
+					uni.showToast({
+						title: '新建话题成功',
+						icon: 'none',
+						success:() => {
+							uni.switchTab({
+								url: '/pages/circle/reading-circles'
+							})
+						}
+					})
+				})
 			},
 			// 获取access_token
 			getAccessToken() {

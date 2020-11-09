@@ -91,14 +91,14 @@
 				$aliImage: this.$aliImage,
 				//模拟话题数据
 				allTopic: [],
-				schoolTopic: [1,2,3],
-				gradeTopic: [1,2],
+				schoolTopic: [],
+				gradeTopic: [],
 				navList: [
 					{title: '全部话题'},
 					{title: '园内话题'},
 					{title: '班内话题'}
 				],
-				swiperHeight: 0, //定义swiper1的高度
+				swiperHeight: '', //定义swiper1的高度
 				currentIndex: 0, 
 				itemHeight: 0,
 				pageSize: '10',
@@ -117,29 +117,64 @@
 			uniLoadMore
 		},
 		mounted() {
-			// 首次进来swiper高度默认取决与全部话题数据累加高度
-			// this.getEleRect()
-			setTimeout(() => {
-				this.allTopic = [1,2,3,4]
-				this.getEleRect()
-			},2000)
+			// 获取话题列表(默认获取全站话题)
+			this.selReadingTopic('all')
+			
 		},
 		methods: {
 			// 获取元素节点
-			getEleRect() {
-				const query = uni.createSelectorQuery().in(this);
-				setTimeout(() => {
-					query.selectAll('.item').boundingClientRect(data => {
-						if(data && data.length > 0) {
-							this.itemHeight = data[0].height
-							this.swiperHeight = this.itemHeight * this.allTopic.length + 'px'
-							console.log(this.swiperHeight)
-						}else {
-							this.swiperHeight = 60 + 'px'
-						}
-						
-					}).exec();
-				}, 200)
+			getEleRect(topicArr) {
+				if(this.itemHeight == '') {
+					console.log('entry')
+					const query = uni.createSelectorQuery().in(this);
+					setTimeout(() => {
+						query.selectAll('.item').boundingClientRect(data => {
+							if(data && data.length > 0) {
+								this.itemHeight = data[0].height
+								this.swiperHeight = this.itemHeight * topicArr.length + 'px'
+								console.log(this.swiperHeight)
+							}else {
+								this.swiperHeight = 60 + 'px'
+							}
+							
+						}).exec();
+					}, 200)
+				}else {
+					this.swiperHeight = this.itemHeight * topicArr.length + 'px'
+				}
+				
+			},
+			// 获取话题列表
+			selReadingTopic(show_range) {
+				let params = {
+					currentPage: String(this.currentPage),
+					pageSize: this.pageSize,
+					filterItems: {
+						show_range: show_range,
+						school_id: '4'
+					}
+				}
+				this.$api.selReadingTopic(params).then(res => {
+					let result = res.data.rows
+					console.log(result)
+					switch(show_range) {
+						case 'all':
+						this.allTopic = [...this.allTopic, ...result]
+						this.getEleRect(this.allTopic)
+						break
+						case 'school': 
+						this.schoolTopic = [...this.schoolTopic, ...result]
+						this.getEleRect(this.schoolTopic)
+						break
+						case 'grade':
+						this.gradeTopic = [...this.gradeTopic, ...result]
+						this.getEleRect(this.gradeTopic)
+						break
+						default:
+						this.allTopic = [...this.allTopic, ...result]
+						break
+					}
+				})
 			},
 			// 话题加载更多
 			loadMore() {
@@ -152,13 +187,16 @@
 				// 刷新数据跟重置swiper高度
 				switch(event.detail.current) {
 					case 0:
-					this.swiperHeight = this.itemHeight * this.allTopic.length + 'px'
+					this.currentPage = 1
+					this.selReadingTopic('all')
 					break
 					case 1:
-					this.swiperHeight = this.itemHeight * this.schoolTopic.length + 'px'
+					this.currentPage = 1
+					this.selReadingTopic('school')
 					break
 					case 2:
-					this.swiperHeight = this.itemHeight * this.gradeTopic.length + 'px'
+					this.currentPage = 1
+					this.selReadingTopic('class')
 					break
 					default: 
 					return
@@ -169,6 +207,7 @@
 				this.currentIndex = index
 				// 刷新数据跟重置swiper高度
 			},
+			// 跳转详情
 			handleClick() {
 				this.$emit('checkTopicDetail')
 			},

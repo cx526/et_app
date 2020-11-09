@@ -99,6 +99,7 @@
 				}
 				this.$api.offlineUserDockerInfo(params).then(res => {
 					this.data = res.data
+					this.school_id = res.data.school_id
 					console.log(this.data)
 				})
 			},
