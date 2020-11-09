@@ -308,3 +308,29 @@
      * 
      */
 ```
+
+```
+/***
+     * 上传图片回调
+     * path:/api/upload/addUploadPic
+      {
+          "targetId":"10",       //如果是话题传话题ID,如果是打卡传打卡ID，如果是评论传评论ID
+          "usage":"reading_topic",     //话题：reading_topic， 打卡：reading_mark， 评论：reading_comment
+          "url":"阿里云返回的url"，
+          "name":"图片名称"
+      }
+     * 
+     */
+```
+
+```
+/***
+     * 删除图片
+     * path:/api/upload/delUploadPic
+      {
+          "url":"阿里云返回的url"，
+          "name":"图片名称"
+      }
+     * 
+     */
+```
