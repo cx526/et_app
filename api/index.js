@@ -221,6 +221,15 @@ api.addReadingTopic = params => request.globalRequest('/api/reading/addReadingTo
 // 查看话题
 api.selReadingTopic = params => request.globalRequest('/api/reading/selReadingTopic', 'POST', params)
 
+// 创建打卡
+api.addReadingMark = params => request.globalRequest('/api/reading/addReadingMark', 'POST', params)
+
+// 查看打卡
+api.selReadingMark = params => request.globalRequest('/api/reading/selReadingMark', 'POST', params)
+
+// 查看活力值详情
+api.selReadingVitalityDetail = params => request.globalRequest('/api/reading/selReadingVitalityDetail', 'POST', params)
+
 // 上传图片的回调
 api.addUploadPic = params => request.globalRequest('/api/upload/addUploadPic', 'POST', params)
 export default api

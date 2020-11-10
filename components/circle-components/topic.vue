@@ -11,70 +11,78 @@
 			</view>
 			<view class="list" id="list">
 				<!-- 812rpx -->
-				<scroll-view scroll-y style="max-height: 812rpx;" @scrolltolower="loadMore">
+				<scroll-view scroll-y style="max-height: 812rpx" @scrolltolower="loadMore">
 					<swiper :style="{'height' : swiperHeight}" circle @change="swiperChange" :current="currentIndex">
 						<swiper-item>
-							<view class="item" v-for="(item, index) in allTopic" :key="index" @tap="handleClick" >
+							<view class="item" v-for="(item, index) in allTopic" :key="index"  @tap="handleClick(item.id)">
 								<view class="show">
-									<image :src="$aliImage + 'read-demo.png'"></image>
+									<image :src="item.imgInfo[0].url" v-if="item.imgInfo && item.imgInfo.length > 0"></image>
+									<image :src="$aliImage + 'read-demo.png'" v-else></image>
 								</view>
 								<view class="context">
 									<view class="title">
-										<text>21天养成阅读习惯</text>
-										<!-- 根据话题类型展示对应的图片 -->
-										<image :src="$aliImage + 'read-topic-01.png'" mode=""></image>
+										<text>{{ item.title }}</text>
+										<image :src="$aliImage + 'read-topic-01.png'"  v-if="item.type === 'pk'"></image>
+										<image :src="$aliImage + 'read-topic-02.png'"  v-else-if="item.type === 'chat'"></image>
+										<image :src="$aliImage + 'read-topic-03.png'" v-else></image>
 									</view>
 									<view class="detail">
-										<text>通过五车书小程序完成21天阅读打卡任务通过五车书小程序完成21天阅读打卡任务</text>
+										<text>{{ item.description }}</text>
 									</view>
 									<view class="time">
-										<text>话题周期：2020.10.20-2020.11.25</text>
+										<text>话题周期：{{ item.start_time }}-{{ item.end_time }}</text>
 									</view>
 								</view>
 							</view>
 							
 						</swiper-item>
 						<swiper-item>
-							<view class="item" v-for="(item, index) in schoolTopic" :key="index"  @tap="handleClick">
+							<view class="item" v-for="(item, index) in schoolTopic" :key="index"  @tap="handleClick(item.id)">
 								<view class="show">
-									<image :src="$aliImage + 'read-demo.png'"></image>
+									<image :src="item.imgInfo[0].url" v-if="item.imgInfo && item.imgInfo.length > 0"></image>
+									<image :src="$aliImage + 'read-demo.png'" v-else></image>
 								</view>
 								<view class="context">
 									<view class="title">
-										<text>21天养成阅读习惯</text>
-										<image :src="$aliImage + 'read-topic-01.png'" mode=""></image>
+										<text>{{ item.title }}</text>
+										<image :src="$aliImage + 'read-topic-01.png'"  v-if="item.type === 'pk'"></image>
+										<image :src="$aliImage + 'read-topic-02.png'"  v-else-if="item.type === 'chat'"></image>
+										<image :src="$aliImage + 'read-topic-03.png'" v-else></image>
 									</view>
 									<view class="detail">
-										<text>通过五车书小程序完成21天阅读打卡任务</text>
+										<text>{{ item.description }}</text>
 									</view>
 									<view class="time">
-										<text>话题周期：2020.10.20-2020.11.25</text>
+										<text>话题周期：{{ item.start_time }}-{{ item.end_time }}</text>
 									</view>
 								</view>
 							</view>
 						</swiper-item>
 						<swiper-item>
-							<view class="item" v-for="(item, index) in gradeTopic" :key="index"  @tap="handleClick">
+							<view class="item" v-for="(item, index) in classTopic" :key="index"  @tap="handleClick(item.id)">
 								<view class="show">
-									<image :src="$aliImage + 'read-demo.png'"></image>
+									<image :src="item.imgInfo[0].url" v-if="item.imgInfo && item.imgInfo.length > 0"></image>
+									<image :src="$aliImage + 'read-demo.png'" v-else></image>
 								</view>
 								<view class="context">
 									<view class="title">
-										<text>21天养成阅读习惯</text>
-										<image :src="$aliImage + 'read-topic-01.png'" mode=""></image>
+										<text>{{ item.title }}</text>
+										<image :src="$aliImage + 'read-topic-01.png'"  v-if="item.type === 'pk'"></image>
+										<image :src="$aliImage + 'read-topic-02.png'"  v-else-if="item.type === 'chat'"></image>
+										<image :src="$aliImage + 'read-topic-03.png'" v-else></image>
 									</view>
 									<view class="detail">
-										<text>通过五车书小程序完成21天阅读打卡任务</text>
+										<text>{{ item.description }}</text>
 									</view>
 									<view class="time">
-										<text>话题周期：2020.10.20-2020.11.25</text>
+										<text>话题周期：{{ item.start_time }}-{{ item.end_time }}</text>
 									</view>
 								</view>
 							</view>
 						</swiper-item>
 						
 					</swiper>
-					<view style="line-height: 60px;">
+					<view>
 						<uni-load-more :status="loadStatus" :content-text="loadText" />
 					</view>
 				</scroll-view>
@@ -86,22 +94,25 @@
 <script>
 	import uniLoadMore from '@/components/uni-load-more/uni-load-more.vue';
 	export default {
+		props: {
+			schoolId: String
+		},
 		data() {
 			return {
 				$aliImage: this.$aliImage,
 				//模拟话题数据
 				allTopic: [],
 				schoolTopic: [],
-				gradeTopic: [],
+				classTopic: [],
 				navList: [
-					{title: '全部话题'},
+					{title: '全站话题'},
 					{title: '园内话题'},
 					{title: '班内话题'}
 				],
 				swiperHeight: '', //定义swiper1的高度
 				currentIndex: 0, 
 				itemHeight: 0,
-				pageSize: '10',
+				pageSize: '4',
 				currentPage: 1,
 				totalPage: 0, //总条数
 				loadStatus: 'noMore',
@@ -110,65 +121,87 @@
 					contentrefresh: '加载中',
 					contentnomore: '暂无更多数据'
 				},
-				
+				school_id: '4', //学校id
+				totalPage: 0, //话题总条数
+				isLoadMore: false, //判断是否开启上拉加载更多
 			}
 		},
 		components: {
 			uniLoadMore
 		},
-		mounted() {
-			// 获取话题列表(默认获取全站话题)
-			this.selReadingTopic('all')
-			
+		watch:{
+			schoolId(newVal) {
+				this.school_id = newVal
+				// 获取话题列表(默认获取全站话题)
+				this.selReadingTopic('all')
+			}
 		},
 		methods: {
 			// 获取元素节点
 			getEleRect(topicArr) {
 				if(this.itemHeight == '') {
-					console.log('entry')
 					const query = uni.createSelectorQuery().in(this);
 					setTimeout(() => {
 						query.selectAll('.item').boundingClientRect(data => {
 							if(data && data.length > 0) {
 								this.itemHeight = data[0].height
 								this.swiperHeight = this.itemHeight * topicArr.length + 'px'
-								console.log(this.swiperHeight)
+								
 							}else {
-								this.swiperHeight = 60 + 'px'
+								this.swiperHeight = 0 + 'px'
 							}
-							
 						}).exec();
 					}, 200)
 				}else {
 					this.swiperHeight = this.itemHeight * topicArr.length + 'px'
 				}
-				
 			},
 			// 获取话题列表
 			selReadingTopic(show_range) {
+				let school_id = ''
+				if(show_range === 'all') {
+					school_id = ''
+				}else {
+					school_id = this.school_id
+				}
 				let params = {
 					currentPage: String(this.currentPage),
 					pageSize: this.pageSize,
 					filterItems: {
 						show_range: show_range,
-						school_id: '4'
+						school_id: school_id
 					}
 				}
 				this.$api.selReadingTopic(params).then(res => {
 					let result = res.data.rows
+					this.totalPage = res.data.totalPage
+					
+					// 格式化开始结束时间
+					if(result && result.length > 0) {
+						result.map(item => {
+							item.start_time = this.formatTime(item.start_time)
+							item.end_time = this.formatTime(item.end_time)
+						})
+					}
 					console.log(result)
 					switch(show_range) {
 						case 'all':
 						this.allTopic = [...this.allTopic, ...result]
 						this.getEleRect(this.allTopic)
+						// 判断是否开启上拉加载更多
+						this.openLoadMore(this.allTopic)
 						break
 						case 'school': 
 						this.schoolTopic = [...this.schoolTopic, ...result]
 						this.getEleRect(this.schoolTopic)
+						// 判断是否开启上拉加载更多
+						this.openLoadMore(this.schoolTopic)
 						break
-						case 'grade':
-						this.gradeTopic = [...this.gradeTopic, ...result]
-						this.getEleRect(this.gradeTopic)
+						case 'class':
+						this.classTopic = [...this.classTopic, ...result]
+						this.getEleRect(this.classTopic)
+						// 判断是否开启上拉加载更多
+						this.openLoadMore(this.classTopic)
 						break
 						default:
 						this.allTopic = [...this.allTopic, ...result]
@@ -176,9 +209,47 @@
 					}
 				})
 			},
+			// 格式化时间
+			formatTime(time) {
+				let date = new Date(time)
+				let year = date.getFullYear()
+				let month = this.complete(date.getMonth() + 1)
+				let day = this.complete(date.getDate())
+				return year +'-'+ month + '-' + day
+			},
+			// 补零操作
+			complete(number) {
+				let num =	number > 9 ? number : '0' + number
+				return num
+			},
+			// 判断是否开启上拉加载更多
+			openLoadMore(topicArr) {
+				if(this.totalPage <= topicArr.length) {
+					this.isLoadMore = false
+					this.loadStatus = 'noMore'
+				}else {
+					this.isLoadMore = true
+					this.loadStatus = 'more'
+				}
+			},
 			// 话题加载更多
 			loadMore() {
-				let test = [1,3,4]
+				if(this.isLoadMore) {
+					this.currentPage = this.currentPage + 1
+					this.loadStatus = 'loading'
+					switch(this.currentIndex) {
+						case 0:
+						this.selReadingTopic('all')
+						break
+						case 1:
+						this.selReadingTopic('school')
+						break
+						case 2:
+						this.selReadingTopic('class')
+						default:
+						return
+					}
+				}
 				
 			},
 			// 监听swiper改变
@@ -187,15 +258,19 @@
 				// 刷新数据跟重置swiper高度
 				switch(event.detail.current) {
 					case 0:
+					this.allTopic = []
 					this.currentPage = 1
+				
 					this.selReadingTopic('all')
 					break
 					case 1:
 					this.currentPage = 1
+					this.schoolTopic = []
 					this.selReadingTopic('school')
 					break
 					case 2:
 					this.currentPage = 1
+					this.classTopic = []
 					this.selReadingTopic('class')
 					break
 					default: 
@@ -208,8 +283,8 @@
 				// 刷新数据跟重置swiper高度
 			},
 			// 跳转详情
-			handleClick() {
-				this.$emit('checkTopicDetail')
+			handleClick(id) {
+				this.$emit('checkTopicDetail', id)
 			},
 		}
 	}

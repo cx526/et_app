@@ -1,7 +1,7 @@
 <template>
 	<view v-if="isLogin">
 		<!-- 个人信息 -->
-		<userInfo @checkTopicRecord="checkTopicRecord" @checkMyRemark="checkMyRemark" @chooseItem="chooseItem" :custom_type = "data.custom_type" />
+		<userInfo @checkTopicRecord="checkTopicRecord" @checkMyRemark="checkMyRemark" @chooseItem="chooseItem" :user_data="data" />
 		<!-- 活力排版 -->
 		<typesetting @checkVigourDetail="checkVigourDetail" />
 		<!-- 通告栏 -->
@@ -9,7 +9,7 @@
 		<!-- 阅读统计 -->
 		<stat @checkReadingDetail="checkReadingDetail" />
 		<!-- 话题 -->
-		<topic @checkTopicDetail="checkTopicDetail" />
+		<topic @checkTopicDetail="checkTopicDetail" :schoolId = "data.schoolInfo.id" />
 		<!-- 热门打卡 -->
 		<markUp @comment="comment" @handleComment="handleComment" :loadMore="true" />
 	</view>
@@ -50,7 +50,7 @@
 		methods: {
 			// 检测登录状态
 			checkLogin() {
-				let userInfo = this.userInfo
+				let userInfo = uni.getStorageSync('userInfo')
 				if(!userInfo.name || userInfo.name === 'guest' || !userInfo.mobile || userInfo.mobile == '') {
 					this.isLogin = false
 					uni.showModal({
@@ -95,12 +95,17 @@
 			getUserInfo() {
 				if(!this.userInfo.mobile || this.userInfo.mobile === '') { return }
 				let params = {
-					mobile: this.userInfo.mobile
+					filterItems: {
+						mobile: this.userInfo.mobile
+					}
 				}
-				this.$api.offlineUserDockerInfo(params).then(res => {
-					this.data = res.data
+				this.$api.getCustom(params).then(res => {
+					this.data = res.data[0]
 					this.school_id = res.data.school_id
 					console.log(this.data)
+					let userInfo = uni.getStorageSync('userInfo')
+					userInfo.id = this.data.id
+					uni.setStorageSync('userInfo', userInfo)
 				})
 			},
 			// 查看话题记录
@@ -123,9 +128,10 @@
 				})
 			},
 			// 查看话题详情
-			checkTopicDetail() {
+			checkTopicDetail(id) {
+				
 				uni.navigateTo({
-					url: '/pages/circle/topic-detail?custom_type='+this.data.custom_type
+					url: '/pages/circle/topic-detail?custom_type='+this.data.custom_type+'&id='+id
 				})
 			},
 			// 查看打卡评论

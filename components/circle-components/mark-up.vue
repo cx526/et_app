@@ -50,9 +50,10 @@
 					<view class="comment">
 						<text class="time">2020-10-28 10:06</text>
 						<view class="detail">
-							<view class="comment-item" v-for="(item, index) in commentList" :key="index" @tap="handleClick(index)">
-								<image :src="$aliImage + item.imgUrl"></image>
-								<text>{{ item.title }}</text>
+							<view class="comment-item" v-for="(item, index) in commentList" :key="index" @tap="handleClick(index)" >
+									<image :src="$aliImage + item.imgUrl"></image>
+									<text>{{ item.title }}</text>
+								
 							</view>
 						</view>
 					</view>
@@ -79,7 +80,8 @@
 			loadMore: {
 				type: Boolean,
 				default: false
-			}
+			},
+			show_comment: String, //控制是否显示评论选项
 		},
 		components: {
 			uniLoadMore
@@ -111,6 +113,11 @@
 				pageSize: '10',
 				currentPage: 1,
 				totalPage: 0, //总条数
+			}
+		},
+		watch: {
+			show_comment(newVal) {
+				this.show_comment = newVal
 			}
 		},
 		methods: {

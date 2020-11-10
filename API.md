@@ -89,8 +89,8 @@
           "custom_id": "61",
           "content": "打卡内容",   话题类型 vitality：活力打卡，chat：轻松畅聊，pk：阅读PK 
           "topic_id": "1",
-          "show_status": "2",  0:不显示，1：显示， 2：审核中 3：违规
-          "show_comment": "0" 0:不显示评论，1：显示评论
+          "show_status": "2",  0:不显示，1：显示， 2：审核中 3：违规(et_app可以不传)
+          "show_comment": "0" 0:不显示评论，1：显示评论(目前暂时跟话题同步)
       }
      * 
      */

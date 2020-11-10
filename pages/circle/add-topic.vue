@@ -47,6 +47,21 @@
 				<text class="label">奖励</text>
 				<input placeholder="请输入话题奖励" @input="getTopicReward" @blur="blurReward" :value="topicReward" />
 			</view>
+			<!-- 只有admin身份才可设置奖励积分/免费次数/五车贝 -->
+			<block v-if="userInfo.openId === 'oUume4hcYaqvcF6OEwPcIsNivTIw' && topicTypeIndex !== 2">
+				<view class="item">
+					<text class="label">积分</text>
+					<input type="number" placeholder="请输入五车贝奖励" @input="getRewardCoin" :value="reward_coin" />
+				</view>
+				<view class="item">
+					<text class="label">五车贝</text>
+					<input type="number" placeholder="请输入积分奖励" @input="getRewardShell" :value="reward_shell" />
+				</view>
+				<view class="item">
+					<text class="label">免费次数</text>
+					<input type="number" placeholder="请输入免费次数奖励" @input="getRewardFree" :value="reward_free" />
+				</view>
+			</block>
 			<!-- 是否开启评论 -->
 			<view class="item">
 				<text class="label">开启评论</text>
@@ -94,18 +109,28 @@
 			</block>
 			<!-- admin身份 -->
 			<block v-else>
+				<!-- 校园 -->
+				<view class="item" v-if="topicScopeIndex !== 0">
+					<text class="label">学校</text>
+					<view class="type">
+						<picker :range="schoolList" @change="changeSchool" range-key="name">
+							<input placeholder="请选择学校" :value="schoolList[schoolIndex].name" disabled />
+						</picker>
+						<image :src="$aliImage + 'read-icon-gray-right.png'" mode="widthFix"></image>
+					</view>	
+				</view>
 				<!-- 年级 -->
-				<view class="item" v-if="topicScopeIndex == '2' || topicScopeIndex == '3'">
+				<view class="item" v-if="topicScopeIndex !== 0">
 					<text class="label">年级</text>
 					<view class="type">
-						<picker :range="gradeList" @change="changeGrade" :range-key="name">
+						<picker :range="gradeList" @change="changeGrade" range-key="name">
 							<input placeholder="请选择年级" :value="gradeList[gradeIndex].name" disabled />
 						</picker>
 						<image :src="$aliImage + 'read-icon-gray-right.png'" mode="widthFix"></image>
 					</view>	
 				</view>
 				<!-- 班级 -->
-				<view class="item" v-if="topicScopeIndex == '2' || topicScopeIndex == '3'">
+				<view class="item" v-if="topicScopeIndex !== 0">
 					<text class="label">班级</text>
 					<view class="type">
 						<picker :range="classList" @change="changeClass">
@@ -167,6 +192,9 @@
 				end_time: '', //话题结束时间
 				description: '', //话题简介
 				reward_gift: '', //话题奖励
+				reward_shell: '', //五车贝
+				reward_free: '', //免费次数
+				reward_coin: '', //积分
 				topicScope: [
 					{
 						title: '本园公开',
@@ -184,6 +212,8 @@
 				topicScopeIndex: 0, //话题范围
 				show_range: '',//话题可见范围
 				school_id: '', //学校id
+				schoolList: [], //学校
+				schoolIndex: '',
 				gradeList: [], //年级
 				gradeIndex: '',
 				grade_id: '', // 年级id
@@ -240,17 +270,27 @@
 				let school_id = this.school_id
 				this.$api.getSchoolInfo().then(res => {
 					let result = res.data
-					let currentSchool = []
-					if(result && result.length > 0) {
-						currentSchool = result.filter(item => {
-							return item.id == school_id
-						})
-					}
-					// 初始化所在学校年级
-					this.gradeList = currentSchool[0].classInfo
-					console.log(this.gradeList)
-					for (let i = 1; i < 51; i++) {
-						this.classList.push(String(i));
+					console.log(result)
+					
+					// 不是admin身份
+					if(this.userInfo.openId !== 'oUume4hcYaqvcF6OEwPcIsNivTIw') {
+						let currentSchool = []
+						if(result && result.length > 0) {
+							currentSchool = result.filter(item => {
+								return item.id == school_id
+							})
+						}
+						// 初始化所在学校年级
+						this.gradeList = currentSchool[0].classInfo
+						for (let i = 1; i < 51; i++) {
+							this.classList.push(String(i));
+						}
+					}else {
+						this.schoolList = result
+						console.log(this.schoolList)
+						for (let i = 1; i < 51; i++) {
+							this.classList.push(String(i));
+						}
 					}
 				})
 			},
@@ -322,6 +362,21 @@
 				this.reward_gift = event.detail.value.replace(/\s*/g, '')
 				
 			},
+			// 获取要奖励的积分
+			getRewardCoin(event) {
+				let value = event.detail.value
+				this.reward_coin = String(value)
+			},
+			// 获取要奖励的五车贝
+			getRewardShell(event) {
+				let value = event.detail.value
+				this.reward_shell = String(value)
+			},
+			// 获取要奖励的积分
+			getRewardFree(event) {
+				let value = event.detail.value
+				this.reward_free = String(value)
+			},
 			// 监听表单失去焦点事件
 			blurReward() {
 				this.checkText('reward', this.reward_gift)
@@ -337,7 +392,19 @@
 				this.grade_id = ''
 				this.class_id = ''
 				console.log(this.show_range)
-	
+				// 如果是admin身份
+				if(this.userInfo.openId === 'oUume4hcYaqvcF6OEwPcIsNivTIw') {
+					this.schoolIndex = ''
+					this.school_id = ''
+				}
+			},
+			// 选择校园
+			changeSchool(event) {
+				let index = event.detail.value
+				this.schoolIndex = index
+				this.school_id = String(this.schoolList[index].id)
+				console.log(this.school_id)
+				this.gradeList = this.schoolList[index].classInfo
 			},
 			// 选择年级
 			changeGrade(event) {
@@ -454,7 +521,6 @@
 			},
 			// 发布话题
 			publish() {
-				// userInfo.openId !== 'oUume4hcYaqvcF6OEwPcIsNivTIw'
 				// 必填项(测试默认封面可有可无，上线需要 this.coverImgUrl)
 				if(this.custom_id == '' || this.title == '' || this.description == '' || this.target_vitality == '' || this.start_time == '' || this.end_time == '') {
 					uni.showToast({
@@ -464,8 +530,8 @@
 					})
 					return
 				}
-				// 如果话题可见范围为本年级/本班级时，需要选择年级及所在班级信息
-				if(this.show_range == 'grade' || this.show_range == 'class') {
+				// 如果话题可见范围为本年级/本班级时，需要选择年级及所在班级信息(不是admin身份)
+				if(this.userInfo.openId !== 'oUume4hcYaqvcF6OEwPcIsNivTIw' &&(this.show_range == 'grade' || this.show_range == 'class')) {
 					if(this.grade_id == '' || this.class_id == '') {
 						uni.showToast({
 							title: '请选全年级班级信息',
@@ -475,14 +541,40 @@
 						return
 					}
 				}
+				// 如果是admin身份且话题范围不为所有公开时
+				if(this.userInfo.openId === 'oUume4hcYaqvcF6OEwPcIsNivTIw' && this.show_range !== 'all') {
+					if(this.school_id === '' || this.grade_id == '' || this.class_id == '') {
+						uni.showToast({
+							title: '请选全年级班级信息',
+							icon: 'none',
+							duration: 1500
+						})
+						return
+					}
+				}
+				// 如果是admin身份且话题范围是所有公开时，school_id为空
+				if(this.userInfo.openId === 'oUume4hcYaqvcF6OEwPcIsNivTIw' && this.show_range === 'all') {
+					this.school_id = ''
+				}
+				// 检测开始时间是否晚于结束时间
+				let start_time = new Date(this.start_time).getTime()
+				let end_time = new Date(this.end_time).getTime()
+				if(start_time >= end_time) {
+					uni.showToast({
+						title: '结束时间不能早于开始时间',
+						icon: 'none',
+						duration: 2000
+					})
+					return
+				}
 				let params = {
 					custom_id: String(this.custom_id), //用户id
 					type: String(this.type), //话题类型
 					title: String(this.title), //话题标题
 					description: String(this.description), //话题简介
-					reward_shell: '0',
-					reward_free: '0',
-					reward_coin: '0',
+					reward_shell: this.reward_shell ? this.reward_shell : '0',
+					reward_free: this.reward_free ? this.reward_free : '0',
+					reward_coin: this.reward_coin ? this.reward_coin : '0',
 					reward_gift: String(this.reward_gift), //奖励
 					reward_vitality: '1', //打卡奖励活力值,
 					target_vitality: String(this.target_vitality), //目标活力值
