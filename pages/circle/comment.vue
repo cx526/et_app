@@ -1,30 +1,30 @@
 <template>
 	<view>
-		<markUp :title="false" />
+		<markUp :title="false" :topicMark="topicMark" parent="comment" />
 		<!-- 评论列表 -->
-		<view class="comment">
-			<scroll-view class="list" scroll-y style="max-height: 515rpx;">
+		<view class="comment" v-if="commentList && commentList.length > 0">
+			<scroll-view class="list" scroll-y style="max-height: 515rpx;" >
 				<view class="title">
 					<view class="left">
 						<image :src="$aliImage + 'read-line.png'" mode="widthFix"></image>
 						<text>评论</text>
 					</view>
 					<view class="right">
-						<text>共8条</text>
+						<text>共{{ totalPage }}条</text>
 					</view>
 				</view>
-				<view class="item" v-for="n in 5" :key="n" @tap="handleComment">
+				<view class="item" v-for="(item, index) in commentList" :key="index" @tap="handleComment" :class="(index + 1) == commentList.length ? ' border-none' : ''">
 					<view class="left">
 						<image :src="userInfo.avatar" mode="widthFix"></image>
 					</view>
 					<view class="right">
 						<view class="context">
 							<text class="name">小A小朋友：</text>
-							<text class="content">这本书非常值得借阅这本书非常值得借阅这本书非常值得借阅</text>
+							<text class="content">{{ item.content }}</text>
 						</view>
 						<view class="grade-info">
 							<text>大良幸福幼儿园  大班3班</text>
-							<text>2020-10-20  08:54</text>
+							<text>{{ item.create_time }}</text>
 						</view>
 					</view>
 				</view>
@@ -33,6 +33,7 @@
 				</view>
 			</scroll-view>
 		</view>
+		<view class="none" v-else>暂无评论内容</view>
 		<!-- 评论框 -->
 		<view class="comment-input">
 			<view class="input">
@@ -62,17 +63,124 @@
 					contentrefresh: '加载中',
 					contentnomore: '暂无更多数据'
 				},
+				custom_id: '', //用户id
+				topic_id: '', //话题id
+				mark_id: '', //打卡id
+				topicMark: [], //打卡详情
+				commentList: [], //评论数据
+				totalPage: 0,
 			}
 		},
 		components: {
 			markUp,
 			uniLoadMore
 		},
-		onLoad() {
+		onLoad(options) {
+			let params = JSON.parse(options.params)
+			console.log(params)
+			this.custom_id = params.custom_id //用户id
+			this.topic_id = params.topic_id //话题id
+			this.mark_id = params.mark_id //打卡id
+			// 查看打卡详情
+			this.selReadingMark()
+			// 查看打卡评论
+			this.selReadingComment()
 			// 获取access_token
 			this.getAccessToken()
 		},
 		methods: {
+			// 获取打卡详情
+			selReadingMark() {
+				let params = {
+					pageSize: this.pageSize,
+					currentPage: String(this.currentPage),
+					filterItems: {
+						id: this.mark_id
+					}
+				}
+				this.$api.selReadingMark(params).then(res => {
+					let result = res.data.rows
+					if(result && result.length > 0) {
+						result.map(item => {
+							item.create_time = this.formatTime(item.create_time, 'YY:MM:DD: hh:mm:ss')
+							item.customInfo.vitality = parseInt(item.customInfo.vitality)
+						})
+					}
+					this.topicMark = result
+				})
+			},
+			// 查看打卡评论
+			selReadingComment() {
+				let params = {
+					filterItems: {
+						mark_id: this.mark_id
+					}
+				}
+				this.$api.selReadingComment(params).then(res => {
+					this.totalPage = res.data.totalPage
+					let result = res.data.rows
+					if(result && result.length > 0) {
+						result.map(item => {
+							item.create_time = this.formatTime(item.create_time)
+						})
+					}
+					this.commentList = [...this.commentList, ...result]
+				})
+			},
+			// 发表评论
+			addReadingComment() {
+				if(this.context === '') {
+					uni.showToast({
+						title: '请输入评论内容',
+						icon: 'none',
+						duration: 1500
+					})
+					return
+				}
+				let params = {
+					custom_id: String(this.custom_id),
+					content: this.context,
+					topic_id: String(this.topic_id),
+					mark_id: String(this.mark_id)
+				}
+				this.$api.addReadingComment(params).then(res => {
+					console.log(res)
+					if(res.data.status === 'ok') {
+						uni.showToast({
+							title: '评论成功',
+							icon:'none',
+							duration: 1500,
+							success: () => {
+								this.context = ''
+								// 刷新评论内容
+								this.currentPage = 1,
+								this.selReadingComment()
+							}
+						})
+					}
+				})
+			},
+			// 格式化时间
+			formatTime(time, type) {
+				let date = new Date(time)
+				let year = date.getFullYear()
+				let month = this.complete(date.getMonth() + 1)
+				let day = this.complete(date.getDate())
+				let hour = this.complete(date.getHours())
+				let minute = this.complete(date.getMinutes())
+				let second = this.complete(date.getSeconds())
+				if(type === 'YY:MM:DD') {
+					return year +'-'+ month + '-' + day
+				}else {
+					return year +'-'+ month + '-' + day +' '+ hour +':'+ minute +':'+ second
+				}
+				
+			},
+			// 补零操作
+			complete(number) {
+				let num =	number > 9 ? number : '0' + number
+				return num
+			},
 			// 举报/删除打卡
 			handleComment() {
 				uni.showActionSheet({
@@ -94,7 +202,7 @@
 			},
 			// 获取评论框输入的内容
 			getComment(event) {
-				this.context = event.detail.value
+				this.context = event.detail.value.replace(/\s*/g, '')
 			},
 			// 提交评论
 			submit() {
@@ -112,7 +220,6 @@
 							let arr = []
 							arr[0] = res.data.access_token
 							arr[1] = new Date().getTime() + (7200 * 1000)
-							console.log(arr)
 							uni.setStorageSync('access_token', arr)
 						}
 					})
@@ -132,7 +239,6 @@
 						content: text
 					},
 					success: res => {
-						console.log(res)
 						if(res.data.errcode === 87014) {
 							uni.showToast({
 								title: '您输入的内容带有敏感词，请重新输入',
@@ -144,6 +250,7 @@
 							})
 						}else {
 							// 提交评论请求
+							this.addReadingComment()
 						}
 					}
 				})
@@ -273,5 +380,15 @@
 		background: #FFFFFF;
 		padding: 0 6rpx;
 		border-radius: 4rpx;
+	}
+	.none {
+		box-sizing: border-box;
+		padding: 30rpx;
+		text-align: center;
+		color: #808080;
+		font-size: 30rpx;
+	}
+	.border-none {
+		border-bottom: none !important;
 	}
 </style>

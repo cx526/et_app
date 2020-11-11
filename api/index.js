@@ -221,14 +221,31 @@ api.addReadingTopic = params => request.globalRequest('/api/reading/addReadingTo
 // 查看话题
 api.selReadingTopic = params => request.globalRequest('/api/reading/selReadingTopic', 'POST', params)
 
+// 查看话题活力之星(排名前三)
+api.selReadingTopicTopCustom = params => request.globalRequest('/api/reading/selReadingTopicTopCustom','POST', params)
+
 // 创建打卡
 api.addReadingMark = params => request.globalRequest('/api/reading/addReadingMark', 'POST', params)
 
 // 查看打卡
 api.selReadingMark = params => request.globalRequest('/api/reading/selReadingMark', 'POST', params)
 
+// 查看热门打卡
+api.selReadingMarkByHot = params => request.globalRequest('/api/reading/selReadingMarkByHot', 'POST', params)
+
+// 删除打卡
+api.delReadingMark = params => request.globalRequest('/api/reading/delReadingMark', 'POST', params)
+
+// 发表评论
+api.addReadingComment = params => request.globalRequest('/api/reading/addReadingComment', 'POST', params)
+
+// 查看打卡评论
+api.selReadingComment = params => request.globalRequest('/api/reading/selReadingComment', 'POST', params)
+
 // 查看活力值详情
 api.selReadingVitalityDetail = params => request.globalRequest('/api/reading/selReadingVitalityDetail', 'POST', params)
+
+
 
 // 上传图片的回调
 api.addUploadPic = params => request.globalRequest('/api/upload/addUploadPic', 'POST', params)

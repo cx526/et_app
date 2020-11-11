@@ -1,69 +1,86 @@
 <template>
 	<view class="card-box">
-		<view class="card">
+		<view class="card" v-if="topicMark && topicMark.length > 0">
 			<view class="title" v-if="title">
 				<view class="left">
 					<image :src="$aliImage + 'read-line.png'" mode="" class="line"></image>
 					<text>热门打卡</text>
 				</view>
-				<view class="right">
+				<view class="right" @tap="reload">
 					<text>换一批</text>
 					<image :src="$aliImage + 'read-reload.png'" mode=""></image>
 				</view>
 			</view>
-			<scroll-view class="list" style="max-height: 1000rpx;" scroll-y @scrolltolower="loadingMore">
-				<view class="item" v-for="n in 1" :key="n">
+			<scroll-view class="list" style="max-height: 1000rpx;" scroll-y @scrolltolower="loadingMore" >
+				<view class="item" v-for="(item, index) in topicMark" :key="index">
 					<view class="user">
 						<view class="show">
-							<image :src="userInfo.avatar" mode=""></image>
+							<image :src="item.customInfo.avatar" mode=""></image>
 						</view>
 						<view class="context">
 							<view class="preson-info">
 								<view class="left">
-									<text>小A小朋友</text>
+									<text>{{ item.childInfo.name }}小朋友</text>
+									<!-- 显示总的活力值 -->
 									<view class="vitality">
 										<image :src="$aliImage + 'read-vitality.png'" mode=""></image>
-										<text>24</text>
+										<text>{{ item.customInfo.vitality }}</text>
 									</view>
 								</view>
-								<view class="right" @tap="handleComment">
+								<view class="right" @tap="handleComment(item)" v-if="parent !== 'comment'">
 									<image :src="$aliImage + 'read-ellipsis.png'" mode=""></image>
 								</view>
 							</view>
 							<view class="grade-info">
-								<text style="margin-right: 8rpx;">大良幸福幼儿园</text>
-								<text>小小班1班</text>
+								<text style="margin-right: 8rpx;">{{ item.schoolInfo.name }}</text>
+								<text v-if="JSON.stringify(item.gradeInfo) !== '{}'">{{item.gradeInfo.name + item.childInfo.class + '班'}}</text>
 							</view>
 						</view>
 						
 					</view>
-					<view class="content">
-						<text style="color: #2AAEC4;margin-right: 10rpx;">#活力打卡#</text>
-						<text>我今天和爸爸一起看了《巴巴和圣诞老人》</text>
+					<!-- 活力详情页 -->
+					<view class="content" v-if="parent === 'topic-detail'">
+						<text style="color: #2AAEC4;margin-right: 10rpx;" v-if="topic_type === 'pk'">#阅读pk#</text>
+						<text style="color: #2AAEC4;margin-right: 10rpx;" v-else-if="topic_type === 'chat'">#轻松畅聊#</text>
+						<text style="color: #2AAEC4;margin-right: 10rpx;" v-else>#活力打卡#</text>
+						<text>{{ item.content }}</text>
 					</view>
-					<view class="photo">
-						<image :src="$aliImage + 'read-upload.png'"></image>
-						<image :src="$aliImage + 'read-upload.png'"></image>
-						<image :src="$aliImage + 'read-upload.png'"></image>
-						<image :src="$aliImage + 'read-upload.png'"></image>
+					<!-- 首页 -->
+					<view class="content" v-else>
+						<text style="color: #2AAEC4;margin-right: 10rpx;" v-if="item.type === 'pk'">#阅读pk#</text>
+						<text style="color: #2AAEC4;margin-right: 10rpx;" v-else-if="item.type === 'chat'">#轻松畅聊#</text>
+						<text style="color: #2AAEC4;margin-right: 10rpx;" v-else>#活力打卡#</text>
+						<text>{{ item.content }}</text>
+					</view>
+					
+					<view class="photo" v-if="item.imgInfo && item.imgInfo.length > 0">
+						<image v-for="(list,listIndex) in item.imgInfo" :key="listIndex" :src="list.url" ></image>
 					</view>
 					<view class="comment">
-						<text class="time">2020-10-28 10:06</text>
+						<text class="time">{{ item.create_time }}</text>
 						<view class="detail">
-							<view class="comment-item" v-for="(item, index) in commentList" :key="index" @tap="handleClick(index)" >
-									<image :src="$aliImage + item.imgUrl"></image>
-									<text>{{ item.title }}</text>
-								
+							<view class="comment-item"  @tap="handleClick('like')" >
+									<image :src="$aliImage + 'read-like.png'"></image>
+									<text>点赞</text>
+							</view>
+							<view class="comment-item"  @tap="handleClick('comment', item)" v-if="item.show_comment === '1'">
+									<image :src="$aliImage + 'read-comment.png'"></image>
+									<text>评论</text>
+							</view>
+							<view class="comment-item"  @tap="handleClick('share')" >
+									<image :src="$aliImage + 'read-share.png'"></image>
+									<text>分享</text>
 							</view>
 						</view>
 					</view>
 				</view>
 				
 			</scroll-view>
-			<view style="line-height: 60px;" v-if="loadMore">
+			<view style="line-height: 60px;" v-if="parent === 'topic-detail'">
 				<uni-load-more :status="loadStatus" :content-text="loadText" />
 			</view>
 		</view>
+		<view v-else class="none">暂无打卡记录</view>
 	</view>
 </template>
 
@@ -71,7 +88,12 @@
 	import uniLoadMore from '@/components/uni-load-more/uni-load-more.vue';
 	export default {
 		props: {
-			// 控制是否显示标题
+			// 区别从哪个页面引用该组件
+			parent: {
+				type: String,
+				default: 'topic-detail'
+			},
+			// 控制是否显示标题(缓一缓按钮)
 			title: {
 				type: Boolean,
 				default: true
@@ -82,6 +104,17 @@
 				default: false
 			},
 			show_comment: String, //控制是否显示评论选项
+			// 打卡数据
+			topicMark: {
+				type: Array,
+				default: []
+			},
+			topic_type: String, //话题类型
+			// 加载更多文案提示
+			loadStatus: {
+				type: String,
+				default: 'more'
+			}
 		},
 		components: {
 			uniLoadMore
@@ -109,7 +142,6 @@
 					contentrefresh: '加载中',
 					contentnomore: '暂无更多数据'
 				},
-				loadStatus: 'noMore',
 				pageSize: '10',
 				currentPage: 1,
 				totalPage: 0, //总条数
@@ -118,19 +150,32 @@
 		watch: {
 			show_comment(newVal) {
 				this.show_comment = newVal
+			},
+			topicMark(newVal) {
+				this.topicMark = newVal		
+				console.log(this.topicMark)
+			},
+			topic_type(newVal) {
+				this.topic_type = newVal
+			},
+			loadMore(newVal) {
+				this.loadMore = newVal
+			},
+			loadStatus(newVal) {
+				this.loadStatus = newVal
 			}
 		},
 		methods: {
 			// 点赞、评论、分享打卡
-			handleClick(index) {
-				switch(index) {
-					case 0:
+			handleClick(type, item) {
+				switch(type) {
+					case 'link':
 					console.log('点赞')
 					break
-					case 1:
-					this.$emit('comment')
+					case 'comment':
+					this.$emit('comment', item)
 					break
-					case 2:
+					case 'share':
 					console.log('分享')
 					break
 					default:
@@ -138,12 +183,19 @@
 				}
 			},
 			// 点击缩略点
-			handleComment() {
-				this.$emit('handleComment')
+			handleComment(item) {
+				this.$emit('handleComment', item)
+			},
+			// 刷新数据
+			reload() {
+				this.$emit('reload')
 			},
 			// 上拉加载更多
 			loadingMore() {
-				console.log(loadingMore)
+				console.log('loadMore')
+				if(this.loadMore && this.parent === 'topic-detail') {
+					this.$emit('loadingMore')
+				}
 			},
 		}
 		
@@ -315,5 +367,11 @@
 		width: 30rpx;
 		height: 30rpx;
 		margin-left: 4rpx;
+	}
+	.none {
+		box-sizing: border-box;
+		padding: 30rpx;
+		color: #808080;
+		text-align: center;
 	}
 </style>

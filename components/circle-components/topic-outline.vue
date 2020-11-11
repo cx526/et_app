@@ -6,10 +6,9 @@
 					<image :src="topicDetail.imgInfo[0].url" mode="widthFix" v-if="topicDetail.imgInfo && topicDetail.imgInfo.length > 0 " class="cover"></image>
 					<image :src="$aliImage + 'read-demo.png'" mode="widthFix" class="cover" v-else></image>
 				</view>
-				<view class="vigour" v-if="topicDetail.type === 'vitality'">
-					<!-- 只有活力打卡话题才有活力值有奖励，轻松畅聊没有活力没有奖励，阅读PK能自定义奖励但没有活力 -->
+				<view class="vigour">
 					<image :src="$aliImage + 'read-vitality.png'"></image>
-					<text>当前活力值：20</text>
+					<text>当前话题活力值: {{ vitality }}</text>
 				</view>
 			</view>
 			<!-- 话题详情页才显示，获奖名单页不显示 -->
@@ -34,8 +33,8 @@
 					<image :src="$aliImage + 'read-topic-03.png'" mode="widthFix" v-else></image>
 				</view>
 				<view class="info">
-					<!-- 轻松畅聊类型话题没有活力值 -->
-					<view class="item" v-if="topicDetail.type !== 'chat'">
+					<!-- 只有活力打卡类型有活力目标 -->
+					<view class="item" v-if="topicDetail.type === 'vitality'">
 						<image :src="$aliImage + 'read-target.png'" mode="widthFix"></image>
 						<text>目标活力值：{{ topicDetail.target_vitality }}</text>
 					</view>
@@ -56,10 +55,12 @@
 						<text>话题周期：{{ topicDetail.start_time }}-{{ topicDetail.end_time }}</text>
 					</view>
 					<!-- 只有活力打卡类型话题才显示 -->
-					<view class="right" v-if="topicDetail.type === 'vitality'">
+					<view class="right" v-if="vitalityList && vitalityList.length > 0">
 						<text>话题活力之星</text>
 						<view class="show">
-							<image :src="userInfo.avatar" mode="widthFix" v-for="n in 3" :key="n"></image>
+							<block v-for="(item, index) in vitalityList" :key="index">
+								<image mode="widthFix" :src="item.customInfo.avatar" v-if="index < 3"></image>
+							</block>
 						</view>
 					</view>
 				</view>
@@ -72,12 +73,23 @@
 <script>
 	export default {
 		props: {
+			// 区别从哪个页面引用该组件
 			parent: {
 				type: String,
 				default: 'topic-detail'
 			},
 			custom_type: String,
-			dataList: Object
+			dataList: Object,
+			// 活力值
+			vitality: {
+				type: Number,
+				default: 0
+			},
+			// 活力之星数据
+			vitalityList: {
+				type: Array,
+				default: []
+			}
 		},
 		data() {
 			return {
@@ -90,7 +102,13 @@
 		watch: {
 			dataList(newVal) {
 				this.topicDetail = newVal
-				console.log(this.topicDetail)
+			},
+			vitality(newVal) {
+				this.vitality = newVal
+			},
+			vitalityList(newVal) {
+				this.vitalityList = newVal
+				console.log(this.vitalityList)
 			}
 		},
 		methods: {

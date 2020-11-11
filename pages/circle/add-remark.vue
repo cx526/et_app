@@ -7,7 +7,7 @@
 				<!-- 从首页进入显示 -->
 				<view class="type" v-if="comeFrom === 'index'">
 					<picker :range="topicList" range-key="title" @change="changeTopic">
-						<text>{{ topicList[topicListIndex].title }}</text>
+						<input :value="topicList[topicListIndex].title" disabled placeholder="请选择您要打卡的话题"></input>
 					</picker>
 					<image :src="$aliImage + 'read-icon-gray-right.png'"></image>
 				</view>
@@ -45,8 +45,8 @@ export default {
 	data() {
 		return {
 			$aliImage: this.$aliImage,
-			topicList: [{ title: '21天养成阅读习惯', id: 1 }, { title: '入校活动', id: 2 }],
-			topicListIndex: 0,
+			topicList: [],
+			topicListIndex: '',
 			comeFrom: '', //判断是从首页进入还是从话题详情页进入
 			title: '',
 			//储存用户上传的图片
@@ -61,22 +61,58 @@ export default {
 			topic_id: '', //话题id
 			show_comment: '', //是否开启评论
 			insertId: '', //打卡id
+			school_id: '', //学校id
 		};
 	},
 	onLoad(options) {
-		this.comeFrom = options.from;
-		this.title = options.title;
-		this.topic_id = options.topic_id
-		this.show_comment = options.show_comment
-		console.log(options);
+		this.comeFrom = options.from
+		if(options.from === 'topicDetail') {
+			console.log('topicDetail')
+			this.title = options.title
+			this.topic_id = options.topic_id
+			this.show_comment = options.show_comment
+		}else {
+			this.school_id = options.school_id
+			console.log('index')
+			// 获取本园话题
+			this.selReadingTopic()
+			// 获取全站话题
+			this.selReadingAllTopic()
+		}
+		
+		console.log(options)
 		// 获取access_token
 		this.getAccessToken()
 	},
 	methods: {
+		// 获取本园话题
+		selReadingTopic() {
+			let params = {
+				filterItems: {
+					school_id: this.school_id
+				}
+			}
+			this.$api.selReadingTopic(params).then(res => {
+				this.topicList = [...this.topicList, ...res.data.rows]
+			})
+		},
+		// 获取全站话题
+		selReadingAllTopic() {
+			let params = {
+				filterItems: {
+					show_range: 'all',
+					school_id: ''
+				}
+			}
+			this.$api.selReadingTopic(params).then(res => {
+				this.topicList = [...this.topicList, ...res.data.rows]
+			})
+		},
 		// 选择话题
 		changeTopic(event) {
 			let index = event.detail.value;
 			this.topicListIndex = index;
+			this.topic_id = this.topicList[index].id
 		},
 		// 获取文本输入内容
 		getContext(event) {
@@ -279,10 +315,13 @@ export default {
 				uni.showToast({
 					title: '打卡成功',
 					icon: 'none',
+					duration: 1500,
 					success:() => {
-						uni.navigateBack({
-							delta: 1
-						})
+						setTimeout(() => {
+							uni.navigateBack({
+								delta: 1
+							})
+						}, 1500)
 					}
 				})
 			})
@@ -292,6 +331,14 @@ export default {
 			if(this.context === '') {
 				uni.showToast({
 					title: '打卡内容不能为空',
+					icon: 'none',
+					duration: 2000
+				})
+				return
+			}
+			if(this.topic_id === '') {
+				uni.showToast({
+					title: '请选择您要打卡的话题',
 					icon: 'none',
 					duration: 2000
 				})
@@ -311,22 +358,38 @@ export default {
 					uni.showToast({
 						title: res.data.msg,
 						icon: 'none',
+						duration: 1500,
 						success: () =>{
-							uni.navigateBack({
-								delta: 1
-							})
+							setTimeout(() => {
+								uni.navigateBack({
+									delta: 1
+								})
+							}, 1500)
+							
 						}
 					})
 					return
 				}
-				this.insertId = res.data.rows.insertId
-				console.log(this.insertId)
-				if(this.imgShow && this.imgShow.length > 0) {
-					this.upLoadFile()
-				}else {
-					uni.navigateBack({
-						delta: 1
-					})
+				else {
+					this.insertId = res.data.rows.insertId
+					console.log(this.insertId)
+					if(this.imgShow && this.imgShow.length > 0) {
+						this.upLoadFile()
+					}
+					else {
+						uni.showToast({
+							title: '打卡成功',
+							icon: 'none',
+							duration: 1500,
+							success: () => {
+								setTimeout(() => {
+									uni.navigateBack({
+										delta: 1
+									})
+								}, 1500)
+							}
+						})
+					}
 				}
 			})
 			

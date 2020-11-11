@@ -109,7 +109,7 @@
 					{title: '园内话题'},
 					{title: '班内话题'}
 				],
-				swiperHeight: '', //定义swiper1的高度
+				swiperHeight: '0px', //定义swiper1的高度
 				currentIndex: 0, 
 				itemHeight: 0,
 				pageSize: '4',
@@ -150,6 +150,7 @@
 							}else {
 								this.swiperHeight = 0 + 'px'
 							}
+							console.log(this.swiperHeight)
 						}).exec();
 					}, 200)
 				}else {

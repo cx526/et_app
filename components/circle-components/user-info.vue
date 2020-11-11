@@ -21,7 +21,7 @@
 						<image :src="$aliImage + 'read-vitality.png'" mode="widthFix"></image>
 						<text>活力值</text>
 					</view>
-					<view class="number">28</view>
+					<view class="number">{{ userInfo.vitality }}</view>
 				</view>
 				<view class="message" @tap="chooseItem" v-if="custom_type !== '1'">
 					<image :src="$aliImage + 'read-message.png'" mode="widthFix"></image>

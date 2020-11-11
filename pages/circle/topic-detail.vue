@@ -2,7 +2,7 @@
 	<view>
 		<view style="margin-bottom: 25rpx;">
 			<!-- 话题简介 -->
-			<topicOutline @checkMoreDetail="checkMoreDetail" @addRemark="addRemark" :custom_type="custom_type" :dataList="topicDetail" />
+			<topicOutline @checkMoreDetail="checkMoreDetail" @addRemark="addRemark" :custom_type="custom_type" :dataList="topicDetail" :vitality="vitality" :vitalityList="vitalityList" />
 			
 		</view>
 		<!-- 只有阅读PK话题才显示，显示统计类型根据该话题的公开范围进行对应的前端显示。 -->
@@ -10,7 +10,7 @@
 			<readChart />
 		</view>
 		
-		<markUp :title="false" @comment="comment"  @handleComment="handleComment" :loadMore="true" :show_comment="topicDetail.show_comment" />
+		<markUp :title="false" @comment="comment"  @handleComment="handleComment" :loadMore="loadMore" :show_comment="topicDetail.show_comment" :topicMark="topicMark" :topic_type="topicDetail.type" :loadStatus="loadStatus" @loadingMore="loadingMore" />
 		<!-- 话题内容详细弹窗 -->
 		<uni-popup ref="contextDetail" >
 			<view :style="{'width': propUpWidth}" class="popUp">{{ topicDetail.description }}</view>
@@ -30,9 +30,17 @@
 				$aliImage: this.$aliImage,
 				userInfo: uni.getStorageSync('userInfo'),
 				propUpWidth: 0,
-				custom_type: '',
+				custom_type: '', //学生身份不显示新建打卡按钮
 				id: '', //话题id
-				topicDetail: null
+				topicDetail: null, //话题详情
+				vitality: 0, //活力值
+				totalPage: 0, //打卡总条数
+				currentPage: 1,
+				pageSize: '5',
+				topicMark: [], // 话题打卡数据
+				loadMore: true,
+				loadStatus: 'more',
+				vitalityList: [], //话题活力之星数据
 			}
 		},
 		components: {
@@ -43,9 +51,9 @@
 		},
 		onLoad(options) {
 			this.custom_type = options.custom_type
-			this.id = options.id
-			// 查看话题详细
-			this.selTopicDetail(this.id)
+			this.id = options.id //话题id
+			// 查看话题活力之星(前三)
+			this.selReadingTopicTopCustom(this.id)
 			// 设置内容弹窗宽度
 			uni.getSystemInfo({
 				success: res => {
@@ -53,7 +61,16 @@
 				}
 			})
 		},
+		onShow() {
+			// this.topicMark = []
+			this.currentPage = 1
+			// 查看话题详细
+			this.selTopicDetail(this.id)
+			// 查看话题的打卡记录
+			this.selReadingMark(this.id, 'del')
+		},
 		methods: {
+			
 			// 查看当前用户在此话题的活力值
 			selReadingVitalityDetail() {
 				let custom_id = this.userInfo.id
@@ -65,7 +82,13 @@
 					}
 				}
 				this.$api.selReadingVitalityDetail(params).then(res => {
-					console.log(res)
+					let result = res.data.rows
+					if(result && result.length > 0) {
+						result.map(item => {
+							this.vitality = Number(this.vitality) + Number(item.vitality)
+						})
+						
+					}
 				})
 			},
 			// 查看话题
@@ -77,43 +100,136 @@
 				}
 				this.$api.selReadingTopic(params).then(res => {
 					let result = res.data.rows[0]
-					result.start_time = this.formatTime(result.start_time)
-					result.end_time = this.formatTime(result.end_time)
+					result.start_time = this.formatTime(result.start_time, 'YY:MM:DD')
+					result.end_time = this.formatTime(result.end_time, 'YY:MM:DD')
 					this.topicDetail = result
-					console.log(this.topicDetail)
-					// 只有活力打卡类型才去调用检测活力值
-					if(this.topicDetail.type === 'vitality') {
-						this.selReadingVitalityDetail()
-					}
+					this.selReadingVitalityDetail()
 				})
 			},
+			// 查看话题的打卡记录
+			selReadingMark(topic_id, type = '') {
+				uni.showLoading({
+					title: '数据加载中',
+					icon: 'none',
+					duration: 1500
+				})
+				let params = {
+					currentPage: String(this.currentPage),
+					pageSize: this.pageSize,
+					filterItems: {
+						topic_id: topic_id
+					}
+				}
+				this.$api.selReadingMark(params).then(res => {
+					uni.hideLoading()
+					this.totalPage = res.data.totalPage
+					let result = res.data.rows
+					if(result && result.length > 0) {
+						result.map(item => {
+							item.create_time = this.formatTime(item.create_time, 'YY:MM:DD: hh:mm:ss')
+							item.customInfo.vitality = parseInt(item.customInfo.vitality)
+						})
+					}
+					if(type === 'del') {
+						this.topicMark = result
+					}else {
+						this.topicMark = [...this.topicMark, ...result]
+					}
+					// 判断是否开启上拉加载更多
+					if(this.topicMark.length < this.totalPage) {
+						this.loadMore = true
+						this.loadStatus = 'more'
+						console.log(this.loadMore)
+					}else {
+						this.loadStatus = 'noMore'
+						this.loadMore = false
+					}
+					
+				})
+			},
+			// 查看话题活力之星(前三)
+			selReadingTopicTopCustom(topic_id) {
+				let params = {
+					filterItems: {
+						topic_id: topic_id
+					}
+				}
+				this.$api.selReadingTopicTopCustom(params).then(res => {
+					let result = res.data.rows
+					let arr = []
+					if(result && result.length > 0) {
+						arr = result.sort(this.compare('totalVitality'))
+					}
+					this.vitalityList = arr
+				})
+			},
+			// 排序
+			compare(property) {
+				return (a, b) => {
+					let value1 = a[property];
+					let value2 = b[property];
+					return value2 - value1;
+				};
+			},
+			// 打卡加载更多
+			loadingMore() {
+				this.loadStatus = 'loading'
+				this.currentPage = this.currentPage + 1
+				this.selReadingMark(this.id)
+			},
 			// 格式化时间
-			formatTime(time) {
+			formatTime(time, type) {
 				let date = new Date(time)
 				let year = date.getFullYear()
 				let month = this.complete(date.getMonth() + 1)
 				let day = this.complete(date.getDate())
-				return year +'-'+ month + '-' + day
+				let hour = this.complete(date.getHours())
+				let minute = this.complete(date.getMinutes())
+				let second = this.complete(date.getSeconds())
+				if(type === 'YY:MM:DD') {
+					return year +'-'+ month + '-' + day
+				}else {
+					return year +'-'+ month + '-' + day +' '+ hour +':'+ minute +':'+ second
+				}
+				
 			},
 			// 补零操作
 			complete(number) {
 				let num =	number > 9 ? number : '0' + number
 				return num
 			},
+			
+			
 			// 查看话题内容详细
 			checkMoreDetail() {
 				this.$refs.contextDetail.open()
 			},
 			// 查看打卡评论
-			comment() {
+			comment(item) {
+				console.log(item)
+				let params = {
+					topic_id: item.topic_id,
+					mark_id: item.id,
+					custom_id: item.custom_id
+				}
 				uni.navigateTo({
-					url: '/pages/circle/comment'
+					url: '/pages/circle/comment?params='+JSON.stringify(params)
 				})
 			},
 			// 举报/删除打卡
-			handleComment() {
+			handleComment(item) {
+				console.log(item)
+				let user_id = this.userInfo.id //用户id
+				let remark_id = item.id //打卡id
+				let custom_id = item.custom_id //发布打卡者id
+				let itemList = []
+				if(user_id == custom_id) {
+					itemList = ['举报','删除']
+				}else {
+					itemList = ['举报']
+				}
 				uni.showActionSheet({
-					itemList:['举报','删除'],
+					itemList:itemList,
 					success: res => {
 						console.log(res)
 						// 举报
@@ -122,10 +238,36 @@
 								url: '/pages/circle/report'
 							})
 						}else if(res.tapIndex === 1) {
-							console.log('删除')
+							uni.showModal({
+								title: '是否确认删除此打卡?',
+								success: res => {
+									if(res.confirm) {
+										this.delReadingMark(remark_id)
+									}
+								}
+							})
 						}else {
 							return
 						}
+					}
+				})
+			},
+			// 删除打卡
+			delReadingMark(remark_id) {
+				let params = {
+					id: remark_id
+				}
+				this.$api.delReadingMark(params).then(res => {
+					if(res.data.status === 'ok') {
+						uni.showToast({
+							title: '删除成功',
+							icon: 'none',
+							success: () => {
+								this.topicMark = []
+								this.currentPage = 1
+								this.selReadingMark(this.id, 'del')
+							}
+						})
 					}
 				})
 			},
