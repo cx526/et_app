@@ -244,7 +244,8 @@
           "content": "举报内容",  
           "topic_id": "1",
           "mark_id": "2",
-          "comment_id": "3"
+          "comment_id": "3",
+          "content_type": "1" 举报类型(1 内容不雅 2 政治不正确 3 反党反社会 4 负能量 5 其他)
       }
      * 
      */
@@ -266,6 +267,7 @@
             "comment_id": "3",
             "content": "test",
             "show_status": "0" 0:不显示，1：显示， 2：审核中 3：违规
+            "content_type": "1" 举报类型(1 内容不雅 2 政治不正确 3 反党反社会 4 负能量 5 其他)
           }
       }
      * 
