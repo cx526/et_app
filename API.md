@@ -71,6 +71,7 @@
             "type": "vitality",   话题类型 vitality：活力打卡，chat：轻松畅聊，pk：阅读PK 
             "title": "话题名称",
             "show_comment": "0" 0:不显示评论，1：显示评论
+						"show_status": "0" 0:不显示，1：显示， 2：审核中 3：违规
             "show_range":  "school", 范围：(school:学校，grade：年级，class：班，all：全站)
             "school_id": "2",
             "grade_id": "1",

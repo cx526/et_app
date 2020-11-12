@@ -1,17 +1,18 @@
 <template>
 	<view class="typesetting-box">
 		<view class="typesetting" @tap="handleClick">
-			<view class="item" v-for="n in 3" :key="n">
+			<view class="item" v-for="(item, index) in rankingList" :key="index">
 				<view class="top">
-					<image :src="userInfo.avatar" mode="widthFix" class="header"></image>
-					<image :src="$aliImage + 'read-No'+(n+1)+'.png'" mode="widthFix" class="ranking"></image>
+					<image :src="item.avatar" mode="widthFix" class="header"></image>
+					<image :src="$aliImage + 'read-No'+(index+1)+'.png'" mode="widthFix" class="ranking"></image>
 				</view>
 				<view class="center">
-					<text>小A小朋友</text>
+					<text v-if="item.childName">{{ item.childName }}小朋友</text>
+					<text v-else>小爱同学</text>
 				</view>
 				<view class="bottom">
 					<image :src="$aliImage + 'read-vitality.png'" mode="widthFix"></image>
-					<text>活力值：29</text>
+					<text>活力值：{{ item.vitality }}</text>
 				</view>
 			</view>
 		</view>
@@ -20,10 +21,21 @@
 
 <script>
 	export default {
+		props: {
+			rankingList: {
+				type: Array,
+				default: []
+			}
+		},
 		data() {
 			return {
 				$aliImage: this.$aliImage,
 				userInfo: uni.getStorageSync('userInfo')
+			}
+		},
+		watch: {
+			rankingList(newVal) {
+				this.rankingList = newVal
 			}
 		},
 		methods: {

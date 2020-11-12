@@ -59,9 +59,10 @@
 					<view class="comment">
 						<text class="time">{{ item.create_time }}</text>
 						<view class="detail">
-							<view class="comment-item"  @tap="handleClick('like')" >
+							<view class="comment-item"  @tap="handleClick('like', item, index)" >
 									<image :src="$aliImage + 'read-like.png'"></image>
-									<text>点赞</text>
+									<text v-if="item.likeStatus === 0">点赞</text>
+									<text v-else style="color: #2AAEC4;">点赞</text>
 							</view>
 							<view class="comment-item"  @tap="handleClick('comment', item)" v-if="item.show_comment === '1'">
 									<image :src="$aliImage + 'read-comment.png'"></image>
@@ -167,10 +168,11 @@
 		},
 		methods: {
 			// 点赞、评论、分享打卡
-			handleClick(type, item) {
+			handleClick(type, item, index) {
+				item.index = index
 				switch(type) {
-					case 'link':
-					console.log('点赞')
+					case 'like':
+					this.$emit('like', item)
 					break
 					case 'comment':
 					this.$emit('comment', item)

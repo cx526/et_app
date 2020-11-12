@@ -1,9 +1,10 @@
 <template>
 	<view>
-		<markUp :title="false" :topicMark="topicMark" parent="comment" />
+		<markUp :title="false" :topicMark="topicMark" parent="comment" @like="like" />
 		<!-- 评论列表 -->
 		<view class="comment" v-if="commentList && commentList.length > 0">
-			<scroll-view class="list" scroll-y style="max-height: 515rpx;" >
+		<view class="list">
+			<scroll-view scroll-y style="max-height: 515rpx;" @scrolltolower="loadingMore">
 				<view class="title">
 					<view class="left">
 						<image :src="$aliImage + 'read-line.png'" mode="widthFix"></image>
@@ -13,25 +14,33 @@
 						<text>共{{ totalPage }}条</text>
 					</view>
 				</view>
-				<view class="item" v-for="(item, index) in commentList" :key="index" @tap="handleComment" :class="(index + 1) == commentList.length ? ' border-none' : ''">
+				<!-- :class="(index + 1) == commentList.length ? ' border-none' : ''" -->
+				<view class="item" v-for="(item, index) in commentList" :key="item.id" @tap="handleComment(item)" >
 					<view class="left">
-						<image :src="userInfo.avatar" mode="widthFix"></image>
+						<image :src="item.customInfo.avatar" mode="widthFix"></image>
 					</view>
 					<view class="right">
 						<view class="context">
-							<text class="name">小A小朋友：</text>
+							<text class="name">{{item.childInfo.name}}小朋友：</text>
 							<text class="content">{{ item.content }}</text>
 						</view>
 						<view class="grade-info">
-							<text>大良幸福幼儿园  大班3班</text>
+							<view >
+								<text style="margin-right: 10rpx;">{{ item.schoolInfo.name }}</text>
+								<text v-if="JSON.stringify(item.gradeInfo) !== '{}'">{{ item.gradeInfo.name + item.childInfo.class + '班' }}</text>
+							</view>
 							<text>{{ item.create_time }}</text>
 						</view>
 					</view>
 				</view>
-				<view style="line-height: 60px;">
-					<uni-load-more :status="loadStatus" :content-text="loadText" />
-				</view>
+				
 			</scroll-view>
+			<view style="line-height: 60px;">
+				<uni-load-more :status="loadStatus" :content-text="loadText" />
+			</view>
+		</view>
+			
+			
 		</view>
 		<view class="none" v-else>暂无评论内容</view>
 		<!-- 评论框 -->
@@ -54,7 +63,7 @@
 				userInfo: uni.getStorageSync('userInfo'),
 				context:'',
 				access_token: '',
-				pageSize: '10',
+				pageSize: '5',
 				currentPage: 1,
 				totalPage: 0, //总条数
 				loadStatus: 'noMore',
@@ -77,7 +86,6 @@
 		},
 		onLoad(options) {
 			let params = JSON.parse(options.params)
-			console.log(params)
 			this.custom_id = params.custom_id //用户id
 			this.topic_id = params.topic_id //话题id
 			this.mark_id = params.mark_id //打卡id
@@ -91,11 +99,13 @@
 		methods: {
 			// 获取打卡详情
 			selReadingMark() {
+				let custom_id = this.userInfo.id
 				let params = {
 					pageSize: this.pageSize,
 					currentPage: String(this.currentPage),
 					filterItems: {
-						id: this.mark_id
+						id: this.mark_id,
+						like_custom_id: String(custom_id)
 					}
 				}
 				this.$api.selReadingMark(params).then(res => {
@@ -110,8 +120,10 @@
 				})
 			},
 			// 查看打卡评论
-			selReadingComment() {
+			selReadingComment(type) {
 				let params = {
+					currentPage: String(this.currentPage),
+					pageSize: this.pageSize,
 					filterItems: {
 						mark_id: this.mark_id
 					}
@@ -124,7 +136,16 @@
 							item.create_time = this.formatTime(item.create_time)
 						})
 					}
-					this.commentList = [...this.commentList, ...result]
+					if(type === 'reload') {
+						this.commentList = result
+					}else {
+						this.commentList = [...this.commentList, ...result]
+					}
+					if(this.totalPage > this.commentList.length) {
+						this.loadStatus = 'more'
+					}else {
+						this.loadStatus = 'noMore'
+					}
 				})
 			},
 			// 发表评论
@@ -144,7 +165,6 @@
 					mark_id: String(this.mark_id)
 				}
 				this.$api.addReadingComment(params).then(res => {
-					console.log(res)
 					if(res.data.status === 'ok') {
 						uni.showToast({
 							title: '评论成功',
@@ -154,10 +174,53 @@
 								this.context = ''
 								// 刷新评论内容
 								this.currentPage = 1,
-								this.selReadingComment()
+								this.selReadingComment('reload')
 							}
 						})
 					}
+				})
+			},
+			// 加载更多
+			loadingMore() {
+				
+				if(this.totalPage > this.commentList.length) {
+					this.loadStatus = 'loading'
+					this.currentPage = this.currentPage + 1
+					this.selReadingComment()
+				}
+			},
+			// 点赞/取消赞
+			like(item) {
+				let custom_id = String(this.userInfo.id)
+				let topic_id = String(item.topic_id)
+				let mark_id = String(item.id)
+				this.addOrDelReadingLike(custom_id, topic_id, mark_id)
+			},
+			addOrDelReadingLike(custom_id, topic_id, mark_id) {
+				let params = {
+					custom_id: custom_id,
+					topic_id: topic_id,
+					mark_id: mark_id,
+				}
+				this.$api.addOrDelReadingLike(params).then(res => {
+					console.log(res)
+					if(res.data.status === 'ok') {
+						let title = ''
+						if(this.topicMark[0].likeStatus == 1) {
+							this.topicMark[0].likeStatus = 0
+							title = '取消点赞'
+						}else {
+							this.topicMark[0].likeStatus = 1
+							title = '点赞成功'
+						}
+						uni.showToast({
+							title: title,
+							icon: 'none',
+							duration: 1000
+						})
+						
+					}
+					
 				})
 			},
 			// 格式化时间
@@ -181,22 +244,58 @@
 				let num =	number > 9 ? number : '0' + number
 				return num
 			},
-			// 举报/删除打卡
-			handleComment() {
+			// 举报/删除评论
+			handleComment(item) {
+				let user_id = this.userInfo.id //用户id
+				let custom_id = item.custom_id //评论者id
+				let id = item.id //评论id
+				let itemList = []
+				if(user_id == custom_id) {
+					itemList = ['举报','删除']
+				}else {
+					itemList = ['举报']
+				}
 				uni.showActionSheet({
-					itemList:['举报','删除'],
+					itemList: itemList,
 					success: res => {
-						console.log(res)
 						// 举报
 						if(res.tapIndex === 0) {
 							uni.navigateTo({
 								url: '/pages/circle/report'
 							})
 						}else if(res.tapIndex === 1) {
-							console.log('删除')
+							uni.showModal({
+								title: '是否确认删除此评论?',
+								success: res => {
+									if(res.confirm) {
+										// 执行删除评论操作
+										this.delReadingComment(id)
+									}
+								}
+							})
 						}else {
 							return
 						}
+					}
+				})
+			},
+			// 删除评论
+			delReadingComment(id) {
+				let params = {
+					id: id
+				}
+				this.$api.delReadingComment(params).then(res => {
+					if(res.data.status === 'ok') {
+						uni.showToast({
+							title: '删除评论成功',
+							icon: 'none',
+							success: () => {
+								// 执行重新刷新评论数据操作
+								this.currentPage = 1
+								this.selReadingComment('reload')
+							}
+						})
+						
 					}
 				})
 			},
@@ -227,7 +326,6 @@
 					// access_token还在有效期内
 					let data = uni.getStorageSync('access_token')
 					this.access_token = data[0]
-					console.log(this.access_token)
 				}
 			},
 			// 文本检测

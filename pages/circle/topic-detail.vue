@@ -10,7 +10,7 @@
 			<readChart />
 		</view>
 		
-		<markUp :title="false" @comment="comment"  @handleComment="handleComment" :loadMore="loadMore" :show_comment="topicDetail.show_comment" :topicMark="topicMark" :topic_type="topicDetail.type" :loadStatus="loadStatus" @loadingMore="loadingMore" />
+		<markUp :title="false" @comment="comment"  @handleComment="handleComment" :loadMore="loadMore" :show_comment="topicDetail.show_comment" :topicMark="topicMark" :topic_type="topicDetail.type" :loadStatus="loadStatus" @loadingMore="loadingMore" @like="like" />
 		<!-- 话题内容详细弹窗 -->
 		<uni-popup ref="contextDetail" >
 			<view :style="{'width': propUpWidth}" class="popUp">{{ topicDetail.description }}</view>
@@ -108,6 +108,7 @@
 			},
 			// 查看话题的打卡记录
 			selReadingMark(topic_id, type = '') {
+				let custom_id = this.userInfo.id
 				uni.showLoading({
 					title: '数据加载中',
 					icon: 'none',
@@ -117,7 +118,8 @@
 					currentPage: String(this.currentPage),
 					pageSize: this.pageSize,
 					filterItems: {
-						topic_id: topic_id
+						topic_id: topic_id,
+						like_custom_id: String(custom_id)
 					}
 				}
 				this.$api.selReadingMark(params).then(res => {
@@ -198,8 +200,6 @@
 				let num =	number > 9 ? number : '0' + number
 				return num
 			},
-			
-			
 			// 查看话题内容详细
 			checkMoreDetail() {
 				this.$refs.contextDetail.open()
@@ -210,10 +210,44 @@
 				let params = {
 					topic_id: item.topic_id,
 					mark_id: item.id,
-					custom_id: item.custom_id
+					custom_id: this.userInfo.id
 				}
 				uni.navigateTo({
 					url: '/pages/circle/comment?params='+JSON.stringify(params)
+				})
+			},
+			// 点赞/取消赞
+			like(item) {
+				let custom_id = String(this.userInfo.id)
+				let topic_id = String(item.topic_id)
+				let mark_id = String(item.id)
+				this.addOrDelReadingLike(custom_id, topic_id, mark_id, item.index)
+			},
+			addOrDelReadingLike(custom_id, topic_id, mark_id, index) {
+				let params = {
+					custom_id: custom_id,
+					topic_id: topic_id,
+					mark_id: mark_id,
+				}
+				this.$api.addOrDelReadingLike(params).then(res => {
+					console.log(res)
+					if(res.data.status === 'ok') {
+						let title = ''
+						if(this.topicMark[index].likeStatus == 1) {
+							this.topicMark[index].likeStatus = 0
+							title = '取消点赞'
+						}else {
+							this.topicMark[index].likeStatus = 1
+							title = '点赞成功'
+						}
+						uni.showToast({
+							title: title,
+							icon: 'none',
+							duration: 1000
+						})
+						
+					}
+					
 				})
 			},
 			// 举报/删除打卡

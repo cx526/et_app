@@ -242,10 +242,23 @@ api.addReadingComment = params => request.globalRequest('/api/reading/addReading
 // 查看打卡评论
 api.selReadingComment = params => request.globalRequest('/api/reading/selReadingComment', 'POST', params)
 
+// 删除评论
+api.delReadingComment = params => request.globalRequest('/api/reading/delReadingComment', 'POST', params)
+
+// 创建/删除点赞
+api.addOrDelReadingLike = params => request.globalRequest('/api/reading/addOrDelReadingLike', 'POST',params)
+
 // 查看活力值详情
 api.selReadingVitalityDetail = params => request.globalRequest('/api/reading/selReadingVitalityDetail', 'POST', params)
 
+// 查看周排名
+api.selReadingVitalityCount = params => request.globalRequest('/api/reading/selReadingVitalityCount', 'POST', params)
 
+// 查看奖励
+api.selReadingReward = params => request.globalRequest('/api/reading/selReadingReward', 'POST', params)
+
+// 创建举报
+api.addReadingReport = params => request.globalRequest('/api/reading/addReadingReport', 'POST', params)
 
 // 上传图片的回调
 api.addUploadPic = params => request.globalRequest('/api/upload/addUploadPic', 'POST', params)

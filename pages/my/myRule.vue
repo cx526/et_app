@@ -38,7 +38,7 @@
 				</swiper-item>
 				<swiper-item>
 						<image @load="offflineLoad"
-						:src="$aliImage + 'rule-offline-02.png'" 
+						:src="$aliImage + 'rule-offline.png'" 
 						mode="widthFix"></image>
 						<image :src="$aliImage + 'service-code.png'"
 						mode="widthFix" class="code" @tap="save"></image>

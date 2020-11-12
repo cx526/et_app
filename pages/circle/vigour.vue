@@ -3,13 +3,14 @@
 		<view class="user">
 			<view class="left">
 				<view class="avatar">
-					<image :src="userInfo.avatar" mode="widthFix" class="user-avatar"></image>
+					<image :src="userRankingList.avatar" mode="widthFix" class="user-avatar"></image>
 				</view>
 				<view class="info">
-					<view class="name">小A小朋友</view>
+					<view class="name" v-if="userRankingList.childName">{{ userRankingList.childName }}小朋友</view>
+					<view v-else>小朋友</view>
 					<view class="vigour">
 						<image :src="$aliImage+ 'read-vitality.png'" mode=""></image>
-						<text>活力值：30</text>
+						<text>活力值：{{ userRankingList.vitality }}</text>
 					</view>
 					<view class="time">
 						<!-- 读取后台返回的时间往前推一周(七天) -->
@@ -19,25 +20,26 @@
 			</view>
 			<view class="right">
 				<image :src="$aliImage + 'read-medal-bg.png'" mode="widthFix"></image>
-				<text class="number">20</text>
+				<text class="number">{{ userRankingList.vitality }}</text>
 			</view>
 		</view>
 		<view class="list">
 			<scroll-view scroll-y style="max-height: 1032rpx;">
-				<view class="item" v-for="n in 20" :key="n">
+				<view class="item" v-for="(item, index) in rankingList" :key="index">
 					<view class="left">
 						<view class="rank">
-							<text>{{ n+1 > 9 ? n+1 : '0' + (n+1) }}</text>
+							<text>{{ index+1 > 9 ? index+1 : '0' + (index+1) }}</text>
 						</view>
-						<image :src="userInfo.avatar"></image>
-						<text class="name">小A小朋友</text>
+						<image :src="item.avatar"></image>
+						<text class="name" v-if="item.childName">{{ item.childName }}小朋友</text>
+						<text v-else>小朋友</text>
 					</view>
 					<view class="right">
-						<image :src="$aliImage + 'read-medal-No'+(n+1)+'.png'" mode="widthFix" class="medal"
-						v-if="(n+1) <= 3"></image>
+						<image :src="$aliImage + 'read-medal-No'+(index+1)+'.png'" mode="widthFix" class="medal"
+						v-if="(index+1) <= 3"></image>
 						<view class="vigour">
 							<image :src="$aliImage + 'read-vitality.png'" mode="widthFix"></image>
-							<text>活力值：20</text>
+							<text>活力值：{{ item.vitality }}</text>
 						</view>
 					</view>
 				</view>
@@ -51,11 +53,52 @@
 		data() {
 			return {
 				$aliImage: this.$aliImage,
-				userInfo: uni.getStorageSync('userInfo')
+				userInfo: uni.getStorageSync('userInfo'),
+				rankingList: [],
+				userRankingList:null
 			}
 		},
+		onLoad() {
+			this.selReadingVitalityCount()
+			this.selReadingVitalityMine()
+		},
 		methods: {
-			
+			// 获取自己
+			selReadingVitalityMine() {
+				let custom_id = this.userInfo.id
+				let params = {
+					filterItems: {
+						custom_id: String(custom_id)
+					}
+				}
+				this.$api.selReadingVitalityCount(params).then(res => {
+					console.log(res)
+					let result = res.data.rows
+					if(result && result.length > 0) {
+						result.map(item => {
+							item.vitality = parseInt(item.vitality)
+						})
+					}
+					this.userRankingList = result[0]
+				})
+			},
+			// 获取前二十名
+			selReadingVitalityCount() {
+				let params = {
+					pageSize: "20",
+					currentPage: "1",
+					
+				}
+				this.$api.selReadingVitalityCount(params).then(res => {
+					let result = res.data.rows
+					if(result && result.length > 0) {
+						result.map(item => {
+							item.vitality = parseInt(item.vitality)
+						})
+					}
+					this.rankingList = result
+				})
+			},
 		}
 	}
 </script>
@@ -149,8 +192,10 @@
 	.user .right .number {
 		font-size: 60rpx;
 		color: #2AAEC4;
-		left: 56rpx;
-		top: 93rpx;
+		left: 50%;
+		top: 50%;
+		transform: translate(-50%,-32%);
+
 		position: absolute;
 	}
 	
