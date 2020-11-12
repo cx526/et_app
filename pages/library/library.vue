@@ -7,9 +7,9 @@
 		<view class="header-box">
 			<view class="user">
 				<image :src="$aliImage + 'user-default.png'"
-				v-if="!userInfo.avatar"></image>
+				v-if="!userInfoStorage.avatar"></image>
 				<image 
-				:src="userInfo.avatar"
+				:src="userInfoStorage.avatar"
 				style="border-radius: 50%;"></image>
 			</view>
 			<view class="info">
@@ -166,6 +166,7 @@ const bookListData = require('@/common/carDataOption.js')
 export default {
 	data() {
 		return {
+			userInfoStorage: uni.getStorageSync('userInfo'),
 			$aliImage: this.$aliImage, //静态图片路径
 			isLogin: false, //登录限制
 			showModel: false, //控制分类弹窗的显示/隐藏

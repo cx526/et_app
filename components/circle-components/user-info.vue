@@ -4,13 +4,14 @@
 			<view class="left" @tap="checkMyRemark">
 				<!-- 根据身份显示不同的标识，没有登录显示默认头像 -->
 				<image :src="$aliImage + 'read-student.png'" class="identity" mode="widthFix"></image>
-				<image :src="userInfo.avatar" class="header"></image>
+				<image :src="avatar" class="header"></image>
 			</view>
 			<view class="center">
-				<view class="user-name">小A小朋友</view>
+				<view class="user-name" v-if="userInfo.childInfo.name">{{ userInfo.childInfo.name }}小朋友</view>
+				<view class="user-name" v-else>游客，你好！</view>
 				<view class="grade-info">
-					<text style="margin-right: 8rpx;">大良幸福幼儿园</text>
-					<text>小小班3班</text>
+					<text style="margin-right: 8rpx;">{{ userInfo.schoolInfo.name }}</text>
+					<text v-if="userInfo.gradeInfo.name">{{ userInfo.gradeInfo.name + userInfo.childInfo.class + '班' }}</text>
 				</view>
 			</view>
 			<view class="right">
@@ -20,7 +21,7 @@
 						<image :src="$aliImage + 'read-vitality.png'" mode="widthFix"></image>
 						<text>活力值</text>
 					</view>
-					<view class="number">28</view>
+					<view class="number">{{ userInfo.vitality }}</view>
 				</view>
 				<view class="message" @tap="chooseItem" v-if="custom_type !== '1'">
 					<image :src="$aliImage + 'read-message.png'" mode="widthFix"></image>
@@ -39,12 +40,29 @@
 				type: String,
 				default: 'index'
 			},
-			custom_type: String
+			user_data: Object,
 		},
 		data() {
 			return {
 				$aliImage: this.$aliImage,
-				userInfo: uni.getStorageSync('userInfo')
+				// userInfo: uni.getStorageSync('userInfo'),
+				userInfo: null
+			}
+		},
+		watch:{
+			user_data(newVal,oldVal) {
+				this.userInfo = newVal
+			}
+		},
+		computed: {
+			avatar() {
+				let userInfo = uni.getStorageSync('userInfo')
+				if(userInfo.avatar) {
+					return userInfo.avatar
+				}else {
+					return this.$aliImage + 'user_default.png'
+				}
+				
 			}
 		},
 		methods: {

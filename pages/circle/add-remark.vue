@@ -7,7 +7,7 @@
 				<!-- 从首页进入显示 -->
 				<view class="type" v-if="comeFrom === 'index'">
 					<picker :range="topicList" range-key="title" @change="changeTopic">
-						<text>{{ topicList[topicListIndex].title }}</text>
+						<input :value="topicList[topicListIndex].title" disabled placeholder="请选择您要打卡的话题"></input>
 					</picker>
 					<image :src="$aliImage + 'read-icon-gray-right.png'"></image>
 				</view>
@@ -45,11 +45,10 @@ export default {
 	data() {
 		return {
 			$aliImage: this.$aliImage,
-			topicList: [{ title: '21天养成阅读习惯', id: 1 }, { title: '入校活动', id: 2 }],
-			topicListIndex: 0,
+			topicList: [],
+			topicListIndex: '',
 			comeFrom: '', //判断是从首页进入还是从话题详情页进入
 			title: '',
-			// https://et-pic-server.oss-cn-shenzhen.aliyuncs.com/app_img/read-demo.png
 			//储存用户上传的图片
 			tempFilePathsMore: [],
 			tempFilePaths: [], //储存未经过压缩图片的路径
@@ -58,25 +57,66 @@ export default {
 			canvasHeight: 0, //canvas高度
 			ctx: null, //定义画布
 			access_token: '',
-			context: ''
+			context: '',
+			topic_id: '', //话题id
+			show_comment: '', //是否开启评论
+			insertId: '', //打卡id
+			school_id: '', //学校id
 		};
 	},
 	onLoad(options) {
-		this.comeFrom = options.from;
-		this.title = options.title;
-		console.log(options);
+		this.comeFrom = options.from
+		if(options.from === 'topicDetail') {
+			console.log('topicDetail')
+			this.title = options.title
+			this.topic_id = options.topic_id
+			this.show_comment = options.show_comment
+		}else {
+			this.school_id = options.school_id
+			console.log('index')
+			// 获取本园话题
+			this.selReadingTopic()
+			// 获取全站话题
+			this.selReadingAllTopic()
+		}
+		
+		console.log(options)
 		// 获取access_token
 		this.getAccessToken()
 	},
 	methods: {
+		// 获取本园话题
+		selReadingTopic() {
+			let params = {
+				filterItems: {
+					school_id: this.school_id
+				}
+			}
+			this.$api.selReadingTopic(params).then(res => {
+				this.topicList = [...this.topicList, ...res.data.rows]
+			})
+		},
+		// 获取全站话题
+		selReadingAllTopic() {
+			let params = {
+				filterItems: {
+					show_range: 'all',
+					school_id: ''
+				}
+			}
+			this.$api.selReadingTopic(params).then(res => {
+				this.topicList = [...this.topicList, ...res.data.rows]
+			})
+		},
 		// 选择话题
 		changeTopic(event) {
 			let index = event.detail.value;
 			this.topicListIndex = index;
+			this.topic_id = this.topicList[index].id
 		},
 		// 获取文本输入内容
 		getContext(event) {
-			this.context = event.detail.value
+			this.context = event.detail.value.replace(/\s*/g, '')
 		},
 		// 监听表单失去焦点事件
 		blurContext() {
@@ -97,10 +137,8 @@ export default {
 				count: 6,
 				sizeType: ['compressed'],
 				success: res => {
-					console.log(res)
 					let tempFilePaths = res.tempFilePaths;
 					this.tempFilePaths = [...this.tempFilePaths, ...tempFilePaths]
-					console.log(this.tempFilePaths)
 					for (let i = 0; i < tempFilePaths.length; i++) {
 						this.tempFilePathsMore[i] = {};
 						this.tempFilePathsMore[i].path = '';
@@ -143,7 +181,11 @@ export default {
 										uni.canvasToTempFilePath({
 											canvasId: `attendCanvasId${i}`,
 											success(res) {
-												that.compressMore(res.tempFilePath, i); // 缩放成功后压缩
+												// that.compressMore(res.tempFilePath, i); // 缩放成功后压缩
+												let arr = []
+												arr.push(res.tempFilePath)
+												that.imgShow = [...that.imgShow, ...arr]
+												console.log(that.imgShow)
 											},
 											fail(res) {
 												uni.showToast({ title: 'canvas缩放失败', icon: 'none' });
@@ -152,13 +194,17 @@ export default {
 									}, 200);
 								});
 							} else {
+								console.log('else')
 								// 直接掉起压缩方法
 								that.canvasWidth = res.width;
 								that.canvasHeight = res.height;
 								// 定义每个画布canvas的宽高和输出图片的宽高
 								that.tempFilePathsMore[i].canvasWidth = that.canvasWidth
 								that.tempFilePathsMore[i].canvasHeight = that.canvasHeight
-								that.compressMore(res.path, i);
+								let arr = []
+								arr.push(res.path)
+								that.imgShow = [...that.imgShow, ...arr]
+								console.log(that.imgShow)
 							}
 						}
 					});
@@ -166,40 +212,38 @@ export default {
 			}
 		},
 		// 压缩图片
-		compressMore(path, index) {
-			var that = this;
-			uni.compressImage({
-				src: path,
-				quality: 90, // 压缩质量
-				success(res) {
-					that.tempFilePathsMore[index].path = res.tempFilePath
-					console.log('最终输出压缩后图片路径：'+ res.tempFilePath)
-					uni.hideLoading();
-					// 展示经过canvas压缩后的图片
-					let arr = []
-					arr.push(res.tempFilePath)
-					that.imgShow = [...that.imgShow, res.tempFilePath]
-					console.log(that.imgShow)
-				},
-				fail() {
-					uni.showToast({ title: '压缩失败', icon: 'none' });
-				}
-			});
-		},
+		// compressMore(path, index) {
+		// 	var that = this;
+		// 	uni.compressImage({
+		// 		src: path,
+		// 		quality: 90, // 压缩质量
+		// 		success(res) {
+		// 			that.tempFilePathsMore[index].path = res.tempFilePath
+		// 			console.log('最终输出压缩后图片路径：'+ res.tempFilePath)
+		// 			uni.hideLoading();
+		// 			// 展示经过canvas压缩后的图片
+		// 			let arr = []
+		// 			arr.push(res.tempFilePath)
+		// 			that.imgShow = [...that.imgShow, res.tempFilePath]
+		// 			console.log(that.imgShow)
+		// 		},
+		// 		fail() {
+		// 			uni.showToast({ title: '压缩失败', icon: 'none' });
+		// 		}
+		// 	});
+		// },
 		// 预览图片
 		preview(index) {
-			console.log(index)
-			console.log(this.imgShow[index])
 			uni.previewImage({
 				urls: this.tempFilePaths,
 				current: index
 			})
 		},
+		
 		// 删除图片
 		del(index) {
 			this.tempFilePaths.splice(index, 1)
 			this.imgShow.splice(index, 1)
-			console.log(this.imgShow)
 		},
 		// 获取access_token
 		getAccessToken() {
@@ -213,7 +257,6 @@ export default {
 						let arr = []
 						arr[0] = res.data.access_token
 						arr[1] = new Date().getTime() + (7200 * 1000)
-						console.log(arr)
 						uni.setStorageSync('access_token', arr)
 					}
 				})
@@ -221,7 +264,6 @@ export default {
 				// access_token还在有效期内
 				let data = uni.getStorageSync('access_token')
 				this.access_token = data[0]
-				console.log(this.access_token)
 			}
 		},
 		// 检测文本内容
@@ -233,7 +275,6 @@ export default {
 					content: text
 				},
 				success: res => {
-					console.log(res)
 					if(res.data.errcode === 87014) {
 						uni.showToast({
 							title: '您输入的内容带有敏感词，请重新输入',
@@ -247,9 +288,115 @@ export default {
 				}
 			})
 		},
+		// 上传图片
+		upLoadFile() {
+			for(let i = 0; i < this.imgShow.length; i++) {
+				uni.uploadFile({
+					url:'https://www.52diyike.com/api/api/upload/uploadPicToAliyun',
+					filePath: this.imgShow[i],
+					name: 'file',
+					success: res => {
+						let result = JSON.parse(res.data)
+						console.log(result)
+						let params = {
+							targetId: String(this.insertId),
+							usage: "reading_mark",
+							res: result
+						}
+						this.addUploadPic(params)
+					}
+				})
+			}
+		},
+		// 上传图片到阿里云后的回调
+		addUploadPic(params) {
+			this.$api.addUploadPic(params).then(res => {
+				console.log(res)
+				uni.showToast({
+					title: '打卡成功',
+					icon: 'none',
+					duration: 1500,
+					success:() => {
+						setTimeout(() => {
+							uni.navigateBack({
+								delta: 1
+							})
+						}, 1500)
+					}
+				})
+			})
+		},
+		// 创建打卡
+		addReadingMark() {
+			if(this.context === '') {
+				uni.showToast({
+					title: '打卡内容不能为空',
+					icon: 'none',
+					duration: 2000
+				})
+				return
+			}
+			if(this.topic_id === '') {
+				uni.showToast({
+					title: '请选择您要打卡的话题',
+					icon: 'none',
+					duration: 2000
+				})
+				return
+			}
+			let userInfo = uni.getStorageSync('userInfo')
+			let custom_id = userInfo.id
+			let params = {
+				custom_id: custom_id,
+				content: this.context,
+				topic_id: this.topic_id,
+				show_comment: this.show_comment
+			}
+			this.$api.addReadingMark(params).then(res => {
+				console.log(res)
+				if(res.data.status === 'fail') {
+					uni.showToast({
+						title: res.data.msg,
+						icon: 'none',
+						duration: 1500,
+						success: () =>{
+							setTimeout(() => {
+								uni.navigateBack({
+									delta: 1
+								})
+							}, 1500)
+							
+						}
+					})
+					return
+				}
+				else {
+					this.insertId = res.data.rows.insertId
+					console.log(this.insertId)
+					if(this.imgShow && this.imgShow.length > 0) {
+						this.upLoadFile()
+					}
+					else {
+						uni.showToast({
+							title: '打卡成功',
+							icon: 'none',
+							duration: 1500,
+							success: () => {
+								setTimeout(() => {
+									uni.navigateBack({
+										delta: 1
+									})
+								}, 1500)
+							}
+						})
+					}
+				}
+			})
+			
+		},
 		// 发表打卡
 		submit() {
-			console.log('submit')
+			this.addReadingMark()
 		},
 	}
 };

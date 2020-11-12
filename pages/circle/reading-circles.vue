@@ -1,7 +1,7 @@
 <template>
 	<view v-if="isLogin">
 		<!-- 个人信息 -->
-		<userInfo @checkTopicRecord="checkTopicRecord" @checkMyRemark="checkMyRemark" @chooseItem="chooseItem" :custom_type = "data.custom_type" />
+		<userInfo @checkTopicRecord="checkTopicRecord" @checkMyRemark="checkMyRemark" @chooseItem="chooseItem" :user_data="data" />
 		<!-- 活力排版 -->
 		<typesetting @checkVigourDetail="checkVigourDetail" />
 		<!-- 通告栏 -->
@@ -9,9 +9,9 @@
 		<!-- 阅读统计 -->
 		<stat @checkReadingDetail="checkReadingDetail" />
 		<!-- 话题 -->
-		<topic @checkTopicDetail="checkTopicDetail" />
+		<topic @checkTopicDetail="checkTopicDetail" :schoolId = "data.schoolInfo.id" />
 		<!-- 热门打卡 -->
-		<markUp @comment="comment" @handleComment="handleComment" :loadMore="true" />
+		<markUp @comment="comment" @handleComment="handleComment" :loadMore="true" :topicMark="topicMark" parent="index" @reload="reload" />
 	</view>
 </template>
 
@@ -27,7 +27,9 @@
 			return {
 				userInfo: uni.getStorageSync('userInfo'),
 				isLogin: false,
-				data: null
+				data: null,
+				totalPage: 0,
+				topicMark: []
 			}
 		},
 		components: {
@@ -39,15 +41,18 @@
 			markUp
 		},
 		onLoad() {
-			// 检测登录状态
-			this.checkLogin()
+			
 			// 获取个人信息
 			this.getUserInfo()
+		},
+		onShow() {
+			// 检测登录状态
+			this.checkLogin()
 		},
 		methods: {
 			// 检测登录状态
 			checkLogin() {
-				let userInfo = this.userInfo
+				let userInfo = uni.getStorageSync('userInfo')
 				if(!userInfo.name || userInfo.name === 'guest' || !userInfo.mobile || userInfo.mobile == '') {
 					this.isLogin = false
 					uni.showModal({
@@ -92,12 +97,65 @@
 			getUserInfo() {
 				if(!this.userInfo.mobile || this.userInfo.mobile === '') { return }
 				let params = {
-					mobile: this.userInfo.mobile
+					filterItems: {
+						mobile: this.userInfo.mobile
+					}
 				}
-				this.$api.offlineUserDockerInfo(params).then(res => {
-					this.data = res.data
-					console.log(this.data)
+				this.$api.getCustom(params).then(res => {
+					res.data[0].vitality = parseInt(res.data[0].vitality)
+					this.data = res.data[0]
+					this.school_id = this.data.schoolInfo.id
+					// 获取热门打卡数据
+					this.selReadingMark(this.school_id)
+					let userInfo = uni.getStorageSync('userInfo')
+					userInfo.id = this.data.id
+					uni.setStorageSync('userInfo', userInfo)
 				})
+			},
+			// 获取热门打卡数据
+			selReadingMark(school_id) {
+				let params = {
+					filterItems: {
+						school_id: school_id,
+						show_count: '10'
+					}
+				}
+				this.$api.selReadingMarkByHot(params).then(res => {
+					let result = res.data.rows
+					if(result && result.length > 0) {
+						result.map(item => {
+							item.customInfo.vitality = parseInt(item.customInfo.vitality)
+							item.create_time = this.formatTime(item.create_time)
+						})
+					}
+					this.topicMark = result
+					
+				})
+			},
+			// 换一换
+			reload() {
+				this.selReadingMark(this.school_id)
+			},
+			// 格式化时间
+			formatTime(time, type) {
+				let date = new Date(time)
+				let year = date.getFullYear()
+				let month = this.complete(date.getMonth() + 1)
+				let day = this.complete(date.getDate())
+				let hour = this.complete(date.getHours())
+				let minute = this.complete(date.getMinutes())
+				let second = this.complete(date.getSeconds())
+				if(type === 'YY:MM:DD') {
+					return year +'-'+ month + '-' + day
+				}else {
+					return year +'-'+ month + '-' + day +' '+ hour +':'+ minute +':'+ second
+				}
+				
+			},
+			// 补零操作
+			complete(number) {
+				let num =	number > 9 ? number : '0' + number
+				return num
 			},
 			// 查看话题记录
 			checkTopicRecord() {
@@ -119,9 +177,10 @@
 				})
 			},
 			// 查看话题详情
-			checkTopicDetail() {
+			checkTopicDetail(id) {
+				
 				uni.navigateTo({
-					url: '/pages/circle/topic-detail?custom_type='+this.data.custom_type
+					url: '/pages/circle/topic-detail?custom_type='+this.data.custom_type+'&id='+id
 				})
 			},
 			// 查看打卡评论
@@ -136,6 +195,7 @@
 					url: '/pages/circle/my-remark?custom_type='+this.data.custom_type
 				})
 			},
+			// 点击消息图标
 			chooseItem() {
 				uni.showActionSheet({
 					itemList:['发布话题','我要打卡'],
@@ -149,7 +209,7 @@
 						}else if(res.tapIndex === 1) {
 							// 跳转打卡页面
 							uni.navigateTo({
-								url: '/pages/circle/add-remark?from=index'
+								url: '/pages/circle/add-remark?from=index&school_id='+this.school_id
 							})
 						}else {
 							return
@@ -158,24 +218,22 @@
 				})
 			},
 			// 举报/删除打卡
-			handleComment() {
+			handleComment(item) {
 				uni.showActionSheet({
-					itemList:['举报','删除'],
+					itemList: ['举报'],
 					success: res => {
-						console.log(res)
 						// 举报
 						if(res.tapIndex === 0) {
 							uni.navigateTo({
 								url: '/pages/circle/report'
 							})
-						}else if(res.tapIndex === 1) {
-							console.log('删除')
 						}else {
 							return
 						}
 					}
 				})
 			},
+			
 		}
 	}
 </script>

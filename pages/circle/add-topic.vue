@@ -21,20 +21,20 @@
 			<!-- 活力值(只有活力打卡才存在) -->
 			<view class="item" v-if="topicTypeIndex === 0">
 				<text class="label">目标活力值</text>
-				<input type="number" placeholder="请输入话题的目标值" @input="getTopicVigour" :value="topicVigour" />
+				<input type="number" placeholder="请输入话题的目标值" @input="getTopicVigour" :value="target_vitality" />
 			</view>
 			<!-- 开始时间 -->
 			<view class="item">
 				<text class="label">开始时间</text>
 				<picker mode="date" @change="getStartTime">
-					<input placeholder="请选择话题开始时间" :value="startTime" />
+					<input placeholder="请选择话题开始时间" :value="start_time" />
 				</picker>
 			</view>
 			<!-- 结束时间 -->
 			<view class="item">
 				<text class="label">结束时间</text>
 				<picker mode="date" @change="getEndTime">
-					<input placeholder="请选择话题结束时间" :value="endTime" />
+					<input placeholder="请选择话题结束时间" :value="end_time" />
 				</picker>
 			</view>
 			<!-- 话题简介 -->
@@ -43,16 +43,31 @@
 				<textarea placeholder="请输入话题简介" auto-height @input="getTopicContext" @blur="blurContext":value="topicContext"></textarea>
 			</view>
 			<!-- 话题奖励 -->
-			<view class="item" v-if="topicScopeIndex !== 3">
+			<view class="item" v-if="topicTypeIndex !== 2">
 				<text class="label">奖励</text>
 				<input placeholder="请输入话题奖励" @input="getTopicReward" @blur="blurReward" :value="topicReward" />
 			</view>
+			<!-- 只有admin身份才可设置奖励积分/免费次数/五车贝 -->
+			<block v-if="userInfo.openId === 'oUume4hcYaqvcF6OEwPcIsNivTIw' && topicTypeIndex !== 2">
+				<view class="item">
+					<text class="label">积分</text>
+					<input type="number" placeholder="请输入五车贝奖励" @input="getRewardCoin" :value="reward_coin" />
+				</view>
+				<view class="item">
+					<text class="label">五车贝</text>
+					<input type="number" placeholder="请输入积分奖励" @input="getRewardShell" :value="reward_shell" />
+				</view>
+				<view class="item">
+					<text class="label">免费次数</text>
+					<input type="number" placeholder="请输入免费次数奖励" @input="getRewardFree" :value="reward_free" />
+				</view>
+			</block>
 			<!-- 是否开启评论 -->
 			<view class="item">
 				<text class="label">开启评论</text>
 				<view class="type">
-					<picker :range="comment"  @change="changeTopicPower">
-						<text>{{ comment[commentIndex] }}</text>
+					<picker :range="comment"  @change="changeTopicPower" range-key="title">
+						<text>{{ comment[commentIndex].title }}</text>
 					</picker>
 					<image :src="$aliImage + 'read-icon-gray-right.png'" mode="widthFix"></image>
 				</view>
@@ -75,8 +90,8 @@
 				<view class="item" v-if="data.custom_type === '2' && topicScopeIndex !== 0 || data.custom_type === '0'">
 					<text class="label">年级</text>
 					<view class="type">
-						<picker :range="gradeList" @change="changeGrade">
-							<input placeholder="请选择年级" :value="gradeList[gradeIndex]" disabled />
+						<picker :range="gradeList" @change="changeGrade" range-key="name">
+							<input placeholder="请选择年级" :value="gradeList[gradeIndex].name" disabled  />
 						</picker>
 						<image :src="$aliImage + 'read-icon-gray-right.png'" mode="widthFix"></image>
 					</view>	
@@ -94,18 +109,28 @@
 			</block>
 			<!-- admin身份 -->
 			<block v-else>
+				<!-- 校园 -->
+				<view class="item" v-if="topicScopeIndex !== 0">
+					<text class="label">学校</text>
+					<view class="type">
+						<picker :range="schoolList" @change="changeSchool" range-key="name">
+							<input placeholder="请选择学校" :value="schoolList[schoolIndex].name" disabled />
+						</picker>
+						<image :src="$aliImage + 'read-icon-gray-right.png'" mode="widthFix"></image>
+					</view>	
+				</view>
 				<!-- 年级 -->
-				<view class="item" v-if="topicScopeIndex == '2' || topicScopeIndex == '3'">
+				<view class="item" v-if="topicScopeIndex !== 0">
 					<text class="label">年级</text>
 					<view class="type">
-						<picker :range="gradeList" @change="changeGrade">
-							<input placeholder="请选择年级" :value="gradeList[gradeIndex]" disabled />
+						<picker :range="gradeList" @change="changeGrade" range-key="name">
+							<input placeholder="请选择年级" :value="gradeList[gradeIndex].name" disabled />
 						</picker>
 						<image :src="$aliImage + 'read-icon-gray-right.png'" mode="widthFix"></image>
 					</view>	
 				</view>
 				<!-- 班级 -->
-				<view class="item" v-if="topicScopeIndex == '2' || topicScopeIndex == '3'">
+				<view class="item" v-if="topicScopeIndex !== 0">
 					<text class="label">班级</text>
 					<view class="type">
 						<picker :range="classList" @change="changeClass">
@@ -143,55 +168,73 @@
 			return {
 				$aliImage: this.$aliImage, 
 				userInfo: uni.getStorageSync('userInfo'),
+				custom_id: '', //个人di
 				topicTypeIndex: 0, //话题类型
 				topicType: [
 					{
 						title: '活力打卡',
-						value: 1
+						type: 'vitality'
 					},
 					{
 						title:'阅读PK',
-						value: 2
+						type: 'pk'
 					},
 					{
 						title: '轻松畅聊',
-						value:3
+						type: 'chat'
 					}
 				],
+				type: 'vitality', //话题类型(默认活力打卡)
 				title: '', //话题标题
-				topicVigour: '', //话题活力目标
-				startTime: '',//话题开始时间
-				endTime: '', //话题结束时间
-				topicContext: '', //话题内容
-				topicReward: '', //话题奖励
+				target_vitality: '', //话题活力目标
+				day_mark_count: '1', //每天最多可打卡几次(按话题类型区分)
+				start_time: '',//话题开始时间
+				end_time: '', //话题结束时间
+				description: '', //话题简介
+				reward_gift: '', //话题奖励
+				reward_shell: '', //五车贝
+				reward_free: '', //免费次数
+				reward_coin: '', //积分
 				topicScope: [
 					{
 						title: '本园公开',
-						value: 1
+						value: 'school'
 					},
 					{
 						title: '本级公开',
-						value: 2
+						value: 'grade'
 					},
 					{
 						title: '本班公开',
-						value: 3
+						value: 'class'
 					},
 				],
 				topicScopeIndex: 0, //话题范围
-				gradeList: ['小小班','中班','大班'],
+				show_range: '',//话题可见范围
+				school_id: '', //学校id
+				schoolList: [], //学校
+				schoolIndex: '',
+				gradeList: [], //年级
 				gradeIndex: '',
-				classList: ['1','2','3','4'],
+				grade_id: '', // 年级id
+				classList: [], //班级
 				classIndex: '',
+				class_id: '' , //班级id
 				data: null ,//个人信息
 				coverImgUrl: '', //话题封面
 				tempFilePaths: '',
-				comment: ['是', '否'], //是否开启话题评论
+				//是否开启话题评论
+				comment: [
+					{ title: '是', value: '1' },
+					{ title: '否', value: '0' }
+				], 
+				show_comment: '1',//默认显示
 				commentIndex: 0,
 				canvasWidth: 0, // canvas长度
 				canvasHeight: 0, //canvas高度
 				ctx: null, //定义画布
 				access_token: '',
+				targetId: '', //新建话题id
 			}
 		},
 		onLoad() {
@@ -213,15 +256,71 @@
 					}
 					this.$api.offlineUserDockerInfo(params).then(res => {
 						this.data = res.data
+						this.custom_id = this.data.id
+						this.school_id = String(this.data.school_id)
+						// 根据身份初始化话题可见选择范围
 						this.getTopicScope(this.data.custom_type)
-						console.log(this.data)
+						// 初始化年级
+						this.dataInit()
 					})
 				}
+			},
+			// 获取学校、年级
+			dataInit() {
+				let school_id = this.school_id
+				this.$api.getSchoolInfo().then(res => {
+					let result = res.data
+					console.log(result)
+					
+					// 不是admin身份
+					if(this.userInfo.openId !== 'oUume4hcYaqvcF6OEwPcIsNivTIw') {
+						let currentSchool = []
+						if(result && result.length > 0) {
+							currentSchool = result.filter(item => {
+								return item.id == school_id
+							})
+						}
+						// 初始化所在学校年级
+						this.gradeList = currentSchool[0].classInfo
+						for (let i = 1; i < 51; i++) {
+							this.classList.push(String(i));
+						}
+					}else {
+						this.schoolList = result
+						console.log(this.schoolList)
+						for (let i = 1; i < 51; i++) {
+							this.classList.push(String(i));
+						}
+					}
+				})
 			},
 			// 改变话题类型
 			changeTopicType(event) {
 				let index = Number(event.detail.value)
 				this.topicTypeIndex = index
+				this.type = this.topicType[index].type
+				console.log(this.type)
+				// 设置每种话题每天最多可以打卡几次
+				switch(this.type) {
+					case 'vitality':
+					this.day_mark_count = '1'
+					this.target_vitality = ''
+					break
+					case 'pk':
+					this.day_mark_count = '2'
+					this.target_vitality = '0'
+					break
+					case 'chat':
+					this.day_mark_count = '20'
+					this.target_vitality = '0'
+					this.reward_gift = ''
+					break
+					default:
+					this.day_mark_count = '1'
+					this.target_vitality = ''
+					return
+				}
+				console.log(this.day_mark_count)
 			},
 			// 获取话题标题
 			getTopicTitle(event) {
@@ -235,91 +334,121 @@
 			},
 			// 获取话题活力目标值
 			getTopicVigour(event) {
-				this.topicVigour = event.detail.value
-				console.log(this.topicVigour)
+				let value = event.detail.value.replace(/\s*/g, '')
+				this.target_vitality = value
+				console.log(this.target_vitality)
 			},
 			// 获取话题开始时间
 			getStartTime(event) {
-				this.startTime = event.detail.value
-				console.log(this.startTime)
+				this.start_time = event.detail.value
+				console.log(this.start_time)
 			},
 			// 获取话题结束时间
 			getEndTime(event) {
-				this.endTime = event.detail.value
-				console.log(this.endTime)
+				this.end_time = event.detail.value
+				console.log(this.end_time)
 			},
 			// 获取话题内容
 			getTopicContext(event) {
-				this.topicContext = event.detail.value
+				this.description = event.detail.value.replace(/\s*/g, '')
 			},
 			// 表单失去焦点事件
 			blurContext() {
-				this.checkText('context',this.topicContext)
-				console.log(this.topicContext)
+				this.checkText('context',this.description)
+				console.log(this.description)
 			},
 			// 获取话题奖励
 			getTopicReward(event) {
-				this.topicReward = event.detail.value
+				this.reward_gift = event.detail.value.replace(/\s*/g, '')
 				
+			},
+			// 获取要奖励的积分
+			getRewardCoin(event) {
+				let value = event.detail.value
+				this.reward_coin = String(value)
+			},
+			// 获取要奖励的五车贝
+			getRewardShell(event) {
+				let value = event.detail.value
+				this.reward_shell = String(value)
+			},
+			// 获取要奖励的积分
+			getRewardFree(event) {
+				let value = event.detail.value
+				this.reward_free = String(value)
 			},
 			// 监听表单失去焦点事件
 			blurReward() {
-				this.checkText('reward', this.topicReward)
-				console.log(this.topicReward)
+				this.checkText('reward', this.reward_gift)
+				console.log(this.reward_gift)
 			},
 			// 改变话题可见范围
 			changeTopicScope(event) {
 				let index = Number(event.detail.value)
 				this.topicScopeIndex = index
+				this.show_range = this.topicScope[index].value
+				this.gradeIndex = ''
+				this.classIndex = ''
+				this.grade_id = ''
+				this.class_id = ''
+				console.log(this.show_range)
+				// 如果是admin身份
 				if(this.userInfo.openId === 'oUume4hcYaqvcF6OEwPcIsNivTIw') {
-					if(this.topicScopeIndex === 0 || this.topicScopeIndex === 1) {
-						this.gradeIndex = ''
-						this.classIndex = ''
-					}
-				}else if(this.data.custom_type === '2') {
-					if(this.topicScopeIndex === 0) {
-						this.gradeIndex = ''
-						this.classIndex = ''
-					}
-				}else {
-					return
+					this.schoolIndex = ''
+					this.school_id = ''
 				}
+			},
+			// 选择校园
+			changeSchool(event) {
+				let index = event.detail.value
+				this.schoolIndex = index
+				this.school_id = String(this.schoolList[index].id)
+				console.log(this.school_id)
+				this.gradeList = this.schoolList[index].classInfo
 			},
 			// 选择年级
 			changeGrade(event) {
 				let index = event.detail.value
 				this.gradeIndex = index
+				this.grade_id = String(this.gradeList[index].id)
+				console.log(this.grade_id)
 			},
 			// 选择班级
 			changeClass(event) {
 				let index = event.detail.value
 				this.classIndex = index
+				this.class_id = String(this.classList[index])
+				console.log(this.class_id)
 			},
 			// 是否开启评论
 			changeTopicPower(event) {
 				let index = event.detail.value
 				this.commentIndex = index
+				this.show_comment = this.comment[index].value
+				console.log(this.show_comment)
 			},
 			// 根据身份获取话题可见范围
 			getTopicScope(custom_type) {
 				
 				// 教师身份可选的话题公开范围
 				let params = [
-					{title: '本级公开', value: 1},
-					{title: '本班公开', value: 2},
+					{title: '本级公开', value: 'grade'},
+					{title: '本班公开', value: 'class'},
 				]
 				// admin身份可选的话题公开范围
 				if(this.userInfo.openId === 'oUume4hcYaqvcF6OEwPcIsNivTIw') {
 					this.topicScope = [
-						{title: '所有公开',value: 1},
-						{title: '本园公开',value: 2},
-						{title: '本级公开',value: 3},
-						{title: '本班公开',value: 4}
+						{title: '所有公开',value: 'all'},
+						{title: '本园公开',value: 'school'},
+						{title: '本级公开',value: 'grade'},
+						{title: '本班公开',value: 'class'}
 					]
-					
+					this.show_range = this.topicScope[this.topicScopeIndex].value
 				}else if(custom_type === '0') {
 					this.topicScope = params
+					this.show_range = this.topicScope[this.topicScopeIndex].value
 				}else {
+					this.show_range = this.topicScope[this.topicScopeIndex].value
 					return
 				}
 			},
@@ -330,6 +459,7 @@
 					count: 1,
 					success(res) {
 						if (res.tempFiles.length > 0) {
+							console.log(res.tempFilePaths[0])
 							that.getCanvasImg(res.tempFiles); // 通过canvas进行缩放
 						}else {
 							uni.showToast({
@@ -367,7 +497,8 @@
 									uni.canvasToTempFilePath({
 										canvasId: 'attendCanvasId',
 										success(res) {
-											that.compressImg(res.tempFilePath); // 缩放成功后压缩
+											that.coverImgUrl = res.tempFilePath
+											console.log(that.coverImgUrl)
 										},
 										fail(res) {
 											uni.showToast({ title: 'canvas缩放失败', icon: 'none' });
@@ -376,36 +507,139 @@
 								}, 200);
 							});
 						} else {
-							// 图片最长边未超过1440，无需进行缩放，直接掉起压缩方法
+							// 未超出最大尺度，不用压缩
 							that.canvasWidth = res.width;
 							that.canvasHeight = res.height;
-							that.compressImg(res.path);
 						}
 					}
 				});
 			},
-			// 压缩图片
-			compressImg(path) {
-				let that = this;
-				uni.compressImage({
-					src: path,
-					quality: 70, // 压缩质量
-					success(e) {
-						that.coverImgUrl = e.tempFilePath
-						console.log(that.coverImgUrl);
-					},
-					fail() {
-						uni.showToast({ title: '压缩失败', icon: 'none' });
-					}
-				});
-			},
+			
 			// 删除图片
 			del() {
 				this.coverImgUrl = ''
 			},
 			// 发布话题
 			publish() {
-				console.log('发布话题')
+				// 必填项(测试默认封面可有可无，上线需要 this.coverImgUrl)
+				if(this.custom_id == '' || this.title == '' || this.description == '' || this.target_vitality == '' || this.start_time == '' || this.end_time == '') {
+					uni.showToast({
+						title: '请填全必要信息',
+						icon: 'none',
+						duration: 1500
+					})
+					return
+				}
+				// 如果话题可见范围为本年级/本班级时，需要选择年级及所在班级信息(不是admin身份)
+				if(this.userInfo.openId !== 'oUume4hcYaqvcF6OEwPcIsNivTIw' &&(this.show_range == 'grade' || this.show_range == 'class')) {
+					if(this.grade_id == '' || this.class_id == '') {
+						uni.showToast({
+							title: '请选全年级班级信息',
+							icon: 'none',
+							duration: 1500
+						})
+						return
+					}
+				}
+				// 如果是admin身份且话题范围不为所有公开时
+				if(this.userInfo.openId === 'oUume4hcYaqvcF6OEwPcIsNivTIw' && this.show_range !== 'all') {
+					if(this.school_id === '' || this.grade_id == '' || this.class_id == '') {
+						uni.showToast({
+							title: '请选全年级班级信息',
+							icon: 'none',
+							duration: 1500
+						})
+						return
+					}
+				}
+				// 如果是admin身份且话题范围是所有公开时，school_id为空
+				if(this.userInfo.openId === 'oUume4hcYaqvcF6OEwPcIsNivTIw' && this.show_range === 'all') {
+					this.school_id = ''
+				}
+				// 检测开始时间是否晚于结束时间
+				let start_time = new Date(this.start_time).getTime()
+				let end_time = new Date(this.end_time).getTime()
+				if(start_time >= end_time) {
+					uni.showToast({
+						title: '结束时间不能早于开始时间',
+						icon: 'none',
+						duration: 2000
+					})
+					return
+				}
+				let params = {
+					custom_id: String(this.custom_id), //用户id
+					type: String(this.type), //话题类型
+					title: String(this.title), //话题标题
+					description: String(this.description), //话题简介
+					reward_shell: this.reward_shell ? this.reward_shell : '0',
+					reward_free: this.reward_free ? this.reward_free : '0',
+					reward_coin: this.reward_coin ? this.reward_coin : '0',
+					reward_gift: String(this.reward_gift), //奖励
+					reward_vitality: '1', //打卡奖励活力值,
+					target_vitality: String(this.target_vitality), //目标活力值
+					start_time: String(this.start_time), //开始时间
+					end_time: String(this.end_time), //结束时间
+					day_mark_count: this.day_mark_count, //每天最多可打卡几次(按话题类型区分)
+					status: '0',
+					show_status: '0',
+					show_comment: String(this.show_comment), //是否显示评论(1显示0不显示)
+					show_range: String(this.show_range) , //话题可见范围
+					school_id: this.school_id, //学校id
+					grade_id: this.grade_id,//年级id
+					class: this.class_id ,//班级
+				}
+				console.log(params)
+				// 新建话题
+				this.addReadingTopic(params)
+			},
+			// 新建话题
+			addReadingTopic(params) {
+				this.$api.addReadingTopic(params).then(res => {
+					if(res.data.status === 'ok') {
+						this.targetId = res.data.rows.insertId //新建话题id
+						uni.switchTab({
+							url: '/pages/circle/reading-circles'
+						})
+						if(this.coverImgUrl != '') {
+							// 上传图片
+							this.upLoadFile(this.coverImgUrl)
+						}
+					}
+				})
+			},
+			// 上传话题封面
+			upLoadFile(coverImgUrl) {
+				uni.uploadFile({
+					url:'https://www.52diyike.com/api/api/upload/uploadPicToAliyun',
+					filePath: coverImgUrl,
+					name: 'file',
+					success: res => {
+						let result = JSON.parse(res.data)
+						console.log(result)
+						let params = {
+							targetId: String(this.targetId),
+							usage: "reading_topic",
+							res: result
+						}
+						console.log(params)
+						this.addUploadPic(params)
+					}
+				})
+			},
+			// 上传图片到阿里云后的回调
+			addUploadPic(params) {
+				this.$api.addUploadPic(params).then(res => {
+					uni.showToast({
+						title: '新建话题成功',
+						icon: 'none',
+						success:() => {
+							uni.switchTab({
+								url: '/pages/circle/reading-circles'
+							})
+						}
+					})
+				})
 			},
 			// 获取access_token
 			getAccessToken() {
@@ -432,6 +666,7 @@
 			},
 			// 检测文本内容
 			checkText(ele,text) {
+				return
 				uni.request({
 					url: 'https://api.weixin.qq.com/wxa/msg_sec_check?access_token='+this.access_token,
 					method: 'POST',
@@ -451,10 +686,10 @@
 										this.title = ''
 										break
 										case 'context':
-										this.topicContext = ''
+										this.description = ''
 										break
 										case 'reward':
-										this.topicReward = ''
+										this.reward_gift = ''
 										break
 										default:
 										return

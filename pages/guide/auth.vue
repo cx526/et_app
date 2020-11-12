@@ -104,7 +104,6 @@ export default {
 			.then(res=>{
 				let childInfo = res.data[0].childInfo;
 				let result = res.data[0]
-				console.log(result)
 				// 卡号不存在手机号存在跳转到绑卡页面
 				if(!result.card_no || result.card_no.replace(/\s*/g, '') == '' ){
 					if(result.mobile || result.mobile.replace(/\s*/g, '') != '') {

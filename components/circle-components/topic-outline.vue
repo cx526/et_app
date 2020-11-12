@@ -3,17 +3,17 @@
 		<view class="topic">
 			<view class="left">
 				<view class="show">
-					<image :src="$aliImage + 'read-demo.png'" mode="widthFix" class="cover"></image>
+					<image :src="topicDetail.imgInfo[0].url" mode="widthFix" v-if="topicDetail.imgInfo && topicDetail.imgInfo.length > 0 " class="cover"></image>
+					<image :src="$aliImage + 'read-demo.png'" mode="widthFix" class="cover" v-else></image>
 				</view>
-				<!-- <image :src="$aliImage + 'read-demo.png'" mode="widthFix" class="cover"></image> -->
 				<view class="vigour">
-					<!-- 只有活力打卡话题才有活力值有奖励，轻松畅聊没有活力没有奖励，阅读PK能自定义奖励但没有活力 -->
 					<image :src="$aliImage + 'read-vitality.png'"></image>
-					<text>当前活力值：20</text>
+					<text>当前话题活力值: {{ vitality }}</text>
 				</view>
 			</view>
 			<!-- 话题详情页才显示，获奖名单页不显示 -->
 			<view class="right" v-if="parent !== 'award-list' && custom_type !== '1'" @tap="addRemark" >
+				
 				<image :src="$aliImage + 'read-message.png'" mode="widthFix"></image>
 				<text>新建打卡</text>
 			</view>
@@ -25,22 +25,26 @@
 					<text>分享</text>
 				</view>
 				<view class="title">
-					<text>{{ title }}</text>
+					<text>{{ topicDetail.title }}</text>
 					<!-- 根据话题类型显示对应的图片 -->
-					<image :src="$aliImage + 'read-topic-03.png'" mode="widthFix"></image>
+					<image :src="$aliImage + 'read-topic-01.png'"  v-if="topicDetail.type === 'pk'"></image>
+					<image :src="$aliImage + 'read-topic-02.png'"  v-else-if="topicDetail.type === 'chat'"></image>
+					<image :src="$aliImage + 'read-topic-03.png'" v-else></image>
+					<image :src="$aliImage + 'read-topic-03.png'" mode="widthFix" v-else></image>
 				</view>
 				<view class="info">
-					<view class="item">
+					<!-- 只有活力打卡类型有活力目标 -->
+					<view class="item" v-if="topicDetail.type === 'vitality'">
 						<image :src="$aliImage + 'read-target.png'" mode="widthFix"></image>
-						<text>目标活力值：24</text>
+						<text>目标活力值：{{ topicDetail.target_vitality }}</text>
 					</view>
-					<view class="item">
+					<view class="item" v-if="topicDetail.reward_gift">
 						<image :src="$aliImage + 'read-gift.png'" mode="widthFix"></image>
-						<text>奖励：50五车贝+1次免费借阅</text>
+						<text>奖励：{{topicDetail.reward_gift}}</text>
 					</view>
 				</view>
 				<view class="explain">
-					<view>通过五车书小程序完成21天阅读打卡任务通过五车书小程序完成21天阅读打卡任务通过五车书小程序完成21天阅读打卡任务</view>
+					<view>{{ topicDetail.description }}</view>
 					<view class="more" @tap="checkMoreDetail">
 						<text>更多</text>
 						<image :src="$aliImage + 'read-icon-right.png'" mode="widthFix"></image>
@@ -48,13 +52,15 @@
 				</view>
 				<view class="time">
 					<view class="left">
-						<text>话题周期：2020.10.20-2020.11.25</text>
+						<text>话题周期：{{ topicDetail.start_time }}-{{ topicDetail.end_time }}</text>
 					</view>
 					<!-- 只有活力打卡类型话题才显示 -->
-					<view class="right">
+					<view class="right" v-if="vitalityList && vitalityList.length > 0">
 						<text>话题活力之星</text>
 						<view class="show">
-							<image :src="userInfo.avatar" mode="widthFix" v-for="n in 3" :key="n"></image>
+							<block v-for="(item, index) in vitalityList" :key="index">
+								<image mode="widthFix" :src="item.customInfo.avatar" v-if="index < 3"></image>
+							</block>
 						</view>
 					</view>
 				</view>
@@ -67,17 +73,42 @@
 <script>
 	export default {
 		props: {
+			// 区别从哪个页面引用该组件
 			parent: {
 				type: String,
 				default: 'topic-detail'
 			},
-			custom_type: String
+			custom_type: String,
+			dataList: Object,
+			// 活力值
+			vitality: {
+				type: Number,
+				default: 0
+			},
+			// 活力之星数据
+			vitalityList: {
+				type: Array,
+				default: []
+			}
 		},
 		data() {
 			return {
 				$aliImage: this.$aliImage,
 				userInfo: uni.getStorageSync('userInfo'),
-				title: '#21天养成阅读习惯#'
+				title: '#21天养成阅读习惯#',
+				topicDetail: null
+			}
+		},
+		watch: {
+			dataList(newVal) {
+				this.topicDetail = newVal
+			},
+			vitality(newVal) {
+				this.vitality = newVal
+			},
+			vitalityList(newVal) {
+				this.vitalityList = newVal
+				console.log(this.vitalityList)
 			}
 		},
 		methods: {
@@ -86,7 +117,7 @@
 				this.$emit('checkMoreDetail')
 			},
 			addRemark() {
-				this.$emit('addRemark', this.title)
+				this.$emit('addRemark', this.topicDetail.title,this.topicDetail.id,this.topicDetail.show_comment)
 			}
 		}
 	}
@@ -195,12 +226,14 @@
 		box-sizing: border-box;
 		display: flex;
 		margin-top: 12rpx;
+		flex-wrap: wrap
 	}
 	.intro .info .item {
 		font-size: 22rpx;
 		color: #2AAEC4;
 		display: flex;
 		align-items: center;
+		
 	}
 	.intro .info .item:nth-child(1) {
 		margin-right: 45rpx;

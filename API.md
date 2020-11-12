@@ -7,19 +7,20 @@
           "type": "vitality",   话题类型 vitality：活力打卡，chat：轻松畅聊，pk：阅读PK 
           "title": "话题名称",
           "description": "话题描述",
-          "reward_shell": "5",
-          "reward_free": "2",
-          "reward_coin": "50",
-          "reward_gift": "礼物",
-          "reward_vitality": "1",
-          "target_vitality": "30",
+          "reward_shell": "5", 注：传零(et_app)
+          "reward_free": "2", 注：传零(et_app)
+          "reward_coin": "50", 注：传零(et_app)
+          "reward_gift": "礼物",注：没有奖励传空(et_app)
+          "reward_vitality": "1",注：没有目标活力值传零，默认每次打卡只能获得1活力值(et_app)
+          "target_vitality": "30",注：没有目标活力值传零(et_app)
           "start_time": "2020-10-03 00:00:00",
           "end_time": "2020-10-09 00:00:00",
-          "day_mark_count": "2",
-          "status": "1", 话题状态：0:未开始 1:进行中，2：已结束
-          "show_status": "2",  0:不显示，1：显示， 2：审核中 3：违规
+          "day_mark_count": "2",注：根据话题类型每天做多可以打卡几次传对应次数(et_app)
+          "status": "1", 话题状态：0:未开始 1:进行中，2：已结束 注：传零，后台做处理(et_app)
+          "show_status": "2",  0:不显示，1：显示， 2：审核中 3：违规 注：传零，后台做处理(et_app)
           "show_comment": "0" 0:不显示评论，1：显示评论
           "show_range":  "school", 范围：(school:学校，grade：年级，class：班，all：全站)
+					注：根据选择范围传对应学校年级班级id，可以传空(et_app)
           "school_id": "2",
           "grade_id": "1",
           "class": "3"
@@ -88,8 +89,8 @@
           "custom_id": "61",
           "content": "打卡内容",   话题类型 vitality：活力打卡，chat：轻松畅聊，pk：阅读PK 
           "topic_id": "1",
-          "show_status": "2",  0:不显示，1：显示， 2：审核中 3：违规
-          "show_comment": "0" 0:不显示评论，1：显示评论
+          "show_status": "2",  0:不显示，1：显示， 2：审核中 3：违规(et_app可以不传)
+          "show_comment": "0" 0:不显示评论，1：显示评论(目前暂时跟话题同步)
       }
      * 
      */
