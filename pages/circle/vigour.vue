@@ -14,7 +14,7 @@
 					</view>
 					<view class="time">
 						<!-- 读取后台返回的时间往前推一周(七天) -->
-						<text>统计日期：2020-10-27</text>
+						<text>统计日期：{{ formatCreateTime }}</text>
 					</view>
 				</view>
 			</view>
@@ -55,7 +55,8 @@
 				$aliImage: this.$aliImage,
 				userInfo: uni.getStorageSync('userInfo'),
 				rankingList: [],
-				userRankingList:null
+				userRankingList:null,
+				formatCreateTime: '', //统计时间
 			}
 		},
 		onLoad() {
@@ -72,7 +73,6 @@
 					}
 				}
 				this.$api.selReadingVitalityCount(params).then(res => {
-					console.log(res)
 					let result = res.data.rows
 					if(result && result.length > 0) {
 						result.map(item => {
@@ -80,6 +80,10 @@
 						})
 					}
 					this.userRankingList = result[0]
+					console.log(this.userRankingList)
+					let date = this.userRankingList.formatCreateTime.split(' ')[0]
+					let timestamp = new Date(date).getTime() - (7 * 24 * 3600 * 1000)
+					this.formatCreateTime = this.formatTime(timestamp, 'YY:MM:DD')
 				})
 			},
 			// 获取前二十名
@@ -98,6 +102,28 @@
 					}
 					this.rankingList = result
 				})
+			},
+			
+			// 格式化时间
+			formatTime(time, type) {
+				let date = new Date(time)
+				let year = date.getFullYear()
+				let month = this.complete(date.getMonth() + 1)
+				let day = this.complete(date.getDate())
+				let hour = this.complete(date.getHours())
+				let minute = this.complete(date.getMinutes())
+				let second = this.complete(date.getSeconds())
+				if(type === 'YY:MM:DD') {
+					return year +'-'+ month + '-' + day
+				}else {
+					return year +'-'+ month + '-' + day +' '+ hour +':'+ minute +':'+ second
+				}
+				
+			},
+			// 补零操作
+			complete(number) {
+				let num =	number > 9 ? number : '0' + number
+				return num
 			},
 		}
 	}

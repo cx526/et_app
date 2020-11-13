@@ -5,7 +5,7 @@
 		<!-- 活力排版 -->
 		<typesetting @checkVigourDetail="checkVigourDetail" v-if="rankingList && rankingList.length > 0" :rankingList="rankingList" />
 		<!-- 通告栏 -->
-		<message />
+		<message v-if="rewardList && rewardList.length > 0" :rewardList="rewardList" />
 		<!-- 阅读统计 -->
 		<stat @checkReadingDetail="checkReadingDetail" />
 		<!-- 话题 -->
@@ -31,6 +31,10 @@
 				totalPage: 0,
 				topicMark: [], //打卡数据
 				rankingList: [], //前三排名数据
+				rewardList: [], //奖励列表
+				school_id: '',//学校id
+				grade_id: '', //年级id
+				class_id: '' //所在班级
 			}
 		},
 		components: {
@@ -48,6 +52,7 @@
 			this.selReadingVitalityCount()
 			// 查看奖励
 			this.selReadingReward()
+			
 		},
 		onShow() {
 			// 检测登录状态
@@ -109,11 +114,25 @@
 					res.data[0].vitality = parseInt(res.data[0].vitality)
 					this.data = res.data[0]
 					this.school_id = this.data.schoolInfo.id
+					if(this.data.custom_type === '0' || this.data.custom_type === '1') {
+						this.grade_id = this.data.gradeInfo.id
+						this.class_id = this.data.childInfo.class
+					}
+					console.log(this.school_id)
+					console.log(this.grade_id)
+					console.log(this.class_id)
 					// 获取热门打卡数据
 					this.selReadingMark(this.school_id)
 					let userInfo = uni.getStorageSync('userInfo')
 					userInfo.id = this.data.id
 					uni.setStorageSync('userInfo', userInfo)
+					// 测试
+					let params1 = {
+						filterItems: {
+							school_id: this.schoold_id
+						}
+					}
+					this.$api.getTeacherInfo(params1).then(res => {console.log(res)})
 				})
 			},
 			// 获取热门打卡数据
@@ -155,7 +174,6 @@
 					mark_id: mark_id,
 				}
 				this.$api.addOrDelReadingLike(params).then(res => {
-					console.log(res)
 					if(res.data.status === 'ok') {
 						let title = ''
 						if(this.topicMark[index].likeStatus == 1) {
@@ -183,7 +201,6 @@
 					
 				}
 				this.$api.selReadingVitalityCount(params).then(res => {
-					console.log(res)
 					let result = res.data.rows
 					
 					if(result && result.length > 0) {
@@ -203,6 +220,8 @@
 				}
 				this.$api.selReadingReward(params).then(res => {
 					console.log(res)
+					let result = res.data.rows
+					this.rewardList = res.data.rows
 				})
 			},
 			// 格式化时间
@@ -292,13 +311,15 @@
 			},
 			// 举报/删除打卡
 			handleComment(item) {
+				console.log(item)
+				let mark_id = item.id //打卡id
 				uni.showActionSheet({
 					itemList: ['举报'],
 					success: res => {
 						// 举报
 						if(res.tapIndex === 0) {
 							uni.navigateTo({
-								url: '/pages/circle/report'
+								url: '/pages/circle/report?mark_id='+mark_id+'&type=remark'
 							})
 						}else {
 							return

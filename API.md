@@ -75,7 +75,8 @@
             "show_range":  "school", 范围：(school:学校，grade：年级，class：班，all：全站)
             "school_id": "2",
             "grade_id": "1",
-            "class": "3"
+            "class": "3",
+						"status": "1"  话题状态：0:未开始 1:进行中，2：已结束
           }
       }
      * 

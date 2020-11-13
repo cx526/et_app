@@ -246,6 +246,7 @@
 			},
 			// 举报/删除评论
 			handleComment(item) {
+				console.log(item)
 				let user_id = this.userInfo.id //用户id
 				let custom_id = item.custom_id //评论者id
 				let id = item.id //评论id
@@ -261,7 +262,7 @@
 						// 举报
 						if(res.tapIndex === 0) {
 							uni.navigateTo({
-								url: '/pages/circle/report'
+								url: '/pages/circle/report?comment_id='+id+'&type=comment'
 							})
 						}else if(res.tapIndex === 1) {
 							uni.showModal({

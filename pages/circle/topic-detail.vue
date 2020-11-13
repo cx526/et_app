@@ -50,6 +50,7 @@
 			readChart
 		},
 		onLoad(options) {
+			console.log(options)
 			this.custom_type = options.custom_type
 			this.id = options.id //话题id
 			// 查看话题活力之星(前三)
@@ -265,18 +266,35 @@
 				uni.showActionSheet({
 					itemList:itemList,
 					success: res => {
-						console.log(res)
 						// 举报
 						if(res.tapIndex === 0) {
 							uni.navigateTo({
-								url: '/pages/circle/report'
+								url: '/pages/circle/report?mark_id='+remark_id+'&type=remark'
 							})
 						}else if(res.tapIndex === 1) {
 							uni.showModal({
 								title: '是否确认删除此打卡?',
 								success: res => {
 									if(res.confirm) {
-										this.delReadingMark(remark_id)
+										let count = 0
+										// 有图片执行删除图片操作
+										if(item.imgInfo && item.imgInfo.length > 0) {
+											for(let i = 0; i < item.imgInfo.length; i++) {
+												let data = item.imgInfo[i]
+												let params = {
+													url: data.url,
+													name: data.file_name
+												}
+												this.$api.delUploadPic(params).then(res =>{
+													count = count + 1
+													if(count == item.imgInfo.length) {
+														// 刷新数据
+														this.delReadingMark(remark_id)
+													}
+												})
+											}
+										}
+										
 									}
 								}
 							})

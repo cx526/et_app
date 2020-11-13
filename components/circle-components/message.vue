@@ -4,15 +4,14 @@
 			<view class="message">
 				<image :src="$aliImage + 'read-inform.png'" mode="widthFix"></image>
 				<swiper vertical autoplay circular :interval="2000" disable-touch>
-					<swiper-item>
-						<text>小朋友参与什么阅读话题活力值达成，获得50五车贝获得50五车贝获得50五车贝</text>
+					<swiper-item v-for="(item, index) in rewardList" :key="index">
+						<text>{{ item.childName }}参与{{ item.topicTitle }}活力值达成，</text>
+						<text v-if="item.reward_shell || item.reward_coin || item.reward_free">
+							获得{{ item.reward_shell }}五车贝{{ item.reward_coin }}积分{{ item.reward_free }}免费次数
+						</text>
+						<text v-else>获得{{ item.reward_gift }}</text>
 					</swiper-item>
-					<swiper-item>
-						<text>小朋友参与什么阅读话题活力值达成，获得50五车贝</text>
-					</swiper-item>
-					<swiper-item>
-						<text>小朋友参与什么阅读话题活力值达成，获得50五车贝</text>
-					</swiper-item>
+				
 				</swiper>
 			</view>
 		</view>
@@ -21,11 +20,22 @@
 
 <script>
 	export default {
+		props: {
+			rewardList: {
+				type: Array,
+				default: []
+			}
+		},
 		data() {
 			return {
 				$aliImage: this.$aliImage
 			}
-		}
+		},
+		watch: {
+			rewardList(newVal) {
+				this.rewardList = newVal
+			}
+		},
 	}
 </script>
 

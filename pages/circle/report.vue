@@ -5,7 +5,7 @@
 				<text class="label">举报原因</text>
 				<view style="display: flex;align-items: center;">
 					<picker :range="reason" range-key="title" @change="changeReason">
-						<text>{{ reason[reasonIndex].title }}</text>
+						<input :value=" reason[reasonIndex].title" placeholder="请选择举报类型" style="text-align: right;"></input>
 					</picker>
 					<image :src="$aliImage + 'read-icon-gray-right.png'"></image>
 				</view>
@@ -13,7 +13,7 @@
 			</view>
 			<textarea  placeholder="请输入要举报的原因..." style="context" placeholder-style="color: #808080; font-size: 28rpx" @input="getContext" />
 		</view>
-		<view class="btn" >
+		<view class="btn" @tap="submit">
 			<text>立即举报</text>
 		</view>
 	</view>
@@ -23,33 +23,45 @@
 	export default {
 		data() {
 			return {
+				userInfo: uni.getStorageSync('userInfo'),
 				$aliImage: this.$aliImage,
-				access_token: '',
-				reasonIndex: 0,
+				reasonIndex: '',
 				context: '',
 				// 1 内容不雅 2 政治不正确 3 反党反社会 4 负能量 5 其他
 				reason: [
 					{
 						title: '内容不雅',
-						value: 1
+						value: '1'
 					},
 					{
 						title: '政治不正确',
-						value: 2
+						value: '2'
 					},
 					{
 						title: '反党反社会',
-						value: 3
+						value: '3'
 					},
 					{
 						title: '负能量',
-						value: 4
+						value: '4'
 					},
 					{
 						title: '其他',
-						value: 5
+						value: '5'
 					}
 				],
+				mark_id: '', //被举报打卡id
+				content_type: '', //举报类型
+				type: '', //打卡举报/评论举报
+			}
+		},
+		onLoad(options) {
+			console.log(options)
+			this.type = options.type
+			if(this.type === 'remark') {
+				this.mark_id = options.mark_id
+			}else {
+				this.comment_id = options.comment_id
 			}
 		},
 		methods: {
@@ -57,51 +69,48 @@
 			changeReason(event) {
 				let index = event.detail.value
 				this.reasonIndex = index
+				this.content_type = this.reason[index].value
 			},
 			// 获取举报原因
 			getContext(event) {
 				this.context = event.detail.value.replace(/\s*/g, '')
 			},
-			// 获取access_token
-			getAccessToken() {
-				let data = uni.getStorageSync('access_token')
-				// access_token过期重新请求一次
-				if(data[0] === '' || !data[0] || new Date().getTime() >= data[1]) {
-					uni.request({
-						url: 'https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&appid=wx4d51a694ef6697ff&secret=fb869bba0e93006943752050004f3c83',
-						method: 'GET',
-						success: res => {
-							let arr = []
-							arr[0] = res.data.access_token
-							arr[1] = new Date().getTime() + (7200 * 1000)
-							uni.setStorageSync('access_token', arr)
-						}
+			// 提交举报
+			submit() {
+				if(this.content_type === '') {
+					uni.showToast({
+						title: '请选择要举报的类型',
+						icon: 'none',
+						duration: 1500
 					})
-				}else {
-					// access_token还在有效期内
-					let data = uni.getStorageSync('access_token')
-					this.access_token = data[0]
+					return
 				}
-			},
-			// 检测文本内容
-			checkText(text) {
-				uni.request({
-					url: 'https://api.weixin.qq.com/wxa/msg_sec_check?access_token='+this.access_token,
-					method: 'POST',
-					data: {
-						content: text
-					},
-					success: res => {
-						if(res.data.errcode === 87014) {
-							uni.showToast({
-								title: '您输入的内容带有敏感词，请重新输入',
-								icon: 'none',
-								duration: 1500,
-								success: () => {
-									this.context = ''
-								}
-							})
-						}
+				let custom_id = this.userInfo.id
+				let params = {
+					custom_id: String(custom_id),
+					content: this.context,
+					content_type: this.content_type
+				}
+				if(this.type === 'remark') {
+					params.mark_id = this.mark_id
+				}else {
+					params.comment_id = this.comment_id
+				}
+				this.$api.addReadingReport(params).then(res => {
+					console.log(res)
+					if(res.data.status === 'ok') {
+						uni.showToast({
+							title: '您的举报已经提交，请等待审核',
+							icon: 'none',
+							duration: 1500,
+							success: () => {
+								setTimeout(() => {
+									uni.navigateBack({
+										delta: 1
+									})
+								}, 1000)
+							}
+						})
 					}
 				})
 			},

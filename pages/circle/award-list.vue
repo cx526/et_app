@@ -1,9 +1,10 @@
 <template>
 	<view>
 		<!-- 话题简介 -->
-		<topicOutline parent="award-list" />
-		<view class="comment">
-			<scroll-view class="list" scroll-y style="max-height: 515rpx;">
+		<topicOutline parent="award-list" :dataList="topicDetail" :vitality="vitality" @checkMoreDetail="checkMoreDetail" />
+		<view class="comment" v-if="rewardList && rewardList.length > 0">
+		<view class="list">
+			<scroll-view  scroll-y style="max-height: 515rpx;" scrolltolower='loadMore'>
 				<view class="title">
 					<view class="left">
 						<image :src="$aliImage + 'read-line.png'" mode="widthFix"></image>
@@ -11,42 +12,177 @@
 					</view>
 					
 				</view>
-				<view class="item" v-for="n in 5" :key="n">
+				<view class="item" v-for="(item, index) in rewardList" :key="index">
 					<view class="left">
-						<image :src="userInfo.avatar" mode="widthFix"></image>
+						<image :src="item.avatar" mode="widthFix"></image>
 					</view>
 					<view class="right">
 						<view class="context">
-							<text class="name">小A小朋友：</text>
+							<text class="name">{{ item.childName }}小朋友：</text>
 						</view>
 						<view class="grade-info">
-							<text>大良幸福幼儿园  大班3班</text>
+							<text style="margin-right: 10rpx;">{{ item.schoolName }}</text>
+							<text v-if="item.gradeName && item.class">{{ item.gradeName + item.class + '班' }}</text>
 						</view>
 					</view>
 					<view class="vigour">
 						<image :src="$aliImage + 'read-vitality.png'" mode=""></image>
-						<text>活力值：21</text>
+						<text>活力值：{{ item.vitality }}</text>
 					</view>
 				</view>
 			</scroll-view>
+			<uni-load-more :status="loadStatus" :content-text="loadText" />
 		</view>
+			
+		</view>
+		<view v-else class="none">暂无获奖名单</view>
+		<!-- 话题内容详细弹窗 -->
+		<uni-popup ref="contextDetail" >
+			<view :style="{'width': propUpWidth}" class="popUp">{{ topicDetail.description }}</view>
+		</uni-popup>
 	</view>
 </template>
 
 <script>
 	import topicOutline from '@/components/circle-components/topic-outline.vue'
+	import uniLoadMore from '@/components/uni-load-more/uni-load-more.vue'
+	import uniPopup from '@/components/uni-popup/uni-popup.vue'
 	export default {
 		data() {
 			return {
 				userInfo: uni.getStorageSync('userInfo'),
 				$aliImage: this.$aliImage,
+				topic_id: '', //话题id
+				topicDetail: null, //话题详情
+				vitality: '',//活力值
+				pageSize: '10',
+				currentPage: 1,
+				rewardList: [],
+				pageSize: '10',
+				currentPage: 1,
+				totalPage: 0,
+				loadStatus: 'noMore',
+				loadText: {
+					contentdown: '上拉加载更多',
+					contentrefresh: '加载中',
+					contentnomore: '暂无更多数据'
+				},
+				propUpWidth: 0
 			}
 		},
 		components: {
-			topicOutline
+			topicOutline,
+			uniLoadMore,
+			uniPopup
+		},
+		onLoad(options) {
+			console.log(options)
+			this.topic_id = options.topic_id
+			// 查看话题详细
+			this.selTopicDetail(this.topic_id)
+			// 查看获奖名单
+			this.selReadingReward()
+			// 设置内容弹窗宽度
+			uni.getSystemInfo({
+				success: res => {
+					this.propUpWidth = res.windowWidth * 0.8 + 'px'
+				}
+			})
 		},
 		methods: {
-			
+			// 查看话题详细
+			selTopicDetail(id) {
+				let params = {
+					filterItems: {
+						id: id
+					}
+				}
+				this.$api.selReadingTopic(params).then(res => {
+					let result = res.data.rows[0]
+					result.start_time = this.formatTime(result.start_time, 'YY:MM:DD')
+					result.end_time = this.formatTime(result.end_time, 'YY:MM:DD')
+					this.topicDetail = result
+					this.selReadingVitalityDetail()
+				})
+			},
+			// 查看当前用户在此话题的活力值
+			selReadingVitalityDetail() {
+				let custom_id = this.userInfo.id
+				let topic_id = this.topic_id
+				let params = {
+					filterItems: {
+						custom_id: String(custom_id) ,
+						topic_id: String(topic_id)
+					}
+				}
+				this.$api.selReadingVitalityDetail(params).then(res => {
+					let result = res.data.rows
+					if(result && result.length > 0) {
+						result.map(item => {
+							this.vitality = Number(this.vitality) + Number(item.vitality)
+						})
+						
+					}
+				})
+			},
+			// 获取奖励名单
+			selReadingReward() {
+				let params = {
+					pageSize: this.pageSize,
+					currentPage: String(this.currentPage),
+					filterItems: {
+						topic_id: this.topic_id
+					}
+				}
+				this.$api.selReadingReward(params).then(res => {
+					this.totalPage = res.data.totalPage
+					let result = res.data.rows
+					if(result && result.length > 0) {
+						result.map(item => {
+							item.vitality = parseInt(item.vitality)
+						})
+					}
+					this.rewardList = [...this.rewardList, ...result]
+					if(this.rewardList.length >= this.totalPage) {
+						this.loadStatus = 'noMore'
+					}else {
+						this.loadStatus = 'more'
+					}
+				})
+			},
+			// 上拉加载更多
+			loadMore() {
+				if(this.rewardList.length < this.totalPage) {
+					this.loadStatus = 'loading'
+					this.currentPage = this.currentPage + 1
+					this.selReadingReward()
+				}
+			},
+			// 查看话题内容详细
+			checkMoreDetail() {
+				this.$refs.contextDetail.open()
+			},
+			// 格式化时间
+			formatTime(time, type) {
+				let date = new Date(time)
+				let year = date.getFullYear()
+				let month = this.complete(date.getMonth() + 1)
+				let day = this.complete(date.getDate())
+				let hour = this.complete(date.getHours())
+				let minute = this.complete(date.getMinutes())
+				let second = this.complete(date.getSeconds())
+				if(type === 'YY:MM:DD') {
+					return year +'-'+ month + '-' + day
+				}else {
+					return year +'-'+ month + '-' + day +' '+ hour +':'+ minute +':'+ second
+				}
+				
+			},
+			// 补零操作
+			complete(number) {
+				let num =	number > 9 ? number : '0' + number
+				return num
+			},
 		}
 	}
 </script>
@@ -132,7 +268,7 @@
 	.list .item .right .grade-info {
 		box-sizing: border-box;
 		display: flex;
-		justify-content: space-between;
+		
 		font-size: 20rpx;
 		color: #B3B3B3;
 		margin-top: 6rpx;
@@ -153,5 +289,19 @@
 		width: 17rpx;
 		height: 26rpx;
 		margin-right: 6rpx;
+	}
+	.none {
+		box-sizing: border-box;
+		padding: 30rpx;
+		text-align: center;
+		color: #808080;
+		font-size: 30rpx;
+	}
+	.popUp {
+		box-sizing: border-box;
+		padding: 24rpx;
+		border-radius: 30rpx;
+		font-size: 30rpx;
+		background: #fff;
 	}
 </style>
