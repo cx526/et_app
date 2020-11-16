@@ -43,7 +43,7 @@
 	.message-box {
 		box-sizing: border-box;
 		padding: 0 25rpx;
-		margin: 20rpx 0;
+		margin-top: 20rpx;
 	}
 	.message {
 		height: 60rpx;

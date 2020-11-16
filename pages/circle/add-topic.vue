@@ -27,14 +27,14 @@
 			<view class="item">
 				<text class="label">开始时间</text>
 				<picker mode="date" @change="getStartTime">
-					<input placeholder="请选择话题开始时间" :value="start_time" />
+					<input placeholder="请选择话题开始时间" :value="start_time" disabled />
 				</picker>
 			</view>
 			<!-- 结束时间 -->
 			<view class="item">
 				<text class="label">结束时间</text>
 				<picker mode="date" @change="getEndTime">
-					<input placeholder="请选择话题结束时间" :value="end_time" />
+					<input placeholder="请选择话题结束时间" :value="end_time" disabled />
 				</picker>
 			</view>
 			<!-- 话题简介 -->
@@ -531,8 +531,16 @@
 					return
 				}
 				// 如果话题可见范围为本年级/本班级时，需要选择年级及所在班级信息(不是admin身份)
-				if(this.userInfo.openId !== 'oUume4hcYaqvcF6OEwPcIsNivTIw' &&(this.show_range == 'grade' || this.show_range == 'class')) {
-					if(this.grade_id == '' || this.class_id == '') {
+				if(this.userInfo.openId !== 'oUume4hcYaqvcF6OEwPcIsNivTIw' && (this.show_range == 'grade' || this.show_range == 'class')) {
+					if(this.show_range == 'grade' && this.grade_id == '') {
+						uni.showToast({
+							title: '请选全年级班级信息',
+							icon: 'none',
+							duration: 1500
+						})
+						return
+					}
+					else if(this.show_range == 'class' && (this.grade_id == '' || this.class_id == '')) {
 						uni.showToast({
 							title: '请选全年级班级信息',
 							icon: 'none',

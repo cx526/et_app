@@ -62,6 +62,7 @@ export default {
 			show_comment: '', //是否开启评论
 			insertId: '', //打卡id
 			school_id: '', //学校id
+			count: 0
 		};
 	},
 	onLoad(options) {
@@ -303,25 +304,29 @@ export default {
 							usage: "reading_mark",
 							res: result
 						}
-						this.addUploadPic(params)
+						this.addUploadPic(params, this.imgShow.length)
 					}
 				})
 			}
 		},
 		// 上传图片到阿里云后的回调
-		addUploadPic(params) {
+		addUploadPic(params, len) {
 			this.$api.addUploadPic(params).then(res => {
-				console.log(res)
+				this.count = this.count+1
 				uni.showToast({
 					title: '打卡成功',
 					icon: 'none',
 					duration: 1500,
 					success:() => {
-						setTimeout(() => {
-							uni.navigateBack({
-								delta: 1
-							})
-						}, 1500)
+						// 全部上传完毕才返回上一页
+						if(len == this.count) {
+							setTimeout(() => {
+								uni.navigateBack({
+									delta: 1
+								})
+							}, 1500)
+						}
+						
 					}
 				})
 			})

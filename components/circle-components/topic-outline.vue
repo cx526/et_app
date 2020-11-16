@@ -3,7 +3,7 @@
 		<view class="topic">
 			<view class="left">
 				<view class="show">
-					<image :src="topicDetail.imgInfo[0].url" mode="widthFix" v-if="topicDetail.imgInfo && topicDetail.imgInfo.length > 0 " class="cover"></image>
+					<image :src="topicDetail.imgInfo[0].url" v-if="topicDetail.imgInfo && topicDetail.imgInfo.length > 0 " class="cover"></image>
 					<image :src="$aliImage + 'read-demo.png'" mode="widthFix" class="cover" v-else></image>
 				</view>
 				<view class="vigour">

@@ -7,7 +7,12 @@
 				<image :src="avatar" class="header"></image>
 			</view>
 			<view class="center">
-				<view class="user-name" v-if="userInfo.childInfo.name">{{ userInfo.childInfo.name }}小朋友</view>
+				<view class="user-name" v-if="userInfo.childInfo.name">
+					<text>{{ userInfo.childInfo.name }}</text>
+					<text v-if="userInfo.custom_type === '1'">小朋友</text>
+					<text v-else-if="userInfo.custom_type === '0'">老师</text>
+					<text v-else>园长</text>
+				</view>
 				<view class="user-name" v-else>游客，你好！</view>
 				<view class="grade-info">
 					<text style="margin-right: 8rpx;">{{ userInfo.schoolInfo.name }}</text>
@@ -23,7 +28,7 @@
 					</view>
 					<view class="number">{{ userInfo.vitality }}</view>
 				</view>
-				<view class="message" @tap="chooseItem" v-if="custom_type !== '1'">
+				<view class="message" @tap="chooseItem" v-if="user_data.custom_type !== '1'">
 					<image :src="$aliImage + 'read-message.png'" mode="widthFix"></image>
 					<!-- 只有在我的打卡页面才显示 -->
 					<text v-if="parent !== 'index'">新建话题</text>

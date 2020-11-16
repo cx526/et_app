@@ -4,11 +4,11 @@
 			<view class="item" v-for="(item, index) in dataList" :key="index" @tap="checkReadingDetail(index)">
 				<image :src="$aliImage + item.path" mode="widthFix" class="bg"></image>
 				<view class="data">
-					<view>
+					<!-- <view>
 						<image :src="$aliImage + 'read-info.png'" mode="widthFix" class="info"></image>
 						<text style="font-size: 36rpx;font-weight: 700;">120</text>
 						<text style="font-size: 20rpx;color: rgba(255,255,255,.6);"> /300人</text>
-					</view>
+					</view> -->
 					<view style="font-size: 24rpx;color: rgba(255,255,255,.6);">{{ item.title }}</view>
 				</view>
 			</view>
@@ -49,6 +49,7 @@
 	.stat-box {
 		box-sizing: border-box;
 		padding: 0 25rpx;
+		margin-top: 20rpx;
 	}
 	.stat {
 		box-sizing: border-box;

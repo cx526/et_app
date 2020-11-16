@@ -6,8 +6,8 @@
 			
 		</view>
 		<!-- 只有阅读PK话题才显示，显示统计类型根据该话题的公开范围进行对应的前端显示。 -->
-		<view style="box-sizing: border-box;padding: 0 25rpx;" v-if="false">
-			<readChart />
+		<view style="box-sizing: border-box;padding: 0 25rpx;" v-if="topicDetail.type === 'pk'">
+			<readChart :rowList="rowList" :dataList="dataList" />
 		</view>
 		
 		<markUp :title="false" @comment="comment"  @handleComment="handleComment" :loadMore="loadMore" :show_comment="topicDetail.show_comment" :topicMark="topicMark" :topic_type="topicDetail.type" :loadStatus="loadStatus" @loadingMore="loadingMore" @like="like" />
@@ -41,6 +41,12 @@
 				loadMore: true,
 				loadStatus: 'more',
 				vitalityList: [], //话题活力之星数据
+				school_id: '', //学校id
+				grade_id: '' , // 话题可见年级id
+				class_id: '', // 华泰可见班级id
+				rowList: [], // 横坐标
+				dataList: [], //纵坐标
+				teacher_id: '', //学生归属老师id
 			}
 		},
 		components: {
@@ -104,7 +110,16 @@
 					result.start_time = this.formatTime(result.start_time, 'YY:MM:DD')
 					result.end_time = this.formatTime(result.end_time, 'YY:MM:DD')
 					this.topicDetail = result
+					this.school_id = this.topicDetail.school_id
+					this.grade_id = this.topicDetail.grade_id
+					this.class_id = this.topicDetail.class
+					console.log(this.topicDetail)
 					this.selReadingVitalityDetail()
+					if(this.grade_id === '') {
+						this.getReadingStat('school')
+					}else {
+						this.selTeacherStudent()
+					}
 				})
 			},
 			// 查看话题的打卡记录
@@ -148,6 +163,86 @@
 						this.loadMore = false
 					}
 					
+				})
+			},
+			// 获取校园，年级阅读数据
+			getReadingStat(type) {
+				let params = {
+					filterItems: {
+						school_id: String(this.school_id)
+					}
+				}
+				if(type === 'grade') {
+					params.filterItems.grade_id = String(this.grade_id)
+				}
+				this.$api.getTeacherInfo(params).then(res => {
+					let result = res.data.rows
+						if(result && result.length > 0) {
+							let rowList = [] //班级(横坐标)
+							let orderBookCount = [] //借阅本书
+							for(let i = 0; i < result.length; i++) {
+								// 组合拼接班级
+								if(result[i].gradeInfo.name && result[i].teacherInfo.class) {
+									let gradeInfo = result[i].gradeInfo.name + result[i].teacherInfo.class + '班'
+									rowList.push(gradeInfo)
+									orderBookCount.push(result[i].offlineOrderCount.offlineOrderBookCount ? result[i].offlineOrderCount.offlineOrderBookCount : 0)
+								}
+							}
+							this.rowList = rowList
+							this.dataList = orderBookCount.sort((n1,n2) => {return n2 - n1})
+							if(type === 'school') {
+								uni.setNavigationBarTitle({
+									title: '本园阅读统计'
+								})
+							}else {
+								uni.setNavigationBarTitle({
+									title: '年级阅读统计'
+								})
+							}				
+						}
+				})
+			},
+			// 获取所在班级教师的id
+			selTeacherStudent() {
+				let params = {
+					filterItems: {
+						custom_id: String(this.userInfo.id)
+					}
+				}
+				this.$api.selTeacherStudent(params).then(res => {
+					let result = res.data.rows
+					if(!result || result.length === 0) {
+						this.isShow = false
+					}else {
+						this.teacher_id = result[0].customInfo.teacherInfo.teacher_id
+						// 获取班级学生阅读统计
+						this.checkStudentRead()
+					}
+				})
+			},
+			// 获取班级学生阅读统计
+			checkStudentRead() {
+				let params = {
+					"filterItems":{
+						teacher_id: this.teacher_id,
+						allTotal:"1",
+					}
+				}
+				this.$api.checkStudentRead(params).then(res => {
+					console.log(res)
+					let result = res.data
+					
+					if(result && result.length > 0) {
+						let rowList = []
+						let dataList = []
+						result.map(item => {
+							rowList.push(item.child_name)
+							dataList.push(item.reading_total)
+						})
+					
+						this.rowList = rowList
+						this.dataList = dataList.sort((n1,n2) => n2 - n1)
+					}
 				})
 			},
 			// 查看话题活力之星(前三)
@@ -257,6 +352,7 @@
 				let user_id = this.userInfo.id //用户id
 				let remark_id = item.id //打卡id
 				let custom_id = item.custom_id //发布打卡者id
+				let topic_id = item.topic_id //话题id
 				let itemList = []
 				if(user_id == custom_id) {
 					itemList = ['举报','删除']
@@ -269,7 +365,7 @@
 						// 举报
 						if(res.tapIndex === 0) {
 							uni.navigateTo({
-								url: '/pages/circle/report?mark_id='+remark_id+'&type=remark'
+								url: '/pages/circle/report?mark_id='+remark_id+'&type=mark&topic_id='+topic_id
 							})
 						}else if(res.tapIndex === 1) {
 							uni.showModal({

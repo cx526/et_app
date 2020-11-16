@@ -3,7 +3,7 @@
 		<view class="user">
 			<view class="left">
 				<view class="avatar">
-					<image :src="userRankingList.avatar" mode="widthFix" class="user-avatar"></image>
+					<image :src="userInfo.avatar" mode="widthFix" class="user-avatar"></image>
 				</view>
 				<view class="info">
 					<view class="name" v-if="userRankingList.childName">{{ userRankingList.childName }}小朋友</view>
@@ -88,12 +88,17 @@
 			},
 			// 获取前二十名
 			selReadingVitalityCount() {
+				uni.showLoading({
+					title: '数据加载中',
+					mask: true
+				})
 				let params = {
 					pageSize: "20",
 					currentPage: "1",
 					
 				}
 				this.$api.selReadingVitalityCount(params).then(res => {
+					uni.hideLoading()
 					let result = res.data.rows
 					if(result && result.length > 0) {
 						result.map(item => {

@@ -269,6 +269,9 @@ api.delUploadPic = params => request.globalRequest('/api/upload/delUploadPic', '
 // 获取本园，本年级阅读统计 {"filterItems":{"school_id":"27","id":"385"}}
 api.getTeacherInfo = params => request.globalRequest('/api/teacherInfo/getTeacherService', 'POST', params)
 
+// 查询学生所在班级教室id
+api.selTeacherStudent = params => request.globalRequest('/api/teacherInfo/selTeacherStudent', 'POST', params)
+
 // 获取班级学生阅读统计 {"filterItems":{"teacher_id":"385","allTotal":"1"}}
 api.checkStudentRead = params => request.globalRequest('/api/count/selReadingCountPerStudent', 'POST', params)
 export default api

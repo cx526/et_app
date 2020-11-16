@@ -249,6 +249,7 @@
 				console.log(item)
 				let user_id = this.userInfo.id //用户id
 				let custom_id = item.custom_id //评论者id
+				let topic_id = item.topic_id //话题id
 				let id = item.id //评论id
 				let itemList = []
 				if(user_id == custom_id) {
@@ -262,7 +263,7 @@
 						// 举报
 						if(res.tapIndex === 0) {
 							uni.navigateTo({
-								url: '/pages/circle/report?comment_id='+id+'&type=comment'
+								url: '/pages/circle/report?comment_id='+id+'&type=comment&topic_id='+topic_id
 							})
 						}else if(res.tapIndex === 1) {
 							uni.showModal({

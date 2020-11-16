@@ -95,7 +95,9 @@
 	import uniLoadMore from '@/components/uni-load-more/uni-load-more.vue';
 	export default {
 		props: {
-			schoolId: String
+			schoolId: String,
+			gradeId: String,
+			classId: String
 		},
 		data() {
 			return {
@@ -134,6 +136,12 @@
 				this.school_id = newVal
 				// 获取话题列表(默认获取全站话题)
 				this.selReadingTopic('all')
+			},
+			gradeId(newVal) {
+				this.grade_id = newVal
+			},
+			classId(newVal) {
+				this.class_id = newVal
 			}
 		},
 		methods: {
@@ -150,7 +158,7 @@
 							}else {
 								this.swiperHeight = 0 + 'px'
 							}
-							console.log(this.swiperHeight)
+							
 						}).exec();
 					}, 200)
 				}else {
@@ -172,6 +180,10 @@
 						show_range: show_range,
 						school_id: school_id
 					}
+				}
+				if(show_range === 'class') {
+					params.filterItems.grade_id = this.grade_id,
+					params.filterItems.class = this.class_id
 				}
 				this.$api.selReadingTopic(params).then(res => {
 					let result = res.data.rows

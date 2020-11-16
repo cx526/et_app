@@ -9,7 +9,7 @@
 		<!-- 阅读统计 -->
 		<stat @checkReadingDetail="checkReadingDetail" />
 		<!-- 话题 -->
-		<topic @checkTopicDetail="checkTopicDetail" :schoolId = "data.schoolInfo.id" />
+		<topic @checkTopicDetail="checkTopicDetail" :schoolId = "data.schoolInfo.id" :gradeId = "grade_id":classId="class_id"  />
 		<!-- 热门打卡 -->
 		<markUp @comment="comment" @handleComment="handleComment" :loadMore="true" :topicMark="topicMark" parent="index" @reload="reload" @like="like" />
 	</view>
@@ -52,7 +52,6 @@
 			this.selReadingVitalityCount()
 			// 查看奖励
 			this.selReadingReward()
-			
 		},
 		onShow() {
 			// 检测登录状态
@@ -126,13 +125,6 @@
 					let userInfo = uni.getStorageSync('userInfo')
 					userInfo.id = this.data.id
 					uni.setStorageSync('userInfo', userInfo)
-					// 测试
-					let params1 = {
-						filterItems: {
-							school_id: this.schoold_id
-						}
-					}
-					this.$api.getTeacherInfo(params1).then(res => {console.log(res)})
 				})
 			},
 			// 获取热门打卡数据
@@ -259,10 +251,17 @@
 			},
 			// 查看阅读数据
 			checkReadingDetail(index) {
+				let params = {
+					school_id: this.school_id,
+					grade_id: this.grade_id,
+					class_id: this.class_id,
+					index: index
+				}
 				uni.navigateTo({
-					url: '/pages/circle/read-data?index='+index
+					url: '/pages/circle/read-data?params='+JSON.stringify(params)
 				})
 			},
+			
 			// 查看话题详情
 			checkTopicDetail(id) {
 				
@@ -272,6 +271,7 @@
 			},
 			// 查看打卡评论
 			comment(item) {
+		
 				let params = {
 					topic_id: item.topic_id,
 					mark_id: item.id,
@@ -313,13 +313,14 @@
 			handleComment(item) {
 				console.log(item)
 				let mark_id = item.id //打卡id
+				let topic_id = item.topic_id //话题id
 				uni.showActionSheet({
 					itemList: ['举报'],
 					success: res => {
 						// 举报
 						if(res.tapIndex === 0) {
 							uni.navigateTo({
-								url: '/pages/circle/report?mark_id='+mark_id+'&type=remark'
+								url: '/pages/circle/report?mark_id='+mark_id+'&type=mark&topic_id='+ topic_id
 							})
 						}else {
 							return

@@ -17,6 +17,10 @@
 </template>
 
 <script>
+	/***
+		rowList: 从父组件传递过来的图形横坐标值
+		dataList: 从父组件传递过来的图形纵坐标值
+	 ***/ 
 	import uCharts from '@/components/u-charts/u-charts/u-charts.js';
 	
 	var canvaColumn=null;
@@ -28,25 +32,51 @@
 				pixelRatio:1,
 				// 模拟数据
 				chartData: {
-				  categories: ["小小班1班", "小小班2班", "小班1班", "小班2班", "中班1班","中班2班"],
+				  categories: [],
 				  series: [
 					{
 					name: "阅读量",
-					data: [30, 38, 25, 14, 34, 50]
+					data: []
 				  }]
 				}
 			}
 		},
-		
+		props: {
+			rowList: {
+				type: Array,
+				default: []
+			},
+			dataList: {
+				type: Array,
+				default: []
+			}
+		},
 		created() {
 			this.cWidth=uni.upx2px(670)
 			this.cHeight=uni.upx2px(500)
 			this.chart('canvasColumn')
 		},
+		updated() {
+			console.log('update')
+			this.chart('canvasColumn')
+		},
+		watch: {
+			rowList(newVal,oldVal) {
+				this.rowList = newVal
+				this.chartData.categories = newVal
+				
+			},
+			dataList(newVal) {
+				this.dataList = newVal
+				this.chartData.series[0].data = newVal
+			}
+		},
+		
 		methods: {
 			// 绘制柱状图
 			chart(canvasId) {
-				let _self = this;
+				let _self = this
+				console.log(_self.chartData)
 				canvaColumn=new uCharts({
 					$this:_self,
 					canvasId: canvasId,
