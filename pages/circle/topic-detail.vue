@@ -5,9 +5,9 @@
 			<topicOutline @checkMoreDetail="checkMoreDetail" @addRemark="addRemark" :custom_type="custom_type" :dataList="topicDetail" :vitality="vitality" :vitalityList="vitalityList" />
 			
 		</view>
-		<!-- 只有阅读PK话题才显示，显示统计类型根据该话题的公开范围进行对应的前端显示。 -->
-		<view style="box-sizing: border-box;padding: 0 25rpx;" v-if="topicDetail.type === 'pk'">
-			<readChart :rowList="rowList" :dataList="dataList" />
+		<!-- 只有阅读PK话题且身份不是园长才显示，显示统计类型根据该话题的公开范围进行对应的前端显示。 -->
+		<view style="box-sizing: border-box;padding: 0 25rpx;" v-if="topicDetail.type === 'pk' && custom_type !== '2' && this.show_range !== 'all' ">
+			<readChart :axis="axis" />
 		</view>
 		
 		<markUp :title="false" @comment="comment"  @handleComment="handleComment" :loadMore="loadMore" :show_comment="topicDetail.show_comment" :topicMark="topicMark" :topic_type="topicDetail.type" :loadStatus="loadStatus" @loadingMore="loadingMore" @like="like" />
@@ -47,6 +47,8 @@
 				rowList: [], // 横坐标
 				dataList: [], //纵坐标
 				teacher_id: '', //学生归属老师id
+				show_range: '' , //区分话题可见范围
+				axis: {}
 			}
 		},
 		components: {
@@ -113,13 +115,29 @@
 					this.school_id = this.topicDetail.school_id
 					this.grade_id = this.topicDetail.grade_id
 					this.class_id = this.topicDetail.class
-					console.log(this.topicDetail)
+					this.show_range = this.topicDetail.show_range
 					this.selReadingVitalityDetail()
-					if(this.grade_id === '') {
-						this.getReadingStat('school')
-					}else {
-						this.selTeacherStudent()
+					// 只有非园长身份且是pk话题且不是admin发布才去展示阅读统计图表
+					if(this.custom_type !== '2' && this.topicDetail.type === 'pk' && this.show_range !== 'all') {
+						if(this.show_range === 'school') {
+							// 园内阅读pk
+							this.getReadingStat('school')
+						}else if(this.show_range === 'grade'){
+							// 年级阅读pk
+							this.getReadingStat('grade')
+						}else {
+							// 班级阅读pk
+							if(this.custom_type === '0') {
+								// 老师身份
+								this.teacher_id = String(this.userInfo.id)
+								this.checkStudentRead()
+							}else {
+								// 学生身份需要先获取所在班级老师id
+								this.selTeacherStudent()
+							}
+						}
 					}
+					
 				})
 			},
 			// 查看话题的打卡记录
@@ -157,7 +175,6 @@
 					if(this.topicMark.length < this.totalPage) {
 						this.loadMore = true
 						this.loadStatus = 'more'
-						console.log(this.loadMore)
 					}else {
 						this.loadStatus = 'noMore'
 						this.loadMore = false
@@ -190,6 +207,8 @@
 							}
 							this.rowList = rowList
 							this.dataList = orderBookCount.sort((n1,n2) => {return n2 - n1})
+							this.axis.rowList = this.rowList
+							this.axis.dataList = this.dataList
 							if(type === 'school') {
 								uni.setNavigationBarTitle({
 									title: '本园阅读统计'
@@ -229,7 +248,6 @@
 					}
 				}
 				this.$api.checkStudentRead(params).then(res => {
-					console.log(res)
 					let result = res.data
 					
 					if(result && result.length > 0) {
@@ -242,6 +260,8 @@
 					
 						this.rowList = rowList
 						this.dataList = dataList.sort((n1,n2) => n2 - n1)
+						this.axis.rowList = this.rowList
+						this.axis.dataList = this.dataList
 					}
 				})
 			},
@@ -326,7 +346,6 @@
 					mark_id: mark_id,
 				}
 				this.$api.addOrDelReadingLike(params).then(res => {
-					console.log(res)
 					if(res.data.status === 'ok') {
 						let title = ''
 						if(this.topicMark[index].likeStatus == 1) {
@@ -421,7 +440,6 @@
 			},
 			// 跳转打卡页面
 			addRemark(title, topic_id,show_comment) {
-				console.log(title)
 				uni.navigateTo({
 					url: '/pages/circle/add-remark?from=topicDetail&title='+title+'&topic_id='+topic_id+'&show_comment='+ show_comment
 				})

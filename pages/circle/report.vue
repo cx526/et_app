@@ -80,15 +80,6 @@
 			},
 			// 提交举报
 			submit() {
-				/*****
-				"custom_id": "61",
-				"type": "topic", 
-				"content": "举报内容",  
-				"topic_id": "1",
-				"mark_id": "2",
-				"comment_id": "3",
-				"content_type": "1" 举报类型(1 内容不雅 2 政治不正确 3 反党反社会 4 负能量 5 其他)
-				******/ 
 				if(this.content_type === '') {
 					uni.showToast({
 						title: '请选择要举报的类型',
@@ -97,7 +88,6 @@
 					})
 					return
 				}
-				console.log(this.userInfo)
 				let custom_id = this.userInfo.id
 				let params = {
 					type: this.type, 
@@ -108,14 +98,8 @@
 					mark_id: this.mark_id,
 					comment_id: this.comment_id
 				}
-				// if(this.type === 'remark') {
-				// 	params.mark_id = this.mark_id
-				// }else {
-				// 	params.comment_id = this.comment_id
-				// }
 				console.log(params)
 				this.$api.addReadingReport(params).then(res => {
-					console.log(res)
 					if(res.data.status === 'ok') {
 						uni.showToast({
 							title: '您的举报已经提交，请等待审核',

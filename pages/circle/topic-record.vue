@@ -185,14 +185,12 @@
 				const query = uni.createSelectorQuery().in(this);
 				setTimeout(() => {
 					query.selectAll(ele).boundingClientRect(data => {
-						console.log(data)
 						let eleHeight = 0
 						if(data && data.length > 0) {
 							data.map(item => {
 								eleHeight = item.height + eleHeight
 							})
 							this.swiperHeight = eleHeight + 'px'
-							console.log(this.swiperHeight)
 						}else {
 							this.swiperHeight = 80 + 'rpx'
 						}
@@ -201,7 +199,6 @@
 			},
 			// 话题加载更多
 			loadMore() {
-				console.log('loadMore')
 				switch(this.currentIndex) {
 					case 0:
 					if(this.totalPage > this.proceedTopic.length) {

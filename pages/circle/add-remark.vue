@@ -355,7 +355,8 @@ export default {
 				custom_id: custom_id,
 				content: this.context,
 				topic_id: this.topic_id,
-				show_comment: this.show_comment
+				show_comment: this.show_comment,
+				show_status: '2'
 			}
 			this.$api.addReadingMark(params).then(res => {
 				console.log(res)

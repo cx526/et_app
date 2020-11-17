@@ -42,33 +42,27 @@
 			}
 		},
 		props: {
-			rowList: {
-				type: Array,
-				default: []
-			},
-			dataList: {
-				type: Array,
-				default: []
-			}
+	
+			axis: Object
 		},
 		created() {
 			this.cWidth=uni.upx2px(670)
 			this.cHeight=uni.upx2px(500)
-			this.chart('canvasColumn')
+			// this.chart('canvasColumn')
 		},
-		updated() {
-			console.log('update')
-			this.chart('canvasColumn')
-		},
+		// mounted() {
+		// 	setTimeout(() => {this.chart('canvasColumn')}, 1000)
+			
+		// },
 		watch: {
-			rowList(newVal,oldVal) {
-				this.rowList = newVal
-				this.chartData.categories = newVal
-				
-			},
-			dataList(newVal) {
-				this.dataList = newVal
-				this.chartData.series[0].data = newVal
+	
+			axis: {
+				handler(newVal) {
+					this.chartData.categories = newVal.rowList
+					this.chartData.series[0].data = newVal.dataList
+					this.chart('canvasColumn')
+				},
+				deep: true
 			}
 		},
 		
@@ -76,7 +70,6 @@
 			// 绘制柱状图
 			chart(canvasId) {
 				let _self = this
-				console.log(_self.chartData)
 				canvaColumn=new uCharts({
 					$this:_self,
 					canvasId: canvasId,

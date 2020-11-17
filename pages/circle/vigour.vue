@@ -80,7 +80,6 @@
 						})
 					}
 					this.userRankingList = result[0]
-					console.log(this.userRankingList)
 					let date = this.userRankingList.formatCreateTime.split(' ')[0]
 					let timestamp = new Date(date).getTime() - (7 * 24 * 3600 * 1000)
 					this.formatCreateTime = this.formatTime(timestamp, 'YY:MM:DD')

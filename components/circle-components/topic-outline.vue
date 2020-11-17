@@ -108,7 +108,6 @@
 			},
 			vitalityList(newVal) {
 				this.vitalityList = newVal
-				console.log(this.vitalityList)
 			}
 		},
 		methods: {

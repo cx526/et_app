@@ -12,7 +12,7 @@
 				</view>
 			</view>
 			<scroll-view class="list" style="max-height: 1000rpx;" scroll-y @scrolltolower="loadingMore" >
-				<view class="item" v-for="(item, index) in topicMark" :key="index">
+				<view class="item" v-for="(item, index) in topicMark" :key="index"  @tap="handleClick('comment', item)" >
 					<view class="user">
 						<view class="show">
 							<image :src="item.customInfo.avatar" mode=""></image>
@@ -27,7 +27,7 @@
 										<text>{{ item.customInfo.vitality }}</text>
 									</view>
 								</view>
-								<view class="right" @tap="handleComment(item)" v-if="parent !== 'comment'">
+								<view class="right" @tap.stop="handleComment(item)" v-if="parent !== 'comment'">
 									<image :src="$aliImage + 'read-ellipsis.png'" mode=""></image>
 								</view>
 							</view>
@@ -54,21 +54,21 @@
 					</view>
 					
 					<view class="photo" v-if="item.imgInfo && item.imgInfo.length > 0">
-						<image v-for="(list,listIndex) in item.imgInfo" :key="listIndex" :src="list.url" ></image>
+						<image v-for="(list,listIndex) in item.imgInfo" :key="listIndex" :src="list.url" @tap.stop="preview(listIndex, item.imgInfo)"></image>
 					</view>
 					<view class="comment">
 						<text class="time">{{ item.create_time }}</text>
 						<view class="detail">
-							<view class="comment-item"  @tap="handleClick('like', item, index)" >
+							<view class="comment-item"  @tap.stop="handleClick('like', item, index)" >
 									<image :src="$aliImage + 'read-like.png'"></image>
 									<text v-if="item.likeStatus === 0">点赞</text>
 									<text v-else style="color: #2AAEC4;">点赞</text>
 							</view>
-							<view class="comment-item"  @tap="handleClick('comment', item)" v-if="item.show_comment === '1'">
+							<view class="comment-item"  @tap.stop="handleClick('comment', item)" v-if="item.show_comment === '1'">
 									<image :src="$aliImage + 'read-comment.png'"></image>
 									<text>评论</text>
 							</view>
-							<view class="comment-item"  @tap="handleClick('share')" >
+							<view class="comment-item"  @tap.stop="handleClick('share', item)" >
 									<image :src="$aliImage + 'read-share.png'"></image>
 									<text>分享</text>
 							</view>
@@ -154,7 +154,6 @@
 			},
 			topicMark(newVal) {
 				this.topicMark = newVal		
-				console.log(this.topicMark)
 			},
 			topic_type(newVal) {
 				this.topic_type = newVal
@@ -175,7 +174,12 @@
 					this.$emit('like', item)
 					break
 					case 'comment':
-					this.$emit('comment', item)
+					if(this.parent !== 'comment') {
+						this.$emit('comment', item)
+					}else {
+						this.$emit('review')
+					}
+					
 					break
 					case 'share':
 					console.log('分享')
@@ -194,10 +198,22 @@
 			},
 			// 上拉加载更多
 			loadingMore() {
-				console.log('loadMore')
 				if(this.loadMore && this.parent === 'topic-detail') {
 					this.$emit('loadingMore')
 				}
+			},
+			// 预览图片
+			preview(index, url) {
+				let urls = url.map(item => {
+					return item.url
+				})
+				uni.previewImage({
+					urls: urls,
+					count: String(index),
+					success: () => {
+							
+					}
+				})
 			},
 		}
 		

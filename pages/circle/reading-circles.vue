@@ -117,9 +117,6 @@
 						this.grade_id = this.data.gradeInfo.id
 						this.class_id = this.data.childInfo.class
 					}
-					console.log(this.school_id)
-					console.log(this.grade_id)
-					console.log(this.class_id)
 					// 获取热门打卡数据
 					this.selReadingMark(this.school_id)
 					let userInfo = uni.getStorageSync('userInfo')
@@ -211,7 +208,6 @@
 					}
 				}
 				this.$api.selReadingReward(params).then(res => {
-					console.log(res)
 					let result = res.data.rows
 					this.rewardList = res.data.rows
 				})
@@ -255,7 +251,8 @@
 					school_id: this.school_id,
 					grade_id: this.grade_id,
 					class_id: this.class_id,
-					index: index
+					index: index,
+					custom_type: this.data.custom_type
 				}
 				uni.navigateTo({
 					url: '/pages/circle/read-data?params='+JSON.stringify(params)

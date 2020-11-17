@@ -760,7 +760,7 @@ export default {
 	right: 20rpx;
 	top: 20rpx;
 	height: 60rpx;
-	background: #007AFF;
+	background: #2AAEC4;
 	z-index: 100;
 	font-size: 30rpx;
 	color: #fff;
@@ -780,7 +780,7 @@ export default {
 	border-left: 16rpx solid transparent;
 	border-right: 16rpx solid transparent;
 	border-top: 16rpx solid transparent;
-	border-bottom: 24rpx solid #007AFF;
+	border-bottom: 24rpx solid #2AAEC4;
 }
 .add-notice image {
 	width: 30rpx;

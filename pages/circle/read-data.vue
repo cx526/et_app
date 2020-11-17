@@ -10,7 +10,7 @@
 					<text>300</text>
 				</view>
 			</view> -->
-			<dataChart :rowList="rowList" :dataList="dataList" />
+			<dataChart :axis="axis" />
 		</view>
 		<view v-else class="none">
 			<text>所在班级暂无老师绑定</text>
@@ -33,7 +33,9 @@
 				rowList: [], // 横坐标
 				dataList: [], // 纵坐标
 				teacher_id: '', //所在班级教师id
-				isShow: true
+				isShow: true,
+				custom_type: '', //身份
+				axis: {}
 			}
 		},
 		components: {
@@ -41,15 +43,21 @@
 		},
 		onLoad(options) {
 			let params = JSON.parse(options.params)
+			console.log(params)
 			this.currentIndex = String(params.index)
 			this.school_id = params.school_id
 			this.grade_id = params.grade_id
 			this.class_id = params.class_id
+			this.custom_type = params.custom_type
 			// 设置navTitle
 			this.setNavTitle(this.currentIndex)
-			if(this.currentIndex === '2') {
+			// 如果是老师身份直接请求(不用再去获取老师id)
+			if(this.currentIndex === '2' && this.custom_type !== '0') {
 				// 获取所在班级教师id
 				this.selTeacherStudent()
+			}else if(this.currentIndex === '2' && this.custom_type === '0'){
+				this.teacher_id = String(this.userInfo.id)
+				this.checkStudentRead()
 			}
 		},
 		methods: {
@@ -64,9 +72,9 @@
 					break
 					case '2':
 					
-					// uni.setNavigationBarTitle({
-					// 	title: '本班阅读统计'
-					// })
+					uni.setNavigationBarTitle({
+						title: '本班阅读统计'
+					})
 					break
 					default:
 					uni.setNavigationBarTitle({
@@ -99,6 +107,8 @@
 							}
 							this.rowList = rowList
 							this.dataList = orderBookCount.sort((n1,n2) => {return n2 - n1})
+							this.axis.rowList = this.rowList
+							this.axis.dataList = this.dataList
 							if(type === 'school') {
 								uni.setNavigationBarTitle({
 									title: '本园阅读统计'
@@ -138,7 +148,6 @@
 					}
 				}
 				this.$api.checkStudentRead(params).then(res => {
-					console.log(res)
 					let result = res.data
 					
 					if(result && result.length > 0) {
@@ -151,6 +160,8 @@
 					
 						this.rowList = rowList
 						this.dataList = dataList.sort((n1,n2) => n2 - n1)
+						this.axis.rowList = this.rowList
+						this.axis.dataList = this.dataList
 					}
 				})
 			}

@@ -8,7 +8,7 @@
 				</view>
 				<view class="center">
 					<text v-if="item.childName">{{ item.childName }}小朋友</text>
-					<text v-else>小爱同学</text>
+					<text v-else>小朋友</text>
 				</view>
 				<view class="bottom">
 					<image :src="$aliImage + 'read-vitality.png'" mode="widthFix"></image>

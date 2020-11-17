@@ -1,6 +1,6 @@
 <template>
 	<view>
-		<markUp :title="false" :topicMark="topicMark" parent="comment" @like="like" />
+		<markUp :title="false" :topicMark="topicMark" parent="comment" @like="like" @review="review" />
 		<!-- 评论列表 -->
 		<view class="comment" v-if="commentList && commentList.length > 0">
 		<view class="list">
@@ -44,9 +44,9 @@
 		</view>
 		<view class="none" v-else>暂无评论内容</view>
 		<!-- 评论框 -->
-		<view class="comment-input">
+		<view class="comment-input" :style="{'bottom': bottom}" v-if="isShow">
 			<view class="input">
-				<input type="text" placeholder="评论" placeholder-style="font-size: 26rpx" @input="getComment" :value="context"  />
+				<input type="text" placeholder="评论" placeholder-style="font-size: 26rpx" @input="getComment" :value="context" :focus="focus" @blur="commentBlur" @focus="bindFocus" :adjust-position="false" @confirm="confirm" />
 				<button type="primary" @tap="submit">提交</button>
 			</view>
 		</view>
@@ -78,6 +78,9 @@
 				topicMark: [], //打卡详情
 				commentList: [], //评论数据
 				totalPage: 0,
+				focus: false,
+				bottom: 0,
+				isShow: false, //控制评论框的显示/隐藏
 			}
 		},
 		components: {
@@ -148,6 +151,25 @@
 					}
 				})
 			},
+			// 输入框获取焦点
+			review() {
+				this.isShow = true
+				this.focus = true
+			},
+			// 输入框失去焦点
+			commentBlur() {
+				this.isShow = false
+				this.focus = false
+				this.bottom = 0
+			},
+			// 获取焦点
+			bindFocus(event) {
+				this.bottom = event.detail.height + 'px'
+			},
+			// 点击软键盘的完成按钮
+			confirm() {
+				this.addReadingComment()
+			},
 			// 发表评论
 			addReadingComment() {
 				if(this.context === '') {
@@ -162,7 +184,8 @@
 					custom_id: String(this.custom_id),
 					content: this.context,
 					topic_id: String(this.topic_id),
-					mark_id: String(this.mark_id)
+					mark_id: String(this.mark_id),
+					show_status: '2'
 				}
 				this.$api.addReadingComment(params).then(res => {
 					if(res.data.status === 'ok') {
@@ -203,7 +226,6 @@
 					mark_id: mark_id,
 				}
 				this.$api.addOrDelReadingLike(params).then(res => {
-					console.log(res)
 					if(res.data.status === 'ok') {
 						let title = ''
 						if(this.topicMark[0].likeStatus == 1) {
@@ -452,7 +474,7 @@
 	
 	.comment-input {
 		box-sizing: border-box;
-		position: fixed;
+		position: absolute;
 		bottom: 0;
 		left: 0;
 		width: 100%;

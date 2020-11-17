@@ -498,7 +498,6 @@
 										canvasId: 'attendCanvasId',
 										success(res) {
 											that.coverImgUrl = res.tempFilePath
-											console.log(that.coverImgUrl)
 										},
 										fail(res) {
 											uni.showToast({ title: 'canvas缩放失败', icon: 'none' });
@@ -510,6 +509,7 @@
 							// 未超出最大尺度，不用压缩
 							that.canvasWidth = res.width;
 							that.canvasHeight = res.height;
+							that.coverImgUrl = res.path
 						}
 					}
 				});
@@ -624,13 +624,11 @@
 					name: 'file',
 					success: res => {
 						let result = JSON.parse(res.data)
-						console.log(result)
 						let params = {
 							targetId: String(this.targetId),
 							usage: "reading_topic",
 							res: result
 						}
-						console.log(params)
 						this.addUploadPic(params)
 					}
 				})
@@ -661,7 +659,6 @@
 							let arr = []
 							arr[0] = res.data.access_token
 							arr[1] = new Date().getTime() + (7200 * 1000)
-							console.log(arr)
 							uni.setStorageSync('access_token', arr)
 						}
 					})
@@ -669,7 +666,6 @@
 					// access_token还在有效期内
 					let data = uni.getStorageSync('access_token')
 					this.access_token = data[0]
-					console.log(this.access_token)
 				}
 			},
 			// 检测文本内容
@@ -682,7 +678,6 @@
 						content: text
 					},
 					success: res => {
-						console.log(res)
 						if(res.data.errcode === 87014) {
 							uni.showToast({
 								title: '您输入的内容带有敏感词，请重新输入',

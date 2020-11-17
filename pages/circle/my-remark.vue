@@ -9,7 +9,7 @@
 							<text>{{ item.topic_start_day }}</text>
 							<text>{{ item.topic_start_month }}月</text>
 						</view>
-						<image :src="item.imgInfo[0].url" mode="widthFix" v-if="item.imgInfo && item.imgInfo.length > 0"></image>
+						<image :src="item.imgInfo[0].url"  v-if="item.imgInfo && item.imgInfo.length > 0"></image>
 						<image :src="$aliImage + 'read-demo.png'" mode="widthFix" v-else></image>
 						<view class="context">
 							<view class="type" v-if="item.type === 'vitality'">#活力打卡</view>

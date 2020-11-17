@@ -13,6 +13,7 @@
 				<!-- 812rpx -->
 				<scroll-view scroll-y style="max-height: 812rpx" @scrolltolower="loadMore">
 					<swiper :style="{'height' : swiperHeight}" circle @change="swiperChange" :current="currentIndex">
+						<!-- 全站话题 -->
 						<swiper-item>
 							<view class="item" v-for="(item, index) in allTopic" :key="index"  @tap="handleClick(item.id)">
 								<view class="show">
@@ -36,6 +37,7 @@
 							</view>
 							
 						</swiper-item>
+						<!-- 园内话题 -->
 						<swiper-item>
 							<view class="item" v-for="(item, index) in schoolTopic" :key="index"  @tap="handleClick(item.id)">
 								<view class="show">
@@ -58,6 +60,30 @@
 								</view>
 							</view>
 						</swiper-item>
+						<!-- 年级话题 -->
+						<swiper-item>
+							<view class="item" v-for="(item, index) in gradeTopic" :key="index"  @tap="handleClick(item.id)">
+								<view class="show">
+									<image :src="item.imgInfo[0].url" v-if="item.imgInfo && item.imgInfo.length > 0"></image>
+									<image :src="$aliImage + 'read-demo.png'" v-else></image>
+								</view>
+								<view class="context">
+									<view class="title">
+										<text>{{ item.title }}</text>
+										<image :src="$aliImage + 'read-topic-01.png'"  v-if="item.type === 'pk'"></image>
+										<image :src="$aliImage + 'read-topic-02.png'"  v-else-if="item.type === 'chat'"></image>
+										<image :src="$aliImage + 'read-topic-03.png'" v-else></image>
+									</view>
+									<view class="detail">
+										<text>{{ item.description }}</text>
+									</view>
+									<view class="time">
+										<text>话题周期：{{ item.start_time }}-{{ item.end_time }}</text>
+									</view>
+								</view>
+							</view>
+						</swiper-item>
+						<!-- 班内话题 -->
 						<swiper-item>
 							<view class="item" v-for="(item, index) in classTopic" :key="index"  @tap="handleClick(item.id)">
 								<view class="show">
@@ -103,12 +129,14 @@
 			return {
 				$aliImage: this.$aliImage,
 				//模拟话题数据
-				allTopic: [],
-				schoolTopic: [],
-				classTopic: [],
+				allTopic: [], //全站话题
+				schoolTopic: [], // 园内话题
+				gradeTopic: [], // 年级话题
+				classTopic: [], // 班内话题
 				navList: [
 					{title: '全站话题'},
 					{title: '园内话题'},
+					{title: '年级话题'},
 					{title: '班内话题'}
 				],
 				swiperHeight: '0px', //定义swiper1的高度
@@ -181,9 +209,16 @@
 						school_id: school_id
 					}
 				}
+				// 年级话题
+				if(show_range === 'grade') {
+					// 园长身份没有年级班级id传空
+					params.filterItems.grade_id = this.grade_id ? this.grade_id : '',
+					params.filterItems.class = ''
+				}
+				// 班内话题
 				if(show_range === 'class') {
-					params.filterItems.grade_id = this.grade_id,
-					params.filterItems.class = this.class_id
+					params.filterItems.grade_id = this.grade_id ? this.grade_id : '',
+					params.filterItems.class = this.class_id ? this.class_id : ''
 				}
 				this.$api.selReadingTopic(params).then(res => {
 					let result = res.data.rows
@@ -196,7 +231,6 @@
 							item.end_time = this.formatTime(item.end_time)
 						})
 					}
-					console.log(result)
 					switch(show_range) {
 						case 'all':
 						this.allTopic = [...this.allTopic, ...result]
@@ -209,6 +243,12 @@
 						this.getEleRect(this.schoolTopic)
 						// 判断是否开启上拉加载更多
 						this.openLoadMore(this.schoolTopic)
+						break
+						case 'grade':
+						this.gradeTopic = [...this.gradeTopic, ...result]
+						this.getEleRect(this.gradeTopic)
+						// 判断是否开启上拉加载更多
+						this.openLoadMore(this.gradeTopic)
 						break
 						case 'class':
 						this.classTopic = [...this.classTopic, ...result]
@@ -258,6 +298,9 @@
 						this.selReadingTopic('school')
 						break
 						case 2:
+						this.selReadingTopic('grade')
+						break
+						case 3:
 						this.selReadingTopic('class')
 						default:
 						return
@@ -282,6 +325,11 @@
 					this.selReadingTopic('school')
 					break
 					case 2:
+					this.currentPage = 1
+					this.gradeTopic = []
+					this.selReadingTopic('grade')
+					break
+					case 3:
 					this.currentPage = 1
 					this.classTopic = []
 					this.selReadingTopic('class')
