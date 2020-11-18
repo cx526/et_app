@@ -16,7 +16,7 @@
 				<view class="item-content-father">
 					<view class="item-content">
 						<image class="item-content-img" :src="item.kind_icon" mode=""></image>
-						<text class="s-item">{{item.name}}</text>
+						<text class="s-item">{{item.description ? item.description : ''}}</text>
 					</view>
 				</view>
 				
