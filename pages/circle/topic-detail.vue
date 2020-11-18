@@ -1,5 +1,5 @@
 <template>
-	<view>
+	<view v-if="isLogin">
 		<view style="margin-bottom: 25rpx;">
 			<!-- 话题简介 -->
 			<topicOutline @checkMoreDetail="checkMoreDetail" @addRemark="addRemark" :custom_type="custom_type" :dataList="topicDetail" :vitality="vitality" :vitalityList="vitalityList" />
@@ -48,7 +48,8 @@
 				dataList: [], //纵坐标
 				teacher_id: '', //学生归属老师id
 				show_range: '' , //区分话题可见范围
-				axis: {}
+				axis: {},
+				isLogin: false, //是否登录
 			}
 		},
 		components: {
@@ -71,15 +72,78 @@
 			})
 		},
 		onShow() {
-			// this.topicMark = []
+			// 检测登录
+			this.checkLogin()
 			this.currentPage = 1
 			// 查看话题详细
 			this.selTopicDetail(this.id)
 			// 查看话题的打卡记录
 			this.selReadingMark(this.id, 'del')
 		},
+		onShareAppMessage(res) {
+			console.log(res)
+			let params = res.target.dataset
+			let topic_id = params.topic_id
+			let mark_id = params.mark_id
+			let custom_id = this.userInfo.id
+			let type = params.type
+			let title = ''
+			let path = ''
+			if(type === 'comment') {
+				title = '五车书打卡分享',
+				path = '/pages/circle/comment?topic_id='+topic_id+'&mark_id='+mark_id+'&custom_id='+custom_id
+			}else {
+				title = '五车书话题分享'
+			}
+			return {
+				title: title,
+				path: path
+			}
+		},
 		methods: {
-			
+			// 检测登录状态
+			checkLogin() {
+				let userInfo = uni.getStorageSync('userInfo')
+				if(!userInfo.name || userInfo.name === 'guest' || !userInfo.mobile || userInfo.mobile == '') {
+					this.isLogin = false
+					uni.showModal({
+						title: '请先登录！',
+						content: '是否前往登录页面?',
+						success: res => {
+							if(res.confirm) {
+								uni.navigateTo({
+									url: '/pages/guide/auth'
+								})
+							}else {
+								uni.switchTab({
+									url: '/pages/index/index'
+								})
+							}
+						}
+						
+					})
+				}else if(!userInfo.card_no || userInfo.card_no === '') {
+					this.isLogin = false
+					uni.showModal({
+						title: '暂未绑卡！',
+						content:'是否前往绑卡页面',
+						success: res => {
+							if(res.confirm) {
+								uni.navigateTo({
+									url: '/pages/library/tied-card'
+								})
+							}else {
+								uni.switchTab({
+									url: '/pages/index/index'
+								})
+							}
+						}
+						
+					})
+				}else {
+					this.isLogin = true
+				}
+			},
 			// 查看当前用户在此话题的活力值
 			selReadingVitalityDetail() {
 				let custom_id = this.userInfo.id
@@ -329,7 +393,7 @@
 					custom_id: this.userInfo.id
 				}
 				uni.navigateTo({
-					url: '/pages/circle/comment?params='+JSON.stringify(params)
+					url: '/pages/circle/comment?topic_id='+params.topic_id+'&mark_id='+params.mark_id+'&custom_id='+params.custom_id
 				})
 			},
 			// 点赞/取消赞
@@ -408,6 +472,8 @@
 													}
 												})
 											}
+										}else {
+											this.delReadingMark(remark_id)
 										}
 										
 									}

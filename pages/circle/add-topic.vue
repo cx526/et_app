@@ -603,7 +603,12 @@
 			},
 			// 新建话题
 			addReadingTopic(params) {
+				uni.showLoading({
+					title: '提交话题中',
+					mask: true
+				})
 				this.$api.addReadingTopic(params).then(res => {
+					uni.hideLoading()
 					if(res.data.status === 'ok') {
 						this.targetId = res.data.rows.insertId //新建话题id
 						uni.switchTab({
@@ -618,11 +623,16 @@
 			},
 			// 上传话题封面
 			upLoadFile(coverImgUrl) {
+				uni.showLoading({
+					title: '上传图片中',
+					icon: 'none'
+				})
 				uni.uploadFile({
 					url:'https://www.52diyike.com/api/api/upload/uploadPicToAliyun',
 					filePath: coverImgUrl,
 					name: 'file',
 					success: res => {
+						uni.hideLoading()
 						let result = JSON.parse(res.data)
 						let params = {
 							targetId: String(this.targetId),

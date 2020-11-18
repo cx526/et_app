@@ -1,5 +1,5 @@
 <template>
-	<view class="content">
+	<view class="content" v-if="isLogin">
 		<!-- 轮播图 -->
 		<view class="swiper-position" style="position: relative;">
 			<swiper class="carousel" indicator-dots="ture" indicator-color="rgba(230,230,230,.3)"  indicator-active-color="rgba(230,230,230,1)" circular autoplay @change="swiperChange">
@@ -152,6 +152,7 @@ export default {
 				}
 			],
 			detailArr: [] , //商品详情图片
+			isLogin: false, //是否登录
 		}
 	},
 	onLoad(option) {
@@ -159,10 +160,55 @@ export default {
 		this.getUserInfo()
 	},
 	onShow() {
+		// 检查登录
+		this.checkLogin()
 		// 获取书籍列表的数目
 		this.len = bookListData.countBookLength();
 	},
 	methods: {
+		// 检查登录
+		checkLogin() {
+			let userInfo = uni.getStorageSync('userInfo')
+			if(!userInfo.name || userInfo.name === 'guest' || !userInfo.mobile || userInfo.mobile == '') {
+				this.isLogin = false
+				uni.showModal({
+					title: '请先登录！',
+					content: '是否前往登录页面?',
+					success: res => {
+						if(res.confirm) {
+							uni.navigateTo({
+								url: '/pages/guide/auth'
+							})
+						}else {
+							uni.switchTab({
+								url: '/pages/index/index'
+							})
+						}
+					}
+					
+				})
+			}else if(!userInfo.card_no || userInfo.card_no === '') {
+				this.isLogin = false
+				uni.showModal({
+					title: '暂未绑卡！',
+					content:'是否前往绑卡页面',
+					success: res => {
+						if(res.confirm) {
+							uni.navigateTo({
+								url: '/pages/library/tied-card'
+							})
+						}else {
+							uni.switchTab({
+								url: '/pages/index/index'
+							})
+						}
+					}
+					
+				})
+			}else {
+				this.isLogin = true
+			}
+		},
 		// 获取个人信息
 		getUserInfo() {
 			let mobile = uni.getStorageSync("userInfo").mobile;

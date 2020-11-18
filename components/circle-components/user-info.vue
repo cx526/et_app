@@ -28,7 +28,7 @@
 					</view>
 					<view class="number">{{ userInfo.vitality }}</view>
 				</view>
-				<view class="message" @tap="chooseItem" v-if="user_data.custom_type !== '1'">
+				<view class="message" @tap="chooseItem">
 					<image :src="$aliImage + 'read-message.png'" mode="widthFix"></image>
 					<!-- 只有在我的打卡页面才显示 -->
 					<text v-if="parent !== 'index'">新建话题</text>

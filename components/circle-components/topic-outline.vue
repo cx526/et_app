@@ -12,7 +12,7 @@
 				</view>
 			</view>
 			<!-- 话题详情页才显示，获奖名单页不显示 -->
-			<view class="right" v-if="parent !== 'award-list' && custom_type !== '1'" @tap="addRemark" >
+			<view class="right" v-if="parent !== 'award-list'" @tap="addRemark" >
 				
 				<image :src="$aliImage + 'read-message.png'" mode="widthFix"></image>
 				<text>新建打卡</text>
@@ -21,6 +21,7 @@
 		<view class="topic-intro">
 			<view class="intro">
 				<view class="share">
+					<button class="share-btn" open-type="share" data-type="topic-detail"></button>
 					<image :src="$aliImage + 'read-share.png'" mode="widthFix"></image>
 					<text>分享</text>
 				</view>
@@ -202,6 +203,7 @@
 		height: 60rpx;
 		font-size: 22rpx;
 		color: #808080;
+		position: relative;
 	}
 	.intro .share image {
 		width: 30rpx;
@@ -292,5 +294,19 @@
 	}
 	.intro .time .right image:first-child {
 		margin-left: 0;
+	}
+	.share-btn {
+		position: absolute;
+		right: 0;
+		top: 0;
+		font-size: 24rpx;
+		background: transparent;
+		color: #fff;
+		height: 60rpx;
+		width: 80rpx;
+		border: 0;
+	}
+	.share-btn:after {
+		border: 0;
 	}
 </style>

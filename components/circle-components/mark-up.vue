@@ -20,7 +20,10 @@
 						<view class="context">
 							<view class="preson-info">
 								<view class="left">
-									<text>{{ item.childInfo.name }}小朋友</text>
+									<text>{{ item.childInfo.name }}</text>
+									<text v-if="item.customInfo.custom_type === '0'">老师</text>
+									<text v-else-if="item.customInfo.custom_type === '1'">小朋友</text>
+									<text v-else>园长</text>
 									<!-- 显示总的活力值 -->
 									<view class="vitality">
 										<image :src="$aliImage + 'read-vitality.png'" mode=""></image>
@@ -69,6 +72,7 @@
 									<text>评论</text>
 							</view>
 							<view class="comment-item"  @tap.stop="handleClick('share', item)" >
+									<button class="share" open-type="share" :data-topic_id="item.topic_id" :data-mark_id="item.id" data-type="comment"></button>
 									<image :src="$aliImage + 'read-share.png'"></image>
 									<text>分享</text>
 							</view>
@@ -182,6 +186,7 @@
 					
 					break
 					case 'share':
+					// this.$emit('share', item)
 					console.log('分享')
 					break
 					default:
@@ -215,6 +220,8 @@
 					}
 				})
 			},
+			
+			
 		}
 		
 	}
@@ -377,6 +384,7 @@
 		display: flex;
 		align-items: center;
 		margin-right: 20rpx;
+		position: relative;
 	}
 	.item .comment .detail .comment-item:last-child {
 		margin-right: 0;
@@ -391,5 +399,19 @@
 		padding: 30rpx;
 		color: #808080;
 		text-align: center;
+	}
+	.share {
+		position: absolute;
+		left: 0;
+		top: 0;
+		font-size: 24rpx;
+		background: transparent;
+		color: #fff;
+		height: 60rpx;
+		width: 80rpx;
+		border: 0;
+	}
+	.share:after {
+		border: 0;
 	}
 </style>

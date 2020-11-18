@@ -7,7 +7,7 @@
 					<image :src="$aliImage + 'read-No'+(index+1)+'.png'" mode="widthFix" class="ranking"></image>
 				</view>
 				<view class="center">
-					<text v-if="item.childName">{{ item.childName }}小朋友</text>
+					<text v-if="item.childName">{{ item.childName }}</text>
 					<text v-else>小朋友</text>
 				</view>
 				<view class="bottom">

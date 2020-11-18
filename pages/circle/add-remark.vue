@@ -111,9 +111,12 @@ export default {
 		},
 		// 选择话题
 		changeTopic(event) {
+			
 			let index = event.detail.value;
 			this.topicListIndex = index;
-			this.topic_id = this.topicList[index].id
+			console.log(this.topicList[index])
+			this.topic_id = String(this.topicList[index].id)
+			this.show_comment = this.topicList[index].show_comment
 		},
 		// 获取文本输入内容
 		getContext(event) {
@@ -291,12 +294,19 @@ export default {
 		},
 		// 上传图片
 		upLoadFile() {
+			uni.showLoading({
+				title: '上传图片中',
+				mask: true
+			})
 			for(let i = 0; i < this.imgShow.length; i++) {
 				uni.uploadFile({
 					url:'https://www.52diyike.com/api/api/upload/uploadPicToAliyun',
 					filePath: this.imgShow[i],
 					name: 'file',
 					success: res => {
+						if(this.count == this.imgShow.length) {
+							uni.hideLoading()
+						}
 						let result = JSON.parse(res.data)
 						console.log(result)
 						let params = {
@@ -311,8 +321,11 @@ export default {
 		},
 		// 上传图片到阿里云后的回调
 		addUploadPic(params, len) {
+			
 			this.$api.addUploadPic(params).then(res => {
 				this.count = this.count+1
+				console.log(len)
+				console.log(this.count)
 				uni.showToast({
 					title: '打卡成功',
 					icon: 'none',
@@ -349,6 +362,10 @@ export default {
 				})
 				return
 			}
+			uni.showLoading({
+				title: '提交打卡中',
+				mask: true
+			})
 			let userInfo = uni.getStorageSync('userInfo')
 			let custom_id = userInfo.id
 			let params = {
@@ -358,7 +375,9 @@ export default {
 				show_comment: this.show_comment,
 				show_status: '2'
 			}
+			console.log(params)
 			this.$api.addReadingMark(params).then(res => {
+				uni.hideLoading()
 				console.log(res)
 				if(res.data.status === 'fail') {
 					uni.showToast({

@@ -11,7 +11,7 @@
 		<!-- 话题 -->
 		<topic @checkTopicDetail="checkTopicDetail" :schoolId = "data.schoolInfo.id" :gradeId = "grade_id":classId="class_id"  />
 		<!-- 热门打卡 -->
-		<markUp @comment="comment" @handleComment="handleComment" :loadMore="true" :topicMark="topicMark" parent="index" @reload="reload" @like="like" />
+		<markUp @comment="comment" @handleComment="handleComment" :loadMore="true" :topicMark="topicMark" parent="index" @reload="reload" @like="like" @share="share" />
 	</view>
 </template>
 
@@ -34,7 +34,8 @@
 				rewardList: [], //奖励列表
 				school_id: '',//学校id
 				grade_id: '', //年级id
-				class_id: '' //所在班级
+				class_id: '' ,//所在班级
+				sharePath: '', //分享路径
 			}
 		},
 		components: {
@@ -57,6 +58,17 @@
 			// 检测登录状态
 			this.checkLogin()
 		},
+		onShareAppMessage(res) {
+				let params = res.target.dataset
+				let topic_id = params.topic_id
+				let mark_id = params.mark_id
+				let custom_id = this.userInfo.id
+				return {
+					title: '五车书打卡分享',
+					path: '/pages/circle/comment?topic_id='+topic_id+'&mark_id='+mark_id+'&custom_id='+custom_id
+				}
+		},
+		
 		methods: {
 			// 检测登录状态
 			checkLogin() {
@@ -182,6 +194,7 @@
 					
 				})
 			},
+			
 			// 获取周排名(前三)
 			selReadingVitalityCount() {
 				let params = {
@@ -276,7 +289,8 @@
 				}
 				
 				uni.navigateTo({
-					url: '/pages/circle/comment?params='+JSON.stringify(params)
+					// url: '/pages/circle/comment?params='+JSON.stringify(params)
+					url: '/pages/circle/comment?topic_id='+params.topic_id+'&mark_id='+params.mark_id+'&custom_id='+params.custom_id
 				})
 			},
 			// 查看我的打卡记录
@@ -287,20 +301,34 @@
 			},
 			// 点击消息图标
 			chooseItem() {
+				let itemList = []
+				if(this.data.custom_type === '1') {
+					itemList = ['我要打卡']
+				}else {
+					itemList = ['发布话题','我要打卡']
+				}
 				uni.showActionSheet({
-					itemList:['发布话题','我要打卡'],
+					itemList: itemList,
 					success: res => {
-						if(res.tapIndex === 0) {
-							// 跳转发布话题页面
-							uni.navigateTo({
-								url: '/pages/circle/add-topic'
-							})
-						}else if(res.tapIndex === 1) {
+						if(this.data.custom_type === '1') {
 							// 跳转打卡页面
 							uni.navigateTo({
 								url: '/pages/circle/add-remark?from=index&school_id='+this.school_id
 							})
-						}else {
+						}else if(this.data.custom_type !== '1') {
+							if(res.tapIndex === 0) {
+								// 跳转发布话题页面
+								uni.navigateTo({
+									url: '/pages/circle/add-topic'
+								})
+							}else if(res.tapIndex === 1) {
+								// 跳转打卡页面
+								uni.navigateTo({
+									url: '/pages/circle/add-remark?from=index&school_id='+this.school_id
+								})
+							}
+						}
+						else {
 							return
 						}
 					}
@@ -325,7 +353,6 @@
 					}
 				})
 			},
-			
 		}
 	}
 </script>

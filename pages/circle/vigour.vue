@@ -31,8 +31,8 @@
 							<text>{{ index+1 > 9 ? index+1 : '0' + (index+1) }}</text>
 						</view>
 						<image :src="item.avatar"></image>
-						<text class="name" v-if="item.childName">{{ item.childName }}小朋友</text>
-						<text v-else>小朋友</text>
+						<text class="name" v-if="item.childName">{{ item.childName }}</text>
+						<text v-else class="name">小朋友</text>
 					</view>
 					<view class="right">
 						<image :src="$aliImage + 'read-medal-No'+(index+1)+'.png'" mode="widthFix" class="medal"

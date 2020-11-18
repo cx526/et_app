@@ -1,5 +1,5 @@
 <template>
-	<view>
+	<view v-if="isLogin">
 		<markUp :title="false" :topicMark="topicMark" parent="comment" @like="like" @review="review" />
 		<!-- 评论列表 -->
 		<view class="comment" v-if="commentList && commentList.length > 0">
@@ -21,7 +21,10 @@
 					</view>
 					<view class="right">
 						<view class="context">
-							<text class="name">{{item.childInfo.name}}小朋友：</text>
+							<text class="name">{{item.childInfo.name}}</text>
+							<text v-if="item.customInfo.custom_type === '0'">老师：</text>
+							<text v-else-if="item.customInfo.custom_type === '1'">小朋友：</text>
+							<text v-else>园长：</text>
 							<text class="content">{{ item.content }}</text>
 						</view>
 						<view class="grade-info">
@@ -81,6 +84,7 @@
 				focus: false,
 				bottom: 0,
 				isShow: false, //控制评论框的显示/隐藏
+				isLogin: false, //是否登录
 			}
 		},
 		components: {
@@ -88,10 +92,10 @@
 			uniLoadMore
 		},
 		onLoad(options) {
-			let params = JSON.parse(options.params)
-			this.custom_id = params.custom_id //用户id
-			this.topic_id = params.topic_id //话题id
-			this.mark_id = params.mark_id //打卡id
+			// let params = JSON.parse(options.params)
+			this.custom_id = options.custom_id //用户id
+			this.topic_id = options.topic_id //话题id
+			this.mark_id = options.mark_id //打卡id
 			// 查看打卡详情
 			this.selReadingMark()
 			// 查看打卡评论
@@ -99,7 +103,63 @@
 			// 获取access_token
 			this.getAccessToken()
 		},
+		onShow() {
+			this.checkLogin()
+		},
+		onShareAppMessage(res) {
+				let params = res.target.dataset
+				let topic_id = params.topic_id
+				let mark_id = params.mark_id
+				let custom_id = this.userInfo.id
+				return {
+					title: '五车书打卡分享',
+					path: '/pages/circle/comment?topic_id='+topic_id+'&mark_id='+mark_id+'&custom_id='+custom_id
+				}
+		},
 		methods: {
+			// 检测登录状态
+			checkLogin() {
+				let userInfo = uni.getStorageSync('userInfo')
+				if(!userInfo.name || userInfo.name === 'guest' || !userInfo.mobile || userInfo.mobile == '') {
+					this.isLogin = false
+					uni.showModal({
+						title: '请先登录！',
+						content: '是否前往登录页面?',
+						success: res => {
+							if(res.confirm) {
+								uni.navigateTo({
+									url: '/pages/guide/auth'
+								})
+							}else {
+								uni.switchTab({
+									url: '/pages/index/index'
+								})
+							}
+						}
+						
+					})
+				}else if(!userInfo.card_no || userInfo.card_no === '') {
+					this.isLogin = false
+					uni.showModal({
+						title: '暂未绑卡！',
+						content:'是否前往绑卡页面',
+						success: res => {
+							if(res.confirm) {
+								uni.navigateTo({
+									url: '/pages/library/tied-card'
+								})
+							}else {
+								uni.switchTab({
+									url: '/pages/index/index'
+								})
+							}
+						}
+						
+					})
+				}else {
+					this.isLogin = true
+				}
+			},
 			// 获取打卡详情
 			selReadingMark() {
 				let custom_id = this.userInfo.id
