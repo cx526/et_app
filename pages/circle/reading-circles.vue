@@ -7,7 +7,7 @@
 		<!-- 通告栏 -->
 		<message v-if="rewardList && rewardList.length > 0" :rewardList="rewardList" />
 		<!-- 阅读统计 -->
-		<stat @checkReadingDetail="checkReadingDetail" />
+		<stat @checkReadingDetail="checkReadingDetail" v-if="data.custom_type !== '2'" />
 		<!-- 话题 -->
 		<topic @checkTopicDetail="checkTopicDetail" :schoolId = "data.schoolInfo.id" :gradeId = "grade_id":classId="class_id"  />
 		<!-- 热门打卡 -->
@@ -143,7 +143,8 @@
 					filterItems: {
 						school_id: school_id,
 						show_count: '10',
-						like_custom_id: String(id)
+						like_custom_id: String(id),
+						show_status: '1'
 					}
 				}
 				this.$api.selReadingMarkByHot(params).then(res => {
@@ -293,8 +294,12 @@
 					url: '/pages/circle/comment?topic_id='+params.topic_id+'&mark_id='+params.mark_id+'&custom_id='+params.custom_id
 				})
 			},
-			// 查看我的打卡记录
+			// 查看我发布的话题
 			checkMyRemark() {
+				// 如果是学生，默认不跳转
+				if(this.data.custom_type === '1') {
+					return
+				}
 				uni.navigateTo({
 					url: '/pages/circle/my-remark?custom_type='+this.data.custom_type
 				})

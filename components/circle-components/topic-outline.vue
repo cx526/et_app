@@ -46,7 +46,7 @@
 				</view>
 				<view class="explain">
 					<view>{{ topicDetail.description }}</view>
-					<view class="more" @tap="checkMoreDetail">
+					<view class="more" @tap="checkMoreDetail" v-if="topicDetail.description.length >= 18">
 						<text>更多</text>
 						<image :src="$aliImage + 'read-icon-right.png'" mode="widthFix"></image>
 					</view>

@@ -144,7 +144,8 @@
 					currentPage: String(this.currentPage),
 					pageSize: this.pageSize,
 					filterItems: {
-						status: status //话题状态：0:未开始 1:进行中，2：已结束
+						status: status ,//话题状态：0:未开始 1:进行中，2：已结束，
+						show_status: '1'
 					}
 				}
 				this.$api.selReadingTopic(params).then(res => {
@@ -192,7 +193,7 @@
 							})
 							this.swiperHeight = eleHeight + 'px'
 						}else {
-							this.swiperHeight = 80 + 'rpx'
+							this.swiperHeight = 0
 						}
 					}).exec();
 				}, 200)

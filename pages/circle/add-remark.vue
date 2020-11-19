@@ -90,7 +90,9 @@ export default {
 		selReadingTopic() {
 			let params = {
 				filterItems: {
-					school_id: this.school_id
+					school_id: this.school_id,
+					show_status: '1',
+					status: '1'
 				}
 			}
 			this.$api.selReadingTopic(params).then(res => {
@@ -102,7 +104,9 @@ export default {
 			let params = {
 				filterItems: {
 					show_range: 'all',
-					school_id: ''
+					school_id: '',
+					show_status: '1',
+					status: '1'
 				}
 			}
 			this.$api.selReadingTopic(params).then(res => {

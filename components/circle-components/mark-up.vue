@@ -209,12 +209,14 @@
 			},
 			// 预览图片
 			preview(index, url) {
+				console.log(index)
 				let urls = url.map(item => {
 					return item.url
 				})
+				console.log(urls)
 				uni.previewImage({
 					urls: urls,
-					count: String(index),
+					current: String(index),
 					success: () => {
 							
 					}

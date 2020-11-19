@@ -188,7 +188,8 @@
 					currentPage: String(this.currentPage),
 					pageSize: this.pageSize,
 					filterItems: {
-						mark_id: this.mark_id
+						mark_id: this.mark_id,
+						show_status: '1'
 					}
 				}
 				this.$api.selReadingComment(params).then(res => {

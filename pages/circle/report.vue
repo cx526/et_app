@@ -5,7 +5,7 @@
 				<text class="label">举报原因</text>
 				<view style="display: flex;align-items: center;">
 					<picker :range="reason" range-key="title" @change="changeReason">
-						<input :value=" reason[reasonIndex].title" placeholder="请选择举报类型" style="text-align: right;"></input>
+						<input :value=" reason[reasonIndex].title" placeholder="请选择举报类型" style="text-align: right;" disabled></input>
 					</picker>
 					<image :src="$aliImage + 'read-icon-gray-right.png'"></image>
 				</view>

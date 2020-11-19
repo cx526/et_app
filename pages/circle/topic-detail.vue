@@ -6,9 +6,9 @@
 			
 		</view>
 		<!-- 只有阅读PK话题且身份不是园长才显示，显示统计类型根据该话题的公开范围进行对应的前端显示。 -->
-		<view style="box-sizing: border-box;padding: 0 25rpx;" v-if="topicDetail.type === 'pk' && custom_type !== '2' && this.show_range !== 'all' ">
+		<!-- <view style="box-sizing: border-box;padding: 0 25rpx;" v-if="topicDetail.type === 'pk' && custom_type !== '2' && this.show_range !== 'all' ">
 			<readChart :axis="axis" />
-		</view>
+		</view> -->
 		
 		<markUp :title="false" @comment="comment"  @handleComment="handleComment" :loadMore="loadMore" :show_comment="topicDetail.show_comment" :topicMark="topicMark" :topic_type="topicDetail.type" :loadStatus="loadStatus" @loadingMore="loadingMore" @like="like" />
 		<!-- 话题内容详细弹窗 -->
@@ -217,7 +217,8 @@
 					pageSize: this.pageSize,
 					filterItems: {
 						topic_id: topic_id,
-						like_custom_id: String(custom_id)
+						like_custom_id: String(custom_id),
+						show_status: '1'
 					}
 				}
 				this.$api.selReadingMark(params).then(res => {

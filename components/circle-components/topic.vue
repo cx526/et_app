@@ -206,7 +206,9 @@
 					pageSize: this.pageSize,
 					filterItems: {
 						show_range: show_range,
-						school_id: school_id
+						school_id: school_id,
+						show_status: '1',
+						status: '1'
 					}
 				}
 				// 年级话题

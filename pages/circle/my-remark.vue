@@ -82,7 +82,9 @@
 					pageSize: this.pageSize,
 					currentPage: String(this.currentPage),
 					filterItems: {
-						custom_id: String(custom_id)
+						custom_id: String(custom_id),
+						show_status: '1', // 0:不显示，1：显示， 2：审核中 3：违规
+						status: '1' // 话题状态：0:未开始 1:进行中，2：已结束
 					},
 				}
 				this.$api.selReadingTopic(params).then(res => {

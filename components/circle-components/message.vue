@@ -6,7 +6,7 @@
 				<swiper vertical autoplay circular :interval="2000" disable-touch>
 					<swiper-item v-for="(item, index) in rewardList" :key="index">
 						<text>{{ item.childName }}参与{{ item.topicTitle }}活力值达成，</text>
-						<text v-if="item.reward_shell !== '0' || item.reward_coin !== '0' || item.reward_free !== '0'">
+						<text v-if="item.reward_shell !== '0' || item.reward_coin !== '0' || item.reward_free !== '0' || item.reward_gift === '' " >
 							获得{{ item.reward_shell }}五车贝{{ item.reward_coin }}积分{{ item.reward_free }}免费次数
 						</text>
 						<text v-else>获得{{ item.reward_gift }}</text>
