@@ -43,7 +43,7 @@
 											</view> -->
 										</view>
 										<view class="time">
-											<text>话题周期：{{ item.formatStartTime }}-{{ item.formatEndTime }}</text>
+											<text>话题周期：{{ item.formatStartTime }}~{{ item.formatEndTime }}</text>
 										</view>
 									</view>
 								</view>
@@ -75,7 +75,7 @@
 											<text>{{ item.description }}</text>
 										</view>
 										<view class="time">
-											<text>话题周期：{{ item.formatStartTime }}-{{ item.formatEndTime }}</text>
+											<text>话题周期：{{ item.formatStartTime }}~{{ item.formatEndTime }}</text>
 											<view class="award" @tap="checkAwardList(item.id)" v-if="item.custom_id == userInfo.id && item.type !== 'chat'">
 												<text>查看获奖名单</text>
 												<image :src="$aliImage + 'read-icon-right.png'" mode=""></image>

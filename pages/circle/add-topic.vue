@@ -65,8 +65,8 @@
 			<!-- 是否开启评论 -->
 			<view class="item">
 				<text class="label">开启评论</text>
-				<view class="type">
-					<picker :range="comment"  @change="changeTopicPower" range-key="title">
+				<view class="type"  style="flex: 1;justify-content: flex-end;">
+					<picker :range="comment"  @change="changeTopicPower" range-key="title" style="flex: 1;justify-content: flex-end;">
 						<text>{{ comment[commentIndex].title }}</text>
 					</picker>
 					<image :src="$aliImage + 'read-icon-gray-right.png'" mode="widthFix"></image>

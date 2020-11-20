@@ -31,7 +31,7 @@
 										<text>{{ item.description }}</text>
 									</view>
 									<view class="time">
-										<text>话题周期：{{ item.start_time }}-{{ item.end_time }}</text>
+										<text>话题周期：{{ item.start_time }}~{{ item.end_time }}</text>
 									</view>
 								</view>
 							</view>
@@ -55,7 +55,7 @@
 										<text>{{ item.description }}</text>
 									</view>
 									<view class="time">
-										<text>话题周期：{{ item.start_time }}-{{ item.end_time }}</text>
+										<text>话题周期：{{ item.start_time }}~{{ item.end_time }}</text>
 									</view>
 								</view>
 							</view>
@@ -78,7 +78,7 @@
 										<text>{{ item.description }}</text>
 									</view>
 									<view class="time">
-										<text>话题周期：{{ item.start_time }}-{{ item.end_time }}</text>
+										<text>话题周期：{{ item.start_time }}~{{ item.end_time }}</text>
 									</view>
 								</view>
 							</view>
@@ -101,7 +101,7 @@
 										<text>{{ item.description }}</text>
 									</view>
 									<view class="time">
-										<text>话题周期：{{ item.start_time }}-{{ item.end_time }}</text>
+										<text>话题周期：{{ item.start_time }}~{{ item.end_time }}</text>
 									</view>
 								</view>
 							</view>

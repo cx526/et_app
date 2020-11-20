@@ -53,7 +53,7 @@
 				</view>
 				<view class="time">
 					<view class="left">
-						<text>话题周期：{{ topicDetail.start_time }}-{{ topicDetail.end_time }}</text>
+						<text>话题周期：{{ topicDetail.start_time }}~{{ topicDetail.end_time }}</text>
 					</view>
 					<!-- 只有活力打卡类型话题才显示 -->
 					<view class="right" v-if="vitalityList && vitalityList.length > 0">

@@ -1,6 +1,6 @@
 <template>
 	<view style="position: relative;">
-		<image :src="$aliImage + 'member-plan.png'" mode="widthFix" style="width: 100%;"></image>
+		<image :src="$aliImage + 'member-plan-banner.png'" mode="widthFix" style="width: 100%;"></image>
 		<view class="btn" @tap="goMember"></view>
 	</view>
 </template>

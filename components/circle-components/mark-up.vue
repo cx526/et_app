@@ -26,7 +26,7 @@
 									<text v-else>园长</text>
 									<!-- 显示总的活力值 -->
 									<view class="vitality">
-										<image :src="$aliImage + 'read-vitality.png'" mode=""></image>
+										<image :src="$aliImage + 'read-vitality.png'" mode="" style="margin-right: 8rpx;"></image>
 										<text>{{ item.customInfo.vitality }}</text>
 									</view>
 								</view>

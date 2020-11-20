@@ -401,9 +401,9 @@
 				let minute = this.complete(date.getMinutes())
 				let second = this.complete(date.getSeconds())
 				if(type === 'YY:MM:DD') {
-					return year +'~'+ month + '~' + day
+					return year +'-'+ month + '-' + day
 				}else {
-					return year +'~'+ month + '~' + day +' '+ hour +':'+ minute +':'+ second
+					return year +'-'+ month + '-' + day +' '+ hour +':'+ minute +':'+ second
 				}
 				
 			},
