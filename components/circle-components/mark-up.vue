@@ -215,6 +215,7 @@
 			// 预览图片
 			preview(index, url) {
 				console.log(index)
+				this.$emit('preview')
 				let urls = url.map(item => {
 					return item.url
 				})

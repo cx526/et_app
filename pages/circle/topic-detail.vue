@@ -10,7 +10,7 @@
 			<readChart :axis="axis" />
 		</view> -->
 		
-		<markUp :title="false" @comment="comment"  @handleComment="handleComment" :loadMore="loadMore" :show_comment="topicDetail.show_comment" :topicMark="topicMark" :topic_type="topicDetail.type" :loadStatus="loadStatus" @loadingMore="loadingMore" @like="like" />
+		<markUp :title="false" @comment="comment"  @handleComment="handleComment" :loadMore="loadMore" :show_comment="topicDetail.show_comment" :topicMark="topicMark" :topic_type="topicDetail.type" :loadStatus="loadStatus" @loadingMore="loadingMore" @like="like" @preview="preview" />
 		<!-- 话题内容详细弹窗 -->
 		<uni-popup ref="contextDetail" >
 			<view :style="{'width': propUpWidth}" class="popUp">{{ topicDetail.description }}</view>
@@ -51,6 +51,7 @@
 				axis: {},
 				isLogin: false, //是否登录
 				private: 0, //违规/待审核打卡数
+				update: true, //控制是否重新加载数据
 			}
 		},
 		components: {
@@ -60,6 +61,7 @@
 			readChart
 		},
 		onLoad(options) {
+			console.log('onLoad')
 			console.log(options)
 			this.custom_type = options.custom_type
 			this.id = options.id //话题id
@@ -75,14 +77,18 @@
 		onShow() {
 			// 检测登录
 			this.checkLogin()
-			this.currentPage = 1
-			this.topicMark = []
+			
 			// 查看话题详细
 			this.selTopicDetail(this.id)
-			// 查看话题的打卡记录
-			// this.selReadingMark(this.id, 'del')
-			this.selUserReadingMark(this.id)
+			if(this.update) {
+				this.currentPage = 1
+				this.topicMark = []
+				// 查看话题的打卡记录
+				this.selUserReadingMark(this.id)
+			}
+			
 		},
+		
 		onShareAppMessage(res) {
 			console.log(res)
 			let params = res.target.dataset
@@ -227,7 +233,8 @@
 							item.customInfo.vitality = parseInt(item.customInfo.vitality)
 						})
 					}
-					this.topicMark = [...this.topicMark, ...result]
+					// this.topicMark = [...this.topicMark, ...result]
+					this.topicMark = result
 					console.log(this.topicMark)
 					if(loadMore === 'loadMore') {
 						this.selReadingMark(this.id)
@@ -517,6 +524,11 @@
 					}
 				})
 			},
+			// 监听子组件预览图片事件
+			preview() {
+				console.log('preview')
+				this.update = false
+			},
 			// 删除打卡
 			delReadingMark(remark_id) {
 				let params = {
@@ -538,6 +550,7 @@
 			},
 			// 跳转打卡页面
 			addRemark(title, topic_id,show_comment) {
+				this.update = true
 				uni.navigateTo({
 					url: '/pages/circle/add-remark?from=topicDetail&title='+title+'&topic_id='+topic_id+'&show_comment='+ show_comment
 				})

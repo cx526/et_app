@@ -46,6 +46,13 @@
 			topic,
 			markUp
 		},
+		watch: {
+			school_id(newVal) {
+				console.log(newVal)
+				// 获取热门打卡数据
+				this.selReadingMark(this.school_id)
+			}
+		},
 		onLoad() {
 			
 			// 获取周排名(前三)
@@ -130,8 +137,7 @@
 						this.grade_id = this.data.gradeInfo.id
 						this.class_id = this.data.childInfo.class
 					}
-					// 获取热门打卡数据
-					this.selReadingMark(this.school_id)
+					
 					let userInfo = uni.getStorageSync('userInfo')
 					userInfo.id = this.data.id
 					uni.setStorageSync('userInfo', userInfo)
