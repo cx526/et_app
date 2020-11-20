@@ -127,6 +127,7 @@
 		},
 		data() {
 			return {
+				userInfo: uni.getStorageSync('userInfo'),
 				$aliImage: this.$aliImage,
 				//模拟话题数据
 				allTopic: [], //全站话题
@@ -154,6 +155,7 @@
 				school_id: '4', //学校id
 				totalPage: 0, //话题总条数
 				isLoadMore: false, //判断是否开启上拉加载更多
+				private: 0, //违规/待审核话题数
 			}
 		},
 		components: {
@@ -163,7 +165,8 @@
 			schoolId(newVal) {
 				this.school_id = newVal
 				// 获取话题列表(默认获取全站话题)
-				this.selReadingTopic('all')
+				// this.selReadingTopic('all')
+				this.selAllReadingTopic()
 			},
 			gradeId(newVal) {
 				this.grade_id = newVal
@@ -172,6 +175,7 @@
 				this.class_id = newVal
 			}
 		},
+
 		methods: {
 			// 获取元素节点
 			getEleRect(topicArr) {
@@ -192,6 +196,29 @@
 				}else {
 					this.swiperHeight = this.itemHeight * topicArr.length + 'px'
 				}
+			},
+			// 获取违规/未审核话题(自己)
+			selAllReadingTopic() {
+				let custom_id = String(this.userInfo.id)
+				let userParams = {
+					filterItems: {
+						custom_id: custom_id,
+						"selUnNormal": "1"
+					}
+				}
+				this.$api.selReadingTopic(userParams).then(res => {
+					this.private = res.data.totalPage
+					let result = res.data.rows
+					if(result && result.length > 0) {
+						result.map(item => {
+							item.start_time = this.formatTime(item.start_time)
+							item.end_time = this.formatTime(item.end_time)
+						})
+					}
+					this.allTopic = [...this.allTopic, ...result]
+					// 获取话题列表(默认获取全站话题)
+					this.selReadingTopic('all')
+				})
 			},
 			// 获取话题列表
 			selReadingTopic(show_range) {
@@ -225,7 +252,6 @@
 				this.$api.selReadingTopic(params).then(res => {
 					let result = res.data.rows
 					this.totalPage = res.data.totalPage
-					
 					// 格式化开始结束时间
 					if(result && result.length > 0) {
 						result.map(item => {
@@ -238,25 +264,25 @@
 						this.allTopic = [...this.allTopic, ...result]
 						this.getEleRect(this.allTopic)
 						// 判断是否开启上拉加载更多
-						this.openLoadMore(this.allTopic)
+						this.openLoadMore(this.allTopic.length - this.private)
 						break
 						case 'school': 
 						this.schoolTopic = [...this.schoolTopic, ...result]
 						this.getEleRect(this.schoolTopic)
 						// 判断是否开启上拉加载更多
-						this.openLoadMore(this.schoolTopic)
+						this.openLoadMore(this.schoolTopic.length)
 						break
 						case 'grade':
 						this.gradeTopic = [...this.gradeTopic, ...result]
 						this.getEleRect(this.gradeTopic)
 						// 判断是否开启上拉加载更多
-						this.openLoadMore(this.gradeTopic)
+						this.openLoadMore(this.gradeTopic.length)
 						break
 						case 'class':
 						this.classTopic = [...this.classTopic, ...result]
 						this.getEleRect(this.classTopic)
 						// 判断是否开启上拉加载更多
-						this.openLoadMore(this.classTopic)
+						this.openLoadMore(this.classTopic.length)
 						break
 						default:
 						this.allTopic = [...this.allTopic, ...result]
@@ -279,7 +305,7 @@
 			},
 			// 判断是否开启上拉加载更多
 			openLoadMore(topicArr) {
-				if(this.totalPage <= topicArr.length) {
+				if(this.totalPage <= topicArr) {
 					this.isLoadMore = false
 					this.loadStatus = 'noMore'
 				}else {
@@ -319,7 +345,7 @@
 					this.allTopic = []
 					this.currentPage = 1
 				
-					this.selReadingTopic('all')
+					this.selAllReadingTopic()
 					break
 					case 1:
 					this.currentPage = 1

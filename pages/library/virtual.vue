@@ -187,7 +187,8 @@
 				isLoadingMore: true,
 				refundInfoText: "退还押金",//储存押金状态
 				from: "",//区别页面从哪里跳转过来
-				price: 29
+				price: 29,
+				member_status: '', //是否是会员 1表示是会员
 			}
 		},
 		components: {
@@ -221,7 +222,10 @@
 				this.$api.getCustom({ filterItems: { mobile } })
 				.then(res => {
 					uni.hideLoading()
-					this.userInfo = res.data[0];
+					this.userInfo = res.data[0]
+					console.log(this.userInfo)
+					// 是否是会员
+					this.member_status = this.userInfo.member_status
 					//储存用户的五车贝;
 					this.shell = (+this.userInfo.shell).toFixed(2) ? 
 					(+this.userInfo.shell).toFixed(2) : 0.00
@@ -307,6 +311,24 @@
 			},
 			// 点击退还押金
 			goDeposit() {
+				// 如果是会员直接跳过显示
+				if(this.member_status === '1') {
+					console.log('if')
+					// 可以退换押金
+					let param = { 
+						custom_id: this.userInfo.id, 
+						deposit: this.deposit
+					}
+					this.$api.postRefund(param)
+					.then(res => {
+						uni.showToast({
+							title: res.data.msg,
+							icon: 'none',
+							duration: 1500
+						})
+						this.refundInfoText = "审批中"
+					})
+				}else {
 				// 判断用户有无存在订单,没有才给退(0不给退,1给退)
 				this.$api.checkOfflineOrder({ custom_id: this.userInfo.id })
 				.then(res => {
@@ -333,9 +355,7 @@
 									duration: 2000
 								})
 								this.refundInfoText = "审批中"
-							}
-							
-							
+							}	
 						}else {
 							// 可以退换押金
 							let param = { 
@@ -360,8 +380,7 @@
 						})
 					}
 				})
-				return
-				// 1 待退还 2 审批中 3已完成
+				}
 				 
 			},
 			// 返回借阅页面

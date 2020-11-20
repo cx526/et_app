@@ -521,8 +521,8 @@
 			},
 			// 发布话题
 			publish() {
-				// 必填项(测试默认封面可有可无，上线需要 this.coverImgUrl)
-				if(this.custom_id == '' || this.title == '' || this.description == '' || this.target_vitality == '' || this.start_time == '' || this.end_time == '') {
+				// 必填项(测试默认封面可有可无，上线需要 )
+				if(this.custom_id == '' || this.title == '' || this.description == '' || this.target_vitality == '' || this.start_time == '' || this.end_time == '' || this.coverImgUrl == '') {
 					uni.showToast({
 						title: '请填全必要信息',
 						icon: 'none',
@@ -590,7 +590,7 @@
 					end_time: String(this.end_time), //结束时间
 					day_mark_count: this.day_mark_count, //每天最多可打卡几次(按话题类型区分)
 					status: '0',
-					show_status: '0',
+					show_status: '2',
 					show_comment: String(this.show_comment), //是否显示评论(1显示0不显示)
 					show_range: String(this.show_range) , //话题可见范围
 					school_id: this.school_id, //学校id

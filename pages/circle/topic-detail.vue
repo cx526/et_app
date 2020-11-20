@@ -50,6 +50,7 @@
 				show_range: '' , //区分话题可见范围
 				axis: {},
 				isLogin: false, //是否登录
+				private: 0, //违规/待审核打卡数
 			}
 		},
 		components: {
@@ -75,10 +76,12 @@
 			// 检测登录
 			this.checkLogin()
 			this.currentPage = 1
+			this.topicMark = []
 			// 查看话题详细
 			this.selTopicDetail(this.id)
 			// 查看话题的打卡记录
-			this.selReadingMark(this.id, 'del')
+			// this.selReadingMark(this.id, 'del')
+			this.selUserReadingMark(this.id)
 		},
 		onShareAppMessage(res) {
 			console.log(res)
@@ -204,6 +207,35 @@
 					
 				})
 			},
+			// 查看个人违规/未审核打卡记录
+			selUserReadingMark(topic_id, loadMore) {
+				let custom_id = this.userInfo.id
+				let userParams = {
+					filterItems: {
+						custom_id: String(custom_id),
+						topic_id: topic_id,
+						like_custom_id: String(custom_id),
+						selUnNormal: "1"
+					}
+				}
+				this.$api.selReadingMark(userParams).then(res => {
+					this.private = res.data.totalPage
+					let result = res.data.rows
+					if(result && result.length > 0) {
+						result.map(item => {
+							item.create_time = this.formatTime(item.create_time, 'YY:MM:DD: hh:mm:ss')
+							item.customInfo.vitality = parseInt(item.customInfo.vitality)
+						})
+					}
+					this.topicMark = [...this.topicMark, ...result]
+					console.log(this.topicMark)
+					if(loadMore === 'loadMore') {
+						this.selReadingMark(this.id)
+					}else {
+						this.selReadingMark(this.id, 'del')
+					}
+				})
+			},
 			// 查看话题的打卡记录
 			selReadingMark(topic_id, type = '') {
 				let custom_id = this.userInfo.id
@@ -221,6 +253,7 @@
 						show_status: '1'
 					}
 				}
+				console.log(params)
 				this.$api.selReadingMark(params).then(res => {
 					uni.hideLoading()
 					this.totalPage = res.data.totalPage
@@ -232,12 +265,14 @@
 						})
 					}
 					if(type === 'del') {
-						this.topicMark = result
+						
+						this.topicMark = [...this.topicMark, ...result]
 					}else {
+						this.topicMark = []
 						this.topicMark = [...this.topicMark, ...result]
 					}
 					// 判断是否开启上拉加载更多
-					if(this.topicMark.length < this.totalPage) {
+					if(this.topicMark.length - this.private < this.totalPage) {
 						this.loadMore = true
 						this.loadStatus = 'more'
 					}else {
@@ -358,7 +393,7 @@
 			loadingMore() {
 				this.loadStatus = 'loading'
 				this.currentPage = this.currentPage + 1
-				this.selReadingMark(this.id)
+				this.selReadingMark(this.id, 'del')
 			},
 			// 格式化时间
 			formatTime(time, type) {
@@ -499,7 +534,7 @@
 							success: () => {
 								this.topicMark = []
 								this.currentPage = 1
-								this.selReadingMark(this.id, 'del')
+								this.selUserReadingMark(this.id)
 							}
 						})
 					}

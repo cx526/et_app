@@ -11,7 +11,7 @@
 						<text>评论</text>
 					</view>
 					<view class="right">
-						<text>共{{ totalPage }}条</text>
+						<text>共{{ commentList.length }}条</text>
 					</view>
 				</view>
 				<!-- :class="(index + 1) == commentList.length ? ' border-none' : ''" -->
@@ -85,6 +85,7 @@
 				bottom: 0,
 				isShow: false, //控制评论框的显示/隐藏
 				isLogin: false, //是否登录
+				private: 0, //违规/待审核评论数
 			}
 		},
 		components: {
@@ -99,7 +100,7 @@
 			// 查看打卡详情
 			this.selReadingMark()
 			// 查看打卡评论
-			this.selReadingComment()
+			this.selUserReadingComment()
 			// 获取access_token
 			this.getAccessToken()
 		},
@@ -182,7 +183,30 @@
 					this.topicMark = result
 				})
 			},
-			// 查看打卡评论
+			// 查看个人提交评论/违规数
+			selUserReadingComment() {
+				let custom_id = this.userInfo.id
+				let userParams = {
+					filterItems: {
+						mark_id: this.mark_id,
+						custom_id: String(custom_id),
+						selUnNormal: "1"
+					}
+				}
+				this.$api.selReadingComment(userParams).then(res => {
+					this.private = res.data.totalPage
+					let result = res.data.rows
+					if(result && result.length > 0) {
+						result.map(item => {
+							item.create_time = this.formatTime(item.create_time)
+						})
+					}
+					this.commentList = [...this.commentList, ...result]
+					// 查看已审核通过的评论
+					this.selReadingComment()
+				})
+			},
+			// 查看打卡评论(审核通过)
 			selReadingComment(type) {
 				let params = {
 					currentPage: String(this.currentPage),
@@ -201,11 +225,12 @@
 						})
 					}
 					if(type === 'reload') {
-						this.commentList = result
+						this.commentList = []
+						this.commentList = [...this.commentList, ...result]
 					}else {
 						this.commentList = [...this.commentList, ...result]
 					}
-					if(this.totalPage > this.commentList.length) {
+					if(this.totalPage  > this.commentList.length - this.private) {
 						this.loadStatus = 'more'
 					}else {
 						this.loadStatus = 'noMore'
@@ -258,7 +283,8 @@
 								this.context = ''
 								// 刷新评论内容
 								this.currentPage = 1,
-								this.selReadingComment('reload')
+								this.commentList = []
+								this.selUserReadingComment()
 							}
 						})
 					}
@@ -267,7 +293,7 @@
 			// 加载更多
 			loadingMore() {
 				
-				if(this.totalPage > this.commentList.length) {
+				if(this.totalPage > this.commentList.length - this.private) {
 					this.loadStatus = 'loading'
 					this.currentPage = this.currentPage + 1
 					this.selReadingComment()
@@ -377,7 +403,8 @@
 							success: () => {
 								// 执行重新刷新评论数据操作
 								this.currentPage = 1
-								this.selReadingComment('reload')
+								this.commentList = []
+								this.selUserReadingComment()
 							}
 						})
 						
