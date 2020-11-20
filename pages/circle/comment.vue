@@ -35,6 +35,11 @@
 							<text>{{ item.create_time }}</text>
 						</view>
 					</view>
+					<!-- 未审核/违规显示标签 -->
+					<view class="show_status" v-if="item.show_status === '2' || item.show_status === '3'">
+						<image v-if="item.show_status === '2'" :src="$aliImage + 'status-icon-01.png'" mode="widthFix"></image>
+						<image v-else :src="$aliImage + 'status-icon-02.png'" mode="widthFix"></image>
+					</view>
 				</view>
 				
 			</scroll-view>
@@ -524,6 +529,7 @@
 		display: flex;
 		align-items: center;
 		border-bottom: 1px dashed #b3b3b3;
+		position: relative;
 	}
 	.list .item:last-child {
 		border-bottom: 0
@@ -559,7 +565,17 @@
 		color: #B3B3B3;
 		margin-top: 6rpx;
 	}
-	
+	.list .item .show_status {
+		position: absolute;
+		right: 5rpx;
+		top: 10rpx;
+		width: 100rpx;
+	}
+	.list .item .show_status image {
+		width: 100%;
+		height: 100%;
+		opacity: 0.7;
+	}
 	.comment-input {
 		box-sizing: border-box;
 		position: absolute;

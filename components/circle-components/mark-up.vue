@@ -78,6 +78,11 @@
 							</view>
 						</view>
 					</view>
+					<!-- 未审核/违规打卡显示标志 -->
+					<view class="show_status" v-if="item.show_status === '2' || item.show_status === '3'">
+						<image v-if="item.show_status === '2'" :src="$aliImage + 'status-icon-01.png'" mode="widthFix"></image>
+						<image v-else :src="$aliImage + 'status-icon-02.png'" mode="widthFix"></image>
+					</view>
 				</view>
 				
 			</scroll-view>
@@ -277,7 +282,7 @@
 	.title .right image {
 		width: 30rpx;
 		height: 30rpx;
-		margin-left: 10rpx;
+		margin-left: 20rpx;
 	}
 	.list {
 		box-sizing: border-box;
@@ -286,7 +291,11 @@
 		box-sizing: border-box;
 		padding: 48rpx 0;
 		border-bottom: 1px solid rgba(112,112,112,.2);
+		position: relative;
 	}
+	
+	
+	
 	.list .item:last-child {
 		border-bottom: 0;
 	}
@@ -395,6 +404,19 @@
 		width: 30rpx;
 		height: 30rpx;
 		margin-left: 4rpx;
+	}
+	
+	.item .show_status {
+		position: absolute;
+		width: 140rpx;
+		right: 70rpx;
+		top: 30rpx;
+		
+	}
+	.item .show_status image {
+		width: 100%;
+		height: 100%;
+		opacity: 0.7;
 	}
 	.none {
 		box-sizing: border-box;

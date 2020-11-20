@@ -47,8 +47,7 @@
 			markUp
 		},
 		onLoad() {
-			// 获取个人信息
-			this.getUserInfo()
+			
 			// 获取周排名(前三)
 			this.selReadingVitalityCount()
 			// 查看奖励
@@ -57,6 +56,8 @@
 		onShow() {
 			// 检测登录状态
 			this.checkLogin()
+			// 获取个人信息
+			this.getUserInfo()
 		},
 		onShareAppMessage(res) {
 				let params = res.target.dataset

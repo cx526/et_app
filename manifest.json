@@ -2,8 +2,8 @@
     "name" : "et-app",
     "appid" : "__UNI__B9DB8EF",
     "description" : "",
-    "versionName" : "3.3.1",
-    "versionCode" : 331,
+    "versionName" : "3.3.2",
+    "versionCode" : 332,
     "transformPx" : false,
     /* 5+App特有相关 */
     "app-plus" : {

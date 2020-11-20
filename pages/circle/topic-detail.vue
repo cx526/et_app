@@ -239,11 +239,7 @@
 			// 查看话题的打卡记录
 			selReadingMark(topic_id, type = '') {
 				let custom_id = this.userInfo.id
-				uni.showLoading({
-					title: '数据加载中',
-					icon: 'none',
-					duration: 1500
-				})
+				
 				let params = {
 					currentPage: String(this.currentPage),
 					pageSize: this.pageSize,
@@ -255,7 +251,7 @@
 				}
 				console.log(params)
 				this.$api.selReadingMark(params).then(res => {
-					uni.hideLoading()
+					
 					this.totalPage = res.data.totalPage
 					let result = res.data.rows
 					if(result && result.length > 0) {
@@ -405,9 +401,9 @@
 				let minute = this.complete(date.getMinutes())
 				let second = this.complete(date.getSeconds())
 				if(type === 'YY:MM:DD') {
-					return year +'-'+ month + '-' + day
+					return year +'~'+ month + '~' + day
 				}else {
-					return year +'-'+ month + '-' + day +' '+ hour +':'+ minute +':'+ second
+					return year +'~'+ month + '~' + day +' '+ hour +':'+ minute +':'+ second
 				}
 				
 			},
