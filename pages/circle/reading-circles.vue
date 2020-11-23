@@ -272,7 +272,7 @@
 			// 查看活力榜
 			checkVigourDetail() {
 				uni.navigateTo({
-					url: '/pages/circle/vigour'
+					url: '/pages/circle/vigour?school_id='+this.school_id
 				})
 			},
 			// 查看阅读数据

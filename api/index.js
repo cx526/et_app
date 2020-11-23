@@ -251,8 +251,11 @@ api.addOrDelReadingLike = params => request.globalRequest('/api/reading/addOrDel
 // 查看活力值详情
 api.selReadingVitalityDetail = params => request.globalRequest('/api/reading/selReadingVitalityDetail', 'POST', params)
 
-// 查看周排名
+// 查看周排名(全站统计)
 api.selReadingVitalityCount = params => request.globalRequest('/api/reading/selReadingVitalityCount', 'POST', params)
+
+// 查看周排名(全校统计)
+api.selSchoolReadingVitalityCount = params => request.globalRequest('/api/count/sortVitalityByApp', 'POST', params)
 
 // 查看奖励
 api.selReadingReward = params => request.globalRequest('/api/reading/selReadingReward', 'POST', params)

@@ -12,10 +12,11 @@
 						<image :src="$aliImage+ 'read-vitality.png'" mode=""></image>
 						<text>活力值：{{ userRankingList.vitality }}</text>
 					</view>
-					<view class="time">
-						<!-- 读取后台返回的时间往前推一周(七天) -->
+					<!-- 读取后台返回的时间往前推一周(七天) -->
+					<!-- <view class="time">
+						
 						<text>统计日期：{{ formatCreateTime }}</text>
-					</view>
+					</view> -->
 				</view>
 			</view>
 			<view class="right">
@@ -53,6 +54,7 @@
 	export default {
 		data() {
 			return {
+				school_id: '',
 				$aliImage: this.$aliImage,
 				userInfo: uni.getStorageSync('userInfo'),
 				rankingList: [],
@@ -60,7 +62,9 @@
 				formatCreateTime: '', //统计时间
 			}
 		},
-		onLoad() {
+		onLoad(options) {
+			this.school_id = options.school_id
+			console.log(this.school_id)
 			this.selReadingVitalityCount()
 			this.selReadingVitalityMine()
 		},
@@ -70,20 +74,25 @@
 				let custom_id = this.userInfo.id
 				let params = {
 					filterItems: {
-						custom_id: String(custom_id)
+						school_id: this.school_id,
+						my_custom_id: String(custom_id)
 					}
 				}
-				this.$api.selReadingVitalityCount(params).then(res => {
-					let result = res.data.rows
-					if(result && result.length > 0) {
-						result.map(item => {
-							item.vitality = parseInt(item.vitality)
-						})
-					}
-					this.userRankingList = result[0]
-					let date = this.userRankingList.formatCreateTime.split(' ')[0]
-					let timestamp = new Date(date).getTime() - (7 * 24 * 3600 * 1000)
-					this.formatCreateTime = this.formatTime(timestamp, 'YY:MM:DD')
+				this.$api.selSchoolReadingVitalityCount(params).then(res => {
+					console.log(res)
+					let result = res.data.mySort
+					result.vitality = parseInt(result.vitality)
+					this.userRankingList = result
+					// let result = res.data.rows
+					// if(result && result.length > 0) {
+					// 	result.map(item => {
+					// 		item.vitality = parseInt(item.vitality)
+					// 	})
+					// }
+					// this.userRankingList = result[0]
+					// let date = this.userRankingList.formatCreateTime.split(' ')[0]
+					// let timestamp = new Date(date).getTime() - (7 * 24 * 3600 * 1000)
+					// this.formatCreateTime = this.formatTime(timestamp, 'YY:MM:DD')
 				})
 			},
 			// 获取前二十名
@@ -225,7 +234,7 @@
 		color: #2AAEC4;
 		left: 50%;
 		top: 50%;
-		transform: translate(-50%,-32%);
+		transform: translate(-50%,-24%);
 
 		position: absolute;
 	}
