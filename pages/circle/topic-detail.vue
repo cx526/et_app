@@ -13,8 +13,14 @@
 		<markUp :title="false" @comment="comment"  @handleComment="handleComment" :loadMore="loadMore" :show_comment="topicDetail.show_comment" :topicMark="topicMark" :topic_type="topicDetail.type" :loadStatus="loadStatus" @loadingMore="loadingMore" @like="like" @preview="preview" />
 		<!-- 话题内容详细弹窗 -->
 		<uni-popup ref="contextDetail" >
-			<view :style="{'width': propUpWidth}" class="popUp">{{ topicDetail.description }}</view>
+			<view :style="{'width': propUpWidth}" class="popUp">
+				<text>{{ topicDetail.description }}</text>
+				<text style="color: #2AAEC4;">*每次打卡可获得10活力值</text>
+			</view>
 		</uni-popup>
+		<view class="submit">
+			<view @tap="addRemark(topicDetail.title,topicDetail.id,topicDetail.show_comment)">我要发圈</view>
+		</view>
 	</view>
 	
 </template>
@@ -36,7 +42,7 @@
 				vitality: 0, //活力值
 				totalPage: 0, //打卡总条数
 				currentPage: 1,
-				pageSize: '5',
+				pageSize: '4',
 				topicMark: [], // 话题打卡数据
 				loadMore: true,
 				loadStatus: 'more',
@@ -88,7 +94,9 @@
 			}
 			
 		},
-		
+		onReachBottom() {
+			this.loadingMore()
+		},
 		onShareAppMessage(res) {
 			console.log(res)
 			let params = res.target.dataset
@@ -98,11 +106,12 @@
 			let type = params.type
 			let title = ''
 			let path = ''
+			let content = params.content
 			if(type === 'comment') {
-				title = '五车书打卡分享',
+				title = content,
 				path = '/pages/circle/comment?topic_id='+topic_id+'&mark_id='+mark_id+'&custom_id='+custom_id
 			}else {
-				title = '五车书话题分享'
+				title = content
 			}
 			return {
 				title: title,
@@ -191,25 +200,25 @@
 					this.show_range = this.topicDetail.show_range
 					this.selReadingVitalityDetail()
 					// 只有非园长身份且是pk话题且不是admin发布才去展示阅读统计图表
-					if(this.custom_type !== '2' && this.topicDetail.type === 'pk' && this.show_range !== 'all') {
-						if(this.show_range === 'school') {
-							// 园内阅读pk
-							this.getReadingStat('school')
-						}else if(this.show_range === 'grade'){
-							// 年级阅读pk
-							this.getReadingStat('grade')
-						}else {
-							// 班级阅读pk
-							if(this.custom_type === '0') {
-								// 老师身份
-								this.teacher_id = String(this.userInfo.id)
-								this.checkStudentRead()
-							}else {
-								// 学生身份需要先获取所在班级老师id
-								this.selTeacherStudent()
-							}
-						}
-					}
+					// if(this.custom_type !== '2' && this.topicDetail.type === 'pk' && this.show_range !== 'all') {
+					// 	if(this.show_range === 'school') {
+					// 		// 园内阅读pk
+					// 		this.getReadingStat('school')
+					// 	}else if(this.show_range === 'grade'){
+					// 		// 年级阅读pk
+					// 		this.getReadingStat('grade')
+					// 	}else {
+					// 		// 班级阅读pk
+					// 		if(this.custom_type === '0') {
+					// 			// 老师身份
+					// 			this.teacher_id = String(this.userInfo.id)
+					// 			this.checkStudentRead()
+					// 		}else {
+					// 			// 学生身份需要先获取所在班级老师id
+					// 			this.selTeacherStudent()
+					// 		}
+					// 	}
+					// }
 					
 				})
 			},
@@ -394,9 +403,12 @@
 			},
 			// 打卡加载更多
 			loadingMore() {
-				this.loadStatus = 'loading'
-				this.currentPage = this.currentPage + 1
-				this.selReadingMark(this.id, 'del')
+				if(this.topicMark.length - this.private < this.totalPage) {
+					this.loadStatus = 'loading'
+					this.currentPage = this.currentPage + 1
+					this.selReadingMark(this.id, 'del')
+				}
+				
 			},
 			// 格式化时间
 			formatTime(time, type) {
@@ -563,7 +575,7 @@
 	page {
 		background: #EBF8FF;
 		box-sizing: border-box;
-		padding-bottom: 30rpx;
+		padding-bottom: 120rpx;
 	}
 </style>
 <style scoped>
@@ -575,5 +587,21 @@
 		border-radius: 30rpx;
 		font-size: 30rpx;
 		background: #fff;
+	}
+	.submit {
+		box-sizing: border-box;
+		padding: 0 25rpx;
+		margin-top: 20rpx;
+		font-size: 30rpx;
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		height: 80rpx;
+		color: #fff;
+		background: #2AAEC4;
+		position: fixed;
+		width: 100%;
+		bottom: 0;
+		left: 0;
 	}
 </style>

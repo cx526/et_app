@@ -11,7 +11,8 @@
 				</view>
 			</view>
 			<view class="list" id="list">
-				<scroll-view scroll-y style="max-height: 874rpx;" @scrolltolower="loadMore">
+				<!-- style="max-height: 874rpx;" -->
+				<scroll-view scroll-y  @scrolltolower="loadMore">
 					<swiper :style="{'height' : swiperHeight}" circle @change="swiperChange" :current="currentIndex">
 						<swiper-item class="proceedTopic">
 							<block v-if="proceedTopic && proceedTopic.length > 0">
@@ -133,9 +134,12 @@
 			cmdProgress,
 			uniLoadMore
 		},
-		mounted() {
+		onLoad() {
 			// 获取话题列表
 			this.selReadingTopic('1', '.proceedTopic .item')
+		},
+		onReachBottom() {
+			this.loadMore()
 		},
 		methods: {
 			// 获取话题列表
@@ -260,6 +264,8 @@
 	}
 	page {
 		background: #EBF8FF;
+		box-sizing: border-box;
+		padding-bottom: 30rpx;
 	}
 </style>
 <style scoped>

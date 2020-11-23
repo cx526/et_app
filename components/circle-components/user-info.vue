@@ -31,7 +31,7 @@
 				<view class="message" @tap="chooseItem">
 					<image :src="$aliImage + 'read-message.png'" mode="widthFix"></image>
 					<!-- 只有在我的打卡页面才显示 -->
-					<text v-if="parent !== 'index'">新建话题</text>
+					<text v-if="parent !== 'index'">我要发圈</text>
 				</view>
 			</view>
 		</view>

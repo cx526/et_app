@@ -15,13 +15,13 @@
 			<view class="right" v-if="parent !== 'award-list'" @tap="addRemark" >
 				
 				<image :src="$aliImage + 'read-message.png'" mode="widthFix"></image>
-				<text>新建打卡</text>
+				<text>我要发圈</text>
 			</view>
 		</view>
 		<view class="topic-intro">
 			<view class="intro">
 				<view class="share">
-					<button class="share-btn" open-type="share" data-type="topic-detail"></button>
+					<button class="share-btn" open-type="share" data-type="topic-detail" :data-content="item.content"></button>
 					<image :src="$aliImage + 'read-share.png'" mode="widthFix"></image>
 					<text>分享</text>
 				</view>
@@ -45,8 +45,11 @@
 					</view>
 				</view>
 				<view class="explain">
-					<view>{{ topicDetail.description }}</view>
-					<view class="more" @tap="checkMoreDetail" v-if="topicDetail.description.length >= 18">
+					<view>
+						<text>{{ topicDetail.description }}</text>
+						<text style="color: #2AAEC4;">*每次打卡可获得10活力值</text>
+					</view>
+					<view class="more" @tap="checkMoreDetail" v-if="topicDetail.description.length >= 45">
 						<text>更多</text>
 						<image :src="$aliImage + 'read-icon-right.png'" mode="widthFix"></image>
 					</view>
@@ -254,16 +257,18 @@
 	}
 	.intro .explain view:nth-child(1) {
 		flex: 1;
-		overflow: hidden;
+		overflow : hidden;
 		text-overflow: ellipsis;
-		white-space: nowrap;
+		display: -webkit-box;
+		-webkit-line-clamp: 2;
+		-webkit-box-orient: vertical;
 	}
 	.intro .explain .more {
 		flex-shrink: 0;
 		display: flex;
 		align-items: center;
 		color: #2AAEC4;
-		margin-left: 145rpx;
+		margin-left: 30rpx;
 	}
 	.intro .explain .more image {
 		width: 21rpx;

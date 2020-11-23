@@ -9,9 +9,13 @@
 		<!-- 阅读统计 -->
 		<stat @checkReadingDetail="checkReadingDetail" v-if="data.custom_type !== '2'" />
 		<!-- 话题 -->
-		<topic @checkTopicDetail="checkTopicDetail" :schoolId = "data.schoolInfo.id" :gradeId = "grade_id":classId="class_id"  />
+		<topic @checkTopicDetail="checkTopicDetail" :schoolId = "data.schoolInfo.id" :gradeId = "grade_id":classId="class_id" @swiperChange="swiperChange"  />
 		<!-- 热门打卡 -->
-		<markUp @comment="comment" @handleComment="handleComment" :loadMore="true" :topicMark="topicMark" parent="index" @reload="reload" @like="like" @share="share" />
+		<markUp @comment="comment" @handleComment="handleComment" :loadMore="true" :topicMark="topicMark" parent="index" @reload="reload" @like="like" @share="share" v-if="currentIndex === 0" />
+		<!-- 悬浮窗按钮 -->
+		<view class="float" @tap="chooseItem">
+			<image :src="$aliImage + 'read-icon-03.png'" mode="widthFix"></image>
+		</view>
 	</view>
 </template>
 
@@ -25,6 +29,7 @@
 	export default {
 		data() {
 			return {
+				$aliImage: this.$aliImage,
 				userInfo: uni.getStorageSync('userInfo'),
 				isLogin: false,
 				data: null,
@@ -36,6 +41,7 @@
 				grade_id: '', //年级id
 				class_id: '' ,//所在班级
 				sharePath: '', //分享路径
+				currentIndex: 0, //全站话题显示热门打卡，其他不显示
 			}
 		},
 		components: {
@@ -48,7 +54,6 @@
 		},
 		watch: {
 			school_id(newVal) {
-				console.log(newVal)
 				// 获取热门打卡数据
 				this.selReadingMark(this.school_id)
 			}
@@ -71,12 +76,12 @@
 				let topic_id = params.topic_id
 				let mark_id = params.mark_id
 				let custom_id = this.userInfo.id
+				let content = params.content
 				return {
-					title: '五车书打卡分享',
+					title: content,
 					path: '/pages/circle/comment?topic_id='+topic_id+'&mark_id='+mark_id+'&custom_id='+custom_id
 				}
 		},
-		
 		methods: {
 			// 检测登录状态
 			checkLogin() {
@@ -164,6 +169,10 @@
 					}
 					this.topicMark = result
 				})
+			},
+			// 监听话题范围改变
+			swiperChange(index) {
+				this.currentIndex = index
 			},
 			// 换一换
 			reload() {
@@ -289,13 +298,12 @@
 			},
 			// 查看打卡评论
 			comment(item) {
-		
+				let userInfo = uni.getStorageSync('userInfo')
 				let params = {
 					topic_id: item.topic_id,
 					mark_id: item.id,
-					custom_id: this.userInfo.id
+					custom_id: userInfo.id
 				}
-				
 				uni.navigateTo({
 					// url: '/pages/circle/comment?params='+JSON.stringify(params)
 					url: '/pages/circle/comment?topic_id='+params.topic_id+'&mark_id='+params.mark_id+'&custom_id='+params.custom_id
@@ -303,10 +311,6 @@
 			},
 			// 查看我发布的话题
 			checkMyRemark() {
-				// 如果是学生，默认不跳转
-				if(this.data.custom_type === '1') {
-					return
-				}
 				uni.navigateTo({
 					url: '/pages/circle/my-remark?custom_type='+this.data.custom_type
 				})
@@ -315,9 +319,9 @@
 			chooseItem() {
 				let itemList = []
 				if(this.data.custom_type === '1') {
-					itemList = ['我要打卡']
+					itemList = ['我要发圈']
 				}else {
-					itemList = ['发布话题','我要打卡']
+					itemList = ['发布话题','我要发圈']
 				}
 				uni.showActionSheet({
 					itemList: itemList,
@@ -376,5 +380,17 @@
 	}
 </style>
 <style scoped>
-
+	/* 悬浮窗按钮 */
+	.float {
+		position: fixed;
+		right: 0;
+		bottom: 300rpx;
+		width: 120rpx;
+		height: 120rpx;
+		z-index: 99;
+	}
+	.float image {
+		width: 100%;
+		height: 100%;
+	}
 </style>

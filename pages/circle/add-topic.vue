@@ -18,7 +18,7 @@
 				<text class="label">话题标题</text>
 				<input type="text" placeholder="请输入话题标题" @input="getTopicTitle" @blur="blurTitle" :value="title" />
 			</view>
-			<!-- 活力值(只有活力打卡才存在) -->
+			<!-- 活力值(只有阅读打卡才存在) -->
 			<view class="item" v-if="topicTypeIndex === 0">
 				<text class="label">目标活力值</text>
 				<input type="number" placeholder="请输入话题的目标值" @input="getTopicVigour" :value="target_vitality" />
@@ -146,11 +146,14 @@
 				
 				<view class="show" style="position: relative;">
 					<image :src="$aliImage + 'read-add.png'" mode="widthFix" v-if="!coverImgUrl" @tap="select_img"></image>
-					<image :src="coverImgUrl" v-if="coverImgUrl" style="width: 120rpx;" mode="widthFix"></image>
+					<image :src="coverImgUrl" v-if="coverImgUrl" style="width: 120rpx;" mode="aspectFit"></image>
 					<icon type="clear" size="12" style="position: absolute;right: 0;top: 0;" v-if="coverImgUrl" @tap="del"></icon>
 				</view>
 				
 			</view>
+		</view>
+		<view class="notice">
+			<text>温馨提示：每次打卡可获得10活力值</text>
 		</view>
 		<view class="btn" @tap="publish">
 			<text>发表话题</text>
@@ -172,7 +175,7 @@
 				topicTypeIndex: 0, //话题类型
 				topicType: [
 					{
-						title: '活力打卡',
+						title: '阅读打卡',
 						type: 'vitality'
 					},
 					{
@@ -184,7 +187,7 @@
 						type: 'chat'
 					}
 				],
-				type: 'vitality', //话题类型(默认活力打卡)
+				type: 'vitality', //话题类型(默认阅读打卡)
 				title: '', //话题标题
 				target_vitality: '', //话题活力目标
 				day_mark_count: '1', //每天最多可打卡几次(按话题类型区分)
@@ -584,7 +587,7 @@
 					reward_free: this.reward_free ? this.reward_free : '0',
 					reward_coin: this.reward_coin ? this.reward_coin : '0',
 					reward_gift: String(this.reward_gift), //奖励
-					reward_vitality: '1', //打卡奖励活力值,
+					reward_vitality: '10', //打卡奖励活力值,
 					target_vitality: String(this.target_vitality), //目标活力值
 					start_time: String(this.start_time), //开始时间
 					end_time: String(this.end_time), //结束时间
@@ -795,5 +798,11 @@
 		left: 50%;
 		transform: translateX(-50%);
 		margin-top: 80rpx;
+	}
+	.notice {
+		box-sizing: border-box;
+		font-size: 30rpx;
+		color: #808080;
+		padding-top: 20rpx;
 	}
 </style>

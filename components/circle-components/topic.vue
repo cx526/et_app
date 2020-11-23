@@ -10,8 +10,8 @@
 				</view>
 			</view>
 			<view class="list" id="list">
-				<!-- 812rpx -->
-				<scroll-view scroll-y style="max-height: 812rpx" @scrolltolower="loadMore">
+				<!-- 812rpx style="max-height: 812rpx" -->
+				<scroll-view scroll-y  @scrolltolower="loadMore">
 					<swiper :style="{'height' : swiperHeight}" circle @change="swiperChange" :current="currentIndex">
 						<!-- 全站话题 -->
 						<swiper-item>
@@ -31,9 +31,16 @@
 										<text>{{ item.description }}</text>
 									</view>
 									<view class="time">
-										<text>话题周期：{{ item.start_time }}~{{ item.end_time }}</text>
+										<text style="margin-right: 6rpx;">话题周期：{{ item.start_time }}~{{ item.end_time }}</text>
+										<text v-if="item.show_status === '2'">审核中</text>
+										<text v-if="item.show_status === '3'">违规</text>
 									</view>
 								</view>
+								<!-- 显示审核/违规标志 -->
+								<!-- <view class="status" v-if="item.show_status === '2' || item.show_status === '3'">
+									<image :src="$aliImage + 'status-icon-01.png'" mode="widthFix" v-if="item.show_status === '2'"></image>
+									<image :src="$aliImage + 'status-icon-02.png'" mode="widthFix" v-else></image>
+								</view> -->
 							</view>
 							
 						</swiper-item>
@@ -109,7 +116,11 @@
 						
 					</swiper>
 					<view>
-						<uni-load-more :status="loadStatus" :content-text="loadText" />
+						<view class="add" @tap="addTopic">
+							<image :src="$aliImage + 'read-add-icon.png'" mode="widthFix"></image>
+							<text>新建话题</text>
+						</view>
+						<!-- <uni-load-more :status="loadStatus" :content-text="loadText" /> -->
 					</view>
 				</scroll-view>
 			</view>
@@ -135,10 +146,10 @@
 				gradeTopic: [], // 年级话题
 				classTopic: [], // 班内话题
 				navList: [
-					{title: '全站话题'},
-					{title: '园内话题'},
-					{title: '年级话题'},
-					{title: '班内话题'}
+					{title: '热门'},
+					{title: '校园圈'},
+					{title: '年级圈'},
+					{title: '班级圈'}
 				],
 				swiperHeight: '0px', //定义swiper1的高度
 				currentIndex: 0, 
@@ -229,8 +240,8 @@
 					school_id = this.school_id
 				}
 				let params = {
-					currentPage: String(this.currentPage),
-					pageSize: this.pageSize,
+					// currentPage: String(this.currentPage),
+					// pageSize: this.pageSize,
 					filterItems: {
 						show_range: show_range,
 						school_id: school_id,
@@ -339,6 +350,7 @@
 			// 监听swiper改变
 			swiperChange(event) {
 				this.currentIndex = event.detail.current
+				this.$emit('swiperChange', this.currentIndex)
 				// 刷新数据跟重置swiper高度
 				switch(event.detail.current) {
 					case 0:
@@ -370,6 +382,12 @@
 			changeType(index) {
 				this.currentIndex = index
 				// 刷新数据跟重置swiper高度
+			},
+			// 跳转新建话题页面
+			addTopic() {
+				uni.navigateTo({
+					url: '/pages/circle/add-topic'
+				})
 			},
 			// 跳转详情
 			handleClick(id) {
@@ -439,7 +457,16 @@
 		border-bottom: 1px dashed #B3B3B3;
 		display: flex;
 		align-items: center;
+		position: relative;
 	}
+/* 	.topic .list .item .status {
+		position: absolute;
+		right: 32rpx;
+		top: 20rpx;
+	}
+	.topic .list .item .status image {
+		width: 120rpx;
+	} */
 	.topic .list .item:last-child {
 		border-bottom: 0;
 	}
@@ -485,5 +512,19 @@
 	}
 	.no-border {
 		border-bottom: none !important;
+	}
+	.add {
+		display: flex;
+		align-items: center;
+		color: #2AAEC4;
+		justify-content: center;
+		font-size: 28rpx;
+		box-sizing: border-box;
+		padding: 16rpx 0;
+	}
+	.add image {
+		width: 30rpx;
+		height: 30rpx;
+		margin-right: 6rpx;
 	}
 </style>

@@ -4,7 +4,8 @@
 		<!-- 评论列表 -->
 		<view class="comment" v-if="commentList && commentList.length > 0">
 		<view class="list">
-			<scroll-view scroll-y style="max-height: 515rpx;" @scrolltolower="loadingMore">
+			<!-- style="max-height: 515rpx;" -->
+			<scroll-view scroll-y  @scrolltolower="loadingMore">
 				<view class="title">
 					<view class="left">
 						<image :src="$aliImage + 'read-line.png'" mode="widthFix"></image>
@@ -71,7 +72,7 @@
 				userInfo: uni.getStorageSync('userInfo'),
 				context:'',
 				access_token: '',
-				pageSize: '5',
+				pageSize: '10',
 				currentPage: 1,
 				totalPage: 0, //总条数
 				loadStatus: 'noMore',
@@ -111,6 +112,9 @@
 		},
 		onShow() {
 			this.checkLogin()
+		},
+		onReachBottom() {
+			this.loadingMore()
 		},
 		onShareAppMessage(res) {
 				let params = res.target.dataset
@@ -224,6 +228,7 @@
 				this.$api.selReadingComment(params).then(res => {
 					this.totalPage = res.data.totalPage
 					let result = res.data.rows
+					console.log('result：'+ result)
 					if(result && result.length > 0) {
 						result.map(item => {
 							item.create_time = this.formatTime(item.create_time)
@@ -249,6 +254,7 @@
 			},
 			// 输入框失去焦点
 			commentBlur() {
+				console.log('commentBlur')
 				this.isShow = false
 				this.focus = false
 				this.bottom = 0
@@ -272,14 +278,18 @@
 					return
 				}
 				let params = {
-					custom_id: String(this.custom_id),
+					custom_id: String(this.userInfo.id),
 					content: this.context,
 					topic_id: String(this.topic_id),
 					mark_id: String(this.mark_id),
 					show_status: '2'
 				}
+				console.log('addReadingComment')
+				console.log(params)
 				this.$api.addReadingComment(params).then(res => {
+					console.log(res)
 					if(res.data.status === 'ok') {
+						console.log('ok')
 						uni.showToast({
 							title: '评论成功',
 							icon:'none',
@@ -422,7 +432,7 @@
 			},
 			// 提交评论
 			submit() {
-				this.checkText(this.context)
+				this.addReadingComment()
 			},
 			// 获取access_token
 			getAccessToken() {
@@ -578,7 +588,7 @@
 	}
 	.comment-input {
 		box-sizing: border-box;
-		position: absolute;
+		position: fixed;
 		bottom: 0;
 		left: 0;
 		width: 100%;

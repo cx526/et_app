@@ -20,7 +20,7 @@
 				<!-- 图片展示 -->
 				<block v-if="tempFilePaths && tempFilePaths.length > 0">
 					<view class="upload" v-for="(item, index) in tempFilePaths" :key="index">
-						<image :src="item" class="show" @tap="preview(index)"></image>
+						<image :src="item" class="show" @tap="preview(index)" mode="aspectFit"></image>
 						<icon type="clear" size="12" style="position: absolute;right: 0;top: 0;" @tap="del(index)"></icon>
 					</view>
 				</block>

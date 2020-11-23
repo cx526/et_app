@@ -11,7 +11,8 @@
 					<image :src="$aliImage + 'read-reload.png'" mode=""></image>
 				</view>
 			</view>
-			<scroll-view class="list" style="max-height: 1000rpx;" scroll-y @scrolltolower="loadingMore" >
+			<!-- style="max-height: 1000rpx;" -->
+			<scroll-view class="list"  scroll-y @scrolltolower="loadingMore" >
 				<view class="item" v-for="(item, index) in topicMark" :key="index"  @tap="handleClick('comment', item)" >
 					<view class="user">
 						<view class="show">
@@ -57,22 +58,23 @@
 					</view>
 					
 					<view class="photo" v-if="item.imgInfo && item.imgInfo.length > 0">
-						<image v-for="(list,listIndex) in item.imgInfo" :key="listIndex" :src="list.url" @tap.stop="preview(listIndex, item.imgInfo)"></image>
+						<image v-for="(list,listIndex) in item.imgInfo" :key="listIndex" :src="list.url" @tap.stop="preview(listIndex, item.imgInfo)" mode="aspectFit"></image>
 					</view>
 					<view class="comment">
 						<text class="time">{{ item.create_time }}</text>
 						<view class="detail">
 							<view class="comment-item"  @tap.stop="handleClick('like', item, index)" >
-									<image :src="$aliImage + 'read-like.png'"></image>
+									<image :src="$aliImage + 'read-like.png'" v-if="item.likeStatus === 0"></image>
+									<image :src="$aliImage + 'read-like-active.png'" v-else></image>
 									<text v-if="item.likeStatus === 0">点赞</text>
-									<text v-else style="color: #2AAEC4;">点赞</text>
+									<text v-else style="color: #2AAEC4;">已赞</text>
 							</view>
 							<view class="comment-item"  @tap.stop="handleClick('comment', item)" v-if="item.show_comment === '1'">
 									<image :src="$aliImage + 'read-comment.png'"></image>
 									<text>评论</text>
 							</view>
 							<view class="comment-item"  @tap.stop="handleClick('share', item)" >
-									<button class="share" open-type="share" :data-topic_id="item.topic_id" :data-mark_id="item.id" data-type="comment"></button>
+									<button class="share" open-type="share" :data-topic_id="item.topic_id" :data-mark_id="item.id" data-type="comment" :data-content="item.content"></button>
 									<image :src="$aliImage + 'read-share.png'"></image>
 									<text>分享</text>
 							</view>
@@ -162,7 +164,8 @@
 				this.show_comment = newVal
 			},
 			topicMark(newVal) {
-				this.topicMark = newVal		
+				this.topicMark = newVal
+				
 			},
 			topic_type(newVal) {
 				this.topic_type = newVal
@@ -332,9 +335,10 @@
 		align-items: center;
 	}
 	.item .context .preson-info .right {
-		width: 30rpx;
-		height: 30rpx;
+		
 		flex-shrink: 0;
+		box-sizing: border-box;
+		padding: 0 14rpx;
 	}
 	.item .context .preson-info .left .vitality {
 		width: 86rpx;
@@ -353,8 +357,8 @@
 		height: 27rpx;
 	}
 	.item .context .preson-info .right image {
-		width: 100%;
-		height: 100%;
+		width: 30rpx;
+		height: 30rpx;
 	}
 	.item .context .grade-info {
 		color: #2AAEC4;

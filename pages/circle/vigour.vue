@@ -24,7 +24,8 @@
 			</view>
 		</view>
 		<view class="list">
-			<scroll-view scroll-y style="max-height: 1032rpx;">
+			<!-- style="max-height: 1032rpx;" -->
+			<scroll-view scroll-y >
 				<view class="item" v-for="(item, index) in rankingList" :key="index">
 					<view class="left">
 						<view class="rank">
