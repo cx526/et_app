@@ -6,7 +6,7 @@
 				<image :src="$aliImage + 'read-student.png'" class="identity" mode="widthFix"></image>
 				<image :src="avatar" class="header"></image>
 			</view>
-			<view class="center">
+			<view class="center" @tap="checkMyRemark">
 				<view class="user-name" v-if="userInfo.childInfo.name">
 					<text>{{ userInfo.childInfo.name }}</text>
 					<text v-if="userInfo.custom_type === '1'">小朋友</text>
