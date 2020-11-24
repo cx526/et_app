@@ -49,6 +49,20 @@
 			</view>	
 		</view>
 		<view class="grey-space"></view>
+		
+		<!-- 编辑推荐 start -->
+		<view class="out-position" v-if="bookInfo.recomment && bookInfo.recomment !== ''">
+			<view class="out-content" style="position-bottom:15upx;">
+				<text class="title-content-process">编辑推荐</text>
+			</view>
+		</view>
+		<view class="remark-position">
+			<rich-text :nodes="bookInfo.recomment"></rich-text>
+		</view>
+		<view class="white-space" v-if="bookInfo.recomment && bookInfo.recomment !== ''"></view>
+		<view class="grey-space" v-if="bookInfo.recomment && bookInfo.recomment !== ''"></view>
+		<!-- 编辑推荐 end -->		
+		
 		<view class="out-position">
 			<view class="out-content" style="position-bottom:15upx;">
 				<text class="title-content-process">绘本简介</text>

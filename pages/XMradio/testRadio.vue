@@ -5,6 +5,7 @@
 </template>
 
 <script>
+	// var plugin = requirePlugin("WechatSI")
 	export default {
 		data() {
 			return {
