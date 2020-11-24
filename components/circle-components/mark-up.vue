@@ -30,6 +30,10 @@
 										<image :src="$aliImage + 'read-vitality.png'" mode="" style="margin-right: 8rpx;"></image>
 										<text>{{ item.customInfo.vitality }}</text>
 									</view>
+									
+									<view class="read-count">
+										<text>已读{{ item.readCount }}本</text>
+									</view>
 								</view>
 								<view class="right" @tap.stop="handleComment(item)" v-if="parent !== 'comment'">
 									<image :src="$aliImage + 'read-ellipsis.png'" mode=""></image>
@@ -320,6 +324,11 @@
 	}
 	.item .context {
 		flex: 1;
+	}
+	.item .read-count {
+		font-size: 22rpx;
+		padding-left: 20rpx;
+		color: #A0A0A0;
 	}
 	.item .context .preson-info {
 		width: 100%;
