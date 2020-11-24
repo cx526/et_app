@@ -2,7 +2,7 @@
 	<view v-if="isLogin">
 		<view style="margin-bottom: 25rpx;">
 			<!-- 话题简介 -->
-			<topicOutline @checkMoreDetail="checkMoreDetail" @addRemark="addRemark" :custom_type="custom_type" :dataList="topicDetail" :vitality="vitality" :vitalityList="vitalityList" />
+			<topicOutline @checkMoreDetail="checkMoreDetail" @addRemark="addRemark" :custom_type="custom_type" :dataList="topicDetail" :vitality="vitality" :vitalityList="vitalityList" @edit="edit" />
 			
 		</view>
 		<!-- 只有阅读PK话题且身份不是园长才显示，显示统计类型根据该话题的公开范围进行对应的前端显示。 -->
@@ -67,7 +67,6 @@
 			readChart
 		},
 		onLoad(options) {
-			console.log('onLoad')
 			console.log(options)
 			this.custom_type = options.custom_type
 			this.id = options.id //话题id
@@ -567,6 +566,39 @@
 					url: '/pages/circle/add-remark?from=topicDetail&title='+title+'&topic_id='+topic_id+'&show_comment='+ show_comment
 				})
 			},
+			// 编辑话题(未审核/违规话题才可以编辑)
+			edit() {
+				uni.showActionSheet({
+					itemList: ['编辑', '删除'],
+					success: res => {
+						console.log(res)
+						if(res.tapIndex === 0) {
+							uni.navigateTo({
+								url: '/pages/circle/add-topic?topic_id='+this.id+'&from=selUnNormal'
+							})
+						}else if(res.tapIndex === 1) {
+							uni.showModal({
+								title: '是否确认删除此话题?',
+								success: res => {
+									if(res.confirm) {
+										// 执行删除话题操作
+										this.delReadingTopic()
+									}
+								}
+							})
+						}
+					}
+				})
+			},
+			// 删除话题
+			delReadingTopic() {
+				let params = {
+					id: String(this.id)
+				}
+				this.$api.delReadingTopic(params).then(res => {
+					console.log(res)
+				})
+			}
 		}
 	}
 </script>

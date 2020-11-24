@@ -20,11 +20,20 @@
 		</view>
 		<view class="topic-intro">
 			<view class="intro">
-				<view class="share">
-					<button class="share-btn" open-type="share" data-type="topic-detail" :data-content="item.content"></button>
-					<image :src="$aliImage + 'read-share.png'" mode="widthFix"></image>
-					<text>分享</text>
+				<view style="display: flex;justify-content: flex-end;">
+					<view class="share" style="margin-right: 20rpx;" v-if="topicDetail.show_status === '2' || topicDetail.show_status === '3'" @tap="edit">
+						<image :src="$aliImage + 'read-share.png'" mode="widthFix"></image>
+						<text>编辑</text>
+					</view>
+					<view class="share">
+						<button class="share-btn" open-type="share" data-type="topic-detail" :data-content="item.content"></button>
+						<image :src="$aliImage + 'read-share.png'" mode="widthFix"></image>
+						<text>分享</text>
+					</view>
+					
 				</view>
+				
+				
 				<view class="title">
 					<text>{{ topicDetail.title }}</text>
 					<!-- 根据话题类型显示对应的图片 -->
@@ -119,8 +128,13 @@
 			checkMoreDetail() {
 				this.$emit('checkMoreDetail')
 			},
+			// 我要发圈
 			addRemark() {
 				this.$emit('addRemark', this.topicDetail.title,this.topicDetail.id,this.topicDetail.show_comment)
+			},
+			// 编辑话题
+			edit() {
+				this.$emit('edit')
 			}
 		}
 	}

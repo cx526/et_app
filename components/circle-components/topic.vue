@@ -169,6 +169,9 @@
 				private: 0, //违规/待审核话题数
 			}
 		},
+		created() {
+			console.log('created')
+		},
 		components: {
 			uniLoadMore
 		},
@@ -188,6 +191,10 @@
 		},
 
 		methods: {
+			update() {
+				console.log('调用了子组件的update方法')
+				this.selAllReadingTopic()
+			},
 			// 获取元素节点
 			getEleRect(topicArr) {
 				if(this.itemHeight == '') {
@@ -217,6 +224,7 @@
 						"selUnNormal": "1"
 					}
 				}
+				console.log(userParams)
 				this.$api.selReadingTopic(userParams).then(res => {
 					this.private = res.data.totalPage
 					let result = res.data.rows
@@ -226,7 +234,7 @@
 							item.end_time = this.formatTime(item.end_time)
 						})
 					}
-					this.allTopic = [...this.allTopic, ...result]
+					this.allTopic = result
 					// 获取话题列表(默认获取全站话题)
 					this.selReadingTopic('all')
 				})
@@ -248,6 +256,11 @@
 						show_status: '1',
 						status: '1'
 					}
+				}
+				// 全站话题
+				if(show_range === 'all') {
+					let custom_id = String(this.userInfo.id)
+					params.filterItems.my_custom_id = custom_id
 				}
 				// 年级话题
 				if(show_range === 'grade') {

@@ -6,11 +6,15 @@
 					<image :src="userInfo.avatar" mode="widthFix" class="user-avatar"></image>
 				</view>
 				<view class="info">
-					<view class="name" v-if="userRankingList.childName">{{ userRankingList.childName }}小朋友</view>
-					<view v-else>小朋友</view>
+					<view class="name" v-if="userRankingList.childName">{{ userRankingList.childName }}</view>
+					<view v-else>
+						<text v-if="custom_type === '0'">老师</text>
+						<text v-else-if="custom_type === '1'">小朋友</text>
+						<text v-else>园长</text>
+					</view>
 					<view class="vigour">
 						<image :src="$aliImage+ 'read-vitality.png'" mode=""></image>
-						<text>活力值：{{ userRankingList.vitality }}</text>
+						<text>活力值：{{ userRankingList.vitality ? userRankingList.vitality : 0 }}</text>
 					</view>
 					<!-- 读取后台返回的时间往前推一周(七天) -->
 					<!-- <view class="time">
@@ -21,7 +25,7 @@
 			</view>
 			<view class="right">
 				<image :src="$aliImage + 'read-medal-bg.png'" mode="widthFix"></image>
-				<text class="number">{{ userRankingList.vitality }}</text>
+				<text class="number">{{ userRankingList.vitality ? userRankingList.vitality : 0 }}</text>
 			</view>
 		</view>
 		<view class="list">
@@ -60,16 +64,16 @@
 				rankingList: [],
 				userRankingList:null,
 				formatCreateTime: '', //统计时间
+				custom_type: ''
 			}
 		},
 		onLoad(options) {
 			this.school_id = options.school_id
-			console.log(this.school_id)
-			this.selReadingVitalityCount()
+			this.custom_type = options.custom_type
+			console.log(options)
 			this.selReadingVitalityMine()
 		},
 		methods: {
-			// 获取自己
 			selReadingVitalityMine() {
 				let custom_id = this.userInfo.id
 				let params = {
@@ -83,62 +87,18 @@
 					let result = res.data.mySort
 					result.vitality = parseInt(result.vitality)
 					this.userRankingList = result
-					// let result = res.data.rows
-					// if(result && result.length > 0) {
-					// 	result.map(item => {
-					// 		item.vitality = parseInt(item.vitality)
-					// 	})
-					// }
-					// this.userRankingList = result[0]
-					// let date = this.userRankingList.formatCreateTime.split(' ')[0]
-					// let timestamp = new Date(date).getTime() - (7 * 24 * 3600 * 1000)
-					// this.formatCreateTime = this.formatTime(timestamp, 'YY:MM:DD')
-				})
-			},
-			// 获取前二十名
-			selReadingVitalityCount() {
-				uni.showLoading({
-					title: '数据加载中',
-					mask: true
-				})
-				let params = {
-					pageSize: "20",
-					currentPage: "1",
-					
-				}
-				this.$api.selReadingVitalityCount(params).then(res => {
-					uni.hideLoading()
-					let result = res.data.rows
-					if(result && result.length > 0) {
-						result.map(item => {
+					let rows = res.data.rows
+					if(rows && rows.length > 0) {
+						rows.map(item => {
 							item.vitality = parseInt(item.vitality)
 						})
 					}
-					this.rankingList = result
+					this.rankingList = rows
 				})
 			},
 			
-			// 格式化时间
-			formatTime(time, type) {
-				let date = new Date(time)
-				let year = date.getFullYear()
-				let month = this.complete(date.getMonth() + 1)
-				let day = this.complete(date.getDate())
-				let hour = this.complete(date.getHours())
-				let minute = this.complete(date.getMinutes())
-				let second = this.complete(date.getSeconds())
-				if(type === 'YY:MM:DD') {
-					return year +'-'+ month + '-' + day
-				}else {
-					return year +'-'+ month + '-' + day +' '+ hour +':'+ minute +':'+ second
-				}
-				
-			},
-			// 补零操作
-			complete(number) {
-				let num =	number > 9 ? number : '0' + number
-				return num
-			},
+
+
 		}
 	}
 </script>

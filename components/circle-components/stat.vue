@@ -24,15 +24,15 @@
 				dataList: [
 					{
 						path: 'read-school.png',
-						title: '本园阅读累计'
+						title: '校园阅读排名'
 					},
 					{
 						path: 'read-grade.png',
-						title: '年级阅读累计'
+						title: '年级阅读排名'
 					},
 					{
 						path: 'read-class.png',
-						title: '班级阅读累计'
+						title: '班级阅读排名'
 					}
 				]
 			}

@@ -218,8 +218,14 @@ api.checkMemberRecord = params => request.globalRequest('/api/member/selDataMemb
 // 新建话题
 api.addReadingTopic = params => request.globalRequest('/api/reading/addReadingTopic', 'POST', params)
 
+// 修改话题
+api.modReadingTopic = params => request.globalRequest('/api/reading/modReadingTopic', 'POST', params)
+
 // 查看话题
 api.selReadingTopic = params => request.globalRequest('/api/reading/selReadingTopic', 'POST', params)
+
+// 删除话题
+api.delReadingTopic = params => request.globalRequest('/api/reading/delReadingTopic', 'POST', params)
 
 // 查看话题活力之星(排名前三)
 api.selReadingTopicTopCustom = params => request.globalRequest('/api/reading/selReadingTopicTopCustom','POST', params)
@@ -277,4 +283,8 @@ api.selTeacherStudent = params => request.globalRequest('/api/teacherInfo/selTea
 
 // 获取班级学生阅读统计 {"filterItems":{"teacher_id":"385","allTotal":"1"}}
 api.checkStudentRead = params => request.globalRequest('/api/count/selReadingCountPerStudent', 'POST', params)
+
+// 查看阅读排名
+api.sortReadingByApp = params => request.globalRequest('/api/count/sortReadingByApp', 'POST', params)
+
 export default api

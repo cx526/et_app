@@ -6,10 +6,10 @@
 		<typesetting @checkVigourDetail="checkVigourDetail" v-if="rankingList && rankingList.length > 0" :rankingList="rankingList" />
 		<!-- 通告栏 -->
 		<message v-if="rewardList && rewardList.length > 0" :rewardList="rewardList" />
-		<!-- 阅读统计 -->
-		<stat @checkReadingDetail="checkReadingDetail" v-if="data.custom_type !== '2'" />
+		<!-- 阅读统计 v-if="data.custom_type === '1'"-->
+		<stat @checkReadingDetail="checkReadingDetail"  />
 		<!-- 话题 -->
-		<topic @checkTopicDetail="checkTopicDetail" :schoolId = "data.schoolInfo.id" :gradeId = "grade_id":classId="class_id" @swiperChange="swiperChange"  />
+		<topic @checkTopicDetail="checkTopicDetail" :schoolId = "data.schoolInfo.id" :gradeId = "grade_id":classId="class_id" @swiperChange="swiperChange" ref="topic" />
 		<!-- 热门打卡 -->
 		<markUp @comment="comment" @handleComment="handleComment" :loadMore="true" :topicMark="topicMark" parent="index" @reload="reload" @like="like" @share="share" v-if="currentIndex === 0" />
 		<!-- 悬浮窗按钮 -->
@@ -59,13 +59,13 @@
 			}
 		},
 		onLoad() {
-			
-			// 获取周排名(前三)
-			this.selReadingVitalityCount()
 			// 查看奖励
 			this.selReadingReward()
 		},
 		onShow() {
+			if(this.$refs.topic) {
+				this.$refs.topic.update()
+			}
 			// 检测登录状态
 			this.checkLogin()
 			// 获取个人信息
@@ -142,21 +142,25 @@
 						this.grade_id = this.data.gradeInfo.id
 						this.class_id = this.data.childInfo.class
 					}
-					
+					// 储存用户id到本地
 					let userInfo = uni.getStorageSync('userInfo')
 					userInfo.id = this.data.id
 					uni.setStorageSync('userInfo', userInfo)
+					// 获取周排名(前三)
+					this.selReadingVitalityCount()
 				})
 			},
 			// 获取热门打卡数据
 			selReadingMark(school_id) {
-				let id = this.userInfo.id
+				let userInfo = uni.getStorageSync('userInfo')
+				let id = String(userInfo.id)
 				let params = {
 					filterItems: {
 						school_id: school_id,
 						show_count: '10',
 						like_custom_id: String(id),
-						show_status: '1'
+						show_status: '1',
+						my_custom_id: id
 					}
 				}
 				this.$api.selReadingMarkByHot(params).then(res => {
@@ -215,19 +219,26 @@
 			// 获取周排名(前三)
 			selReadingVitalityCount() {
 				let params = {
-					pageSize: "3",
-					currentPage: "1",
-					
+					filterItems: {
+						school_id: this.school_id
+					}
 				}
-				this.$api.selReadingVitalityCount(params).then(res => {
+				this.$api.selSchoolReadingVitalityCount(params).then(res => {
 					let result = res.data.rows
 					
 					if(result && result.length > 0) {
-						result.map(item => {
-							item.vitality = parseInt(item.vitality)
-						})
+						if(result.length > 3) {
+							this.rankingList = result.filter((item, index) => {
+								return index < 3
+							})
+						}else {
+							this.rankingList = result
+						}
+						// result.map(item => {
+						// 	item.vitality = parseInt(item.vitality)
+						// })
 					}
-					this.rankingList = result
+					
 				})
 			},
 			// 查看奖励
@@ -272,7 +283,7 @@
 			// 查看活力榜
 			checkVigourDetail() {
 				uni.navigateTo({
-					url: '/pages/circle/vigour?school_id='+this.school_id
+					url: '/pages/circle/vigour?school_id='+this.school_id+'&custom_type='+this.data.custom_type
 				})
 			},
 			// 查看阅读数据
