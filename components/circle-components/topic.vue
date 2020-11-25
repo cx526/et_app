@@ -165,7 +165,7 @@
 					contentnomore: '暂无更多数据'
 				},
 				school_id: '4', //学校id
-				totalPage: 0, //话题总条数
+				// totalPage: 0, //话题总条数
 				isLoadMore: false, //判断是否开启上拉加载更多
 				private: 0, //违规/待审核话题数
 			}
