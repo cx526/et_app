@@ -15,7 +15,7 @@
 			<view class="right" v-if="parent !== 'award-list'" @tap="addRemark" >
 				
 				<image :src="$aliImage + 'read-message.png'" mode="widthFix"></image>
-				<text>我要发圈</text>
+				<text>我要打卡</text>
 			</view>
 		</view>
 		<view class="topic-intro">
@@ -128,7 +128,7 @@
 			checkMoreDetail() {
 				this.$emit('checkMoreDetail')
 			},
-			// 我要发圈
+			// 我要打卡
 			addRemark() {
 				this.$emit('addRemark', this.topicDetail.title,this.topicDetail.id,this.topicDetail.show_comment)
 			},

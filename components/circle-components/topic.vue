@@ -263,6 +263,7 @@
 				if(show_range === 'all') {
 					let custom_id = String(this.userInfo.id)
 					params.filterItems.my_custom_id = custom_id
+					params.filterItems.show_range = ''
 				}
 				// 年级话题
 				if(show_range === 'grade') {

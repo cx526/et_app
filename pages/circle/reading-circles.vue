@@ -347,9 +347,9 @@
 			chooseItem() {
 				let itemList = []
 				if(this.data.custom_type === '1') {
-					itemList = ['我要发圈']
+					itemList = ['我要打卡']
 				}else {
-					itemList = ['发布话题','我要发圈']
+					itemList = ['发布话题','我要打卡']
 				}
 				uni.showActionSheet({
 					itemList: itemList,

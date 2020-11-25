@@ -19,7 +19,7 @@
 			</view>
 		</uni-popup>
 		<view class="submit" @tap="addRemark(topicDetail.title,topicDetail.id,topicDetail.show_comment)">
-			<view >我要发圈</view>
+			<view >我要打卡</view>
 		</view>
 	</view>
 	
@@ -230,7 +230,7 @@
 						custom_id: String(custom_id),
 						topic_id: topic_id,
 						like_custom_id: String(custom_id),
-						selUnNormal: "1"
+						selUnNormal: "1"
 					}
 				}
 				this.$api.selReadingMark(userParams).then(res => {
