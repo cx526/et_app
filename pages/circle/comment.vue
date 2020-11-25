@@ -376,6 +376,7 @@
 				let topic_id = item.topic_id //话题id
 				let id = item.id //评论id
 				let itemList = []
+				let mark_id = String(this.mark_id)
 				if(user_id == custom_id) {
 					itemList = ['举报','删除']
 				}else {
@@ -387,7 +388,7 @@
 						// 举报
 						if(res.tapIndex === 0) {
 							uni.navigateTo({
-								url: '/pages/circle/report?comment_id='+id+'&type=comment&topic_id='+topic_id
+								url: '/pages/circle/report?comment_id='+id+'&type=comment&mark_id='+mark_id+'&topic_id='+topic_id
 							})
 						}else if(res.tapIndex === 1) {
 							uni.showModal({

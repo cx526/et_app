@@ -61,10 +61,11 @@
 			console.log(options)
 			this.type = options.type
 			this.topic_id = options.topic_id
-			if(this.type === 'mark') {
+			if (this.type === 'mark') {
 				this.mark_id = options.mark_id
-			}else {
+			} else if (this.type === 'comment') {
 				this.comment_id = options.comment_id
+				this.mark_id = options.mark_id
 			}
 		},
 		methods: {
