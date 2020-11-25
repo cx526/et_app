@@ -53,7 +53,7 @@
 		<!-- 编辑推荐 start -->
 		<view class="out-position" v-if="bookInfo.recomment && bookInfo.recomment !== ''">
 			<view class="out-content" style="position-bottom:15upx;">
-				<text class="title-content-process">编辑推荐</text>
+				<text class="title-content-process">书书推荐</text>
 			</view>
 		</view>
 		<view class="remark-position">
