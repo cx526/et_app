@@ -16,7 +16,7 @@
 					<swiper :style="{'height' : swiperHeight}" circle @change="swiperChange" :current="currentIndex">
 						<swiper-item class="proceedTopic">
 							<block v-if="proceedTopic && proceedTopic.length > 0">
-								<view class="item" v-for="(item, index) in proceedTopic" :key="index" >
+								<view class="item" v-for="(item, index) in proceedTopic" :key="index" @tap="topicDetail(item.id)" >
 									<view class="show">
 										<image v-if="item.imgInfo && item.imgInfo.length > 0" :src="item.imgInfo[0].url"></image>
 										<image :src="$aliImage + 'read-demo.png'" v-else></image>
@@ -126,7 +126,7 @@
 					contentrefresh: '加载中',
 					contentnomore: '暂无更多数据'
 				},
-				
+				custom_type: ''
 				
 			}
 		},
@@ -134,7 +134,8 @@
 			cmdProgress,
 			uniLoadMore
 		},
-		onLoad() {
+		onLoad(options) {
+			this.custom_type = options.custom_type
 			// 获取话题列表
 			this.selReadingTopic('1', '.proceedTopic .item')
 		},
@@ -241,9 +242,16 @@
 				}
 			},
 			// 改变话题分类
+
 			changeType(index) {
 				this.currentIndex = index
 				// 获取数据跟充值swiper高度
+			},
+			// 跳转详情页
+			topicDetail(id) {
+				uni.navigateTo({
+					url: '/pages/circle/topic-detail?id='+id+'&custom_type='+this.custom_type
+				})
 			},
 			// 查看获奖名单
 			checkAwardList(topic_id) {

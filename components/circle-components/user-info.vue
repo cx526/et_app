@@ -28,7 +28,8 @@
 					</view>
 					<view class="number">{{ userInfo.vitality }}</view>
 				</view>
-				<view class="message" @tap="chooseItem">
+				<!-- 首页不显示 -->
+				<view class="message" @tap="chooseItem" v-if="parent !== 'index'">
 					<image :src="$aliImage + 'read-message.png'" mode="widthFix"></image>
 					<!-- 只有在我的打卡页面才显示 -->
 					<text v-if="parent !== 'index'">我要发圈</text>

@@ -49,7 +49,7 @@
 <style scoped>
 	.typesetting-box {
 		box-sizing: border-box;
-		padding: 40rpx 25rpx 0 40rpx;
+		padding: 25rpx 25rpx 0 25rpx;
 	}
 	.typesetting {
 		box-sizing: border-box;

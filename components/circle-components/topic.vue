@@ -116,7 +116,7 @@
 						
 					</swiper>
 					<view>
-						<view class="add" @tap="addTopic">
+						<view class="add" @tap="addTopic" v-if="custom_type !== '1'">
 							<image :src="$aliImage + 'read-add-icon.png'" mode="widthFix"></image>
 							<text>新建话题</text>
 						</view>
@@ -134,7 +134,8 @@
 		props: {
 			schoolId: String,
 			gradeId: String,
-			classId: String
+			classId: String,
+			custom_type: String
 		},
 		data() {
 			return {
@@ -169,9 +170,7 @@
 				private: 0, //违规/待审核话题数
 			}
 		},
-		created() {
-			console.log('created')
-		},
+		
 		components: {
 			uniLoadMore
 		},
@@ -187,12 +186,15 @@
 			},
 			classId(newVal) {
 				this.class_id = newVal
+			},
+			custom_type(newVal) {
+				console.log(newVal)
+				this.custom_type = newVal
 			}
 		},
 
 		methods: {
 			update() {
-				console.log('调用了子组件的update方法')
 				this.selAllReadingTopic()
 			},
 			// 获取元素节点
@@ -287,26 +289,31 @@
 						case 'all':
 						this.allTopic = [...this.allTopic, ...result]
 						this.getEleRect(this.allTopic)
+						
 						// 判断是否开启上拉加载更多
 						this.openLoadMore(this.allTopic.length - this.private)
+						console.log(this.swiperHeight)
 						break
 						case 'school': 
 						this.schoolTopic = [...this.schoolTopic, ...result]
 						this.getEleRect(this.schoolTopic)
 						// 判断是否开启上拉加载更多
 						this.openLoadMore(this.schoolTopic.length)
+						console.log(this.swiperHeight)
 						break
 						case 'grade':
 						this.gradeTopic = [...this.gradeTopic, ...result]
 						this.getEleRect(this.gradeTopic)
 						// 判断是否开启上拉加载更多
 						this.openLoadMore(this.gradeTopic.length)
+						console.log(this.swiperHeight)
 						break
 						case 'class':
 						this.classTopic = [...this.classTopic, ...result]
 						this.getEleRect(this.classTopic)
 						// 判断是否开启上拉加载更多
 						this.openLoadMore(this.classTopic.length)
+						console.log(this.swiperHeight)
 						break
 						default:
 						this.allTopic = [...this.allTopic, ...result]

@@ -9,7 +9,7 @@
 		<!-- 阅读统计 -->
 		<stat @checkReadingDetail="checkReadingDetail" ref="stat" v-if="data.custom_type !== '2'" />
 		<!-- 话题 -->
-		<topic @checkTopicDetail="checkTopicDetail" :schoolId = "data.schoolInfo.id" :gradeId = "grade_id":classId="class_id" @swiperChange="swiperChange" ref="topic" />
+		<topic @checkTopicDetail="checkTopicDetail" :schoolId = "data.schoolInfo.id" :gradeId = "grade_id":classId="class_id" @swiperChange="swiperChange" ref="topic" :custom_type="data.custom_type" />
 		<!-- 热门打卡 -->
 		<markUp @comment="comment" @handleComment="handleComment" :loadMore="true" :topicMark="topicMark" parent="index" @reload="reload" @like="like" @share="share" v-if="currentIndex === 0" />
 		<!-- 悬浮窗按钮 -->
@@ -162,6 +162,7 @@
 			},
 			// 获取热门打卡数据
 			selReadingMark(school_id) {
+				
 				let userInfo = uni.getStorageSync('userInfo')
 				let id = String(userInfo.id)
 				let params = {
@@ -173,7 +174,9 @@
 						my_custom_id: id
 					}
 				}
+				
 				this.$api.selReadingMarkByHot(params).then(res => {
+					console.log(res)
 					let result = res.data.rows
 					if(result && result.length > 0) {
 						result.map(item => {
@@ -194,18 +197,22 @@
 			},
 			// 点赞/取消赞
 			like(item) {
-				let custom_id = String(this.userInfo.id)
+				let	userInfo = uni.getStorageSync('userInfo')
+				let custom_id = String(userInfo.id)
 				let topic_id = String(item.topic_id)
 				let mark_id = String(item.id)
 				this.addOrDelReadingLike(custom_id, topic_id, mark_id, item.index)
 			},
 			addOrDelReadingLike(custom_id, topic_id, mark_id, index) {
+				console.log('addOrDelReadingLike')
 				let params = {
 					custom_id: custom_id,
 					topic_id: topic_id,
 					mark_id: mark_id,
 				}
+				console.log(params)
 				this.$api.addOrDelReadingLike(params).then(res => {
+					console.log(res)
 					if(res.data.status === 'ok') {
 						let title = ''
 						if(this.topicMark[index].likeStatus == 1) {
@@ -287,7 +294,7 @@
 			// 查看话题记录
 			checkTopicRecord() {
 				uni.navigateTo({
-					url: '/pages/circle/topic-record'
+					url: '/pages/circle/topic-record?custom_type='+this.data.custom_type
 				})
 			},
 			// 查看活力榜

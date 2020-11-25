@@ -18,8 +18,8 @@
 				<text style="color: #2AAEC4;">*每次打卡可获得10活力值</text>
 			</view>
 		</uni-popup>
-		<view class="submit">
-			<view @tap="addRemark(topicDetail.title,topicDetail.id,topicDetail.show_comment)">我要发圈</view>
+		<view class="submit" @tap="addRemark(topicDetail.title,topicDetail.id,topicDetail.show_comment)">
+			<view >我要发圈</view>
 		</view>
 	</view>
 	
@@ -98,6 +98,7 @@
 		},
 		onShareAppMessage(res) {
 			console.log(res)
+			this.preview()
 			let params = res.target.dataset
 			let topic_id = params.topic_id
 			let mark_id = params.mark_id

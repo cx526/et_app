@@ -26,7 +26,7 @@
 						<text>编辑</text>
 					</view>
 					<view class="share">
-						<button class="share-btn" open-type="share" data-type="topic-detail" :data-content="item.content"></button>
+						<button class="share-btn" open-type="share" data-type="topic-detail" :data-content="topicDetail.title"></button>
 						<image :src="$aliImage + 'read-share.png'" mode="widthFix"></image>
 						<text>分享</text>
 					</view>
