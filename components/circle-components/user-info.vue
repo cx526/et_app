@@ -97,7 +97,7 @@
 <style scoped>
 	.user-box {
 		box-sizing: border-box;
-		padding: 62rpx 42rpx 16rpx 42rpx;
+		padding: 62rpx 42rpx 30rpx 42rpx;
 	}
 	.user {
 		box-sizing: border-box;
