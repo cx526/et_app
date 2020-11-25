@@ -597,6 +597,13 @@
 				}
 				this.$api.delReadingTopic(params).then(res => {
 					console.log(res)
+					if(res.data.status === 'ok') {
+						// 标记阅读圈主页热门话题是否需要重新加载
+						uni.setStorageSync('isReload', true)
+						uni.switchTab({
+							url: '/pages/circle/reading-circles'
+						})
+					}
 				})
 			}
 		}

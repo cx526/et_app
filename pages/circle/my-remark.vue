@@ -253,6 +253,25 @@
 					}
 				})
 			},
+			// 删除打卡
+			delReadingMark(remark_id) {
+				let params = {
+					id: remark_id
+				}
+				this.$api.delReadingMark(params).then(res => {
+					if(res.data.status === 'ok') {
+						uni.showToast({
+							title: '删除成功',
+							icon: 'none',
+							success: () => {
+								this.topicMark = []
+								this.currentPage = 1
+								this.selReadingMark()
+							}
+						})
+					}
+				})
+			},
 		}
 	}
 </script>

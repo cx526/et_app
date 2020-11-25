@@ -2,8 +2,8 @@
     "name" : "et-app",
     "appid" : "__UNI__B9DB8EF",
     "description" : "",
-    "versionName" : "3.3.2",
-    "versionCode" : 332,
+    "versionName" : "3.3.3",
+    "versionCode" : 333,
     "transformPx" : false,
     /* 5+App特有相关 */
     "app-plus" : {
@@ -65,13 +65,13 @@
             "minified" : false
         },
         "usingComponents" : true,
-		"plugins": {
-			// 喜马拉雅微信小程序插件
-			"XiMaLaYaFM": {
-				"version": "0.2.1",
-				"provider": "wxc6a13dda5815c529"
-			}
-		}
+        "plugins" : {
+            // 喜马拉雅微信小程序插件
+            "XiMaLaYaFM" : {
+                "version" : "0.2.1",
+                "provider" : "wxc6a13dda5815c529"
+            }
+        }
     },
     "mp-alipay" : {
         "usingComponents" : true

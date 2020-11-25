@@ -509,6 +509,8 @@
 					console.log(this.coverImgUrl)
 					// 图片有发生改变才调上传接口
 					if(this.coverImgUrl.indexOf('http://et-pic-server.oss-cn-shenzhen.aliyuncs.com/') !== -1) {
+						// 标记阅读圈主页热门话题是否需要重新加载
+						uni.setStorageSync('isReload', true)
 						uni.switchTab({
 							url: '/pages/circle/reading-circles'
 						})
@@ -858,6 +860,8 @@
 					if(res.data.status === 'ok') {
 						this.targetId = res.data.rows.insertId //新建话题id
 						console.log(this.targetId)
+						// 标记阅读圈主页热门话题是否需要重新加载
+						uni.setStorageSync('isReload', true)
 						uni.switchTab({
 							url: '/pages/circle/reading-circles'
 						})
@@ -902,6 +906,8 @@
 						title: title,
 						icon: 'none',
 						success:() => {
+							// 标记阅读圈主页热门话题是否需要重新加载
+							uni.setStorageSync('isReload', true)
 							uni.switchTab({
 								url: '/pages/circle/reading-circles'
 							})

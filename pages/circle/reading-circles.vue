@@ -6,8 +6,8 @@
 		<typesetting @checkVigourDetail="checkVigourDetail" v-if="rankingList && rankingList.length > 0" :rankingList="rankingList" />
 		<!-- 通告栏 -->
 		<message v-if="rewardList && rewardList.length > 0" :rewardList="rewardList" />
-		<!-- 阅读统计 v-if="data.custom_type === '1'"-->
-		<stat @checkReadingDetail="checkReadingDetail"  />
+		<!-- 阅读统计 -->
+		<stat @checkReadingDetail="checkReadingDetail" ref="stat" v-if="data.custom_type !== '2'" />
 		<!-- 话题 -->
 		<topic @checkTopicDetail="checkTopicDetail" :schoolId = "data.schoolInfo.id" :gradeId = "grade_id":classId="class_id" @swiperChange="swiperChange" ref="topic" />
 		<!-- 热门打卡 -->
@@ -58,13 +58,20 @@
 				this.selReadingMark(this.school_id)
 			}
 		},
-		onLoad() {
+		onLoad(options) {
+			
 			// 查看奖励
 			this.selReadingReward()
 		},
 		onShow() {
-			if(this.$refs.topic) {
+			// 是否更新热门话题数据
+			let isReload = uni.getStorageSync('isReload')
+			if(this.$refs.topic && isReload) {
 				this.$refs.topic.update()
+			}
+			// 更新统计数据
+			if(this.$refs.stat ) {
+				this.$refs.stat.updateSort()
 			}
 			// 检测登录状态
 			this.checkLogin()
@@ -81,6 +88,9 @@
 					title: content,
 					path: '/pages/circle/comment?topic_id='+topic_id+'&mark_id='+mark_id+'&custom_id='+custom_id
 				}
+		},
+		onHide() {
+			uni.setStorageSync('isReload', false)
 		},
 		methods: {
 			// 检测登录状态

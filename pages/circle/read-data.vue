@@ -140,6 +140,42 @@
 				this.$api.sortReadingByApp(params).then(res => {
 					this.userList = res.data.mySort
 					this.dataList = res.data.rows
+					let data = []
+					switch(index) {
+						case '0':
+						if(JSON.stringify(this.userList) === '{}') {
+							data[0] = this.dataList.length + 1
+							data[1] = this.dataList.length + 1
+						}else {
+							data[0] = this.userList.sort
+							data[1] = this.dataList.length
+						}
+						uni.setStorageSync('school_sort', data)
+						console.log(data)
+						break
+						case '1':
+						if(JSON.stringify(this.userList) === '{}') {
+							data[0] = this.dataList.length + 1
+							data[1] = this.dataList.length + 1
+						}else {
+							data[0] = this.userList.sort
+							data[1] = this.dataList.length
+						}
+						uni.setStorageSync('grade_sort', data)
+						break
+						case '2':
+						if(JSON.stringify(this.userList) === '{}') {
+							data[0] = this.dataList.length + 1
+							data[1] = this.dataList.length + 1
+						}else {
+							data[0] = this.userList.sort
+							data[1] = this.dataList.length
+						}
+						uni.setStorageSync('class_sort', data)
+						break
+						default:
+						break
+					}
 				})
 			},
 			
