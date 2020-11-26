@@ -109,7 +109,7 @@
 			let content = params.content
 			if(type === 'comment') {
 				title = content,
-				path = '/pages/circle/comment?topic_id='+topic_id+'&mark_id='+mark_id+'&custom_id='+custom_id
+				path = '/pagesCircle/circle/comment?topic_id='+topic_id+'&mark_id='+mark_id+'&custom_id='+custom_id
 			}else {
 				title = content
 			}
@@ -444,7 +444,7 @@
 					custom_id: this.userInfo.id
 				}
 				uni.navigateTo({
-					url: '/pages/circle/comment?topic_id='+params.topic_id+'&mark_id='+params.mark_id+'&custom_id='+params.custom_id
+					url: '/pagesCircle/circle/comment?topic_id='+params.topic_id+'&mark_id='+params.mark_id+'&custom_id='+params.custom_id
 				})
 			},
 			// 点赞/取消赞
@@ -499,7 +499,7 @@
 						// 举报
 						if(res.tapIndex === 0) {
 							uni.navigateTo({
-								url: '/pages/circle/report?mark_id='+remark_id+'&type=mark&topic_id='+topic_id
+								url: '/pagesCircle/circle/report?mark_id='+remark_id+'&type=mark&topic_id='+topic_id
 							})
 						}else if(res.tapIndex === 1) {
 							uni.showModal({
@@ -564,7 +564,7 @@
 			addRemark(title, topic_id,show_comment) {
 				this.update = true
 				uni.navigateTo({
-					url: '/pages/circle/add-remark?from=topicDetail&title='+title+'&topic_id='+topic_id+'&show_comment='+ show_comment
+					url: '/pagesCircle/circle/add-remark?from=topicDetail&title='+title+'&topic_id='+topic_id+'&show_comment='+ show_comment
 				})
 			},
 			// 编辑话题(未审核/违规话题才可以编辑)
@@ -575,7 +575,7 @@
 						console.log(res)
 						if(res.tapIndex === 0) {
 							uni.navigateTo({
-								url: '/pages/circle/add-topic?topic_id='+this.id+'&from=selUnNormal'
+								url: '/pagesCircle/circle/add-topic?topic_id='+this.id+'&from=selUnNormal'
 							})
 						}else if(res.tapIndex === 1) {
 							uni.showModal({
@@ -602,7 +602,7 @@
 						// 标记阅读圈主页热门话题是否需要重新加载
 						uni.setStorageSync('isReload', true)
 						uni.switchTab({
-							url: '/pages/circle/reading-circles'
+							url: '/pagesCircle/circle/reading-circles'
 						})
 					}
 				})

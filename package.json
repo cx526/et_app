@@ -10,7 +10,7 @@
     "type": "git",
     "url": "git@gitee.com:decade/et_app.git"
   },
-  "author": "",
+  "author": "Decade Chan",
   "license": "ISC",
   "dependencies": {
     "md5": "^2.2.1"

@@ -512,7 +512,7 @@
 						// 标记阅读圈主页热门话题是否需要重新加载
 						uni.setStorageSync('isReload', true)
 						uni.switchTab({
-							url: '/pages/circle/reading-circles'
+							url: '/pagesCircle/circle/reading-circles'
 						})
 					}else {
 						this.upLoadFile(this.coverImgUrl)
@@ -863,7 +863,7 @@
 						// 标记阅读圈主页热门话题是否需要重新加载
 						uni.setStorageSync('isReload', true)
 						uni.switchTab({
-							url: '/pages/circle/reading-circles'
+							url: '/pagesCircle/circle/reading-circles'
 						})
 						if(this.coverImgUrl != '') {
 							// 上传图片
@@ -909,7 +909,7 @@
 							// 标记阅读圈主页热门话题是否需要重新加载
 							uni.setStorageSync('isReload', true)
 							uni.switchTab({
-								url: '/pages/circle/reading-circles'
+								url: '/pagesCircle/circle/reading-circles'
 							})
 						}
 					})

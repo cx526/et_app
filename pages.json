@@ -11,7 +11,7 @@
 			}
 		},
 		{
-			"path": "pages/circle/reading-circles",
+			"path": "pages/reading-circles",
 			"style": {
 				"navigationBarTitleText": "悦读圈"
 			}
@@ -531,65 +531,73 @@
 			}
 		}
 
-		// 悦读圈
-		, {
-			"path": "pages/circle/vigour",
-			"style": {
-				"navigationBarTitleText": "活力榜"
-			}
-		}, {
-			"path": "pages/circle/topic-detail",
-			"style": {
-				"navigationBarTitleText": "话题详情"
-			}
-		}, {
-			"path": "pages/circle/comment",
-			"style": {
-				"navigationBarTitleText": "评论"
-			}
-		}, {
-			"path": "pages/circle/topic-record",
-			"style": {
-				"navigationBarTitleText": "话题记录"
-			}
-		}, {
-			"path": "pages/circle/award-list",
-			"style": {
-				"navigationBarTitleText": "获奖名单"
-			}
-		}, {
-			"path": "pages/circle/my-remark",
-			"style": {
-				"navigationBarTitleText": "打卡记录"
-			}
-		}, 
-		{
-			"path": "pages/circle/add-topic",
-			"style": {
-				"navigationBarTitleText": "新建话题"
-			}
-		}, 
-		{
-			"path": "pages/circle/report",
-			"style": {
-				"navigationBarTitleText": "举报"
-			}
-		}, {
-			"path": "pages/circle/add-remark",
-			"style": {
-				"navigationBarTitleText": "新建打卡"
-			}
-		}
-	    ,{
-            "path" : "pages/circle/read-data",
-            "style" :                                                                                    
-            {
-                "navigationBarTitleText": "",
-                "enablePullDownRefresh": false
-            }
-            
-        }
     ],
+	"subPackages": [{
+		"root": "pagesCircle",
+		"pages": [
+			// 悦读圈
+			{
+				"path": "circle/vigour",
+				"style": {
+					"navigationBarTitleText": "活力榜"
+				}
+			}, {
+				"path": "circle/topic-detail",
+				"style": {
+					"navigationBarTitleText": "话题详情"
+				}
+			}, {
+				"path": "circle/comment",
+				"style": {
+					"navigationBarTitleText": "评论"
+				}
+			}, {
+				"path": "circle/topic-record",
+				"style": {
+					"navigationBarTitleText": "话题记录"
+				}
+			}, {
+				"path": "circle/award-list",
+				"style": {
+					"navigationBarTitleText": "获奖名单"
+				}
+			}, {
+				"path": "circle/my-remark",
+				"style": {
+					"navigationBarTitleText": "打卡记录"
+				}
+			}, {
+				"path": "circle/add-topic",
+				"style": {
+					"navigationBarTitleText": "新建话题"
+				}
+			}, {
+				"path": "circle/report",
+				"style": {
+					"navigationBarTitleText": "举报"
+				}
+			}, {
+				"path": "circle/add-remark",
+				"style": {
+					"navigationBarTitleText": "新建打卡"
+				}
+			}, {
+			    "path" : "circle/read-data",
+			    "style" :                                                                                    
+			    {
+			        "navigationBarTitleText": "",
+			        "enablePullDownRefresh": false
+			    }
+			    
+			}
+		]
+	}],
+	"preloadRule": {
+	    "pages/index/index": {
+	        "network": "all",
+	        "packages": ["pagesCircle"]
+	    }
+	},
 	"globalStyle": {
 		"navigationBarTextStyle": "black",
 		"navigationBarBackgroundColor": "#FFFFFF",
@@ -607,7 +615,7 @@
 				"text": "首页"
 			},
 			{
-				"pagePath": "pages/circle/reading-circles",
+				"pagePath": "pages/reading-circles",
 				"iconPath": "static/guide.png",
 				"selectedIconPath": "static/guide-active.png",
 				"text": "悦读圈"

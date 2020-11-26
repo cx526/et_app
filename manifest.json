@@ -16,6 +16,11 @@
             "autoclose" : true,
             "delay" : 0
         },
+        "optimization": {
+			"subPackages": true
+        },
+        "runmode" : "liberate", 
+        // 开启分包优化后，必须配置资源释放模式
         /* 模块配置 */
         "modules" : {},
         /* 应用发布信息 */
@@ -62,16 +67,17 @@
         "appid" : "wx4d51a694ef6697ff",
         "setting" : {
             "urlCheck" : false,
-            "minified" : false
+            "minified" : true,
+            "es6" : true
         },
-        "usingComponents" : true
-        // "plugins" : {
-        //     // 喜马拉雅微信小程序插件
-        //     "XiMaLaYaFM" : {
-        //         "version" : "0.2.1",
-        //         "provider" : "wxc6a13dda5815c529"
-        //     }
-        // }
+        "usingComponents" : true,
+        "plugins" : {
+            // 喜马拉雅微信小程序插件
+            "XiMaLaYaFM" : {
+                "version" : "0.2.1",
+                "provider" : "wxc6a13dda5815c529"
+            }
+        }
     },
     "mp-alipay" : {
         "usingComponents" : true
@@ -83,3 +89,5 @@
         "usingComponents" : true
     }
 }
+// 喜马拉雅微信小程序插件
+

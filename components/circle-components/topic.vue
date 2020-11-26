@@ -223,7 +223,7 @@
 				let userParams = {
 					filterItems: {
 						custom_id: custom_id,
-						"selUnNormal": "1"
+						"selUnNormal": "1"
 					}
 				}
 				console.log(userParams)
@@ -407,7 +407,7 @@
 			// 跳转新建话题页面
 			addTopic() {
 				uni.navigateTo({
-					url: '/pages/circle/add-topic'
+					url: '/pagesCircle/circle/add-topic'
 				})
 			},
 			// 跳转详情

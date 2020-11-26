@@ -86,7 +86,7 @@
 				let content = params.content
 				return {
 					title: content,
-					path: '/pages/circle/comment?topic_id='+topic_id+'&mark_id='+mark_id+'&custom_id='+custom_id
+					path: '/pagesCircle/circle/comment?topic_id='+topic_id+'&mark_id='+mark_id+'&custom_id='+custom_id
 				}
 		},
 		onHide() {
@@ -294,13 +294,13 @@
 			// 查看话题记录
 			checkTopicRecord() {
 				uni.navigateTo({
-					url: '/pages/circle/topic-record?custom_type='+this.data.custom_type
+					url: '/pagesCircle/circle/topic-record?custom_type='+this.data.custom_type
 				})
 			},
 			// 查看活力榜
 			checkVigourDetail() {
 				uni.navigateTo({
-					url: '/pages/circle/vigour?school_id='+this.school_id+'&custom_type='+this.data.custom_type
+					url: '/pagesCircle/circle/vigour?school_id='+this.school_id+'&custom_type='+this.data.custom_type
 				})
 			},
 			// 查看阅读数据
@@ -313,7 +313,7 @@
 					custom_type: this.data.custom_type
 				}
 				uni.navigateTo({
-					url: '/pages/circle/read-data?params='+JSON.stringify(params)
+					url: '/pagesCircle/circle/read-data?params='+JSON.stringify(params)
 				})
 			},
 			
@@ -321,7 +321,7 @@
 			checkTopicDetail(id) {
 				
 				uni.navigateTo({
-					url: '/pages/circle/topic-detail?custom_type='+this.data.custom_type+'&id='+id
+					url: '/pagesCircle/circle/topic-detail?custom_type='+this.data.custom_type+'&id='+id
 				})
 			},
 			// 查看打卡评论
@@ -333,14 +333,14 @@
 					custom_id: userInfo.id
 				}
 				uni.navigateTo({
-					// url: '/pages/circle/comment?params='+JSON.stringify(params)
-					url: '/pages/circle/comment?topic_id='+params.topic_id+'&mark_id='+params.mark_id+'&custom_id='+params.custom_id
+					// url: '/pagesCircle/circle/comment?params='+JSON.stringify(params)
+					url: '/pagesCircle/circle/comment?topic_id='+params.topic_id+'&mark_id='+params.mark_id+'&custom_id='+params.custom_id
 				})
 			},
 			// 查看我发布的话题
 			checkMyRemark() {
 				uni.navigateTo({
-					url: '/pages/circle/my-remark?custom_type='+this.data.custom_type
+					url: '/pagesCircle/circle/my-remark?custom_type='+this.data.custom_type
 				})
 			},
 			// 点击消息图标
@@ -357,18 +357,18 @@
 						if(this.data.custom_type === '1') {
 							// 跳转打卡页面
 							uni.navigateTo({
-								url: '/pages/circle/add-remark?from=index&school_id='+this.school_id
+								url: '/pagesCircle/circle/add-remark?from=index&school_id='+this.school_id
 							})
 						}else if(this.data.custom_type !== '1') {
 							if(res.tapIndex === 0) {
 								// 跳转发布话题页面
 								uni.navigateTo({
-									url: '/pages/circle/add-topic'
+									url: '/pagesCircle/circle/add-topic'
 								})
 							}else if(res.tapIndex === 1) {
 								// 跳转打卡页面
 								uni.navigateTo({
-									url: '/pages/circle/add-remark?from=index&school_id='+this.school_id
+									url: '/pagesCircle/circle/add-remark?from=index&school_id='+this.school_id
 								})
 							}
 						}
@@ -389,7 +389,7 @@
 						// 举报
 						if(res.tapIndex === 0) {
 							uni.navigateTo({
-								url: '/pages/circle/report?mark_id='+mark_id+'&type=mark&topic_id='+ topic_id
+								url: '/pagesCircle/circle/report?mark_id='+mark_id+'&type=mark&topic_id='+ topic_id
 							})
 						}else {
 							return

@@ -250,13 +250,13 @@
 			// 跳转详情页
 			topicDetail(id) {
 				uni.navigateTo({
-					url: '/pages/circle/topic-detail?id='+id+'&custom_type='+this.custom_type
+					url: '/pagesCircle/circle/topic-detail?id='+id+'&custom_type='+this.custom_type
 				})
 			},
 			// 查看获奖名单
 			checkAwardList(topic_id) {
 				uni.navigateTo({
-					url: '/pages/circle/award-list?topic_id='+topic_id
+					url: '/pagesCircle/circle/award-list?topic_id='+topic_id
 				})
 			},
 		}

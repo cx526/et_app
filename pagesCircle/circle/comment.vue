@@ -123,7 +123,7 @@
 				let custom_id = this.userInfo.id
 				return {
 					title: '五车书打卡分享',
-					path: '/pages/circle/comment?topic_id='+topic_id+'&mark_id='+mark_id+'&custom_id='+custom_id
+					path: '/pagesCircle/circle/comment?topic_id='+topic_id+'&mark_id='+mark_id+'&custom_id='+custom_id
 				}
 		},
 		methods: {
@@ -199,7 +199,7 @@
 					filterItems: {
 						mark_id: this.mark_id,
 						custom_id: String(custom_id),
-						selUnNormal: "1"
+						selUnNormal: "1"
 					}
 				}
 				this.$api.selReadingComment(userParams).then(res => {
@@ -388,7 +388,7 @@
 						// 举报
 						if(res.tapIndex === 0) {
 							uni.navigateTo({
-								url: '/pages/circle/report?comment_id='+id+'&type=comment&mark_id='+mark_id+'&topic_id='+topic_id
+								url: '/pagesCircle/circle/report?comment_id='+id+'&type=comment&mark_id='+mark_id+'&topic_id='+topic_id
 							})
 						}else if(res.tapIndex === 1) {
 							uni.showModal({

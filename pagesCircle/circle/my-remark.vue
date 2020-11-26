@@ -114,7 +114,7 @@
 			chooseItem() {
 				let school_id = this.data.schoolInfo.id
 				uni.navigateTo({
-					url: '/pages/circle/add-remark?from=index&school_id='+school_id
+					url: '/pagesCircle/circle/add-remark?from=index&school_id='+school_id
 				})
 			},
 			// 格式化时间
@@ -194,7 +194,7 @@
 					custom_id: this.userInfo.id
 				}
 				uni.navigateTo({
-					url: '/pages/circle/comment?topic_id='+params.topic_id+'&mark_id='+params.mark_id+'&custom_id='+params.custom_id
+					url: '/pagesCircle/circle/comment?topic_id='+params.topic_id+'&mark_id='+params.mark_id+'&custom_id='+params.custom_id
 				})
 			},
 			// 举报/删除打卡
@@ -216,7 +216,7 @@
 						// 举报
 						if(res.tapIndex === 0) {
 							uni.navigateTo({
-								url: '/pages/circle/report?mark_id='+remark_id+'&type=mark&topic_id='+topic_id
+								url: '/pagesCircle/circle/report?mark_id='+remark_id+'&type=mark&topic_id='+topic_id
 							})
 						}else if(res.tapIndex === 1) {
 							uni.showModal({
