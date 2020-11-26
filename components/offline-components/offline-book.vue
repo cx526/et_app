@@ -106,7 +106,7 @@
 						success: res => {
 							if(res.confirm) {
 								uni.redirectTo({
-									url: '/pages/library/tied-card'
+									url: '/pagesLibrary/library/tied-card'
 								})
 							}else {
 								uni.showToast({
@@ -195,7 +195,7 @@
 					return
 				}
 				uni.navigateTo({
-					url: '/pages/library/offline-bookdetail?bookID=' + id
+					url: '/pagesLibrary/library/offline-bookdetail?bookID=' + id
 				});
 			},
 			// 跳转到书篮tabbar页面

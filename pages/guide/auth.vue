@@ -108,7 +108,7 @@ export default {
 				if(!result.card_no || result.card_no.replace(/\s*/g, '') == '' ){
 					if(result.mobile || result.mobile.replace(/\s*/g, '') != '') {
 						uni.navigateTo({
-							url:'/pages/library/tied-card?from=home'
+							url:'/pagesLibrary/library/tied-card?from=home'
 						})
 					}
 					

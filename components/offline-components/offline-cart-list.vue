@@ -343,7 +343,7 @@ export default {
 		// 选取书籍
 		chooseBooks() {
 			uni.switchTab({
-				url: '../library/library'
+				url: '/pages/library'
 			});
 		},
 		// 计算借书币
@@ -588,8 +588,8 @@ export default {
 					let offlinePlaceBook = this.chooseBookList
 					uni.setStorageSync("offlinePlaceBook", offlinePlaceBook)
 					uni.navigateTo({
-						// url: '/pages/library/offline-order?chooseBookList='+JSON.stringify(this.chooseBookList)
-						url: '/pages/library/offline-order'
+						// url: '/pagesLibrary/library/offline-order?chooseBookList='+JSON.stringify(this.chooseBookList)
+						url: '/pagesLibrary/library/offline-order'
 					})
 				}
 
@@ -668,7 +668,7 @@ export default {
 						});
 						// 跳转到取书页
 						uni.redirectTo({
-							url: '/pages/library/take-books?status=0&from=placeOrder'
+							url: '/pagesLibrary/library/take-books?status=0&from=placeOrder'
 						});
 					} else {
 						uni.showToast({
@@ -697,7 +697,7 @@ export default {
 		// 跳转借书币页面
 		goPay() {
 			uni.redirectTo({
-				url: '../../pages/library/virtual'
+				url: '../../pagesLibrary/library/virtual'
 			});
 		}
 	}

@@ -171,7 +171,7 @@ export default {
 				{
 					name: '童书馆',
 					img: 'https://et-pic-server.oss-cn-shenzhen.aliyuncs.com/app_img/index-button-01.png',
-					toUrl: '/pages/library/library'	
+					toUrl: '/pages/library'	
 				},
 				{
 					name: '选绘本',
@@ -438,7 +438,7 @@ export default {
 				})
 				return
 			}
-			else if(toUrl === '/pages/library/library') {
+			else if(toUrl === '/pages/library') {
 				uni.switchTab({
 					url: toUrl
 				})
@@ -554,7 +554,7 @@ export default {
 			// tabBars:tabBar名称 booksList:数据 pagesType:是否对库存为零的书籍进行隐藏
 			uni.setStorageSync("offlineRecommenBook", bookList)
 			uni.navigateTo({
-				url: '/pages/library/offline-more?name='+name
+				url: '/pagesLibrary/library/offline-more?name='+name
 				// url:
 				// 	'./kindlist?pagesType=hotList&noPull=1&selectID=0&tabBars=' +
 				// 	encodeURIComponent(JSON.stringify(tabBars)) +

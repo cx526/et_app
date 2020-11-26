@@ -105,7 +105,7 @@ export default {
 				uni.navigateTo({ url: 'bookdetail?bookID=' + encodeURIComponent(JSON.stringify(this.$props.bookInfo.id)) });
 			}else {
 				uni.navigateTo({
-					url: '/pages/library/offline-bookdetail?bookID=' + this.bookInfo.id
+					url: '/pagesLibrary/library/offline-bookdetail?bookID=' + this.bookInfo.id
 				});
 			}
 			

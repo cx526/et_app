@@ -282,7 +282,7 @@ export default {
 					success: (res) => {
 						if (res.confirm) {
 							uni.removeStorageSync('userInfo')
-							uni.reLaunch({url: '../guide/guide'})
+							uni.reLaunch({url: '/pages/guide/guide'})
 						}else {
 							uni.reLaunch({
 								url: '/pages/index/index'
@@ -554,13 +554,13 @@ export default {
 		// 跳转到书篮tabbar页面
 		goCart() {
 			uni.reLaunch({
-				url: '../cart/cart'
+				url: '/pages/cart/cart'
 			});
 		},
 		// 跳转到搜索页
 		goSearch() {
 			uni.navigateTo({
-				url: './offline-search'
+				url: '/pagesLibrary/library/offline-search'
 			});
 		},
 		// 提示书籍已借完
@@ -574,19 +574,19 @@ export default {
 		// 跳转至商品详情页
 		goDetail(id) {
 			uni.navigateTo({
-				url: './offline-bookdetail?bookID=' + id
+				url: '/pagesLibrary/library/offline-bookdetail?bookID=' + id
 			});
 		},
 		// 点击权限弹窗取消按钮(返回首页)
 		goIndex() {
 			uni.switchTab({
-				url: '../index/index'
+				url: '/pages/index/index'
 			});
 		},
 		// 跳转到绑卡页面
 		goCard() {
 			uni.navigateTo({
-				url: '/pages/library/tied-card'
+				url: '/pagesLibrary/library/tied-card'
 			})
 		},
 		

@@ -120,7 +120,7 @@
 
 <script>
 const bookListData = require('@/common/carDataOption.js')
-import etTag from '../../components/etTag.vue'
+import etTag from '@/components/etTag.vue'
 export default {
 	components: {
 		etTag
@@ -130,7 +130,7 @@ export default {
 		if(res.from === 'menu') {
 			return {
 				title: this.bookInfo.title,
-				path: '/pages/library/offline-bookdetail?bookID='+this.bookID
+				path: '/pagesLibrary/library/offline-bookdetail?bookID='+this.bookID
 			}
 		}
 	},
@@ -209,7 +209,7 @@ export default {
 					success: res => {
 						if(res.confirm) {
 							uni.navigateTo({
-								url: '/pages/library/tied-card'
+								url: '/pagesLibrary/library/tied-card'
 							})
 						}else {
 							uni.switchTab({
@@ -247,7 +247,7 @@ export default {
 		// 跳转到绑卡页面
 		bindCard() {
 			uni.redirectTo({
-				url: '/pages/library/tied-card'
+				url: '/pagesLibrary/library/tied-card'
 			})
 		},
 		// 收藏功能
@@ -311,7 +311,7 @@ export default {
 					success: res => {
 						if(res.confirm) {
 							uni.redirectTo({
-								url: '/pages/library/tied-card'
+								url: '/pagesLibrary/library/tied-card'
 							})
 						}else {
 							uni.showToast({

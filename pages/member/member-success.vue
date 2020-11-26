@@ -29,7 +29,7 @@
 			// 立即借阅
 			borrow() {
 				uni.switchTab({
-					url: '/pages/library/library'
+					url: '/pages/library'
 				})
 			}
 		}

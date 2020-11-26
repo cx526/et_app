@@ -514,7 +514,7 @@ export default {
 						duration: 2000,
 						success: () => {
 							uni.reLaunch({
-								url: '/pages/library/library'
+								url: '/pages/library'
 							});
 						}
 					});
@@ -558,7 +558,7 @@ export default {
 								title: '绑定教师成功',
 								success: () => {
 									uni.reLaunch({
-										url: '/pages/library/library'
+										url: '/pages/library'
 									});
 								}
 							});

@@ -16,7 +16,7 @@
 		methods: {
 			go() {
 				uni.switchTab({
-					url: '/pages/library/library'
+					url: '/pages/library'
 				})
 			}
 		}

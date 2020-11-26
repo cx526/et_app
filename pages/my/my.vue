@@ -284,7 +284,7 @@ export default {
 					{
 						'imgSrc' : this.$aliImage + 'my2_1.png',
 						'title'	: '钱包',
-						'toUrl'	: '/pages/library/virtual?from=mine',
+						'toUrl'	: '/pagesLibrary/library/virtual?from=mine',
 						// 'toUrl'	: '/pages/my/myDeposit',
 						'buttomContent' : ''
 					},
@@ -309,7 +309,7 @@ export default {
 					{
 						'imgSrc' : this.$aliImage + 'my2_5.png',
 						'title'	: '完善信息',
-						'toUrl'	: '/pages/library/tied-card'
+						'toUrl'	: '/pagesLibrary/library/tied-card'
 						// 'toUrl'	: '/pages/my/myInfoList'
 					},
 					{
@@ -348,25 +348,25 @@ export default {
 				{
 					imgUrl: 'offline-icon-01.png',
 					text: '待取书',
-					url: '/pages/library/take-books?status=0',
+					url: '/pagesLibrary/library/take-books?status=0',
 					number: 0
 				},
 				{
 					imgUrl: 'offline-icon-02.png',
 					text: '待还书',
-					url: '/pages/library/return-books?status=0',
+					url: '/pagesLibrary/library/return-books?status=0',
 					number: 0
 				},
 				{
 					imgUrl: 'offline-icon-03.png',
 					text: '已归还',
-					url: '/pages/library/return-books?status=1',
+					url: '/pagesLibrary/library/return-books?status=1',
 					number: 0
 				},
 				{
 					imgUrl: 'offline-icon-04.png',
 					text: '已失效',
-					url: '/pages/library/take-books?status=1',
+					url: '/pagesLibrary/library/take-books?status=1',
 					number: 0
 				},
 			],

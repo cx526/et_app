@@ -387,64 +387,9 @@
 		},
 		// 线下部分
 		{
-			"path": "pages/library/library",
+			"path": "pages/library",
 			"style": {
 				"navigationBarTitleText": "智慧童书馆"
-			}
-		},
-		{
-			"path": "pages/library/take-books",
-			"style": {
-				"navigationBarTitleText": "快速取书",
-				"navigationStyle": "custom",
-				"app-plus": {
-					"titleNView": false
-				}
-			}
-		},
-		{
-			"path": "pages/library/tied-card",
-			"style": {
-				"navigationBarTitleText": "绑卡"
-			}
-		},
-		{
-			"path": "pages/library/pay",
-			"style": {
-				"navigationBarTitleText": "五车贝充值"
-			}
-		},
-
-		{
-			"path": "pages/library/virtual",
-			"style": {
-				"navigationBarTitleText": "我的钱包",
-				"navigationStyle": "custom",
-				"app-plus": {
-					"titleNView": false
-				}
-			}
-		},
-		{
-			"path": "pages/library/return-books",
-			"style": {
-				"navigationBarTitleText": "快速还书"
-			}
-		}, {
-			"path": "pages/library/offline-bookdetail",
-			"style": {
-				"navigationBarTitleText": "绘本详情"
-			}
-		}, {
-			"path": "pages/library/offline-order",
-			"style": {
-				"navigationBarTitleText": "订单详情"
-			}
-		},
-		{
-			"path": "pages/library/offline-search",
-			"style": {
-				"navigationBarTitleText": "书籍搜索"
 			}
 		},
 		{
@@ -479,12 +424,8 @@
 				"navigationBarTitleText": "五车书绘本借阅"
 			}
 		},
-		{
-			"path": "pages/library/offline-more",
-			"style": {}
-		}
 		// 会员
-		, {
+		{
 			"path": "pages/member/member",
 			"style": {
 				"navigationBarTitleText": "会员"
@@ -524,70 +465,136 @@
 		}
 
     ],
-	"subPackages": [{
-		"root": "pagesCircle",
-		"pages": [
-			// 悦读圈
-			{
-				"path": "circle/vigour",
-				"style": {
-					"navigationBarTitleText": "活力榜"
+	"subPackages": [
+		{
+			"root": "pagesLibrary",
+			"pages": [
+				{
+					"path": "library/take-books",
+					"style": {
+						"navigationBarTitleText": "快速取书",
+						"navigationStyle": "custom",
+						"app-plus": {
+							"titleNView": false
+						}
+					}
+				},
+				{
+					"path": "library/tied-card",
+					"style": {
+						"navigationBarTitleText": "绑卡"
+					}
+				},
+				{
+					"path": "library/pay",
+					"style": {
+						"navigationBarTitleText": "五车贝充值"
+					}
+				},
+				
+				{
+					"path": "library/virtual",
+					"style": {
+						"navigationBarTitleText": "我的钱包",
+						"navigationStyle": "custom",
+						"app-plus": {
+							"titleNView": false
+						}
+					}
+				},
+				{
+					"path": "library/return-books",
+					"style": {
+						"navigationBarTitleText": "快速还书"
+					}
+				}, {
+					"path": "library/offline-bookdetail",
+					"style": {
+						"navigationBarTitleText": "绘本详情"
+					}
+				}, {
+					"path": "library/offline-order",
+					"style": {
+						"navigationBarTitleText": "订单详情"
+					}
+				},
+				{
+					"path": "library/offline-search",
+					"style": {
+						"navigationBarTitleText": "书籍搜索"
+					}
+				},
+				{
+					"path": "library/offline-more",
+					"style": {}
 				}
-			}, {
-				"path": "circle/topic-detail",
-				"style": {
-					"navigationBarTitleText": "话题详情"
+			]
+		},
+		{
+			"root": "pagesCircle",
+			"pages": [
+				// 悦读圈
+				{
+					"path": "circle/vigour",
+					"style": {
+						"navigationBarTitleText": "活力榜"
+					}
+				}, {
+					"path": "circle/topic-detail",
+					"style": {
+						"navigationBarTitleText": "话题详情"
+					}
+				}, {
+					"path": "circle/comment",
+					"style": {
+						"navigationBarTitleText": "评论"
+					}
+				}, {
+					"path": "circle/topic-record",
+					"style": {
+						"navigationBarTitleText": "话题记录"
+					}
+				}, {
+					"path": "circle/award-list",
+					"style": {
+						"navigationBarTitleText": "获奖名单"
+					}
+				}, {
+					"path": "circle/my-remark",
+					"style": {
+						"navigationBarTitleText": "打卡记录"
+					}
+				}, {
+					"path": "circle/add-topic",
+					"style": {
+						"navigationBarTitleText": "新建话题"
+					}
+				}, {
+					"path": "circle/report",
+					"style": {
+						"navigationBarTitleText": "举报"
+					}
+				}, {
+					"path": "circle/add-remark",
+					"style": {
+						"navigationBarTitleText": "新建打卡"
+					}
+				}, {
+					"path" : "circle/read-data",
+					"style" :                                                                                    
+					{
+						"navigationBarTitleText": "",
+						"enablePullDownRefresh": false
+					}
+					
 				}
-			}, {
-				"path": "circle/comment",
-				"style": {
-					"navigationBarTitleText": "评论"
-				}
-			}, {
-				"path": "circle/topic-record",
-				"style": {
-					"navigationBarTitleText": "话题记录"
-				}
-			}, {
-				"path": "circle/award-list",
-				"style": {
-					"navigationBarTitleText": "获奖名单"
-				}
-			}, {
-				"path": "circle/my-remark",
-				"style": {
-					"navigationBarTitleText": "打卡记录"
-				}
-			}, {
-				"path": "circle/add-topic",
-				"style": {
-					"navigationBarTitleText": "新建话题"
-				}
-			}, {
-				"path": "circle/report",
-				"style": {
-					"navigationBarTitleText": "举报"
-				}
-			}, {
-				"path": "circle/add-remark",
-				"style": {
-					"navigationBarTitleText": "新建打卡"
-				}
-			}, {
-			    "path" : "circle/read-data",
-			    "style" :                                                                                    
-			    {
-			        "navigationBarTitleText": "",
-			        "enablePullDownRefresh": false
-			    }
-			    
-			}
-		]
-	}],
+			]
+		}
+	],
 	"preloadRule": {
 	    "pages/index/index": {
 	        "network": "all",
-	        "packages": ["pagesCircle"]
+	        "packages": ["pagesCircle", "pagesLibrary"]
 	    }
 	},
 	"globalStyle": {
@@ -613,7 +620,7 @@
 				"text": "悦读圈"
 			},
 			{
-				"pagePath": "pages/library/library",
+				"pagePath": "pages/library",
 				"iconPath": "static/library.png",
 				"selectedIconPath": "static/library-active.png",
 				"text": "童书馆"

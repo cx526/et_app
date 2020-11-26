@@ -541,7 +541,7 @@
 						})
 						// 跳转到取书页
 						uni.redirectTo({
-							url: '/pages/library/take-books?status=0&from=placeOrder'
+							url: '/pagesLibrary/library/take-books?status=0&from=placeOrder'
 						})
 					}else {
 						uni.hideLoading()
@@ -585,7 +585,7 @@
 			// 跳转充值页面
 			goPay() {
 				uni.redirectTo({
-					url: '/pages/library/virtual'
+					url: '/pagesLibrary/library/virtual'
 				})
 			}
 			

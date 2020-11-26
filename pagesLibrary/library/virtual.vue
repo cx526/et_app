@@ -306,7 +306,7 @@
 			// 跳转充值页面
 			goPay() {
 				uni.navigateTo({
-					url: './pay'
+					url: '/pagesLibrary/library/pay'
 				})
 			},
 			// 点击退还押金

@@ -119,7 +119,7 @@
 				this.$api.offlineGetBooksList(param).then(res => {
 					this.productList = res.data.rows
 					uni.reLaunch({
-						url: './library?isSearch=true&productList='+JSON.stringify(this.productList)
+						url: '/pages/library?isSearch=true&productList='+JSON.stringify(this.productList)
 					})
 				})
 				// { filterItems: { search: AAA }}
@@ -153,7 +153,7 @@
 				this.$api.offlineGetBooksList(param).then(res => {
 					this.productList = res.data.rows
 					uni.reLaunch({
-						url: './library?isSearch=true&productList='+JSON.stringify(this.productList)
+						url: '/pages/library?isSearch=true&productList='+JSON.stringify(this.productList)
 					})
 				})		
 			},

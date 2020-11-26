@@ -353,7 +353,7 @@
 						success: (res) => {
 							if (res.confirm) {
 								uni.removeStorageSync('userInfo')
-								uni.reLaunch({url: '../guide/guide'})
+								uni.reLaunch({url: '/pages/guide/guide'})
 							}else {
 								uni.reLaunch({
 									url: '/pages/index/index'

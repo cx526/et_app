@@ -106,7 +106,7 @@ export default {
 				// 	})
 				// 	return
 				// }
-				if(toUrl === '/pages/library/tied-card') {
+				if(toUrl === '/pagesLibrary/library/tied-card') {
 					// 如果是教师身份默认不给进修改信息页面
 					if(this.custom_type == '0' || this.custom_type == '2') {
 						uni.showToast({

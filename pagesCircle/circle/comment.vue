@@ -156,7 +156,7 @@
 						success: res => {
 							if(res.confirm) {
 								uni.navigateTo({
-									url: '/pages/library/tied-card'
+									url: '/pagesLibrary/library/tied-card'
 								})
 							}else {
 								uni.switchTab({

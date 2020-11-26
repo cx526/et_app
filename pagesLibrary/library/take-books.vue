@@ -314,7 +314,7 @@ export default {
 					success: (res) => {
 						if (res.confirm) {
 							uni.removeStorageSync('userInfo')
-							uni.reLaunch({url: '../guide/guide'})
+							uni.reLaunch({url: '/pages/guide/guide'})
 						}else {
 							uni.reLaunch({
 								url: '/pages/index/index'
@@ -588,7 +588,7 @@ export default {
 			if(this.from == 'placeOrder') {
 				uni.reLaunch({
 					// url: '../cart/cart?flag=true'
-					url: '../cart/cart'
+					url: '/pages/cart/cart'
 				})
 			}else {
 				uni.navigateBack({
