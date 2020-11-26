@@ -67,7 +67,6 @@
 <script>
 import clTabs from '../../components/cl-tabs/cl-tabs.vue';
 import vTabs from '../../components/v-tabs/v-tabs.vue';
-import etKindlist from '../../components/etKindlist.vue';
 import etImgbox from '../../components/etImgbox.vue';
 import etBookCartList from '../../components/etBookCartList.vue';
 import uniPopup from '@/components/uni-popup/uni-popup.vue';
@@ -79,7 +78,6 @@ const insertBook = require('@/common/carDataOption');
 export default {
 	components: {
 		clTabs,
-		etKindlist,
 		etImgbox,
 		etBookCartList,
 		uniPopup,

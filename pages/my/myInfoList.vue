@@ -24,12 +24,10 @@
 </template>
 
 <script>
-import etBabyInfo from '../../components/etBabyInfo.vue'
 import regionData from '../../common/regionData.js'
 
 export default {
 	components: {
-		etBabyInfo
 	},
 	onLoad() {
 		// 获取用户信息

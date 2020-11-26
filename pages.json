@@ -310,15 +310,7 @@
 				}
 			}
 		},
-		{
-			"path": "pages/guide/register",
-			"style": {
-				"navigationBarTitleText": "幼儿信息",
-				"app-plus": {
-					"titleNView": false
-				}
-			}
-		},
+
 		{
 			"path": "pages/guide/guide",
 			"style": {

@@ -5,9 +5,9 @@
 </template>
 
 <script>
-	import uCharts from './u-charts.js';
+	import uCharts from './u-charts.min.js';
 	var canvases = {};
-	
+
 	export default {
 		props: {
 			chartType: {

@@ -21,7 +21,7 @@
 		rowList: 从父组件传递过来的图形横坐标值
 		dataList: 从父组件传递过来的图形纵坐标值
 	 ***/ 
-	import uCharts from '@/components/u-charts/u-charts/u-charts.js';
+	import uCharts from '@/components/u-charts/u-charts/u-charts.min.js';
 	
 	var canvaColumn=null;
 	export default {
