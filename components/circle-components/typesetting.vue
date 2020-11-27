@@ -103,7 +103,7 @@
 		border: 1px solid #bcedf5;
 		border-radius: 18rpx;
 		text-align: center;
-		font-size: 24rpx;
+		font-size: 22rpx;
 		margin-top: 12rpx;
 	}
 	.item .bottom image {

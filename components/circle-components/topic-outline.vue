@@ -3,6 +3,8 @@
 		<view class="topic">
 			<view class="left">
 				<view class="show">
+					<!-- 结束封面 -->
+					<image :src="$aliImage + 'read-over.png'" style="position: absolute;left: 0;top: 0;width: 210rpx;height: 210rpx;z-index: 12;" v-if="topicDetail.status === '2'"></image>
 					<image :src="topicDetail.imgInfo[0].url" v-if="topicDetail.imgInfo && topicDetail.imgInfo.length > 0 " class="cover"></image>
 					<image :src="$aliImage + 'read-demo.png'" mode="widthFix" class="cover" v-else></image>
 				</view>
@@ -12,7 +14,7 @@
 				</view>
 			</view>
 			<!-- 话题详情页才显示，获奖名单页不显示 -->
-			<view class="right" v-if="parent !== 'award-list'" @tap="addRemark" >
+			<view class="right" v-if="parent !== 'award-list' && topicDetail.status !== '2'" @tap="addRemark" >
 				
 				<image :src="$aliImage + 'read-message.png'" mode="widthFix"></image>
 				<text>我要打卡</text>
@@ -68,7 +70,7 @@
 						<text>话题周期：{{ topicDetail.start_time }}~{{ topicDetail.end_time }}</text>
 					</view>
 					<!-- 只有活力打卡类型话题才显示 -->
-					<view class="right" v-if="vitalityList && vitalityList.length > 0">
+					<view class="right" v-if="vitalityList && vitalityList.length > 0" @tap="checkTopicVitality">
 						<text>话题活力之星</text>
 						<view class="show">
 							<block v-for="(item, index) in vitalityList" :key="index">
@@ -135,7 +137,11 @@
 			// 编辑话题
 			edit() {
 				this.$emit('edit')
-			}
+			},
+			// 跳转查看该话题下的活力榜
+			checkTopicVitality() {
+				this.$emit('checkTopicVitality')
+			},
 		}
 	}
 </script>

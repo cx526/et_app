@@ -73,7 +73,7 @@
 									<text v-if="item.likeStatus === 0">点赞</text>
 									<text v-else style="color: #2AAEC4;">已赞</text>
 							</view>
-							<view class="comment-item"  @tap.stop="handleClick('comment', item)" v-if="item.show_comment === '1'">
+							<view class="comment-item"  @tap.stop="handleClick('comment', item)" v-if="item.show_comment === '1' && status !== '2'">
 									<image :src="$aliImage + 'read-comment.png'"></image>
 									<text>评论</text>
 							</view>
@@ -130,6 +130,11 @@
 			loadStatus: {
 				type: String,
 				default: 'more'
+			},
+			// 是否过期(过期不显示评论)
+			status: {
+				type: String,
+				default: '1'
 			}
 		},
 		components: {

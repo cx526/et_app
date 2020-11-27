@@ -78,11 +78,14 @@
 				custom_type: '', //身份
 				userList: null, //个人数据
 				dataList: [], //总数据
+				rows: [],
+				totalPage: 0, //总条数
+				currentPage: 1,
+				pageSize: 10
 			}
 		},
 		onLoad(options) {
 			let params = JSON.parse(options.params)
-			console.log(params)
 			this.currentIndex = String(params.index)
 			this.school_id = params.school_id
 			this.grade_id = params.grade_id
@@ -92,6 +95,13 @@
 			this.setNavTitle(this.currentIndex)
 			// 获取排名数据
 			this.sortReadingByApp(this.currentIndex)
+		},
+		onReachBottom() {
+			if(this.totalPage > this.dataList.length) {
+				this.currentPage = this.currentPage + 1
+				let arr = this.rows.slice(this.dataList.length, this.currentPage * this.pageSize)
+				this.dataList = [...this.dataList, ...arr]
+			}
 		},
 		methods: {
 			// 设置navTitle
@@ -139,37 +149,50 @@
 				}
 				this.$api.sortReadingByApp(params).then(res => {
 					this.userList = res.data.mySort
-					this.dataList = res.data.rows
+					// this.dataList = res.data.rows
+					let result = res.data.rows
+					this.rows = result
+					this.totalPage = result.length
+					if(result.length > 10) {
+						if(this.dataList.length === 0) {
+							this.dataList = result.slice(0, this.currentPage * this.pageSize)
+						}else {
+							let arr = result.slice(this.dataList.length, this.currentPage * this.pageSize)
+							this.dataList = [...this.dataList, ...arr]
+						}
+					}else {
+						this.dataList = result
+					}
+					// 处理排名缓存
 					let data = []
 					switch(index) {
 						case '0':
 						if(JSON.stringify(this.userList) === '{}') {
-							data[0] = this.dataList.length + 1
-							data[1] = this.dataList.length + 1
+							data[0] = this.rows.length + 1
+							data[1] = this.rows.length + 1
 						}else {
 							data[0] = this.userList.sort
-							data[1] = this.dataList.length
+							data[1] = this.rows.length
 						}
 						uni.setStorageSync('school_sort', data)
-						console.log(data)
 						break
 						case '1':
 						if(JSON.stringify(this.userList) === '{}') {
-							data[0] = this.dataList.length + 1
-							data[1] = this.dataList.length + 1
+							data[0] = this.rows.length + 1
+							data[1] = this.rows.length + 1
 						}else {
 							data[0] = this.userList.sort
-							data[1] = this.dataList.length
+							data[1] = this.rows.length
 						}
 						uni.setStorageSync('grade_sort', data)
 						break
 						case '2':
 						if(JSON.stringify(this.userList) === '{}') {
-							data[0] = this.dataList.length + 1
-							data[1] = this.dataList.length + 1
+							data[0] = this.rows.length + 1
+							data[1] = this.rows.length + 1
 						}else {
 							data[0] = this.userList.sort
-							data[1] = this.dataList.length
+							data[1] = this.rows.length
 						}
 						uni.setStorageSync('class_sort', data)
 						break

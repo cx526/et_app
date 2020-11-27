@@ -68,13 +68,11 @@ export default {
 	onLoad(options) {
 		this.comeFrom = options.from
 		if(options.from === 'topicDetail') {
-			console.log('topicDetail')
 			this.title = options.title
 			this.topic_id = options.topic_id
 			this.show_comment = options.show_comment
 		}else {
 			this.school_id = options.school_id
-			console.log('index')
 			// 获取本园话题
 			this.selReadingTopic()
 			// 获取全站话题
@@ -118,7 +116,6 @@ export default {
 			
 			let index = event.detail.value;
 			this.topicListIndex = index;
-			console.log(this.topicList[index])
 			this.topic_id = String(this.topicList[index].id)
 			this.show_comment = this.topicList[index].show_comment
 		},
@@ -193,7 +190,6 @@ export default {
 												let arr = []
 												arr.push(res.tempFilePath)
 												that.imgShow = [...that.imgShow, ...arr]
-												console.log(that.imgShow)
 											},
 											fail(res) {
 												uni.showToast({ title: 'canvas缩放失败', icon: 'none' });
@@ -202,7 +198,7 @@ export default {
 									}, 200);
 								});
 							} else {
-								console.log('else')
+
 								// 直接掉起压缩方法
 								that.canvasWidth = res.width;
 								that.canvasHeight = res.height;
@@ -212,7 +208,6 @@ export default {
 								let arr = []
 								arr.push(res.path)
 								that.imgShow = [...that.imgShow, ...arr]
-								console.log(that.imgShow)
 							}
 						}
 					});
@@ -312,7 +307,6 @@ export default {
 							uni.hideLoading()
 						}
 						let result = JSON.parse(res.data)
-						console.log(result)
 						let params = {
 							targetId: String(this.insertId),
 							usage: "reading_mark",
@@ -328,8 +322,6 @@ export default {
 			
 			this.$api.addUploadPic(params).then(res => {
 				this.count = this.count+1
-				console.log(len)
-				console.log(this.count)
 				uni.showToast({
 					title: '打卡成功',
 					icon: 'none',
@@ -379,10 +371,8 @@ export default {
 				show_comment: this.show_comment,
 				show_status: '2'
 			}
-			console.log(params)
 			this.$api.addReadingMark(params).then(res => {
 				uni.hideLoading()
-				console.log(res)
 				if(res.data.status === 'fail') {
 					uni.showToast({
 						title: res.data.msg,
@@ -401,7 +391,6 @@ export default {
 				}
 				else {
 					this.insertId = res.data.rows.insertId
-					console.log(this.insertId)
 					if(this.imgShow && this.imgShow.length > 0) {
 						this.upLoadFile()
 					}

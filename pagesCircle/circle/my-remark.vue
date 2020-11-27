@@ -182,7 +182,6 @@
 			},
 			// 监听子组件预览图片事件
 			preview() {
-				console.log('preview')
 				this.update = false
 			},
 			// 查看打卡评论

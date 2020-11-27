@@ -99,7 +99,6 @@
 					mark_id: this.mark_id,
 					comment_id: this.comment_id
 				}
-				console.log(params)
 				this.$api.addReadingReport(params).then(res => {
 					if(res.data.status === 'ok') {
 						uni.showToast({

@@ -265,6 +265,7 @@ export default {
 					userInfo.card_no = result.card_no ? result.card_no : ''
 					userInfo.docker_mac = result.docker_mac ? result.docker_mac : ''
 					this.docker_mac = result.docker_mac ? result.docker_mac : ''
+					userInfo.custom_type = result.custom_type
 					uni.setStorageSync('userInfo', userInfo)
 					// 获取老师推荐书籍
 					this.getHotBook('init');
@@ -389,6 +390,7 @@ export default {
 				uni.navigateTo({
 					url: item.target
 				})
+				
 			}else {
 				uni.navigateTo({
 					url: '/pages/index/swiper-article?src='+encodeURIComponent(JSON.stringify(target))

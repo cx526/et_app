@@ -2,7 +2,7 @@
 	<view v-if="isLogin">
 		<view style="margin-bottom: 25rpx;">
 			<!-- 话题简介 -->
-			<topicOutline @checkMoreDetail="checkMoreDetail" @addRemark="addRemark" :custom_type="custom_type" :dataList="topicDetail" :vitality="vitality" :vitalityList="vitalityList" @edit="edit" />
+			<topicOutline @checkMoreDetail="checkMoreDetail" @addRemark="addRemark" :custom_type="custom_type" :dataList="topicDetail" :vitality="vitality" :vitalityList="vitalityList" @edit="edit" @checkTopicVitality="checkTopicVitality" />
 			
 		</view>
 		<!-- 只有阅读PK话题且身份不是园长才显示，显示统计类型根据该话题的公开范围进行对应的前端显示。 -->
@@ -10,7 +10,7 @@
 			<readChart :axis="axis" />
 		</view> -->
 		
-		<markUp :title="false" @comment="comment"  @handleComment="handleComment" :loadMore="loadMore" :show_comment="topicDetail.show_comment" :topicMark="topicMark" :topic_type="topicDetail.type" :loadStatus="loadStatus" @loadingMore="loadingMore" @like="like" @preview="preview" />
+		<markUp :title="false" @comment="comment"  @handleComment="handleComment" :loadMore="loadMore" :show_comment="topicDetail.show_comment" :topicMark="topicMark" :topic_type="topicDetail.type" :loadStatus="loadStatus" @loadingMore="loadingMore" @like="like" @preview="preview" :status="topicDetail.status" />
 		<!-- 话题内容详细弹窗 -->
 		<uni-popup ref="contextDetail" >
 			<view :style="{'width': propUpWidth}" class="popUp">
@@ -68,7 +68,7 @@
 		},
 		onLoad(options) {
 			console.log(options)
-			this.custom_type = options.custom_type
+			this.custom_type = this.userInfo.custom_type
 			this.id = options.id //话题id
 			// 查看话题活力之星(前三)
 			this.selReadingTopicTopCustom(this.id)
@@ -97,7 +97,6 @@
 			this.loadingMore()
 		},
 		onShareAppMessage(res) {
-			console.log(res)
 			this.preview()
 			let params = res.target.dataset
 			let topic_id = params.topic_id
@@ -174,6 +173,7 @@
 				}
 				this.$api.selReadingVitalityDetail(params).then(res => {
 					let result = res.data.rows
+					this.vitality = 0
 					if(result && result.length > 0) {
 						result.map(item => {
 							this.vitality = Number(this.vitality) + Number(item.vitality)
@@ -244,7 +244,6 @@
 					}
 					// this.topicMark = [...this.topicMark, ...result]
 					this.topicMark = result
-					console.log(this.topicMark)
 					if(loadMore === 'loadMore') {
 						this.selReadingMark(this.id)
 					}else {
@@ -265,7 +264,6 @@
 						show_status: '1'
 					}
 				}
-				console.log(params)
 				this.$api.selReadingMark(params).then(res => {
 					
 					this.totalPage = res.data.totalPage
@@ -386,11 +384,26 @@
 				}
 				this.$api.selReadingTopicTopCustom(params).then(res => {
 					let result = res.data.rows
+					console.log(result)
 					let arr = []
-					if(result && result.length > 0) {
-						arr = result.sort(this.compare('totalVitality'))
+					// if(result && result.length > 0) {
+					// 	arr = result.sort(this.compare('totalVitality'))
+					// }
+					// 只筛选前三名做展示
+					if(result && result.length > 3) {
+						for(let i = 0; i < result.length; i++) {
+							this.vitalityList.push(result[i])
+						}
+					}else {
+						this.vitalityList = result
 					}
-					this.vitalityList = arr
+					
+				})
+			},
+			// 跳转查看该话题的活力榜
+			checkTopicVitality() {
+				uni.navigateTo({
+					url: '/pagesCircle/circle/vigour?from=topic-detail&topic_id='+this.id+'&custom_type='+this.custom_type
 				})
 			},
 			// 排序
@@ -538,7 +551,6 @@
 			},
 			// 监听子组件预览图片事件
 			preview() {
-				console.log('preview')
 				this.update = false
 			},
 			// 删除打卡
@@ -572,7 +584,6 @@
 				uni.showActionSheet({
 					itemList: ['编辑', '删除'],
 					success: res => {
-						console.log(res)
 						if(res.tapIndex === 0) {
 							uni.navigateTo({
 								url: '/pagesCircle/circle/add-topic?topic_id='+this.id+'&from=selUnNormal'
@@ -597,12 +608,11 @@
 					id: String(this.id)
 				}
 				this.$api.delReadingTopic(params).then(res => {
-					console.log(res)
 					if(res.data.status === 'ok') {
 						// 标记阅读圈主页热门话题是否需要重新加载
 						uni.setStorageSync('isReload', true)
 						uni.switchTab({
-							url: '/pagesCircle/circle/reading-circles'
+							url: '/pages/reading-circles'
 						})
 					}
 				})

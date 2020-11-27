@@ -164,8 +164,7 @@
 					contentrefresh: '加载中',
 					contentnomore: '暂无更多数据'
 				},
-				school_id: '4', //学校id
-				// totalPage: 0, //话题总条数
+				school_id: '', //学校id
 				isLoadMore: false, //判断是否开启上拉加载更多
 				private: 0, //违规/待审核话题数
 			}
@@ -261,7 +260,8 @@
 				}
 				// 全站话题
 				if(show_range === 'all') {
-					let custom_id = String(this.userInfo.id)
+					let userInfo = uni.getStorageSync('userInfo')
+					let custom_id = String(userInfo.id)
 					params.filterItems.my_custom_id = custom_id
 					params.filterItems.show_range = ''
 				}

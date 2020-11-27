@@ -44,7 +44,7 @@
 											</view> -->
 										</view>
 										<view class="time">
-											<text>话题周期：{{ item.formatStartTime }}~{{ item.formatEndTime }}</text>
+											<text>话题周期：{{ item.start_time }}~{{ item.end_time }}</text>
 										</view>
 									</view>
 								</view>
@@ -56,7 +56,7 @@
 						<!-- 已结束才能查看获奖名单 -->
 						<swiper-item class="terminateTopic">
 							<block v-if="terminateTopic && terminateTopic.length > 0">
-								<view class="item"  v-for="(item, index) in terminateTopic" :key="index">
+								<view class="item"  v-for="(item, index) in terminateTopic" :key="index" @tap="topicDetail(item.id)">
 									<view class="show">
 										<image v-if="item.imgInfo && item.imgInfo.length > 0" :src="item.imgInfo[0].url"></image>
 										<image :src="$aliImage + 'read-demo.png'" v-else></image>
@@ -76,11 +76,11 @@
 											<text>{{ item.description }}</text>
 										</view>
 										<view class="time">
-											<text>话题周期：{{ item.formatStartTime }}~{{ item.formatEndTime }}</text>
-											<view class="award" @tap="checkAwardList(item.id)" v-if="item.custom_id == userInfo.id && item.type !== 'chat'">
+											<text>话题周期：{{ item.start_time }}~{{ item.end_time }}</text>
+											<!-- <view class="award" @tap="checkAwardList(item.id)" v-if="item.custom_id == userInfo.id && item.type !== 'chat'">
 												<text>查看获奖名单</text>
 												<image :src="$aliImage + 'read-icon-right.png'" mode=""></image>
-											</view>
+											</view> -->
 										</view>
 									</view>
 								</view>
@@ -126,8 +126,8 @@
 					contentrefresh: '加载中',
 					contentnomore: '暂无更多数据'
 				},
-				custom_type: ''
-				
+				custom_type: '',
+				school_id: ''
 			}
 		},
 		components: {
@@ -136,6 +136,8 @@
 		},
 		onLoad(options) {
 			this.custom_type = options.custom_type
+			this.school_id = options.school_id
+			console.log(options)
 			// 获取话题列表
 			this.selReadingTopic('1', '.proceedTopic .item')
 		},
@@ -145,17 +147,26 @@
 		methods: {
 			// 获取话题列表
 			selReadingTopic(status,ele, type) {
+				let userInfo = uni.getStorageSync('userInfo')
+				let custom_id = String(userInfo.id)
 				let params = {
 					currentPage: String(this.currentPage),
 					pageSize: this.pageSize,
 					filterItems: {
 						status: status ,//话题状态：0:未开始 1:进行中，2：已结束，
-						show_status: '1'
+						show_status: '1',
+						my_custom_id: custom_id
 					}
 				}
-				this.$api.selReadingTopic(params).then(res => {
+				this.$api.selReadingTopicByMark(params).then(res => {
 					this.totalPage = res.data.totalPage
 					let result = res.data.rows
+					if(result && result.length > 0) {
+						result.map(item => {
+							item.start_time = this.formatTime(item.start_time, 'YY:MM:DD')
+							item.end_time = this.formatTime(item.end_time, 'YY:MM:DD')
+						})
+					}
 					if(status === '1') {
 						if(type === 'loadMore') {
 							this.proceedTopic = [...this.proceedTopic, ...result]
@@ -250,7 +261,7 @@
 			// 跳转详情页
 			topicDetail(id) {
 				uni.navigateTo({
-					url: '/pagesCircle/circle/topic-detail?id='+id+'&custom_type='+this.custom_type
+					url: '/pagesCircle/circle/topic-detail?id='+id
 				})
 			},
 			// 查看获奖名单
@@ -258,6 +269,27 @@
 				uni.navigateTo({
 					url: '/pagesCircle/circle/award-list?topic_id='+topic_id
 				})
+			},
+			// 格式化时间
+			formatTime(time, type) {
+				let date = new Date(time)
+				let year = date.getFullYear()
+				let month = this.complete(date.getMonth() + 1)
+				let day = this.complete(date.getDate())
+				let hour = this.complete(date.getHours())
+				let minute = this.complete(date.getMinutes())
+				let second = this.complete(date.getSeconds())
+				if(type === 'YY:MM:DD') {
+					return year +'-'+ month + '-' + day
+				}else {
+					return year +'-'+ month + '-' + day +' '+ hour +':'+ minute +':'+ second
+				}
+				
+			},
+			// 补零操作
+			complete(number) {
+				let num =	number > 9 ? number : '0' + number
+				return num
 			},
 		}
 	}

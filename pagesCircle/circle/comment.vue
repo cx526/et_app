@@ -228,7 +228,6 @@
 				this.$api.selReadingComment(params).then(res => {
 					this.totalPage = res.data.totalPage
 					let result = res.data.rows
-					console.log('result：'+ result)
 					if(result && result.length > 0) {
 						result.map(item => {
 							item.create_time = this.formatTime(item.create_time)
@@ -254,7 +253,6 @@
 			},
 			// 输入框失去焦点
 			commentBlur() {
-				console.log('commentBlur')
 				this.isShow = false
 				this.focus = false
 				this.bottom = 0
@@ -284,12 +282,8 @@
 					mark_id: String(this.mark_id),
 					show_status: '2'
 				}
-				console.log('addReadingComment')
-				console.log(params)
 				this.$api.addReadingComment(params).then(res => {
-					console.log(res)
 					if(res.data.status === 'ok') {
-						console.log('ok')
 						uni.showToast({
 							title: '评论成功',
 							icon:'none',

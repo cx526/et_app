@@ -287,4 +287,7 @@ api.checkStudentRead = params => request.globalRequest('/api/count/selReadingCou
 // 查看阅读排名
 api.sortReadingByApp = params => request.globalRequest('/api/count/sortReadingByApp', 'POST', params)
 
+// 查看我打卡过的话题
+api.selReadingTopicByMark = params => request.globalRequest('/api/reading/selReadingTopicByMark', 'POST', params)
+
 export default api

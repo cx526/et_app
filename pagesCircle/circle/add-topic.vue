@@ -139,7 +139,19 @@
 						<image :src="$aliImage + 'read-icon-gray-right.png'" mode="widthFix"></image>
 					</view>	
 				</view>
+				
 			</block>
+			<!-- 话题奖励结算方式 -->
+			<view class="item"  v-if="userInfo.openId === 'oUume4hcYaqvcF6OEwPcIsNivTIw' && type !== 'chat'">
+				<text class="label">结算方式</text>
+				<view class="type">
+					<picker :range="settlementList" range-key="title" @change="changeSettlement">
+						<input :value="settlementValue" placeholder="请选择奖励结算方式" disabled></input>
+					</picker>
+					<image :src="$aliImage + 'read-icon-gray-right.png'"></image>
+				</view>
+				
+			</view>
 			<!-- 话题封面 -->
 			<view class="item cover">
 				<text class="label">话题封面</text>
@@ -247,6 +259,13 @@
 				topic_id: '', //编辑话题id
 				from: '',
 				editTopicInfo: '', //编辑话题信息
+				settlement_type: '', //话题奖励结算方式
+				settlementValue: '',
+				settlementIndex: '',
+				settlementList: [
+					{title: '话题结束结算', value: 'topicEnd'},
+					{title: '每日结算', value: 'day'}
+				]
 			}
 		},
 		onLoad(options) {
@@ -410,7 +429,16 @@
 					}
 					// 班级
 					this.class_id = result.class
-					
+					// 奖励结算方式
+					this.settlement_type = result.settlement_type //奖励结算方式
+					if(result.settlement_type !== '') {
+						this.settlementList.filter((item, index) => {
+							if(item.value === result.settlement_type) {
+								this.settlementIndex = index
+								this.settlementValue = this.settlementList[this.settlementIndex].title
+							}
+						})
+					}
 					// 封面图
 					this.coverImgUrl = result.imgInfo[0].url
 				})
@@ -465,6 +493,17 @@
 				if(this.userInfo.openId === 'oUume4hcYaqvcF6OEwPcIsNivTIw' && this.show_range === 'all') {
 					this.school_id = ''
 				}
+				// 如果是admin身份且话题类型不为轻松畅聊时，settlement_type不能为空
+				if(this.userInfo.openId === 'oUume4hcYaqvcF6OEwPcIsNivTIw' && this.type !== 'chat') {
+					if(this.settlement_type === '') {
+						uni.showToast({
+							title: '请选择奖励结算方式',
+							icon: 'none',
+							duration: 1500
+						})
+						return
+					}
+				}
 				// 检测开始时间是否晚于结束时间
 				let start_time = new Date(this.start_time).getTime()
 				let end_time = new Date(this.end_time).getTime()
@@ -498,6 +537,7 @@
 					class: String(this.class_id),
 					status: String(this.status),
 					show_status: String(this.show_status),
+					settlement_type: this.settlement_type
 				}
 				console.log(params)
 				this.modReadingTopic(params)
@@ -505,14 +545,12 @@
 			// 编辑话题
 			modReadingTopic(params) {
 				this.$api.modReadingTopic(params).then(res => {
-					console.log(res)
-					console.log(this.coverImgUrl)
 					// 图片有发生改变才调上传接口
 					if(this.coverImgUrl.indexOf('http://et-pic-server.oss-cn-shenzhen.aliyuncs.com/') !== -1) {
 						// 标记阅读圈主页热门话题是否需要重新加载
 						uni.setStorageSync('isReload', true)
 						uni.switchTab({
-							url: '/pagesCircle/circle/reading-circles'
+							url: '/pages/reading-circles'
 						})
 					}else {
 						this.upLoadFile(this.coverImgUrl)
@@ -525,7 +563,6 @@
 				let index = Number(event.detail.value)
 				this.topicTypeIndex = index
 				this.type = this.topicType[index].type
-				console.log(this.type)
 				// 设置每种话题每天最多可以打卡几次
 				switch(this.type) {
 					case 'vitality':
@@ -540,13 +577,13 @@
 					this.day_mark_count = '20'
 					this.target_vitality = '0'
 					this.reward_gift = ''
+					this.settlement_type = ''
 					break
 					default:
 					this.day_mark_count = '1'
 					this.target_vitality = ''
 					return
 				}
-				console.log(this.day_mark_count)
 			},
 			// 获取话题标题
 			getTopicTitle(event) {
@@ -556,23 +593,19 @@
 			// 监听表单失去焦点事件
 			blurTitle() {
 				this.checkText('title',this.title)
-				console.log(this.title)
 			},
 			// 获取话题活力目标值
 			getTopicVigour(event) {
 				let value = event.detail.value.replace(/\s*/g, '')
 				this.target_vitality = value
-				console.log(this.target_vitality)
 			},
 			// 获取话题开始时间
 			getStartTime(event) {
 				this.start_time = event.detail.value
-				console.log(this.start_time)
 			},
 			// 获取话题结束时间
 			getEndTime(event) {
 				this.end_time = event.detail.value
-				console.log(this.end_time)
 			},
 			// 获取话题内容
 			getTopicContext(event) {
@@ -581,7 +614,6 @@
 			// 表单失去焦点事件
 			blurContext() {
 				this.checkText('context',this.description)
-				console.log(this.description)
 			},
 			// 获取话题奖励
 			getTopicReward(event) {
@@ -606,7 +638,6 @@
 			// 监听表单失去焦点事件
 			blurReward() {
 				this.checkText('reward', this.reward_gift)
-				console.log(this.reward_gift)
 			},
 			// 改变话题可见范围
 			changeTopicScope(event) {
@@ -619,7 +650,6 @@
 				this.class_id = ''
 				this.gradeInfo = ''
 				this.classInfo = ''
-				console.log(this.show_range)
 				// 如果是admin身份
 				if(this.userInfo.openId === 'oUume4hcYaqvcF6OEwPcIsNivTIw') {
 					this.schoolIndex = ''
@@ -631,7 +661,6 @@
 				let index = event.detail.value
 				this.schoolIndex = index
 				this.school_id = String(this.schoolList[index].id)
-				console.log(this.school_id)
 				this.gradeList = this.schoolList[index].classInfo
 				this.schoolInfo = this.schoolList[index].name
 			},
@@ -641,14 +670,12 @@
 				this.gradeIndex = index
 				this.grade_id = String(this.gradeList[index].id)
 				this.gradeInfo = this.gradeList[index].name
-				console.log(this.grade_id)
 			},
 			// 选择班级
 			changeClass(event) {
 				let index = event.detail.value
 				this.classIndex = index
 				this.class_id = String(this.classList[index])
-				console.log(this.class_id)
 				this.classInfo = this.classList[index]
 			},
 			// 是否开启评论
@@ -656,7 +683,6 @@
 				let index = event.detail.value
 				this.commentIndex = index
 				this.show_comment = this.comment[index].value
-				console.log(this.show_comment)
 			},
 			// 根据身份获取话题可见范围
 			getTopicScope(custom_type) {
@@ -682,7 +708,13 @@
 					this.show_range = this.topicScope[this.topicScopeIndex].value
 					return
 				}
-				console.log(this.topicScope)
+			},
+			// 选择奖励结算方式(admin账号发布才可以)
+			changeSettlement(event) {
+				let index = event.detail.value
+				this.settlementIndex = index
+				this.settlement_type = this.settlementList[index].value
+				this.settlementValue = this.settlementList[index].title
 			},
 			// 选择图片
 			select_img() {
@@ -691,7 +723,6 @@
 					count: 1,
 					success(res) {
 						if (res.tempFiles.length > 0) {
-							console.log(res.tempFilePaths[0])
 							that.getCanvasImg(res.tempFiles); // 通过canvas进行缩放
 						}else {
 							uni.showToast({
@@ -750,7 +781,6 @@
 			// 删除图片
 			del() {
 				this.coverImgUrl = ''
-				console.log(this.editTopicInfo)
 				if(this.from === 'selUnNormal') {
 					let imgInfo = this.editTopicInfo.imgInfo
 					if(imgInfo.length > 0) {
@@ -812,6 +842,17 @@
 				if(this.userInfo.openId === 'oUume4hcYaqvcF6OEwPcIsNivTIw' && this.show_range === 'all') {
 					this.school_id = ''
 				}
+				// 如果是admin身份且话题类型不为轻松畅聊时，settlement_type不能为空
+				if(this.userInfo.openId === 'oUume4hcYaqvcF6OEwPcIsNivTIw' && this.type !== 'chat') {
+					if(this.settlement_type === '') {
+						uni.showToast({
+							title: '请选择奖励结算方式',
+							icon: 'none',
+							duration: 1500
+						})
+						return
+					}
+				}
 				// 检测开始时间是否晚于结束时间
 				let start_time = new Date(this.start_time).getTime()
 				let end_time = new Date(this.end_time).getTime()
@@ -844,6 +885,7 @@
 					school_id: this.school_id, //学校id
 					grade_id: this.grade_id,//年级id
 					class: this.class_id ,//班级
+					settlement_type: this.settlement_type //奖励结算方式
 				}
 				console.log(params)
 				// 新建话题
@@ -862,12 +904,14 @@
 						console.log(this.targetId)
 						// 标记阅读圈主页热门话题是否需要重新加载
 						uni.setStorageSync('isReload', true)
-						uni.switchTab({
-							url: '/pagesCircle/circle/reading-circles'
-						})
+						
 						if(this.coverImgUrl != '') {
 							// 上传图片
 							this.upLoadFile(this.coverImgUrl)
+						}else {
+							uni.switchTab({
+								url: '/pages/reading-circles'
+							})
 						}
 					}
 				})
@@ -908,9 +952,9 @@
 						success:() => {
 							// 标记阅读圈主页热门话题是否需要重新加载
 							uni.setStorageSync('isReload', true)
-							uni.switchTab({
-								url: '/pagesCircle/circle/reading-circles'
-							})
+								uni.switchTab({
+									url: '/pages/reading-circles'
+								})
 						}
 					})
 				})

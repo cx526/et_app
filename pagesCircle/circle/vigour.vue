@@ -1,57 +1,106 @@
 <template>
 	<view>
-		<view class="user">
-			<view class="left">
-				<view class="avatar">
-					<image :src="userInfo.avatar" mode="widthFix" class="user-avatar"></image>
-				</view>
-				<view class="info">
-					<view class="name" v-if="userRankingList.childName">{{ userRankingList.childName }}</view>
-					<view v-else>
-						<text v-if="custom_type === '0'">老师</text>
-						<text v-else-if="custom_type === '1'">小朋友</text>
-						<text v-else>园长</text>
+		<view v-if="from === 'index'">
+			<view class="user">
+				<view class="left">
+					<view class="avatar">
+						<image :src="userInfo.avatar" mode="widthFix" class="user-avatar"></image>
 					</view>
-					<view class="vigour">
-						<image :src="$aliImage+ 'read-vitality.png'" mode=""></image>
-						<text>活力值：{{ userRankingList.vitality ? userRankingList.vitality : 0 }}</text>
-					</view>
-					<!-- 读取后台返回的时间往前推一周(七天) -->
-					<!-- <view class="time">
-						
-						<text>统计日期：{{ formatCreateTime }}</text>
-					</view> -->
-				</view>
-			</view>
-			<view class="right">
-				<image :src="$aliImage + 'read-medal-bg.png'" mode="widthFix"></image>
-				<text class="number">{{ userRankingList.vitality ? userRankingList.vitality : 0 }}</text>
-			</view>
-		</view>
-		<view class="list">
-			<!-- style="max-height: 1032rpx;" -->
-			<scroll-view scroll-y >
-				<view class="item" v-for="(item, index) in rankingList" :key="index">
-					<view class="left">
-						<view class="rank">
-							<text>{{ index+1 > 9 ? index+1 : '0' + (index+1) }}</text>
+					<view class="info">
+						<view class="name" v-if="userRankingList.childName">{{ userRankingList.childName }}</view>
+						<view v-else>
+							<text v-if="custom_type === '0'">老师</text>
+							<text v-else-if="custom_type === '1'">小朋友</text>
+							<text v-else>园长</text>
 						</view>
-						<image :src="item.avatar"></image>
-						<text class="name" v-if="item.childName">{{ item.childName }}</text>
-						<text v-else class="name">小朋友</text>
-					</view>
-					<view class="right">
-						<image :src="$aliImage + 'read-medal-No'+(index+1)+'.png'" mode="widthFix" class="medal"
-						v-if="(index+1) <= 3"></image>
 						<view class="vigour">
-							<image :src="$aliImage + 'read-vitality.png'" mode="widthFix"></image>
-							<text>活力值：{{ item.vitality }}</text>
+							<image :src="$aliImage+ 'read-vitality.png'" mode=""></image>
+							<text>活力值：{{ userRankingList.vitality ? userRankingList.vitality : 0 }}</text>
 						</view>
 					</view>
 				</view>
-			</scroll-view>
+				<view class="right">
+					<image :src="$aliImage + 'read-medal-bg.png'" mode="widthFix"></image>
+					<text class="number">{{ userRankingList.vitality ? userRankingList.vitality : 0 }}</text>
+				</view>
+			</view>
+			<view class="list">
+				<!-- style="max-height: 1032rpx;" -->
+				<scroll-view scroll-y >
+					<view class="item" v-for="(item, index) in rankingList" :key="index">
+						<view class="left">
+							<view class="rank">
+								<text>{{ index+1 > 9 ? index+1 : '0' + (index+1) }}</text>
+							</view>
+							<image :src="item.avatar"></image>
+							<text class="name" v-if="item.childName">{{ item.childName }}</text>
+							<text v-else class="name">小朋友</text>
+						</view>
+						<view class="right">
+							<image :src="$aliImage + 'read-medal-No'+(index+1)+'.png'" mode="widthFix" class="medal"
+							v-if="(index+1) <= 3"></image>
+							<view class="vigour">
+								<image :src="$aliImage + 'read-vitality.png'" mode="widthFix"></image>
+								<text>活力值：{{ parseInt(item.vitality) }}</text>
+							</view>
+						</view>
+					</view>
+				</scroll-view>
+			</view>
 		</view>
+		<!-- 从话题详情活力之星进入 -->
+		<view v-else>
+			<view class="user">
+				<view class="left">
+					<view class="avatar">
+						<image :src="userInfo.avatar" mode="widthFix" class="user-avatar"></image>
+					</view>
+					<view class="info">
+						<view class="name" v-if="userRankingList.customInfo.childName">{{ userRankingList.customInfo.childName }}</view>
+						<view v-else>
+							<text v-if="custom_type === '0'">老师</text>
+							<text v-else-if="custom_type === '1'">小朋友</text>
+							<text v-else>园长</text>
+						</view>
+						<view class="vigour">
+							<image :src="$aliImage+ 'read-vitality.png'" mode=""></image>
+							<text>活力值：{{ userRankingList.totalVitality ? userRankingList.totalVitality : 0 }}</text>
+						</view>
+					</view>
+				</view>
+				<view class="right">
+					<image :src="$aliImage + 'read-medal-bg.png'" mode="widthFix"></image>
+					<text class="number">{{ userRankingList.totalVitality ? userRankingList.totalVitality : 0 }}</text>
+				</view>
+			</view>
+			<view class="list">
+				<!-- style="max-height: 1032rpx;" -->
+				<scroll-view scroll-y >
+					<view class="item" v-for="(item, index) in rankingList" :key="index">
+						<view class="left">
+							<view class="rank">
+								<text>{{ index+1 > 9 ? index+1 : '0' + (index+1) }}</text>
+							</view>
+							<image :src="item.customInfo.avatar"></image>
+							<text class="name" v-if="item.customInfo.childName">{{ item.customInfo.childName }}</text>
+							<text v-else class="name">小朋友</text>
+						</view>
+						<view class="right">
+							<image :src="$aliImage + 'read-medal-No'+(index+1)+'.png'" mode="widthFix" class="medal"
+							v-if="(index+1) <= 3"></image>
+							<view class="vigour">
+								<image :src="$aliImage + 'read-vitality.png'" mode="widthFix"></image>
+								<text>活力值：{{ parseInt(item.totalVitality) }}</text>
+							</view>
+						</view>
+					</view>
+				</scroll-view>
+			</view>
+		</view>
+		
+		
 	</view>
+	
 </template>
 
 <script>
@@ -61,19 +110,45 @@
 				school_id: '',
 				$aliImage: this.$aliImage,
 				userInfo: uni.getStorageSync('userInfo'),
-				rankingList: [],
+				rankingList: [], //渲染到页面的数据(前端做分页)
+				rows: [], //总数据
 				userRankingList:null,
 				formatCreateTime: '', //统计时间
-				custom_type: ''
+				custom_type: '',
+				from: '', //区分从哪里进入该页面
+				totalPage: 0, //总条数
+				currentPage: 1,
+				pageSize: 10,
+				topic_id: '', //话题id
 			}
 		},
 		onLoad(options) {
-			this.school_id = options.school_id
+			
+			this.from = options.from
 			this.custom_type = options.custom_type
 			console.log(options)
-			this.selReadingVitalityMine()
+			// 从首页进来
+			if(this.from === 'index') {
+				this.school_id = options.school_id
+				this.selReadingVitalityMine()
+			}else {
+				this.topic_id = options.topic_id
+				this.selReadingTopicTopCustom()
+			}
+			
+		},
+		onReachBottom() {
+			// 前端做数据分页展示
+			if(this.totalPage > this.rankingList.length) {
+				this.currentPage = this.currentPage + 1
+				let rows = this.rows
+				let arr = []
+				arr = rows.slice(this.rankingList.length, this.currentPage * this.pageSize)
+				this.rankingList = [...this.rankingList, ...arr]
+			}
 		},
 		methods: {
+			// 查看本校活力排行榜
 			selReadingVitalityMine() {
 				let custom_id = this.userInfo.id
 				let params = {
@@ -83,21 +158,81 @@
 					}
 				}
 				this.$api.selSchoolReadingVitalityCount(params).then(res => {
-					console.log(res)
+					this.totalPage = res.data.rows.length
+					// 个人
 					let result = res.data.mySort
 					result.vitality = parseInt(result.vitality)
 					this.userRankingList = result
+					// 全部
 					let rows = res.data.rows
-					if(rows && rows.length > 0) {
-						rows.map(item => {
-							item.vitality = parseInt(item.vitality)
-						})
+					this.rows = res.data.rows
+					// 返回的总数据大于10条前端做分页展示
+					if(rows && rows.length > 10) {
+						let arr = []
+						if(this.rankingList.length == 0) {
+							arr = rows.slice(0, this.currentPage * this.pageSize)
+							this.rankingList = arr
+						}else {
+							arr = rows.slice(this.rankingList.length, this.currentPage * this.pageSize)
+							this.rankingList = [...this.rankingList, ...arr]
+						}
+						
+					}else {
+						this.rankingList = rows
 					}
-					this.rankingList = rows
 				})
 			},
-			
-
+			// 查看某话题下的活力排行榜
+			selReadingTopicTopCustom() {
+				let params = {
+					filterItems: {
+						topic_id: this.topic_id
+					}
+				}
+				this.$api.selReadingTopicTopCustom(params).then(res => {
+					let result = res.data.rows
+					this.totalPage = result.length //总条数
+					let userRankingList = ''
+					let rows = [] //总数据
+					if(result && result.length > 0) {
+						// 筛选个人信息
+						result.filter(item => {
+							if(item.custom_id == this.userInfo.id) {
+								userRankingList = item
+								userRankingList.totalVitality = parseInt(userRankingList.totalVitality)
+							}
+						})
+						this.userRankingList = userRankingList
+						// 全部信息处理
+						result.map(item => {
+							rows.push(item)
+						})
+						this.rows = rows
+						// 返回的总数据大于10条前端做分页展示
+						if(rows && rows.length > 10) {
+							let arr = []
+							if(this.rankingList.length == 0) {
+								arr = rows.slice(0, this.currentPage * this.pageSize)
+								this.rankingList = arr
+							}else {
+								arr = rows.slice(this.rankingList.length, this.currentPage * this.pageSize)
+								this.rankingList = [...this.rankingList, ...arr]
+							}
+							
+						}else {
+							this.rankingList = rows
+						}
+					}
+				})
+			},
+			// 排序
+			compare(property) {
+				return (a, b) => {
+					let value1 = a[property];
+					let value2 = b[property];
+					return value2 - value1;
+				};
+			},
 
 		}
 	}
@@ -230,7 +365,7 @@
 		align-items: center;
 	}
 	.list .item .left .rank {
-		width: 40rpx;
+		width: 46rpx;
 		height: 83rpx;
 		background: linear-gradient(180deg,#7bcfec, #9be6e7);
 		border-radius: 10rpx 0px 0px 10rpx;

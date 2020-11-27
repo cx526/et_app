@@ -176,7 +176,6 @@
 				}
 				
 				this.$api.selReadingMarkByHot(params).then(res => {
-					console.log(res)
 					let result = res.data.rows
 					if(result && result.length > 0) {
 						result.map(item => {
@@ -204,15 +203,12 @@
 				this.addOrDelReadingLike(custom_id, topic_id, mark_id, item.index)
 			},
 			addOrDelReadingLike(custom_id, topic_id, mark_id, index) {
-				console.log('addOrDelReadingLike')
 				let params = {
 					custom_id: custom_id,
 					topic_id: topic_id,
 					mark_id: mark_id,
 				}
-				console.log(params)
 				this.$api.addOrDelReadingLike(params).then(res => {
-					console.log(res)
 					if(res.data.status === 'ok') {
 						let title = ''
 						if(this.topicMark[index].likeStatus == 1) {
@@ -294,13 +290,13 @@
 			// 查看话题记录
 			checkTopicRecord() {
 				uni.navigateTo({
-					url: '/pagesCircle/circle/topic-record?custom_type='+this.data.custom_type
+					url: '/pagesCircle/circle/topic-record?custom_type='+this.data.custom_type+'&school_id='+this.school_id
 				})
 			},
 			// 查看活力榜
 			checkVigourDetail() {
 				uni.navigateTo({
-					url: '/pagesCircle/circle/vigour?school_id='+this.school_id+'&custom_type='+this.data.custom_type
+					url: '/pagesCircle/circle/vigour?school_id='+this.school_id+'&custom_type='+this.data.custom_type+'&from=index'
 				})
 			},
 			// 查看阅读数据
@@ -321,7 +317,7 @@
 			checkTopicDetail(id) {
 				
 				uni.navigateTo({
-					url: '/pagesCircle/circle/topic-detail?custom_type='+this.data.custom_type+'&id='+id
+					url: '/pagesCircle/circle/topic-detail?id='+id
 				})
 			},
 			// 查看打卡评论
