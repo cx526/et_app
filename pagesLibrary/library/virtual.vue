@@ -63,6 +63,7 @@
 						 5.event为returnDeposit，dep小于0为退还押金 
 						 6.event为getBookFail shell大于0为逾期未取书
 						 7.event为give为赠送
+						 8.event为giveReading为阅读圈赠送
 						 -->
 						 <!-- 充值五车贝 -->
 						<view class="item" v-if="item.event == 'recharge' && item.shell != 0 && item.deposit == 0">
@@ -82,6 +83,18 @@
 								<text>充值押金</text>
 								<text style="color: #039EB9;">
 								+{{ item.totalMoney }}</text>
+							</view>
+							<view class="time">
+								<text style="margin-right: 12rpx;">
+									创建时间：{{ item.handle_create_time }}</text>
+							</view>
+						</view>
+						<!-- 阅读圈赠送 -->
+						<view class="item" v-else-if="item.event == 'giveReading'">
+							<view class="topic">
+									 <text>悦读圈赠送</text>
+									 <text style="color: #039EB9;">
+										 {{ item.shell }}</text>
 							</view>
 							<view class="time">
 								<text style="margin-right: 12rpx;">

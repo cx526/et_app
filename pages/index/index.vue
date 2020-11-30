@@ -415,7 +415,7 @@ export default {
 				return
 			}
 			uni.navigateTo({
-				url: '../library/offline-bookdetail?bookID=' + bookID
+				url: '/pagesLibrary/library/offline-bookdetail?bookID=' + bookID
 			});
 			// uni.navigateTo({ url: 'bookdetail?bookID=' + JSON.stringify(bookID) });
 		},
