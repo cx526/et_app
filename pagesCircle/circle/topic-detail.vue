@@ -402,6 +402,7 @@
 			},
 			// 跳转查看该话题的活力榜
 			checkTopicVitality() {
+				this.update = false
 				uni.navigateTo({
 					url: '/pagesCircle/circle/vigour?from=topic-detail&topic_id='+this.id+'&custom_type='+this.custom_type
 				})
@@ -450,6 +451,7 @@
 			},
 			// 查看打卡评论
 			comment(item) {
+				this.update = false
 				console.log(item)
 				let params = {
 					topic_id: item.topic_id,

@@ -21,7 +21,8 @@
 				</view>
 				<view class="right">
 					<image :src="$aliImage + 'read-medal-bg.png'" mode="widthFix"></image>
-					<text class="number">{{ userRankingList.vitality ? userRankingList.vitality : 0 }}</text>
+					<text class="number" v-if="JSON.stringify(userRankingList) !== '{}'">{{ userRankingList.sort }}</text>
+					<text class="number" v-else>{{ rankingList.length }}</text>
 				</view>
 			</view>
 			<view class="list">
@@ -53,7 +54,7 @@
 			<view class="user">
 				<view class="left">
 					<view class="avatar">
-						<image :src="userInfo.avatar" mode="widthFix" class="user-avatar"></image>
+						<image :src="userRankingList.customInfo.avatar" mode="widthFix" class="user-avatar"></image>
 					</view>
 					<view class="info">
 						<view class="name" v-if="userRankingList.customInfo.childName">{{ userRankingList.customInfo.childName }}</view>
@@ -70,7 +71,8 @@
 				</view>
 				<view class="right">
 					<image :src="$aliImage + 'read-medal-bg.png'" mode="widthFix"></image>
-					<text class="number">{{ userRankingList.totalVitality ? userRankingList.totalVitality : 0 }}</text>
+					<text class="number" v-if="userRankingList.sort === 0">{{ rankingList.length + 1 }}</text>
+					<text class="number" v-else>{{ userRankingList.sort }}</text>
 				</view>
 			</view>
 			<view class="list">
@@ -139,13 +141,21 @@
 		},
 		onReachBottom() {
 			// 前端做数据分页展示
-			if(this.totalPage > this.rankingList.length) {
-				this.currentPage = this.currentPage + 1
-				let rows = this.rows
-				let arr = []
-				arr = rows.slice(this.rankingList.length, this.currentPage * this.pageSize)
-				this.rankingList = [...this.rankingList, ...arr]
+			if(this.from === 'index') {
+				if(this.totalPage > this.rankingList.length) {
+					this.currentPage = this.currentPage + 1
+					let rows = this.rows
+					let arr = []
+					arr = rows.slice(this.rankingList.length, this.currentPage * this.pageSize)
+					this.rankingList = [...this.rankingList, ...arr]
+				}
+			}else {
+				if(this.rankingList.length < this.totalPage) {
+					this.currentPage = this.currentPage + 1
+					this.selReadingTopicTopCustom()
+				}
 			}
+			
 		},
 		methods: {
 			// 查看本校活力排行榜
@@ -185,44 +195,40 @@
 			// 查看某话题下的活力排行榜
 			selReadingTopicTopCustom() {
 				let params = {
+					currentPage: String(this.currentPage),
+					pageSize: String(this.pageSize),
 					filterItems: {
-						topic_id: this.topic_id
+						topic_id: this.topic_id,
+						my_custom_id: String(this.userInfo.id)
 					}
 				}
 				this.$api.selReadingTopicTopCustom(params).then(res => {
 					let result = res.data.rows
-					this.totalPage = result.length //总条数
-					let userRankingList = ''
-					let rows = [] //总数据
-					if(result && result.length > 0) {
-						// 筛选个人信息
-						result.filter(item => {
-							if(item.custom_id == this.userInfo.id) {
-								userRankingList = item
-								userRankingList.totalVitality = parseInt(userRankingList.totalVitality)
-							}
-						})
-						this.userRankingList = userRankingList
+					console.log(result)
+					this.totalPage = res.data.totalPage //总条数
+					console.log(this.totalPage)
+					this.userRankingList = res.data.mySort
+					this.rankingList = [...this.rankingList, ...result]
 						// 全部信息处理
-						result.map(item => {
-							rows.push(item)
-						})
-						this.rows = rows
-						// 返回的总数据大于10条前端做分页展示
-						if(rows && rows.length > 10) {
-							let arr = []
-							if(this.rankingList.length == 0) {
-								arr = rows.slice(0, this.currentPage * this.pageSize)
-								this.rankingList = arr
-							}else {
-								arr = rows.slice(this.rankingList.length, this.currentPage * this.pageSize)
-								this.rankingList = [...this.rankingList, ...arr]
-							}
+						// result.map(item => {
+						// 	rows.push(item)
+						// })
+						// this.rows = rows
+						// // 返回的总数据大于10条前端做分页展示
+						// if(rows && rows.length > 10) {
+						// 	let arr = []
+						// 	if(this.rankingList.length == 0) {
+						// 		arr = rows.slice(0, this.currentPage * this.pageSize)
+						// 		this.rankingList = arr
+						// 	}else {
+						// 		arr = rows.slice(this.rankingList.length, this.currentPage * this.pageSize)
+						// 		this.rankingList = [...this.rankingList, ...arr]
+						// 	}
 							
-						}else {
-							this.rankingList = rows
-						}
-					}
+						// }else {
+						// 	this.rankingList = rows
+						// }
+					// }
 				})
 			},
 			// 排序

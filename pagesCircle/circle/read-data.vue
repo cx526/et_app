@@ -9,9 +9,10 @@
 				<view class="info">
 					<view class="name" v-if="userList.customInfo.childName">{{ userList.customInfo.childName }}</view>
 					<view v-else class="name">
-						<text v-if="custom_type === '0'">老师</text>
+						<text>{{ userInfo.name }}</text>
+						<!-- <text v-if="custom_type === '0'">老师</text>
 						<text v-else-if="custom_type === '1'">小朋友</text>
-						<text v-else>园长</text>
+						<text v-else>园长</text> -->
 					</view>
 					<view class="sort">
 						<view class="rank">
