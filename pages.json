@@ -600,6 +600,12 @@
 					}
 				},
 				{
+					"path":"favourite/wish-book",
+					"style":{
+						"navigationBarTitleText":"添加心愿书单"
+					}
+				},
+				{
 					"path": "XMradio/index",
 					"style": {
 						"navigationBarTitleText": "音视频",

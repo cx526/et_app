@@ -252,9 +252,6 @@ export default {
 		},
 		// 收藏功能
 		collection(){
-			// uni.navigateTo({
-			// 	url: '/pagesSecret/secret/index'
-			// })
 			uni.showToast({
 				title: '收藏功能暂未开放，敬请期待！',
 				duration: 2000,
