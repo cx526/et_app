@@ -189,9 +189,9 @@ export default {
 					toUrl: './sign'
 				},
 				{
-					name: '会员',
+					name: '音视频',
 					img: 'https://et-pic-server.oss-cn-shenzhen.aliyuncs.com/app_img/index_button_05.png',
-					toUrl: '/pages/member/member'
+					toUrl: '/pagesFavourite/XMradio/index'
 				}
 			],
 			hotBookList: [],
