@@ -605,7 +605,14 @@
 						"navigationBarTitleText": "音视频"
 					}
 				}
-			]
+			],
+			"plugins" : {
+			    // 喜马拉雅微信小程序插件
+			    "XiMaLaYaFM" : {
+			        "version" : "0.2.1",
+			        "provider" : "wxc6a13dda5815c529"
+			    }
+			}
 		}
 		
 	],

@@ -70,14 +70,7 @@
             "minified" : true,
             "es6" : true
         },
-        "usingComponents" : true,
-        "plugins" : {
-            // 喜马拉雅微信小程序插件
-            "XiMaLaYaFM" : {
-                "version" : "0.2.1",
-                "provider" : "wxc6a13dda5815c529"
-            }
-        }
+        "usingComponents" : true
     },
     "mp-alipay" : {
         "usingComponents" : true
