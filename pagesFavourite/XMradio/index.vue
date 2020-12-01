@@ -6,11 +6,15 @@
 
 <script>
 	const XMPlugin = requirePlugin('XiMaLaYaFM')
+
 	export default {
 		data() {
 			return {
 				
 			}
+		},
+		components: {
+
 		},
 		onLoad() {
 			this.init()

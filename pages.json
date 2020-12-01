@@ -602,7 +602,12 @@
 				{
 					"path": "XMradio/index",
 					"style": {
-						"navigationBarTitleText": "音视频"
+						"navigationBarTitleText": "音视频",
+						"usingComponents": {
+						    // #ifdef  MP-WEIXIN
+							// "xm-component": "plugin://xmly-plugin/demo-component"
+						    // #endif
+						}
 					}
 				}
 			],
