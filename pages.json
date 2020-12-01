@@ -591,10 +591,10 @@
 			]
 		},
 		{
-			"root":"pagesSecret",
+			"root":"pagesFavourite",
 			"pages":[
 				{
-					"path":"secret/index",
+					"path":"favourite/index",
 					"style":{
 						"navigationBarTitleText":"我的收藏"
 					}
@@ -606,12 +606,8 @@
 	"preloadRule": {
 	    "pages/index/index": {
 	        "network": "all",
-	        "packages": ["pagesCircle", "pagesLibrary"]
-	    },
-			"pagesLibrary/library/offline-bookdetail": {
-				"network":"all",
-				"packages": ["pagesSecret"]
-			}
+	        "packages": ["pagesCircle", "pagesLibrary", "pagesFavourite"]
+	    }
 	},
 	"globalStyle": {
 		"navigationBarTextStyle": "black",
