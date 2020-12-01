@@ -1,6 +1,6 @@
 <template>
 	<view>
-		
+		<text>XMradio</text>
 	</view>
 </template>
 
