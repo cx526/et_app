@@ -21,7 +21,7 @@
 				<text class="label">书本简介</text>
 				<input placeholder="请输入书本简介" placeholder-style="font-size: 28rpx" />
 			</view>
-			<view class="item spcial" style="border-bottom: none;">
+			<view class="item spcial" style="border-bottom: none">
 				<text class="label">书本封面</text>
 				<view class="show">
 					<!-- 图片展示 -->

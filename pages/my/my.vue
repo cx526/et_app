@@ -316,7 +316,8 @@ export default {
 						'imgSrc' : this.$aliImage + 'my2_6.png',
 						'title'	: '会员',
 						// 'toUrl'	: '/pages/member/member'
-						'toUrl'	: '/pagesFavourite/favourite/index'
+						'toUrl'	: '/pages/member/member-list'
+						// 'toUrl'	: '/pagesFavourite/favourite/index'
 					},
 					{
 						'imgSrc' : this.$aliImage + 'my2_7.png',
@@ -521,7 +522,7 @@ export default {
 				return
 			}
 			uni.navigateTo({
-				url: '/pages/member/member'
+				url: '/pages/member/member-list'
 			})
 		},
 		

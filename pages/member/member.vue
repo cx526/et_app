@@ -6,6 +6,7 @@
 		v-if="memberCard && memberCard.length > 0"
 		previous-margin = "60rpx"
 		next-margin = "60rpx"
+		:current="current"
 		>
 			<swiper-item v-for="(item,index) in memberCard" :key="index" 
 			:style="{'height': swiperHeight}">
@@ -108,10 +109,14 @@
 				member_status: '',//表示用户是否开通过会员
 				formatMemberDueDate: '',//会员到期日
 				expireTime: '', //会员到期时间
+				current: 0
 			}
 		},
 		
-		onLoad() {
+		onLoad(options) {
+			if(JSON.stringify(options) !== '{}') {
+				this.current = Number(options.current)
+			}
 			// 获取会员卡列表
 			this.getMemberCard()
 			// 获取用户个人信息

@@ -464,6 +464,15 @@
 			}
 		}
 
+        ,{
+            "path" : "pages/member/member-list",
+            "style" :                                                                                    
+            {
+                "navigationBarTitleText": "会员卡列表",
+                "enablePullDownRefresh": false
+            }
+            
+        }
     ],
 	"subPackages": [
 		{
