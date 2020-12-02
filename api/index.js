@@ -290,4 +290,7 @@ api.sortReadingByApp = params => request.globalRequest('/api/count/sortReadingBy
 // 查看我打卡过的话题
 api.selReadingTopicByMark = params => request.globalRequest('/api/reading/selReadingTopicByMark', 'POST', params)
 
+// 喜马拉雅签名接口
+api.xmlySign = params => request.globalRequest('/api/xmly/signature', 'POST', params)
+
 export default api
