@@ -5,7 +5,7 @@
 			<image :src="$aliImage + 'member-detail.png'" mode="widthFix"></image>
 		</view>
 		<view class="list">
-			<memberType :memberType="memberType" @memberDetail="memberDetail" />
+			<memberType :memberType="memberType" @memberDetail="memberDetail" :isShow="false" />
 		</view>
 		<view class="btn" @click="goMember">
 			<image :src="$aliImage + 'member-btn.png'" mode="widthFix"></image>
@@ -57,7 +57,7 @@
 			// 跳转会员页
 			goMember() {
 				uni.navigateTo({
-					url: '/pages/member/member-list'
+					url: '/pages/member/member'
 				})
 			}
 		}

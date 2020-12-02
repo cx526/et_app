@@ -1,6 +1,10 @@
 <template>
-	<view class="list">
-		<memberType :memberType="memberType" @memberDetail="memberDetail" />
+	<view style="position: relative;">
+		<image class="banner" :src="$aliImage + 'member-list-banner-02.png'" mode="widthFix" />
+		<view class="type">
+			<memberType :memberType="memberType" @memberDetail="memberDetail" parent="another" />
+		</view>
+		
 	</view>
 </template>
 <script>
@@ -42,13 +46,24 @@
 <style>
 	page {
 		box-sizing: border-box;
-		background: #FFFBE6;
-		padding-bottom: 40rpx;
+		background: #ffda75;
+		/* padding-bottom: 40rpx; */
 	}
 </style>
 <style scoped>
+	.banner {
+		width: 100%;
+		display: block;
+	}
 	.list {
 		box-sizing: border-box;
 		padding: 0 50rpx;
+	}
+	.type {
+		position: absolute;
+		left: 50%;
+		transform: translateX(-50%);
+		bottom: 8%;
+		
 	}
 </style>

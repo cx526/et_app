@@ -35,7 +35,7 @@
 		<!-- 按钮组合栏 -->
 		<view class="btn-group"><et-button v-for="(item, i) in groupList" :key="i" :title="item.name" :img="item.img" @tap="toButtonUrl(item.toUrl)"></et-button></view>
 
-		<view class="white-space" style="height: 10upx;"></view>
+		<!-- <view class="white-space" style="height: 10upx;"></view> -->
 
 		<!-- banner -->
 		<view class="banner" @tap="oneBannerUrl()" v-if="oneBannerList">
@@ -193,6 +193,7 @@ export default {
 					img: 'https://et-pic-server.oss-cn-shenzhen.aliyuncs.com/app_img/index_button_05.png',
 					// toUrl: '/pagesFavourite/XMradio/index'
 					toUrl: '/pages/member/member-list'
+					// toUrl: '/pages/index/swiper-member'
 				}
 			],
 			hotBookList: [],

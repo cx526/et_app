@@ -315,7 +315,7 @@ export default {
 					{
 						'imgSrc' : this.$aliImage + 'my2_6.png',
 						'title'	: '会员',
-						// 'toUrl'	: '/pages/member/member'
+						// 'toUrl'	: '/pages/index/swiper-member'
 						'toUrl'	: '/pages/member/member-list'
 						// 'toUrl'	: '/pagesFavourite/favourite/index'
 					},

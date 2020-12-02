@@ -109,13 +109,15 @@
 				member_status: '',//表示用户是否开通过会员
 				formatMemberDueDate: '',//会员到期日
 				expireTime: '', //会员到期时间
-				current: 0
+				current: 0,
+				swiperCurrent: 0
 			}
 		},
 		
 		onLoad(options) {
 			if(JSON.stringify(options) !== '{}') {
-				this.current = Number(options.current)
+				this.swiperCurrent = Number(options.current)
+				// this.current = Number(options.current)
 			}
 			// 获取会员卡列表
 			this.getMemberCard()
@@ -176,6 +178,7 @@
 				this.$api.getMemberCard(params)
 				.then(res => {
 					this.memberCard = res.data.rows;
+					this.current = this.swiperCurrent
 					if(this.memberCard && this.memberCard.length > 0) {
 						// 动态添加属性
 						this.memberCard.map(item => {
