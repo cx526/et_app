@@ -11,21 +11,21 @@
 				<swiper :style="{'height': swiperHeight}" @change="swiperChange">
 					<swiper-item class="favourite">
 						<view class="item" v-for="(item, index) in bookList" :key="index">
-							<image :src="$aliImage + 'book-demo.png'" mode="widthFix" class="cover"></image>
+							<image :src="item.imgInfo[0].url" mode="widthFix" class="cover"></image>
 							<view class="context">
 								<view class="book-title">
-									<text>爸爸到底有什么用?</text>
+									<text>{{ item.title }}</text>
 								</view>
 								<view class="book-label">
-									<view>3-6岁</view>
-									<view>科普百科</view>
+									<view v-for="(tag, tagIndex) in item.tagInfo" v-if="tagIndex < 2" :key="tagIndex">{{ tag.tag_name }}</view>
+									
 								</view>
 								<view class="book-icon">
 									<view class="icon" style="margin-right: 30rpx; color: #B3B3B3;">
 										<image :src="$aliImage + 'favourite-icon-02.png'" mode=""></image>
 										<text>取消收藏</text>
 									</view>
-									<view class="icon" style="color: #2AAEC4;">
+									<view class="icon" style="color: #2AAEC4;" @tap="push(item)">
 										<image :src="$aliImage + 'favourite-icon-01.png'" mode=""></image>
 										<text>加入书架</text>
 									</view>
@@ -57,7 +57,11 @@
 		<view style="margin-top: 40rpx;" v-if="currentIndex === 1">
 			<Btn title="添加心愿书单" @handleClick="handleClick" />
 		</view>
-		
+		<!-- 书篮v-if="len" -->
+		<view class="library-box"  @tap="goCart" v-if="len">
+			<image :src="$aliImage + 'book-cart.png'" mode=""></image>
+			<text>{{ len }}</text>
+		</view>
 	</view>
 </template>
 
@@ -66,6 +70,7 @@
 	export default {
 		data() {
 			return {
+				userInfo: uni.getStorageSync('userInfo'),
 				$aliImage: this.$aliImage,
 				bookList: [],
 				wishBook: [1,2,3],
@@ -82,22 +87,24 @@
 					}
 				],
 				itemHeight: 0 ,
+				pageSize: '5',
+				currentPage: 1,
+				totalPage: 0,
+				len: 0
 			}
 		},
 		components: {
 			Btn
 		},
 		onLoad() {
-			
-		},
-		onReady() {
-			setTimeout(() => {
-				this.bookList = [1,2,3,4,5,6]
-				this.getEleRect('.favourite .item')
-			}, 1000)
+			this.len = uni.getStorageSync('offlineCartList').length
+			this.selGoodsCollect()
 		},
 		onReachBottom() {
-			console.log('loadingMore')
+			if(this.currentIndex === 0 && this.totalPage > this.bookList.length) {
+				this.currentPage = this.currentPage + 1
+				this.selGoodsCollect()
+			}
 		},
 		methods: {
 			// 获取元素高度
@@ -133,11 +140,74 @@
 					break
 				}
 			},
+			// 获取收藏书籍列表
+			selGoodsCollect() {
+				let params = {
+					pageSize: this.pageSize,
+					currentPage: String(this.currentPage),
+					filterItems: {
+						custom_id: String(this.userInfo.id)
+					}
+				}
+				this.$api.selGoodsCollect(params).then(res => {
+					this.totalPage = res.data.totalPage
+					let result = res.data.rows
+					this.bookList = [...this.bookList, ...result]
+					this.getEleRect('.favourite .item')
+				})
+			},
 			// 按钮点击事件
 			handleClick() {
 				uni.navigateTo({
 					url: '/pagesFavourite/favourite/wish-book'
 				})
+			},
+			// 加入书篮
+			// push(item) {
+			// 	let arrList = uni.getStorageSync('offlineCartList') ? uni.getStorageSync('offlineCartList') : [];
+			// 	let arr = [];
+			// 	if(arrList && arrList.length > 0) {
+			// 		arrList.map(item => {
+			// 			arr.push(item.id)
+			// 		})
+			// 		if(arr.indexOf(item.goods_id) === -1) {
+			// 			uni.showToast({
+			// 				title: '加入书篮成功',
+			// 				duration: 2000,
+			// 				icon: 'none',
+			// 				success: () => {
+			// 					arrList.unshift(item);
+			// 					console.log(arrList)
+			// 					uni.setStorageSync('offlineCartList', arrList)
+			// 					this.len = uni.getStorageSync('offlineCartList').length
+			// 				}
+			// 			});
+			// 		}else {
+			// 			uni.showToast({
+			// 				title: '相同图书请不要重复添加',
+			// 				duration: 2000,
+			// 				icon: 'none'
+			// 			});
+			// 		}
+			// 	}else {
+			// 		uni.showToast({
+			// 			title: '加入书篮成功',
+			// 			duration: 2000,
+			// 			icon: 'none',
+			// 			success: () => {
+			// 				arrList.push(item);
+			// 				uni.setStorageSync('offlineCartList', arrList)
+			// 				this.len = uni.getStorageSync('offlineCartList').length
+			// 			}
+			// 		});
+			// 	}
+				
+			// },
+			// 跳转到书篮tabbar页面
+			goCart() {
+				uni.reLaunch({
+					url: '/pages/cart/cart'
+				});
 			},
 		}
 	}
@@ -256,5 +326,38 @@
 		font-size: 28rpx;
 		font-weight: 700;
 	}
-
+	/* 书篮 */
+	.library-box {
+		box-sizing: border-box;
+		position: fixed;
+		border-radius: 50%;
+		width: 120rpx;
+		height: 120rpx;
+		right: 0;
+		bottom: 300rpx;
+		/* background: #fff; */
+		z-index: 20;
+		/* box-shadow: 0rpx 0rpx 20rpx rgba(179, 179, 179, 1); */
+		display: flex;
+		justify-content: center;
+		align-items: center;
+	}
+	.library-box image {
+		width: 100%;
+		height: 100%;
+	}
+	.library-box text {
+		position: absolute;
+		left: 60%;
+		top: -12rpx;
+		width: 40rpx;
+		height: 40rpx;
+		border-radius: 50%;
+		color: #fff;
+		font-size: 20rpx;
+		background: rgb(250, 81, 81);
+		display: flex;
+		justify-content: center;
+		align-items: center;
+	}
 </style>

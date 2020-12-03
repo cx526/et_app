@@ -263,11 +263,15 @@ export default {
 					mobile: mobile
 				})
 				.then(res => {
+					if(res.data.status === 'fail') {
+						return
+					}
 					let result = res.data
 					userInfo.card_no = result.card_no ? result.card_no : ''
 					userInfo.docker_mac = result.docker_mac ? result.docker_mac : ''
 					this.docker_mac = result.docker_mac ? result.docker_mac : ''
 					userInfo.custom_type = result.custom_type
+					userInfo.id = result.id
 					uni.setStorageSync('userInfo', userInfo)
 					// 获取老师推荐书籍
 					this.getHotBook('init');
@@ -387,7 +391,6 @@ export default {
 		// 点击swiper
 		toTargetUrl(item) {
 			let target = item.target
-			console.log(target)
 			if(target.indexOf('http') == -1) {
 				uni.navigateTo({
 					url: item.target

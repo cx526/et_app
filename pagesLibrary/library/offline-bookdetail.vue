@@ -88,9 +88,13 @@
 		<view class="bottom-position">
 			<!-- 收藏 -->
 			<view class="bottom-button-position">
-				<view class="bottom-button" @tap="collection">
+				<view class="bottom-button" @tap="collection" v-if="bookInfo.collectStatus === '1'">
 					<image :src="$aliImage + 'bookdetail_add.png'" class="bottom-image'"></image>
 					<text style="font-size: 20upx;color: #2AAEC4;">收藏</text>
+				</view>
+				<view class="bottom-button" @tap="collection" v-else>
+					<image :src="$aliImage + 'bookdetai_none_add.png'" class="bottom-image'"></image>
+					<text style="font-size: 20upx;color: rgb(184,184,184);">收藏</text>
 				</view>
 			</view>
 			<!-- 书篮 -->
@@ -126,7 +130,6 @@ export default {
 		etTag
 	},
 	onShareAppMessage(res) {
-		console.log(this.bookInfo)
 		if(res.from === 'menu') {
 			return {
 				title: this.bookInfo.title,
@@ -231,15 +234,11 @@ export default {
 				}).then(res => {
 				this.userInfo = res.data[0];
 				console.log(this.userInfo)
-				
-				console.log(JSON.stringify(this.userInfo.dockerInfo))
 				if(JSON.stringify(this.userInfo.dockerInfo)  == '{}' && this.userInfo.dockerInfo) {
-					console.log('entry')
 					this.docker_mac = this.userInfo.dockerInfo.docker_mac ? this.userInfo.dockerInfo.docker_mac : ''
 				}else if(JSON.stringify(this.userInfo.dockerInfo)  != '{}' && this.userInfo.dockerInfo) {
 					this.docker_mac = this.userInfo.dockerInfo.docker_mac 
 				}
-				console.log(this.docker_mac)
 				// 获取书籍详情
 				this.getBookData(this.docker_mac);
 			})
@@ -252,19 +251,42 @@ export default {
 		},
 		// 收藏功能
 		collection(){
-			uni.showToast({
-				title: '收藏功能暂未开放，敬请期待！',
-				duration: 2000,
-				icon: 'none'
-			});
+			// uni.showToast({
+			// 	title: '收藏功能暂未开放，敬请期待！',
+			// 	duration: 2000,
+			// 	icon: 'none'
+			// });
+			let params = {
+				custom_id: String(this.userInfo.id),
+				goods_id: String(this.bookInfo.id)
+			}
+			this.$api.addOrDelGoodsCollect(params).then(res => {
+				if(res.data.status === 'ok') {
+					this.bookInfo.collectStatus == '1' ? this.bookInfo.collectStatus = '0' : this.bookInfo.collectStatus = '1'
+					if(this.bookInfo.collectStatus === '1') {
+						uni.showToast({
+							title: '收藏成功',
+							duration: 1500,
+							icon: 'none'
+						})
+					}else {
+						uni.showToast({
+							title: '取消收藏成功',
+							duration: 1500,
+							icon: 'none'
+						})
+					}
+				}
+			})
 		},
 		// 获取书籍详情
 		getBookData(docker_mac) {
 			uni.showLoading();
 			this.$api.getGoodsInfo({ 
 				NoPageing: '1', 
-				filterItems: {'id': this.bookID} ,
+				filterItems: {'id': this.bookID, my_custom_id: String(this.userInfo.id)} ,
 				docker_mac: docker_mac
+				
 			}).then(res => {
 				uni.hideLoading();
 			   this.bookInfo = res.data.rows[0];
@@ -274,9 +296,7 @@ export default {
 					 this.bookInfo.detailArr.map(item => {
 						 this.detailArr.push(item.url)
 					 })
-				 }
-				 console.log(this.detailArr)
-			   
+				 }  
 			})
 		},
 		swiperChange(e) {
@@ -393,7 +413,6 @@ export default {
 		},
 		// 预览图片
 		preview(url) {
-			console.log(url)
 			uni.previewImage({
 				urls: [url]
 			})

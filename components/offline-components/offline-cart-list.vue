@@ -199,6 +199,7 @@ export default {
 	created() {
 		this.booksNumber = this.count; //判断书篮是否存在
 		this.bookList = uni.getStorageSync('offlineCartList');
+		console.log(this.bookList)
 		// 获取用户的个人账号信息
 		this.getUserInfo();
 	},

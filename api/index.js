@@ -290,6 +290,13 @@ api.sortReadingByApp = params => request.globalRequest('/api/count/sortReadingBy
 // 查看我打卡过的话题
 api.selReadingTopicByMark = params => request.globalRequest('/api/reading/selReadingTopicByMark', 'POST', params)
 
+// 收藏/心愿书单接口
+// 增加或删除书本收藏
+api.addOrDelGoodsCollect = params => request.globalRequest('/api/goodsAssist/addOrDelGoodsCollect', 'POST', params)
+
+// 查看收藏书籍列表
+api.selGoodsCollect = params => request.globalRequest('/api/goodsAssist/selGoodsCollect', 'POST', params)
+
 // 喜马拉雅签名接口
 api.xmlySign = params => request.globalRequest('/api/xmly/signature', 'POST', params)
 
