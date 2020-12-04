@@ -26,4 +26,9 @@ export const XMdeveloper_columnsURL = XMoriginURL + '/operation/columns?count=20
 export const XMdeveloper_bannersURL = XMoriginURL + '/operation/banners?scope=2'
 
 // 获取开发者分类列表 url
-export const XMdeveloper_categoriesURL = XMoriginURL + '/operation/categories?source=2'	
+export const XMdeveloper_categoriesURL = XMoriginURL + '/operation/categories'
+
+// ------------------------------ //
+
+// 获取专辑详情信息
+ export const XMalbums_browseURL = XMoriginURL + '/albums/browse?count=20'

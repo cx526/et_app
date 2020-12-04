@@ -11,6 +11,7 @@
 		XMdeveloper_columnsURL,
 		XMdeveloper_bannersURL,
 		XMdeveloper_categoriesURL,
+		XMalbums_browseURL,
 	} from './XM.js'
 	
 	export default {
@@ -35,13 +36,19 @@
 				this.XMplayer = player
 				
 				// 获取开发者收藏专辑
-				const albumsResult = await this.XMclient.get(XMdeveloper_albumsURL + `&page=${this.albumsPage}`)
+				let paramAlbums = {
+					page: this.albumsPage
+				}
+				const albumsResult = await this.XMclient.get(XMdeveloper_albumsURL, paramAlbums)
 				if(albumsResult.code === 0) {
 					console.log(albumsResult)
 				}
 				
 				// 获取开发者听单
-				const columnResult = await this.XMclient.get(XMdeveloper_columnsURL + `&page=${this.columnPage}`)
+				let paramCol = {
+					page: this.columnPage
+				}
+				const columnResult = await this.XMclient.get(XMdeveloper_columnsURL, paramCol)
 				if(columnResult.code === 0) {
 					console.log(columnResult)
 				}
@@ -57,6 +64,17 @@
 				if(categoriesResult.code === 0) {
 					console.log(categoriesResult)
 				}
+
+				// 获取专辑详情信息
+				let paramAlbumDetail = {
+					album_id: 2811252,
+					page: 1,
+				}
+				const albumsDetailResult = await this.XMclient.get(XMalbums_browseURL, paramAlbumDetail)
+				if(albumsDetailResult.code === 0) {
+					console.log(albumsDetailResult)
+				}				
+				
 			}
 		}
 	}
