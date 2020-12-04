@@ -179,9 +179,12 @@ export default {
 					toUrl: './kind'
 				},
 				{
-					name: '积分',
-					img: 'https://et-pic-server.oss-cn-shenzhen.aliyuncs.com/app_img/index_button_03.png',
-					toUrl: '/pages/my/myIntegral'
+					// name: '会员',
+					name: '音频',
+					img: 'https://et-pic-server.oss-cn-shenzhen.aliyuncs.com/app_img/index_button_05.png',
+					toUrl: '/pagesFavourite/XMradio/index'
+					// toUrl: '/pages/member/member-list'
+					// toUrl: '/pages/index/swiper-member'
 				},
 				{
 					name: '签到',
@@ -189,12 +192,10 @@ export default {
 					toUrl: './sign'
 				},
 				{
-					name: '会员',
-					img: 'https://et-pic-server.oss-cn-shenzhen.aliyuncs.com/app_img/index_button_05.png',
-					// toUrl: '/pagesFavourite/XMradio/index'
-					toUrl: '/pages/member/member-list'
-					// toUrl: '/pages/index/swiper-member'
-				}
+					name: '积分',
+					img: 'https://et-pic-server.oss-cn-shenzhen.aliyuncs.com/app_img/index_button_03.png',
+					toUrl: '/pages/my/myIntegral'
+				},
 			],
 			hotBookList: [],
 			bookCat: [
