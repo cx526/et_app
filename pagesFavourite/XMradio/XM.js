@@ -14,5 +14,16 @@ export function initXMLY() {
 	})
 }
 
-// 获取分类列表 url
-export const XMcategoriesURL = 'https://api.ximalaya.com/categories/list'
+const XMoriginURL = 'https://api.ximalaya.com'
+
+// 获取开发者收藏专辑 url
+export const XMdeveloper_albumsURL = XMoriginURL + '/operation/developer_collected_albums?count=20'
+
+// 获取开发者听单 url
+export const XMdeveloper_columnsURL = XMoriginURL + '/operation/columns?count=20&scopes=developer'
+
+// 获取开发者焦点图 url
+export const XMdeveloper_bannersURL = XMoriginURL + '/operation/banners?scope=2'
+
+// 获取开发者分类列表 url
+export const XMdeveloper_categoriesURL = XMoriginURL + '/operation/categories?source=2'	
