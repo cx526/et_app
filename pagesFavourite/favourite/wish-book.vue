@@ -3,23 +3,23 @@
 		<view class="list">
 			<view class="item">
 				<text class="label">书本名称</text>
-				<input placeholder="请输入书名" placeholder-style="font-size: 28rpx" />
+				<input placeholder="请输入书名" placeholder-style="font-size: 28rpx" @input="getTitle" />
 			</view>
 			<view class="item">
 				<text class="label">书本作者</text>
-				<input placeholder="请输入书本作者" placeholder-style="font-size: 28rpx" />
+				<input placeholder="请输入书本作者" placeholder-style="font-size: 28rpx" @input="getAuthor" />
 			</view>
 			<view class="item">
 				<text class="label">书本出版社</text>
-				<input placeholder="请输入书本出版本" placeholder-style="font-size: 28rpx" />
+				<input placeholder="请输入书本出版本" placeholder-style="font-size: 28rpx" @input="getPublisher" />
 			</view>
 			<view class="item">
 				<text class="label">书本ISBN</text>
-				<input placeholder="请输入书本ISBN" placeholder-style="font-size: 28rpx" />
+				<input placeholder="请输入书本ISBN" placeholder-style="font-size: 28rpx" @input="getISB" />
 			</view>
 			<view class="item">
 				<text class="label">书本简介</text>
-				<input placeholder="请输入书本简介" placeholder-style="font-size: 28rpx" />
+				<input placeholder="请输入书本简介" placeholder-style="font-size: 28rpx" @input="getSummary" />
 			</view>
 			<view class="item spcial" style="border-bottom: none">
 				<text class="label">书本封面</text>
@@ -42,7 +42,7 @@
 			</block>
 		</view>
 		<view style="margin-top: 40rpx;">
-			<Btn title="提交" />
+			<Btn title="提交" @handleClick="handleClick" />
 		</view>
 	</view>
 	
@@ -53,16 +53,115 @@
 	export default {
 		data() {
 			return {
+				userInfo: uni.getStorageSync('userInfo'),
 				$aliImage: this.$aliImage,
 				tempFilePaths: [],
 				tempFilePathsMore: [],
-				imgShow: []
+				imgShow: [], //书籍封面(压缩后)
+				title: '', // 书籍名称
+				author: '', // 书籍作者
+				publisher: '', // 书籍出版社
+				isbn13: '', //isb编码
+				summary: '', //书籍简介
+				count: 0,
+				insertId: '', //新建心愿书籍成功后返回的id
 			}
 		},
 		components: {
 			Btn
 		},
 		methods: {
+			// 获取书籍名称
+			getTitle(event) {
+				let value = event.detail.value.replace(/\s*/g, '')
+				this.title = value
+			},
+			// 获取书籍作者
+			getAuthor(event) {
+				let value = event.detail.value.replace(/\s*/g, '')
+				this.author = value
+			},
+			// 获取书籍出版社
+			getPublisher(event) {
+				let value = event.detail.value.replace(/\s*/g, '')
+				this.publisher = value
+			},
+			// 获取书籍简介
+			getSummary(event) {
+				let value = event.detail.value.replace(/\s*/g, '')
+				this.summary = value
+			},
+			// 获取书籍的ISBN编码
+			getISB(event) {
+				let value = event.detail.value.replace(/\s*/g, '')
+				this.isbn13 = value
+			},
+			
+			
+			// 提交
+			handleClick() {
+				if(this.title === '') {
+					uni.showToast({
+						title: '请填写心愿书籍名称',
+						icon: 'none',
+						duration: 1500
+					})
+					return
+				}else if(!this.imgShow || this.imgShow.length === 0) {
+					uni.showToast({
+						title: '请上传心愿书籍封面图',
+						icon: 'none',
+						duration: 1500
+					})
+					return
+				}
+				let params = {
+					title: this.title,
+					author: this.author,
+					publisher: this.publisher,
+					isbn13: this.isbn13,
+					summary: this.summary,
+					custom_id: String(this.userInfo.id),
+				}
+				this.$api.addGoodsWish(params).then(res => {
+					console.log(res)
+					if(res.data.status === 'ok') {
+						this.insertId = res.data.insertId
+						uni.setStorageSync('selGoodsWish', true)
+						if(this.imgShow && this.imgShow.length > 0) {
+							console.log(this.imgShow)
+							this.upLoadFile()
+						}else {
+							uni.showToast({
+								title: '创建成功',
+								icon: 'none',
+								duration: 1500,
+								success: () => {
+									setTimeout(() => {
+										uni.navigateBack({
+											delta: 1
+										})
+									}, 1000)
+								}
+							})
+						}
+						console.log(this.insertId)
+					}else {
+						uni.showToast({
+							title: '创建失败,请稍后再试',
+							icon: 'none',
+							duration: 1500,
+							success: () => {
+								setTimeout(() => {
+									uni.navigateBack({
+										delta: 1
+									})
+								}, 1000)
+							}
+						})
+					}
+				})
+			},
 			// 选择图片
 			select_more() {
 				if(this.imgShow.length >= 2) {
@@ -159,6 +258,67 @@
 				uni.previewImage({
 					urls: this.tempFilePaths,
 					current: index
+				})
+			},
+			// 上传图片到阿里云
+			upLoadFile() {
+				uni.showLoading({
+					title: '上传图片中',
+					mask: true
+				})
+				for(let i = 0; i < this.imgShow.length; i++) {
+					uni.uploadFile({
+						url:'https://www.52diyike.com/api/api/upload/uploadPicToAliyun',
+						filePath: this.imgShow[i],
+						name: 'file',
+						success: res => {
+							if(this.count == this.imgShow.length) {
+								uni.hideLoading()
+							}
+							let result = JSON.parse(res.data)
+							let params = {
+								targetId: String(this.insertId),
+								usage: "goods_wish",
+								res: result
+							}
+							this.addUploadPic(params, this.imgShow.length)
+						}
+					})
+				}
+			},
+			// 回调
+			addUploadPic(params, len) {
+				
+				this.$api.addUploadPic(params).then(res => {
+					this.count = this.count+1
+					if(len == this.count) {
+						uni.showToast({
+							title: '打卡成功',
+							icon: 'none',
+							duration: 1500,
+							success: () => {
+								uni.navigateBack({
+									delta: 1
+								})
+							}
+						})
+					}
+					// uni.showToast({
+					// 	title: '打卡成功',
+					// 	icon: 'none',
+					// 	duration: 1500,
+					// 	success:() => {
+					// 		// 全部上传完毕才返回上一页
+					// 		if(len == this.count) {
+					// 			setTimeout(() => {
+					// 				uni.navigateBack({
+					// 					delta: 1
+					// 				})
+					// 			}, 1500)
+					// 		}
+							
+					// 	}
+					// })
 				})
 			},
 		}

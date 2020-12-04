@@ -297,6 +297,15 @@ api.addOrDelGoodsCollect = params => request.globalRequest('/api/goodsAssist/add
 // 查看收藏书籍列表
 api.selGoodsCollect = params => request.globalRequest('/api/goodsAssist/selGoodsCollect', 'POST', params)
 
+// 增加心愿书籍
+api.addGoodsWish = params => request.globalRequest('/api/goodsAssist/addGoodsWish', 'POST', params)
+
+// 查看心愿书籍列表
+api.selGoodsWish = params => request.globalRequest('/api/goodsAssist/selGoodsWish', 'POST', params)
+
+// 删除心愿书单
+api.delGoodsWish = params => request.globalRequest('/api/goodsAssist/delGoodsWish', 'POST', params)
+
 // 喜马拉雅签名接口
 api.xmlySign = params => request.globalRequest('/api/xmly/signature', 'POST', params)
 

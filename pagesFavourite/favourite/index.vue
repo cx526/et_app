@@ -2,16 +2,16 @@
 	<view style="padding: 40rpx 25rpx;">
 		<view class="box">
 			<view class="title">
-				<view class="subTitle" v-for="(item, index) in navList" :key="index" :class="currentIndex === index ? ' active' : ''" >
+				<view class="subTitle" v-for="(item, index) in navList" :key="index" :class="currentIndex === index ? ' active' : ''" @tap="changeNav(index)">
 					<text>{{ item.title }}</text>
 					<text class="line" v-show="currentIndex === index"></text>
 				</view>
 			</view>
 			<view class="list" id="list">
-				<swiper :style="{'height': swiperHeight}" @change="swiperChange">
+				<swiper :style="{'height': swiperHeight}" @change="swiperChange" :current="currentIndex">
 					<swiper-item class="favourite">
-						<view class="item" v-for="(item, index) in bookList" :key="index">
-							<image :src="item.imgInfo[0].url" mode="widthFix" class="cover"></image>
+						<view class="item" v-for="(item, index) in bookList" :key="index" @tap="bookDetail(item.id)">
+							<image :src="item.forGoodsPic[0].url" mode="widthFix" class="cover"></image>
 							<view class="context">
 								<view class="book-title">
 									<text>{{ item.title }}</text>
@@ -21,11 +21,11 @@
 									
 								</view>
 								<view class="book-icon">
-									<view class="icon" style="margin-right: 30rpx; color: #B3B3B3;">
+									<view class="icon" style="margin-right: 30rpx; color: #B3B3B3;" @tap.stop="cancel(item.goods_id)">
 										<image :src="$aliImage + 'favourite-icon-02.png'" mode=""></image>
 										<text>取消收藏</text>
 									</view>
-									<view class="icon" style="color: #2AAEC4;" @tap="push(item)">
+									<view class="icon" style="color: #2AAEC4;" @tap.stop="push(item)">
 										<image :src="$aliImage + 'favourite-icon-01.png'" mode=""></image>
 										<text>加入书架</text>
 									</view>
@@ -35,22 +35,27 @@
 					</swiper-item>
 					<swiper-item class="wish">
 						<view class="item" v-for="(item, index) in wishBook" :key="index">
-							<image :src="$aliImage + 'book-demo.png'" mode="widthFix" class="cover"></image>
+							<image :src="item.imgInfo[0].url" mode="widthFix" class="cover"></image>
 							<view class="context">
-								<view class="book-title" style="font-size: 28rpx;">
-									<text>爸爸到底有什么用?</text>
+								<view class="book-title" style="font-size: 28rpx;display: flex;justify-content: space-between;padding-right: 18rpx;">
+									<text>{{ item.title }}</text>
+									<image :src="$aliImage + 'rubbish.png'" style="width: 30rpx;" mode="widthFix" @tap="delWish(item.id)"></image>
 								</view>
 								<view class="publisher">
-									<text>路边出版社</text>
+									<text>{{ item.publisher }}</text>
 								</view>
 								<view class="name">
-									<text>小明</text>
+									<text>{{ item.author }}</text>
 								</view>
 							</view>
 						</view>
 						
 					</swiper-item>
 				</swiper>
+				<!-- 暂无数据 -->
+				<view class="none" v-if="(bookList.length === 0 && currentIndex === 0) || (wishBook.length === 0 && currentIndex === 1)">
+					<text>暂无数据</text>
+				</view>
 			</view>
 		</view>
 		<!-- btn -->
@@ -73,7 +78,7 @@
 				userInfo: uni.getStorageSync('userInfo'),
 				$aliImage: this.$aliImage,
 				bookList: [],
-				wishBook: [1,2,3],
+				wishBook: [],
 				swiperHeight: 0, // 定义swiper高度
 				currentIndex: 0,
 				navList: [
@@ -100,10 +105,22 @@
 			this.len = uni.getStorageSync('offlineCartList').length
 			this.selGoodsCollect()
 		},
+		onShow() {
+			let selGoodsWish = uni.getStorageSync('selGoodsWish')
+			if(selGoodsWish) {
+				this.currentPage = 1
+				this.selGoodsWish('noNormal')
+				uni.setStorageSync('selGoodsWish', false)
+			}
+		},
+	
 		onReachBottom() {
 			if(this.currentIndex === 0 && this.totalPage > this.bookList.length) {
 				this.currentPage = this.currentPage + 1
 				this.selGoodsCollect()
+			}else if(this.currentIndex === 1 && this.totalPage > this.wishBook.length) {
+				this.currentPage = this.currentPage + 1
+				this.selGoodsWish()
 			}
 		},
 		methods: {
@@ -126,22 +143,77 @@
 					}).exec();
 				}, 200)
 			},
+			// 点击tap
+			changeNav(index) {
+				this.currentIndex = index
+				switch(this.currentIndex) {
+					case 0:
+					if(this.bookList && this.bookList.length > 0) {
+						this.getEleRect('.favourite .item')
+					}
+					this.swiperHeight = 0
+					break
+					case 1:
+					if(this.wishBook && this.wishBook.length > 0) {
+						this.getEleRect('.wish .item')
+					}
+					this.swiperHeight = 0
+					break
+					default:
+					break
+				}
+			},
 			// 监听swiper改变事件
 			swiperChange(event) {
 				this.currentIndex = event.detail.current
 				switch(this.currentIndex) {
 					case 0:
-					this.getEleRect('.favourite .item')
+					this.currentPage = 1
+					this.selGoodsCollect('noNormal')
+					if(this.bookList.length === 0) {
+						this.swiperHeight = 0
+					}
+					
 					break
 					case 1:
-					this.getEleRect('.wish .item')
+					this.currentPage = 1
+					this.selGoodsWish('noNormal')
+					if(this.wishBook.length === 0) {
+						this.swiperHeight = 0
+					}
 					break
 					default:
 					break
 				}
 			},
 			// 获取收藏书籍列表
-			selGoodsCollect() {
+			selGoodsCollect(type='loading') {
+				let params = {
+					pageSize: this.pageSize,
+					currentPage: String(this.currentPage),
+					filterItems: {
+						custom_id: String(this.userInfo.id),
+						docker_mac: this.userInfo.docker_mac
+					}
+				}
+				this.$api.selGoodsCollect(params).then(res => {
+					this.totalPage = res.data.totalPage
+					let result = res.data.rows
+					if(type == 'noNormal') {
+						this.bookList = result
+					}else {
+						this.bookList = [...this.bookList, ...result]
+					}
+					if(this.bookList && this.bookList.length > 0) {
+						this.getEleRect('.favourite .item')
+					}else {
+						this.swiperHeight = 0
+					}
+					
+				})
+			},
+			// 查看心愿书籍列表
+			selGoodsWish(type='loading') {
 				let params = {
 					pageSize: this.pageSize,
 					currentPage: String(this.currentPage),
@@ -149,11 +221,19 @@
 						custom_id: String(this.userInfo.id)
 					}
 				}
-				this.$api.selGoodsCollect(params).then(res => {
+				this.$api.selGoodsWish(params).then(res => {
 					this.totalPage = res.data.totalPage
 					let result = res.data.rows
-					this.bookList = [...this.bookList, ...result]
-					this.getEleRect('.favourite .item')
+					if(type == 'noNormal') {
+						this.wishBook = result
+					}else {
+						this.wishBook = [...this.wishBook, ...result]
+					}
+					if(this.wishBook && this.wishBook.length > 0) {
+						this.getEleRect('.wish .item')
+					}else {
+						this.swiperHeight = 0
+					}
 				})
 			},
 			// 按钮点击事件
@@ -163,52 +243,92 @@
 				})
 			},
 			// 加入书篮
-			// push(item) {
-			// 	let arrList = uni.getStorageSync('offlineCartList') ? uni.getStorageSync('offlineCartList') : [];
-			// 	let arr = [];
-			// 	if(arrList && arrList.length > 0) {
-			// 		arrList.map(item => {
-			// 			arr.push(item.id)
-			// 		})
-			// 		if(arr.indexOf(item.goods_id) === -1) {
-			// 			uni.showToast({
-			// 				title: '加入书篮成功',
-			// 				duration: 2000,
-			// 				icon: 'none',
-			// 				success: () => {
-			// 					arrList.unshift(item);
-			// 					console.log(arrList)
-			// 					uni.setStorageSync('offlineCartList', arrList)
-			// 					this.len = uni.getStorageSync('offlineCartList').length
-			// 				}
-			// 			});
-			// 		}else {
-			// 			uni.showToast({
-			// 				title: '相同图书请不要重复添加',
-			// 				duration: 2000,
-			// 				icon: 'none'
-			// 			});
-			// 		}
-			// 	}else {
-			// 		uni.showToast({
-			// 			title: '加入书篮成功',
-			// 			duration: 2000,
-			// 			icon: 'none',
-			// 			success: () => {
-			// 				arrList.push(item);
-			// 				uni.setStorageSync('offlineCartList', arrList)
-			// 				this.len = uni.getStorageSync('offlineCartList').length
-			// 			}
-			// 		});
-			// 	}
+			push(item) {
+				let arrList = uni.getStorageSync('offlineCartList') ? uni.getStorageSync('offlineCartList') : [];
+				let arr = [];
+				if(arrList && arrList.length > 0) {
+					arrList.map(item => {
+						arr.push(item.id)
+					})
+					if(arr.indexOf(item.id) === -1) {
+						uni.showToast({
+							title: '加入书篮成功',
+							duration: 2000,
+							icon: 'none',
+							success: () => {
+								arrList.unshift(item);
+								uni.setStorageSync('offlineCartList', arrList)
+								this.len = uni.getStorageSync('offlineCartList').length
+							}
+						});
+					}else {
+						uni.showToast({
+							title: '相同图书请不要重复添加',
+							duration: 2000,
+							icon: 'none'
+						});
+					}
+				}else {
+					uni.showToast({
+						title: '加入书篮成功',
+						duration: 2000,
+						icon: 'none',
+						success: () => {
+							arrList.push(item);
+							uni.setStorageSync('offlineCartList', arrList)
+							this.len = uni.getStorageSync('offlineCartList').length
+						}
+					});
+				}
 				
-			// },
+			},
+			// 取消收藏
+			cancel(goods_id) {
+				let params = {
+					goods_id: goods_id,
+					custom_id: String(this.userInfo.id)
+				}
+				this.$api.addOrDelGoodsCollect(params).then(res => {
+					if(res.data.status === 'ok') {
+						// 刷新数据
+						this.currentPage = 1
+						this.selGoodsCollect('noNormal')
+					}
+				})
+			},
 			// 跳转到书篮tabbar页面
 			goCart() {
 				uni.reLaunch({
 					url: '/pages/cart/cart'
 				});
 			},
+			// 删除心愿书单
+			delWish(id) {
+				
+				let params = {
+					id: String(id)
+				}
+				uni.showModal({
+					title: '是否确认删除此心愿书单?',
+					success: res => {
+						if(res.confirm) {
+							this.$api.delGoodsWish(params).then(res => {
+								if(res.data.status === 'ok') {
+									this.currentPage = 1
+									this.selGoodsWish('noNormal')
+								}
+							})
+						}
+					}
+				})
+				
+			},
+			// 跳转到书籍详情页
+			bookDetail(id) {
+				uni.navigateTo({
+					url: '/pagesLibrary/library/offline-bookdetail?bookID='+id
+				})
+			}
 		}
 	}
 </script>
@@ -359,5 +479,12 @@
 		display: flex;
 		justify-content: center;
 		align-items: center;
+	}
+	.none {
+		box-sizing: border-box;
+		padding: 30rpx;
+		text-align: center;
+		font-size: 30rpx;
+		color:#808080;
 	}
 </style>
