@@ -17,7 +17,7 @@
 									<text>{{ item.title }}</text>
 								</view>
 								<view class="book-label">
-									<view v-for="(tag, tagIndex) in item.tagInfo" v-if="tagIndex < 2" :key="tagIndex">{{ tag.tag_name }}</view>
+									<view v-for="(tag, tagIndex) in item.tagInfo" v-if="tagIndex < 4" :key="tagIndex">{{ tag.tag_name }}</view>
 									
 								</view>
 								<view class="book-icon">
