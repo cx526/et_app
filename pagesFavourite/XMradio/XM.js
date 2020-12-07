@@ -32,3 +32,14 @@ export const XMdeveloper_categoriesURL = XMoriginURL + '/operation/categories'
 
 // 获取专辑详情信息
  export const XMalbums_browseURL = XMoriginURL + '/albums/browse?count=20'
+
+
+
+// 获取开发者听单
+// let paramCol = {
+// 	page: this.columnPage
+// }
+// const columnResult = await this.XMclient.get(XMdeveloper_columnsURL, paramCol)
+// if(columnResult.code === 0) {
+// 	console.log(columnResult)
+// }
