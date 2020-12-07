@@ -3,13 +3,13 @@
 		<view v-if="parent === 'banner'">
 			<image v-for="(item, index) in memberType" :key="item.id" :src="item.banner_url" mode="widthFix" @tap="memberDetail(index)"></image>
 			<view class="context" v-if="isShow">
-				<text>敬请期待...</text>
+				<text>更多类型会员卡，敬请期待</text>
 			</view>
 		</view>
 		<view v-else>
 			<image v-for="(item, index) in memberType" :key="item.id" :src="item.listimg_url" mode="widthFix" @tap="memberDetail(index)"></image>
 			<view class="context" v-if="isShow">
-				<text>敬请期待...</text>
+				<text>更多类型会员卡，敬请期待</text>
 			</view>
 		</view>
 	</view>

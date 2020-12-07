@@ -517,6 +517,7 @@
 	.topic .list .item .title image {
 		width: 120rpx;
 		height: 38rpx;
+		flex-shrink: 0;
 	}
 	.topic .list .item .detail {
 		margin-top: 10rpx;
