@@ -1,6 +1,7 @@
 <template>
 	<view>
 		<text>XMradio</text>
+		<button @tap="play">play</button>
 	</view>
 </template>
 
@@ -75,6 +76,11 @@
 					console.log(albumsDetailResult)
 				}				
 				
+			},
+			async play() {
+				console.log('play')
+				await this.XMplayer.setPlaylist([28780230])
+				await this.XMplayer.playByIndex(0)
 			}
 		}
 	}
