@@ -179,13 +179,11 @@ export default {
 					toUrl: './kind'
 				},
 				{
-					name: '会员',
-					// name: '音频',
-					img: 'https://et-pic-server.oss-cn-shenzhen.aliyuncs.com/app_img/index_button_05.png',
-					// toUrl: '/pagesFavourite/XMradio/index'
-					toUrl: '/pages/member/member-list'
-					// toUrl: '/pages/index/swiper-member'
+					name: '小学堂',
+					img: 'https://et-pic-server.oss-cn-shenzhen.aliyuncs.com/app_img/index_button_07.png',
+					toUrl: '/pagesFavourite/XMradio/index'
 				},
+				
 				{
 					name: '签到',
 					img: 'https://et-pic-server.oss-cn-shenzhen.aliyuncs.com/app_img/index_button_04.png',
@@ -197,9 +195,11 @@ export default {
 				// 	toUrl: '/pages/my/myIntegral'
 				// },
 				{
-					name: '小学堂',
-					img: 'https://et-pic-server.oss-cn-shenzhen.aliyuncs.com/app_img/index_button_06.png',
-					toUrl: '/pagesFavourite/XMradio/index'
+					name: '会员',
+					// name: '音频',
+					img: 'https://et-pic-server.oss-cn-shenzhen.aliyuncs.com/app_img/index_button_05.png',
+					// toUrl: '/pagesFavourite/XMradio/index'
+					toUrl: '/pages/member/member-list'
 				},
 			],
 			hotBookList: [],

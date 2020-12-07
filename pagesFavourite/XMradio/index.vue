@@ -46,7 +46,6 @@
 				const {xmly, player} = await initXMLY()
 				this.XMclient = xmly
 				this.XMplayer = player
-<<<<<<< HEAD
 				// 获取开发者收藏专辑
 				let paramAlbums = {
 					page: this.albumsPage
@@ -64,11 +63,10 @@
 				if(columnResult.code === 0) {
 					console.log(columnResult)
 				}
-=======
 				
 				this.albumsList = await this.getAlbumsList(this.albumsPage)
 				console.log(this.albumsList)
->>>>>>> f4ce2f6a848cebc220c59a6a7b2f1d2e7d3f9b7b
+
 				
 				this.kindList = await this.getKinds()
 				console.log(this.kindList)
