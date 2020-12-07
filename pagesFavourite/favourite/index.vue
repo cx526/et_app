@@ -39,7 +39,7 @@
 							<view class="context">
 								<view class="book-title" style="font-size: 28rpx;display: flex;justify-content: space-between;padding-right: 18rpx;">
 									<text>{{ item.title }}</text>
-									<image :src="$aliImage + 'rubbish.png'" style="width: 30rpx;" mode="widthFix" @tap="delWish(item.id)"></image>
+									<image :src="$aliImage + 'rubbish.png'" style="width: 30rpx;" mode="widthFix" @tap="delWish(item)"></image>
 								</view>
 								<view class="publisher">
 									<text>{{ item.publisher }}</text>
@@ -95,7 +95,8 @@
 				pageSize: '5',
 				currentPage: 1,
 				totalPage: 0,
-				len: 0
+				len: 0,
+				count: 0
 			}
 		},
 		components: {
@@ -303,8 +304,11 @@
 				});
 			},
 			// 删除心愿书单
-			delWish(id) {
-				
+			delWish(item) {
+				console.log(item)
+				let id = item.id
+				let imgInfo = item.imgInfo
+				let len = imgInfo.length
 				let params = {
 					id: String(id)
 				}
@@ -312,16 +316,39 @@
 					title: '是否确认删除此心愿书单?',
 					success: res => {
 						if(res.confirm) {
-							this.$api.delGoodsWish(params).then(res => {
-								if(res.data.status === 'ok') {
-									this.currentPage = 1
-									this.selGoodsWish('noNormal')
+							// 先执行删除图片操作
+							if(imgInfo && imgInfo.length > 0) {
+								for(let i = 0; i < imgInfo.length; i++) {
+									let imgParams = {
+										url: imgInfo[i].url,
+										name: imgInfo[i].file_name
+									}
+									this.$api.delUploadPic(imgParams).then(res => {
+										this.count = this.count + 1
+										if(this.count === len) {
+											// 执行删除心愿书操作
+											this.delGoodsWish(params)
+										}
+									})
 								}
-							})
+							}else {
+								// 执行删除心愿书操作
+								this.delGoodsWish(params)
+							}
+							
 						}
 					}
 				})
 				
+			},
+			// 删除书单操作
+			delGoodsWish(params) {
+				this.$api.delGoodsWish(params).then(res => {
+					if(res.data.status === 'ok') {
+						this.currentPage = 1
+						this.selGoodsWish('noNormal')
+					}
+				})
 			},
 			// 跳转到书籍详情页
 			bookDetail(id) {

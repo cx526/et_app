@@ -65,6 +65,7 @@
 				summary: '', //书籍简介
 				count: 0,
 				insertId: '', //新建心愿书籍成功后返回的id
+				ctx: null
 			}
 		},
 		components: {
@@ -124,12 +125,10 @@
 					custom_id: String(this.userInfo.id),
 				}
 				this.$api.addGoodsWish(params).then(res => {
-					console.log(res)
 					if(res.data.status === 'ok') {
 						this.insertId = res.data.insertId
 						uni.setStorageSync('selGoodsWish', true)
 						if(this.imgShow && this.imgShow.length > 0) {
-							console.log(this.imgShow)
 							this.upLoadFile()
 						}else {
 							uni.showToast({
@@ -145,7 +144,6 @@
 								}
 							})
 						}
-						console.log(this.insertId)
 					}else {
 						uni.showToast({
 							title: '创建失败,请稍后再试',
@@ -254,7 +252,6 @@
 			},
 			// 预览图片
 			preview(index) {
-				console.log(index)
 				uni.previewImage({
 					urls: this.tempFilePaths,
 					current: index

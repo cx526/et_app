@@ -1,5 +1,5 @@
 <template>
-	<view v-if="isLogin">
+	<view v-if="isLogin && isScoped">
 		<view style="margin-bottom: 25rpx;">
 			<!-- 话题简介 -->
 			<topicOutline @checkMoreDetail="checkMoreDetail" @addRemark="addRemark" :custom_type="custom_type" :dataList="topicDetail" :vitality="vitality" :vitalityList="vitalityList" @edit="edit" @checkTopicVitality="checkTopicVitality" />
@@ -58,6 +58,7 @@
 				isLogin: false, //是否登录
 				private: 0, //违规/待审核打卡数
 				update: true, //控制是否重新加载数据
+				isScoped: true //控制话题是否可见
 			}
 		},
 		components: {
@@ -191,6 +192,27 @@
 				}
 				this.$api.selReadingTopic(params).then(res => {
 					let result = res.data.rows[0]
+					let school_id = this.userInfo.school_id
+					console.log(school_id, result.school_id)
+					// 扫码进来需要判断话题所属学校
+					if(result.school_id && result.school_id !== '' ) {
+						if(school_id != result.school_id) {
+							this.isScoped = false
+							uni.showToast({
+								title: '该话题不属于所在学校可见范围',
+								icon: 'none',
+								duration: 1500,
+								success: () => {
+									setTimeout(() => {
+										uni.switchTab({
+											url: '/pages/reading-circles'
+										})
+									}, 1500)
+								}
+							})
+							return
+						}
+					}
 					result.start_time = this.formatTime(result.start_time, 'YY:MM:DD')
 					result.end_time = this.formatTime(result.end_time, 'YY:MM:DD')
 					this.topicDetail = result

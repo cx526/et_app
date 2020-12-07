@@ -191,10 +191,15 @@ export default {
 					img: 'https://et-pic-server.oss-cn-shenzhen.aliyuncs.com/app_img/index_button_04.png',
 					toUrl: './sign'
 				},
+				// {
+				// 	name: '积分',
+				// 	img: 'https://et-pic-server.oss-cn-shenzhen.aliyuncs.com/app_img/index_button_03.png',
+				// 	toUrl: '/pages/my/myIntegral'
+				// },
 				{
-					name: '积分',
-					img: 'https://et-pic-server.oss-cn-shenzhen.aliyuncs.com/app_img/index_button_03.png',
-					toUrl: '/pages/my/myIntegral'
+					name: '小学堂',
+					img: 'https://et-pic-server.oss-cn-shenzhen.aliyuncs.com/app_img/index_button_06.png',
+					toUrl: '/pagesFavourite/XMradio/index'
 				},
 			],
 			hotBookList: [],
@@ -273,6 +278,7 @@ export default {
 					this.docker_mac = result.docker_mac ? result.docker_mac : ''
 					userInfo.custom_type = result.custom_type
 					userInfo.id = result.id
+					userInfo.school_id = result.school_id
 					uni.setStorageSync('userInfo', userInfo)
 					// 获取老师推荐书籍
 					this.getHotBook('init');
@@ -452,14 +458,14 @@ export default {
 				})
 				return
 			}
-			// else if(toUrl === '/pages/member/member') {
-			// 	uni.showToast({
-			// 		title: '敬请期待',
-			// 		icon: 'none',
-			// 		duration: 2000
-			// 	})
-			// 	return
-			// }
+			else if(toUrl === '/pagesFavourite/XMradio/index') {
+				uni.showToast({
+					title: '敬请期待',
+					icon: 'none',
+					duration: 2000
+				})
+				return
+			}
 			else {
 				uni.navigateTo({ url: toUrl });
 			}

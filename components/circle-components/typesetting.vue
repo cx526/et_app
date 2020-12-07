@@ -12,7 +12,7 @@
 				</view>
 				<view class="bottom">
 					<image :src="$aliImage + 'read-vitality.png'" mode="widthFix"></image>
-					<text>活力值：{{ parseInt(item.vitality) }}</text>
+					<text style="flex: 1;">活力值:{{ parseInt(item.vitality) }}</text>
 				</view>
 			</view>
 		</view>

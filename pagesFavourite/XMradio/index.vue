@@ -34,7 +34,6 @@
 				const {xmly, player} = await initXMLY()
 				this.XMclient = xmly
 				this.XMplayer = player
-				
 				// 获取开发者收藏专辑
 				let paramAlbums = {
 					page: this.albumsPage

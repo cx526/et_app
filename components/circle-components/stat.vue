@@ -7,8 +7,9 @@
 					<!-- 显示排名 -->
 					<view v-if="item.sort && item.length">
 						<image :src="$aliImage + 'read-info.png'" mode="widthFix" class="info"></image>
-						<text style="font-size: 36rpx;font-weight: 700;">{{ item.sort }}</text>
-						<text style="font-size: 20rpx;color: rgba(255,255,255,.6);"> /{{ item.length }}人</text>
+						<text style="font-size: 42rpx;font-weight: 700;">{{ item.sort }}</text>
+						<text style="font-size: 26rpx;color: rgba(255,255,255,.6);margin: 0 4rpx;">/</text>
+						<text style="font-size: 26rpx;color: rgba(255,255,255,.6);"> {{ item.length }}人</text>
 					</view>
 					<view style="font-size: 24rpx;color: rgba(255,255,255,.6);">{{ item.title }}</view>
 				</view>
@@ -107,8 +108,8 @@
 		color: #fff;
 	}
 	.stat .item .data .info {
-		width: 30rpx;
-		height: 30rpx;
+		width: 36rpx;
+		height: 36rpx;
 		margin-right: 6rpx;
 	}
 </style>

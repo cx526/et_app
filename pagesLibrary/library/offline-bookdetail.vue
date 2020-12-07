@@ -86,8 +86,8 @@
 		<view class="white-space"></view>
 		
 		<view class="bottom-position">
-			<!-- 收藏 v-if="bookInfo.collectStatus === '1'" -->
-			<view class="bottom-button-position">
+			<!-- 收藏v-if="bookInfo.collectStatus === '1'" -->
+			<view class="bottom-button-position" >
 				<view class="bottom-button" @tap="collection" >
 					<image :src="$aliImage + 'bookdetail_add.png'" class="bottom-image'"></image>
 					<text style="font-size: 20upx;color: #2AAEC4;">收藏</text>
