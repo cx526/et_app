@@ -25,10 +25,10 @@
 										<image :src="$aliImage + 'favourite-icon-02.png'" mode=""></image>
 										<text>取消收藏</text>
 									</view>
-									<view class="icon" style="color: #2AAEC4;" @tap.stop="push(item)">
+									<!-- <view class="icon" style="color: #2AAEC4;" @tap.stop="push(item)">
 										<image :src="$aliImage + 'favourite-icon-01.png'" mode=""></image>
 										<text>加入书架</text>
-									</view>
+									</view> -->
 								</view>
 							</view>
 						</view>
@@ -63,10 +63,10 @@
 			<Btn title="添加心愿书单" @handleClick="handleClick" />
 		</view>
 		<!-- 书篮v-if="len" -->
-		<view class="library-box"  @tap="goCart" v-if="len">
+		<!-- <view class="library-box"  @tap="goCart" v-if="len">
 			<image :src="$aliImage + 'book-cart.png'" mode=""></image>
 			<text>{{ len }}</text>
-		</view>
+		</view> -->
 	</view>
 </template>
 

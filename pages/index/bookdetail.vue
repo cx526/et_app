@@ -113,9 +113,13 @@
 		
 		<view class="bottom-position">
 			<view class="bottom-button-position">
-				<view class="bottom-button" @tap="collection">
-					<image src="https://et-pic-server.oss-cn-shenzhen.aliyuncs.com/app_img/bookdetail_add.png" class="bottom-image"></image>
+				<view class="bottom-button" @tap="collection" v-if="bookInfo.collectStatus === '1'">
+					<image :src="$aliImage + 'bookdetail_add.png'" class="bottom-image'"></image>
 					<text style="font-size: 20upx;color: #2AAEC4;">收藏</text>
+				</view>
+				<view class="bottom-button" @tap="collection" v-else>
+					<image :src="$aliImage + 'bookdetai_none_add.png'" class="bottom-image'"></image>
+					<text style="font-size: 20upx;color: rgb(184,184,184);">收藏</text>
 				</view>
 			</view>
 			<view class="bottom-button-position cart-book-count-father">
@@ -153,6 +157,8 @@ export default {
 	},
 	data() {
 		return {
+			userInfo: uni.getStorageSync('userInfo'),
+			$aliImage: this.$aliImage, //静态图片路径
 			allBooks: '',
 			bookInfo:{},
 			bookID:	0,
@@ -209,11 +215,33 @@ export default {
 			toUrlFunction.toUrl('/pages/guide/borrowExplain');
 		},
 		collection(){
-			uni.showToast({
-				title: '收藏功能暂未开放，敬请期待！',
-				duration: 2000,
-				icon: 'none'
-			});
+			// uni.showToast({
+			// 	title: '收藏功能暂未开放，敬请期待！',
+			// 	duration: 2000,
+			// 	icon: 'none'
+			// });
+			let params = {
+				custom_id: String(this.userInfo.id),
+				goods_id: String(this.bookInfo.id)
+			}
+			this.$api.addOrDelGoodsCollect(params).then(res => {
+				if(res.data.status === 'ok') {
+					this.bookInfo.collectStatus == '1' ? this.bookInfo.collectStatus = '0' : this.bookInfo.collectStatus = '1'
+					if(this.bookInfo.collectStatus === '1') {
+						uni.showToast({
+							title: '收藏成功',
+							duration: 1500,
+							icon: 'none'
+						})
+					}else {
+						uni.showToast({
+							title: '取消收藏成功',
+							duration: 1500,
+							icon: 'none'
+						})
+					}
+				}
+			})
 		},
 		toCartUrl(url){
 			toUrlFunction.toUrl(url);

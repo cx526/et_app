@@ -86,16 +86,16 @@
 		<view class="white-space"></view>
 		
 		<view class="bottom-position">
-			<!-- 收藏v-if="bookInfo.collectStatus === '1'" -->
+			<!-- 收藏 -->
 			<view class="bottom-button-position" >
-				<view class="bottom-button" @tap="collection" >
+				<view class="bottom-button" @tap="collection" v-if="bookInfo.collectStatus === '1'">
 					<image :src="$aliImage + 'bookdetail_add.png'" class="bottom-image'"></image>
 					<text style="font-size: 20upx;color: #2AAEC4;">收藏</text>
 				</view>
-				<!-- <view class="bottom-button" @tap="collection" v-else>
+				<view class="bottom-button" @tap="collection" v-else>
 					<image :src="$aliImage + 'bookdetai_none_add.png'" class="bottom-image'"></image>
 					<text style="font-size: 20upx;color: rgb(184,184,184);">收藏</text>
-				</view> -->
+				</view>
 			</view>
 			<!-- 书篮 -->
 			<view 
@@ -256,28 +256,28 @@ export default {
 				duration: 2000,
 				icon: 'none'
 			});
-			// let params = {
-			// 	custom_id: String(this.userInfo.id),
-			// 	goods_id: String(this.bookInfo.id)
-			// }
-			// this.$api.addOrDelGoodsCollect(params).then(res => {
-			// 	if(res.data.status === 'ok') {
-			// 		this.bookInfo.collectStatus == '1' ? this.bookInfo.collectStatus = '0' : this.bookInfo.collectStatus = '1'
-			// 		if(this.bookInfo.collectStatus === '1') {
-			// 			uni.showToast({
-			// 				title: '收藏成功',
-			// 				duration: 1500,
-			// 				icon: 'none'
-			// 			})
-			// 		}else {
-			// 			uni.showToast({
-			// 				title: '取消收藏成功',
-			// 				duration: 1500,
-			// 				icon: 'none'
-			// 			})
-			// 		}
-			// 	}
-			// })
+			let params = {
+				custom_id: String(this.userInfo.id),
+				goods_id: String(this.bookInfo.id)
+			}
+			this.$api.addOrDelGoodsCollect(params).then(res => {
+				if(res.data.status === 'ok') {
+					this.bookInfo.collectStatus == '1' ? this.bookInfo.collectStatus = '0' : this.bookInfo.collectStatus = '1'
+					if(this.bookInfo.collectStatus === '1') {
+						uni.showToast({
+							title: '收藏成功',
+							duration: 1500,
+							icon: 'none'
+						})
+					}else {
+						uni.showToast({
+							title: '取消收藏成功',
+							duration: 1500,
+							icon: 'none'
+						})
+					}
+				}
+			})
 		},
 		// 获取书籍详情
 		getBookData(docker_mac) {
