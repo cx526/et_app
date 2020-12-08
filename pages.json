@@ -624,6 +624,12 @@
 						    // #endif
 						}
 					}
+				},
+				{
+					"path": "XMradio/player",
+					"style": {
+						"navigationBarTitleText": "播放器"
+					}
 				}
 			],
 			"plugins" : {
