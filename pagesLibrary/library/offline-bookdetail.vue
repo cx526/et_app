@@ -262,6 +262,7 @@ export default {
 			}
 			this.$api.addOrDelGoodsCollect(params).then(res => {
 				if(res.data.status === 'ok') {
+					uni.setStorageSync('selGoodsCollect', true)
 					this.bookInfo.collectStatus == '1' ? this.bookInfo.collectStatus = '0' : this.bookInfo.collectStatus = '1'
 					if(this.bookInfo.collectStatus === '1') {
 						uni.showToast({

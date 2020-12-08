@@ -113,6 +113,12 @@
 				this.selGoodsWish('noNormal')
 				uni.setStorageSync('selGoodsWish', false)
 			}
+			let selGoodsCollect = uni.getStorageSync('selGoodsCollect')
+			if(selGoodsCollect) {
+				this.currentPage = 1
+				this.selGoodsCollect('noNormal')
+				uni.setStorageSync('selGoodsCollect', false)
+			}
 		},
 	
 		onReachBottom() {
