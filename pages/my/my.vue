@@ -21,7 +21,8 @@
 							 v-if="!userInfo.name || userInfo.name === 'guest'" >
 								<image src="https://et-pic-server.oss-cn-shenzhen.aliyuncs.com/app_img/avatar.png"></image>
 							</view>
-							<view v-else @tap="clearSessionAction">
+							<view v-else @tap="clearSessionAction" style="position: relative;">
+								<view class="circle"></view>
 								<image :src="userInfo.avatar"></image>
 							</view>
 						</view>
@@ -836,6 +837,17 @@ export default {
 	flex-shrink: 0;
 	border-radius: 50%;
 	margin-right: 12rpx;
+	display: block;
+}
+.user-right-position .circle {
+	position: absolute;
+	left: -1rpx;
+	top: -1rpx;
+	width: 84rpx;
+	height: 84rpx;
+	background: #fff;
+	border-radius: 50%;
+	z-index: -1;
 }
 .userInfo-content {
 	display: flex;

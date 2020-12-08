@@ -5,7 +5,9 @@
 	v-show="isLogin">
 		<!-- 头部 -->
 		<view class="header-box">
+			
 			<view class="user">
+				<view class="circle"></view>
 				<image :src="$aliImage + 'user-default.png'"
 				v-if="!userInfoStorage.avatar"></image>
 				<image 
@@ -614,17 +616,32 @@ page {
 	padding-left: 40rpx;
 	padding-right: 40rpx;
 	justify-content: space-between;
+	position: relative;
 }
+
 .header-box .user {
 	width: 80rpx;
 	height: 80rpx;
 	box-sizing: border-box;
 	margin-right: 112rpx;
+	position: relative;
 }
 .header-box .user image {
 	width: 100%;
 	height: 100%;
 	display: block;
+	position: relative;
+	z-index: 8;
+}
+.header-box .user .circle {
+	position: absolute;
+	left: -1rpx;
+	top: -1rpx;
+	width: 84rpx;
+	height: 84rpx;
+	background: #fff;
+	border-radius: 50%;
+	z-index: 4;
 }
 .header-box .info {
 	display: flex;

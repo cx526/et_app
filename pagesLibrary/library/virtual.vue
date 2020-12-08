@@ -324,32 +324,50 @@
 			},
 			// 点击退还押金
 			goDeposit() {
+				uni.showLoading({
+					title: '申请退押金中',
+					mask: true
+				})
 				// 如果是会员直接跳过显示
 				if(this.member_status === '1') {
-					console.log('if')
-					// 可以退换押金
-					let param = { 
-						custom_id: this.userInfo.id, 
-						deposit: this.deposit
-					}
-					this.$api.postRefund(param)
-					.then(res => {
-						uni.showToast({
-							title: res.data.msg,
-							icon: 'none',
-							duration: 1500
-						})
-						this.refundInfoText = "审批中"
+					// 查看是否有申请过退押金操作
+					this.$api.checkOfflineOrder({ custom_id: this.userInfo.id }).then(res => {
+						let result = res.data.rows
+						if(result.refundInfo && result.refundInfo.length > 0) {
+							uni.hideLoading()
+							uni.showToast({
+								title: '押金退还审批中，请耐心等待',
+								icon: 'none',
+								duration: 2000
+							})
+							this.refundInfoText = "审批中"
+							return
+						}else {
+							// 执行申请退押金操作
+							let param = {
+								custom_id: this.userInfo.id, 
+								deposit: this.deposit
+							}
+							this.$api.postRefund(param).then(res => {
+								uni.hideLoading()
+								uni.showToast({
+									title: res.data.msg,
+									icon: 'none',
+									duration: 1500
+								})
+								this.refundInfoText = "审批中"
+							})
+						}
 					})
 				}else {
 				// 判断用户有无存在订单,没有才给退(0不给退,1给退)
 				this.$api.checkOfflineOrder({ custom_id: this.userInfo.id })
 				.then(res => {
 					let data = res.data.rows
-					console.log(data)
 					if(res.data.status == 'ok') {
 						// 存在订单，不给退押金
 						if(data.canRefundStatus == 0) {
+							uni.hideLoading()
 							// 存在订单
 							if(data.offlineOrder.length != 0 || 
 							data.onlineOrder.length != 0) {
@@ -375,8 +393,8 @@
 								custom_id: this.userInfo.id, 
 								deposit: this.deposit
 							}
-							this.$api.postRefund(param)
-							.then(res => {
+							this.$api.postRefund(param).then(res => {
+								uni.hideLoading()
 								uni.showToast({
 									title: res.data.msg,
 									icon: 'none',
@@ -386,6 +404,7 @@
 							})
 						}
 					}else {
+						uni.hideLoading()
 						uni.showToast({
 							title: '发生未知错误,请稍后再试！',
 							icon: 'none',

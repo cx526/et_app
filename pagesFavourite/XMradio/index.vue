@@ -86,6 +86,7 @@
 					})
 				let finalCategor = []
 				categoriesResult.map(item => {
+					// 筛选开发者分类栏目
 					if (item.source === 2) {
 						finalCategor.push(item)
 					}

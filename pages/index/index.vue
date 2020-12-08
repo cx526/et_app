@@ -458,14 +458,14 @@ export default {
 				})
 				return
 			}
-			else if(toUrl === '/pagesFavourite/XMradio/index') {
-				uni.showToast({
-					title: '敬请期待',
-					icon: 'none',
-					duration: 2000
-				})
-				return
-			}
+			// else if(toUrl === '/pagesFavourite/XMradio/index') {
+			// 	uni.showToast({
+			// 		title: '敬请期待',
+			// 		icon: 'none',
+			// 		duration: 2000
+			// 	})
+			// 	return
+			// }
 			else {
 				uni.navigateTo({ url: toUrl });
 			}
@@ -617,7 +617,7 @@ export default {
 /* search */
 .search-box {
 	box-sizing: border-box;
-	padding: 0 40rpx;
+	padding: 0 25rpx;
 	margin-top: 25upx;
 }
 .search-box .search {

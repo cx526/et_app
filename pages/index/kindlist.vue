@@ -231,6 +231,7 @@ export default {
 	},
 	methods: {
 		tabChange(e) {
+			console.log('tabChange')
 			console.log(this.tabBarsObj)
 			this.tabBarID = this.tabBarsObj[e].id; // 更新id用于获取列表数据
 			this.tabCurrentIndex = e; // 更新标签序号
@@ -249,6 +250,7 @@ export default {
 				}
 			};
 			this.$api.getGoodsInfo(param).then(res => {
+				console.log(res)
 				let objArr = [];
 				res.data.rows.map((item, index) => {
 					objArr[index] = {};
