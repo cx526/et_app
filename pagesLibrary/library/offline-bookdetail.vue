@@ -51,16 +51,20 @@
 		<view class="grey-space"></view>
 		
 		<!-- 编辑推荐 start -->
-		<view class="out-position" v-if="bookInfo.recomment && bookInfo.recomment !== ''">
-			<view class="out-content" style="position-bottom:15upx;">
-				<text class="title-content-process">书书推荐</text>
+		<block v-if="bookInfo.recomment && bookInfo.recomment !== '' && bookInfo.recomment !== 'null' && bookInfo.recomment !== '<p>null</p>' && bookInfo.recomment !== '<p>undefined</p>'" >
+			<view class="out-position" >
+				<view class="out-content" style="position-bottom:15upx;">
+					<text class="title-content-process">书书推荐</text>
+				</view>
 			</view>
-		</view>
-		<view class="remark-position">
-			<rich-text :nodes="bookInfo.recomment"></rich-text>
-		</view>
-		<view class="white-space" v-if="bookInfo.recomment && bookInfo.recomment !== ''"></view>
-		<view class="grey-space" v-if="bookInfo.recomment && bookInfo.recomment !== ''"></view>
+			<view class="remark-position">
+				<rich-text :nodes="bookInfo.recomment"></rich-text>
+			</view>
+		</block>
+		
+		
+		<view class="white-space" v-if="bookInfo.recomment && bookInfo.recomment !== '' && bookInfo.recomment !== 'null' && bookInfo.recomment !== '<p>null</p>' && bookInfo.recomment !== '<p>undefined</p>'"></view>
+		<view class="grey-space" v-if="bookInfo.recomment && bookInfo.recomment !== '' && bookInfo.recomment !== 'null' && bookInfo.recomment !== '<p>null</p>' && bookInfo.recomment !== '<p>undefined</p>'"></view>
 		<!-- 编辑推荐 end -->		
 		
 		<view class="out-position">

@@ -108,7 +108,7 @@ export default {
 			popupShow: false,
 			listStatus: 1, //列表状态0：没数据，1：加载中，其他：有数据
 			isHidden: 1, //是否隐藏没库存数据，0不隐藏，1隐藏  默认隐藏，如果是搜索页面与热门推荐则不隐藏
-			docker_mac: ''
+			docker_mac: '',
 		};
 	},
 	onLoad(option) {
@@ -191,8 +191,8 @@ export default {
 				arr = objArr.filter(item => {
 					return item.goods_info.stock.usageCount !== 0
 				})
-				if(!arr || arr.length < 12) {
-					// 防止currentPage为1时返回书籍数量不够多导致出现不能上拉加载更多
+				if(!arr || arr.length < 10) {
+					// 防止currentPage为1时返回有库存书籍数量不够多导致出现不能上拉加载更多
 					this.getBookMore()
 				}
 			});
@@ -211,6 +211,7 @@ export default {
 			this.loadStatus = 'noMore'; //没有数据时显示‘没有更多’
 			return;
 		}
+		this.loadStatus = 'loading'
 		let param = {
 			pageSize: this.pageSize,
 			currentPage: this.currentPage,
@@ -268,8 +269,8 @@ export default {
 				arr = objArr.filter(item => {
 					return item.goods_info.stock.usageCount !== 0
 				})
-				if(!arr || arr.length < 12) {
-					// 防止currentPage为1时返回书籍数量不够多导致出现不能上拉加载更多
+				if(!arr || arr.length < 10) {
+					// 防止currentPage为1时返回有库存书籍数量不够多导致出现不能上拉加载更多
 					this.getBookMore()
 				}
 			});
