@@ -134,7 +134,6 @@ export default {
 		// 初始化商品列表
 		if (option.bookList) {
 			let listDataArr = JSON.parse(decodeURIComponent(option.bookList));
-			// console.log(listDataArr);
 			let objStatus = 0; //兼容goods_info状态
 			let objArr = [];
 			listDataArr.map((item, index) => {
@@ -187,15 +186,22 @@ export default {
 				this.listStatus = this.listData.length;
 				this.currentPage++;
 				uni.hideLoading();
+				// 筛选有库存的书籍
+				let arr = []
+				arr = objArr.filter(item => {
+					return item.goods_info.stock.usageCount !== 0
+				})
+				if(!arr || arr.length < 12) {
+					// 防止currentPage为1时返回书籍数量不够多导致出现不能上拉加载更多
+					this.getBookMore()
+				}
 			});
 		}
-		console.log(this.listData);
 		// 初始化商品列表
 
 		//如果是搜索页面与热门推荐则不隐藏0库存数据
 		if (option.pagesType === 'search' || option.pagesType === 'hotList') {
 			this.isHidden = 0;
-			console.log('uuuiii');
 		}
 	},
 	// 上拉加载更多,onReachBottom上拉触底函数
@@ -231,8 +237,6 @@ export default {
 	},
 	methods: {
 		tabChange(e) {
-			console.log('tabChange')
-			console.log(this.tabBarsObj)
 			this.tabBarID = this.tabBarsObj[e].id; // 更新id用于获取列表数据
 			this.tabCurrentIndex = e; // 更新标签序号
 			this.currentPage = 1; //初始化分页页码，拿到第一页
@@ -250,7 +254,6 @@ export default {
 				}
 			};
 			this.$api.getGoodsInfo(param).then(res => {
-				console.log(res)
 				let objArr = [];
 				res.data.rows.map((item, index) => {
 					objArr[index] = {};
@@ -258,10 +261,40 @@ export default {
 					// this.listData.push(objArr);
 				});
 				this.listData = objArr;
-				// this.listData.push(objArr);
 				this.currentPage++;
 				uni.hideLoading();
+				// 筛选有库存的书籍
+				let arr = []
+				arr = objArr.filter(item => {
+					return item.goods_info.stock.usageCount !== 0
+				})
+				if(!arr || arr.length < 12) {
+					// 防止currentPage为1时返回书籍数量不够多导致出现不能上拉加载更多
+					this.getBookMore()
+				}
 			});
+		},
+		getBookMore() {
+			let param = {
+				pageSize: this.pageSize,
+				currentPage: this.currentPage,
+				filterItems: {
+					kind: this.tabBarID,
+					tagCount: 2,
+					state: 1,
+					docker_mac: this.docker_mac
+				}
+			}
+			this.$api.getGoodsInfo(param).then(res => {
+				let objArr = [];
+				res.data.rows.map((item, index) => {
+					objArr[index] = {};
+					objArr[index].goods_info = item;
+					this.listData.push(objArr[index]);
+				});
+				this.currentPage++;
+				this.loadStatus = 'more';
+			})
 		},
 		toDetail(id) {
 			uni.navigateTo({ url: 'bookdetail?bookID=' + JSON.stringify(id) });
@@ -283,7 +316,6 @@ export default {
 			this.$refs.popup.close();
 		},
 		popupChange(e) {
-			console.log(e);
 			this.popupShow = e.show;
 			this.cartBookCount = insertBook.cartBookCount();
 		}
