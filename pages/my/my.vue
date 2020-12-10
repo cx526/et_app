@@ -326,8 +326,8 @@ export default {
 						'toUrl'	: '请前往【我的五车书】公众号咨询客服'
 					},
 					{
-						'imgSrc' : this.$aliImage + 'my2_8.png',
-						'title'	: '收货地址',
+						'imgSrc' : this.$aliImage + 'my2_9.png',
+						'title'	: '心愿书单',
 						// 'toUrl'	: '/pages/cart/addressList'
 						'toUrl'	: '/pagesFavourite/favourite/index'
 					}
