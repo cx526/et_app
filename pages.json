@@ -389,7 +389,8 @@
 		{
 			"path": "pages/library",
 			"style": {
-				"navigationBarTitleText": "智慧童书馆"
+				"navigationBarTitleText": "智慧童书馆",
+				"enablePullDownRefresh":true
 			}
 		},
 		{

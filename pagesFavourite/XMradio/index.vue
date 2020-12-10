@@ -6,20 +6,21 @@
 			<button @tap="pause">pause</button>
 			<button @tap="stop">stop</button>
 		-->
-		
+		<!--
 		<view style="position: relative;">
 			<swiper class="carousel" circular autoplay @change="swiperChange">
 				<swiper-item v-for="(item, i) in carouselList" :key="i" class="carousel-item" @tap="toTargetUrl(item)">
 					<image :src="item.banner_cover_url" />
 				</swiper-item>
 			</swiper>
-			<!-- 自定义swiper指示器 -->
+			
 			<view class="swiper-dots">
 				<text class="num">{{ swiperCurrent + 1 }}</text>
 				<text class="sign">/</text>
 				<text class="num">{{ swiperLength }}</text>
 			</view>
 		</view>
+		-->
 		
 		<view>
 			<view v-for="(item, i) in albumsList" :key="i" style="height: 200upx; background: #00B7CC; color: #fff; margin-top: 30upx;" @tap="goAlbumDetail(item.id)">
@@ -36,7 +37,7 @@
 	import { 
 		XMdeveloper_albumsURL,
 		XMdeveloper_columnsURL,
-		XMdeveloper_bannersURL,
+		// XMdeveloper_bannersURL,
 		XMdeveloper_categoriesURL,
 		XMalbums_browseURL,
 	} from './XM.js'
@@ -50,9 +51,9 @@
 				columnPage: 1,
 				albumsList: [],
 				kindList: [],
-				swiperCurrent: 0,
-				swiperLength: 0,
-				carouselList: []
+				// swiperCurrent: 0,
+				// swiperLength: 0,
+				// carouselList: []
 			}
 		},
 		components: {
@@ -66,15 +67,16 @@
 				const {xmly, player} = await initXMLY()
 				this.XMclient = xmly
 				this.XMplayer = player
-				
-				this.albumsList = await this.getAlbumsList(this.albumsPage)
-				console.log(this.albumsList)
-				
+				// 获取专辑分类
 				this.kindList = await this.getKinds()
 				console.log(this.kindList)
-				
-				this.carouselList = await this.getBanners()
-				this.swiperLength = this.carouselList.length;
+				// 获取收藏专辑
+				this.albumsList = await this.getAlbumsList(this.albumsPage)
+				console.log(this.albumsList)
+				console.log('ok')
+				// 获取轮播图
+				// this.carouselList = await this.getBanners()
+				// this.swiperLength = this.carouselList.length;
 			},
 			async getKinds() {
 				// 获取开发者分类列表
@@ -93,17 +95,17 @@
 				})
 				return finalCategor
 			},
-			async getBanners() {
-				// 获取开发者焦点图
-				const bannersResult = await this.XMclient.get(XMdeveloper_bannersURL)
-					.then(res => {
-						if(res.code === 0) {
-							return res.data.banners
-						}
-						return []
-					})
-				return bannersResult
-			},
+			// async getBanners() {
+			// 	// 获取开发者焦点图
+			// 	const bannersResult = await this.XMclient.get(XMdeveloper_bannersURL)
+			// 		.then(res => {
+			// 			if(res.code === 0) {
+			// 				return res.data.banners
+			// 			}
+			// 			return []
+			// 		})
+			// 	return bannersResult
+			// },
 			async getAlbumsList(page) {
 				// 获取开发者收藏专辑
 				let paramAlbums = {
@@ -148,15 +150,15 @@
 				await this.getAlbumsDetail(id, 1)
 			},
 			// 监听轮播图发生改变
-			swiperChange(e) {
-				const index = e.detail.current;
-				this.swiperCurrent = index;
-			},
+			// swiperChange(e) {
+			// 	const index = e.detail.current;
+			// 	this.swiperCurrent = index;
+			// },
 			// 点击swiper
-			toTargetUrl(item) {
-				let target = item.target
-				console.log(target)
-			},
+			// toTargetUrl(item) {
+			// 	let target = item.target
+			// 	console.log(target)
+			// },
 		}
 	}
 </script>

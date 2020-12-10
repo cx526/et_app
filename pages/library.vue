@@ -102,6 +102,12 @@
 						</view>
 					</view>
 				</template>
+				<template v-else >
+					<view class="noResult" @tap="getAllProductList">
+						<image :src="$aliImage + 'read-reload.png'" mode="widthFix"></image>
+						<text>刷新</text>
+					</view>
+				</template>
 				<!-- 分类弹窗 -->
 				<popup v-model="showModel" position="bottom">
 					<view :style="{ height: height, position: absolute, left: 0, bottom: 0 }" class="popUp">
@@ -272,6 +278,11 @@ export default {
 			}
 		}
 	},
+	// 下拉刷新
+	onPullDownRefresh() {
+		console.log('onPullDownRefresh')
+		this.getAllProductList('onPullDownRefresh')
+	},
 	methods: {
 		
 		// 检测用户的登录状态
@@ -402,7 +413,11 @@ export default {
 			this.free = (+this.userInfo.free_bind )+ (+this.userInfo.free_month)
 		},
 		// 获取当前所属幼儿园书柜书籍列表
-		getBooksList() {
+		getBooksList(type='normal') {
+			console.log(type)
+			if(type === 'onPullDownRefresh') {
+				this.currentPage = 1
+			}
 			this.productList = [];
 			this.loadStatus = 'loading';
 			uni.showLoading({
@@ -420,6 +435,9 @@ export default {
 			})
 			.then(res => {
 				uni.hideLoading();
+				if(type === 'onPullDownRefresh') {
+					uni.stopPullDownRefresh()
+				}
 				this.totalPage = res.data.totalPage
 				this.productList = res.data.rows;
 				if (res.data.rows.length < this.pageSize || res.data.rows.length == 0) {
@@ -435,6 +453,7 @@ export default {
 			this.$api.offlineBookType({
 				docker_mac: this.docker_mac
 			}).then(res => {
+				
 				res.data.rows.map(item => {
 					item.isSelect = false;
 				});
@@ -442,14 +461,14 @@ export default {
 			});
 		},
 		// 获取全部书籍
-		getAllProductList() {
+		getAllProductList(type='normal') {
 			this.typeList.map(item => {
 				item.isSelect = false;
 			})
-			this.getBooksList();
+			this.getBooksList(type);
 			this.isType = true;
 			this.showModel = false;
-			// this.$refs.typepopup.close();
+			
 		},
 		// 改变分类
 		changeType(id, index) {
@@ -762,7 +781,7 @@ page {
 	justify-content: space-between;
 	padding: 0 10rpx 20rpx 10rpx;
 	position: relative;
-	top: -20rpx;
+	/* top: -20rpx; */
 }
 .type-box .list .item {
 	text-align: center;
@@ -1002,5 +1021,18 @@ page {
 	margin-left: 12rpx;
 	background-image: linear-gradient(180deg, #40aed1, #69d9e4);
 	color: #fff;
+}
+.noResult {
+	box-sizing: border-box;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	color: #2AAEC4;
+	font-size: 30rpx;
+	width: 100%;
+}
+.noResult image {
+	width: 30rpx;
+	margin-right: 6rpx;
 }
 </style>

@@ -449,6 +449,7 @@ export default {
 				let data = res.data
 				this.id = data.id
 				this.member_status = data.member_status
+				
 				this.free = Number(data.free_bind) + Number(data.free_month)
 				this.memberIcon = data.memberIcon
 				if(data.formatMemberDueDate && 
