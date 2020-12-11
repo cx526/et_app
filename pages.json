@@ -636,7 +636,7 @@
 			"plugins" : {
 			    // 喜马拉雅微信小程序插件
 			    "XiMaLaYaFM" : {
-			        "version" : "0.2.1",
+			        "version" : "3.0.0",
 			        "provider" : "wxc6a13dda5815c529"
 			    }
 			}
