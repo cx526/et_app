@@ -1,5 +1,8 @@
 <template>
 	<view style="padding: 40rpx 25rpx;">
+		<view class="context-text">
+			<text>加入收藏的书籍，将在下次换书时，优先放入您孩子学校的童书馆，换书成功后会有短信提示您借阅此书。</text>
+		</view>
 		<view class="box">
 			<view class="title">
 				<view class="subTitle" v-for="(item, index) in navList" :key="index" :class="currentIndex === index ? ' active' : ''" @tap="changeNav(index)">
@@ -11,7 +14,7 @@
 				<swiper :style="{'height': swiperHeight}" @change="swiperChange" :current="currentIndex">
 					<swiper-item class="favourite">
 						<view class="item" v-for="(item, index) in bookList" :key="index" @tap="bookDetail(item.id)">
-							<image :src="item.forGoodsPic[0].url" mode="widthFix" class="cover"></image>
+							<image :src="item.forGoodsPic[0].url" mode="aspectFit" class="cover"></image>
 							<view class="context">
 								<view class="book-title">
 									<text>{{ item.title }}</text>
@@ -35,7 +38,8 @@
 					</swiper-item>
 					<swiper-item class="wish">
 						<view class="item" v-for="(item, index) in wishBook" :key="index">
-							<image :src="item.imgInfo[0].url" mode="widthFix" class="cover"></image>
+							<image :src="item.imgInfo[0].url" mode="aspectFit" class="cover" v-if="item.imgInfo && item.imgInfo.length > 0"></image>
+							<image :src="$aliImage + 'wish-default.png'" class="cover" mode="aspectFit" v-else></image>
 							<view class="context">
 								<view class="book-title" style="font-size: 28rpx;display: flex;justify-content: space-between;padding-right: 18rpx;">
 									<text>{{ item.title }}</text>
@@ -379,6 +383,16 @@
 		background: #ffffff;
 		border-radius: 30rpx;
 		box-shadow: 0px 3rpx 6rpx 0px rgba(0,0,0,0.16); 
+	}
+	.context-text {
+		font-size: 30rpx;
+		color: #808080;
+		box-sizing: border-box;
+		background: #fff;
+		border-radius: 20rpx;
+		box-shadow: 0px 3rpx 6rpx 0px rgba(0,0,0,0.16); 
+		padding: 12rpx 16rpx;
+		margin-bottom: 36rpx;
 	}
 	.box .title {
 		line-height: 120rpx;

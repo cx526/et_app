@@ -108,13 +108,6 @@
 						duration: 1500
 					})
 					return
-				}else if(!this.imgShow || this.imgShow.length === 0) {
-					uni.showToast({
-						title: '请上传心愿书籍封面图',
-						icon: 'none',
-						duration: 1500
-					})
-					return
 				}
 				let params = {
 					title: this.title,

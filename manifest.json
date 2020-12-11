@@ -2,8 +2,8 @@
     "name" : "et-app",
     "appid" : "__UNI__B9DB8EF",
     "description" : "",
-    "versionName" : "3.3.7",
-    "versionCode" : 337,
+    "versionName" : "3.3.8",
+    "versionCode" : 338,
     "transformPx" : false,
     /* 5+App特有相关 */
     "app-plus" : {
@@ -71,7 +71,7 @@
             "es6" : true
         },
         "usingComponents" : true,
-		"requiredBackgroundModes": [ "audio" ]
+        "requiredBackgroundModes" : [ "audio" ]
     },
     "mp-alipay" : {
         "usingComponents" : true

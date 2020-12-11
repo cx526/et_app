@@ -255,11 +255,6 @@ export default {
 		},
 		// 收藏功能
 		collection(){
-			uni.showToast({
-				title: '收藏功能暂未开放，敬请期待！',
-				duration: 2000,
-				icon: 'none'
-			});
 			let params = {
 				custom_id: String(this.userInfo.id),
 				goods_id: String(this.bookInfo.id)
@@ -270,8 +265,8 @@ export default {
 					this.bookInfo.collectStatus == '1' ? this.bookInfo.collectStatus = '0' : this.bookInfo.collectStatus = '1'
 					if(this.bookInfo.collectStatus === '1') {
 						uni.showToast({
-							title: '收藏成功',
-							duration: 1500,
+							title: '加入收藏成功！该书籍将在下次换书时，优先放入您孩子学校的童书馆。',
+							duration: 3000,
 							icon: 'none'
 						})
 					}else {

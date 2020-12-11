@@ -231,8 +231,8 @@ export default {
 					this.bookInfo.collectStatus == '1' ? this.bookInfo.collectStatus = '0' : this.bookInfo.collectStatus = '1'
 					if(this.bookInfo.collectStatus === '1') {
 						uni.showToast({
-							title: '收藏成功',
-							duration: 1500,
+							title: '加入收藏成功！该书籍将在下次换书时，优先放入您孩子学校的童书馆。',
+							duration: 3000,
 							icon: 'none'
 						})
 					}else {
