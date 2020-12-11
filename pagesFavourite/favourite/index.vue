@@ -1,8 +1,6 @@
 <template>
 	<view style="padding: 40rpx 25rpx;">
-		<view class="context-text">
-			<text>加入收藏的书籍，将在下次换书时，优先放入您孩子学校的童书馆，换书成功后会有短信提示您借阅此书。</text>
-		</view>
+		
 		<view class="box">
 			<view class="title">
 				<view class="subTitle" v-for="(item, index) in navList" :key="index" :class="currentIndex === index ? ' active' : ''" @tap="changeNav(index)">
@@ -37,7 +35,7 @@
 						</view>
 					</swiper-item>
 					<swiper-item class="wish">
-						<view class="item" v-for="(item, index) in wishBook" :key="index">
+						<view class="item" v-for="(item, index) in wishBook" :key="index" :class="index + 1 == wishBook.length ? ' noBorder' : ''">
 							<image :src="item.imgInfo[0].url" mode="aspectFit" class="cover" v-if="item.imgInfo && item.imgInfo.length > 0"></image>
 							<image :src="$aliImage + 'wish-default.png'" class="cover" mode="aspectFit" v-else></image>
 							<view class="context">
@@ -60,11 +58,18 @@
 				<view class="none" v-if="(bookList.length === 0 && currentIndex === 0) || (wishBook.length === 0 && currentIndex === 1)">
 					<text>暂无数据</text>
 				</view>
+				<!-- btn -->
+				<view class="none" v-if="currentIndex === 1">
+					<Btn title="添加心愿书单" @handleClick="handleClick" />
+				</view>
 			</view>
 		</view>
-		<!-- btn -->
-		<view style="margin-top: 40rpx;" v-if="currentIndex === 1">
-			<Btn title="添加心愿书单" @handleClick="handleClick" />
+		
+		
+		<view class="context-text">
+			<view>温馨提示：</view>
+			<view v-if="currentIndex === 0">加入收藏的书籍，将在下次换书时，优先放入您孩子学校的童书馆，换书成功后会有短信提示您借阅此书。</view>
+			<view v-else>提交您的心愿书单，我们将根据库存情况进行采购，采购后会优先换书到您孩子学校的童书馆。</view>
 		</view>
 		<!-- 书篮v-if="len" -->
 		<!-- <view class="library-box"  @tap="goCart" v-if="len">
@@ -87,7 +92,7 @@
 				currentIndex: 0,
 				navList: [
 					{
-						title: '喜欢',
+						title: '收藏',
 						isShow: false
 					},
 					{
@@ -385,14 +390,14 @@
 		box-shadow: 0px 3rpx 6rpx 0px rgba(0,0,0,0.16); 
 	}
 	.context-text {
-		font-size: 30rpx;
+		font-size: 26rpx;
 		color: #808080;
 		box-sizing: border-box;
-		background: #fff;
+		/* background: #fff; */
 		border-radius: 20rpx;
-		box-shadow: 0px 3rpx 6rpx 0px rgba(0,0,0,0.16); 
+		/* box-shadow: 0px 3rpx 6rpx 0px rgba(0,0,0,0.16); */
 		padding: 12rpx 16rpx;
-		margin-bottom: 36rpx;
+		margin: 36rpx 0;
 	}
 	.box .title {
 		line-height: 120rpx;
@@ -428,7 +433,7 @@
 	.box .list .item {
 		box-sizing: border-box;
 		padding: 13rpx 0;
-		border-bottom: 1rpx dashed #B3B3B3;
+		border-bottom: 2rpx dashed #ECECEC;
 		display: flex;
 		align-items: center;
 	}
@@ -502,9 +507,7 @@
 		height: 120rpx;
 		right: 0;
 		bottom: 300rpx;
-		/* background: #fff; */
 		z-index: 20;
-		/* box-shadow: 0rpx 0rpx 20rpx rgba(179, 179, 179, 1); */
 		display: flex;
 		justify-content: center;
 		align-items: center;
@@ -533,5 +536,8 @@
 		text-align: center;
 		font-size: 30rpx;
 		color:#808080;
+	}
+	.noBorder {
+		border-bottom: 0 !important;
 	}
 </style>

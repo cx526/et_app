@@ -16,8 +16,9 @@
 							<text>{{ refundInfoText }}</text>
 						</view>
 						<!-- 无押金显示充值 -->
-						<view class="btn" v-if="deposit == 0" @tap="goDepositPay">
-							<text>立即充值</text>
+						<view v-if="deposit == 0" @tap="goDepositPay">
+							<!-- <text>立即充值</text> -->
+							<image :src="$aliImage + 'pay-icon-01.png'" mode="widthFix" style="width: 166rpx;position: relative;top: 4rpx;"></image>
 						</view>
 					</view>
 					<view class="number">
@@ -31,8 +32,9 @@
 					<view class="topic">
 						<image :src="$aliImage + 'library-money-icon01.png'" mode="" class="icon"></image>
 						<text style="font-weight: 700;margin-right: 19rpx;">五车贝</text>
-						<view class="btn" @tap="goPay">
-							<text>立即充值</text>
+						<view @tap="goPay">
+							<!-- <text>立即充值</text> -->
+							<image :src="$aliImage + 'pay-icon-01.png'" mode="widthFix" style="width: 166rpx;position: relative;top: 4rpx;"></image>
 						</view>
 					</view>
 					<view class="number">
@@ -642,7 +644,9 @@
 	}
 
 	.pay-box .context .btn {
-		background: rgba(255, 255, 255, .4);
+		background-image: linear-gradient(to right, #FFE0A8 ,#F0C789);
+		color: #8A4F1C !important;
+		font-weight: 700;
 		font-size: 26rpx;
 		box-sizing: border-box;
 		padding: 4rpx 16rpx;

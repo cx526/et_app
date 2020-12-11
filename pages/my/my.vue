@@ -296,7 +296,7 @@ export default {
 						'buttomContent' : ''
 					},
 					{
-						'imgSrc' : this.$aliImage + 'my2_3.png',
+						'imgSrc' : this.$aliImage + 'my2_13.png',
 						'title'	: '签到',
 						'toUrl'	: '/pages/index/sign',
 						'buttomContent' : ''
@@ -314,7 +314,7 @@ export default {
 						// 'toUrl'	: '/pages/my/myInfoList'
 					},
 					{
-						'imgSrc' : this.$aliImage + 'my2_6.png',
+						'imgSrc' : this.$aliImage + 'my2_10.png',
 						'title'	: '会员',
 						// 'toUrl'	: '/pages/index/swiper-member'
 						'toUrl'	: '/pages/member/member-list'
