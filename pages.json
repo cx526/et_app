@@ -618,12 +618,18 @@
 				{
 					"path": "XMradio/index",
 					"style": {
-						"navigationBarTitleText": "音视频",
+						"navigationBarTitleText": "小学堂",
 						"usingComponents": {
 						    // #ifdef  MP-WEIXIN
 							// "xm-component": "plugin://xmly-plugin/demo-component"
 						    // #endif
 						}
+					}
+				},
+				{
+					"path": "XMradio/albumDetail",
+					"style": {
+						"navigationBarTitleText":"专辑详情"
 					}
 				},
 				{
@@ -636,7 +642,7 @@
 			"plugins" : {
 			    // 喜马拉雅微信小程序插件
 			    "XiMaLaYaFM" : {
-			        "version" : "3.0.0",
+			        "version" : "3.0.1",
 			        "provider" : "wxc6a13dda5815c529"
 			    }
 			}
