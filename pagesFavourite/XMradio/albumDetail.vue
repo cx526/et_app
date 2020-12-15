@@ -53,12 +53,13 @@
 					</swiper-item>
 					<swiper-item>
 						<block v-for="(item, index) in dataList" :key="index">
-							<view class="item">
+							<view class="item" @tap="play(item)">
 								<view class="detail">
 									<view class="sort">{{ index + 1 }}</view>
 									<view class="title">{{ item.track_title }}</view>
-									<view class="icon">
-										<image :src="$aliImage + 'xmly-play.png'"></image>
+									<view class="icon" >
+										<image :src="$aliImage + 'xmly-play.png'" v-if="item.play_status === 'play'"></image>
+										<image :src="$aliImage + 'xmly-pause.png'" v-else></image>
 									</view>
 								</view>
 								<view class="time">
@@ -68,7 +69,7 @@
 									</view>
 									<view class="listen">
 										<image :src="$aliImage + 'xmly-clock.png'"></image>
-										<text>{{ item.created_at }}</text>
+										<text>{{ item.created_at | formatDate }}</text>
 									</view>
 								</view>
 							</view>
@@ -94,12 +95,12 @@
 				play_count: '', // 播放次数
 				album_intro: '', // 专辑简介
 				dataList: [],
-				itemHeight: 0,
 				swiperHeight: 0,
 				XMclient: '',
 				XMplayer: '',
 				currentIndex: 0,
 				page: 1,
+				totalPage: 0, // 返回数据总的页数
 				navList: [
 					{title: '简介'}, 
 					{title: '节目'},
@@ -108,7 +109,6 @@
 		},
 		async onLoad(options) {
 			let album_detail = JSON.parse(uni.getStorageSync('album_detail'))
-			console.log(album_detail)
 			this.album_id = Number(album_detail.id)
 			this.tagList = album_detail.tagList
 			this.cover_url_middle = album_detail.cover_url_middle
@@ -126,6 +126,19 @@
 				else if(len >= 9) {
 					return play_count = (play_count / 100000000).toFixed(2) + '亿'
 				}
+			},
+			formatDate(created_at) {
+				let date = new Date(created_at)
+				let year = date.getFullYear()
+				let month = date.getMonth() + 1 > 9 ? date.getMonth() + 1 : '0' + (date.getMonth() + 1)
+				let day = date.getDate() > 9 ? date.getDate() : '0' + (date.getDate())
+				return year + '-' + month + '-' + day
+			}
+		},
+		onReachBottom() {
+			if(this.page < this.totalPage) {
+				this.page = this.page + 1
+				this.getAlbumsDetail(this.album_id, this.page)
 			}
 		},
 		methods: {
@@ -134,6 +147,7 @@
 				const { xmly, player } = await initXMLY()
 				this.XMclient = xmly
 				this.XMplayer = player
+				console.log(this.XMplayer)
 			},
 			async getAlbumsDetail(album_id, page) {
 				// 获取专辑详情信息
@@ -142,9 +156,14 @@
 					page: page,
 				}
 				await this.XMclient.get(XMalbums_browseURL, paramAlbumDetail).then(res => {
-					console.log(res)
 					if(res.code === 0) {
-						this.dataList = [...this.dataList, ...res.data.tracks]
+						let result = res.data.tracks
+						this.totalPage = res.data.total_page
+						result.map(item => {
+							item.play_status = 'play'
+						})
+						this.dataList = [...this.dataList, ...result]
+						console.log(this.dataList)
 						this.getSwiperHeight('.context .item')
 					}
 				})	
@@ -153,12 +172,12 @@
 			getSwiperHeight(ele) {
 				setTimeout(() => {
 					const query = uni.createSelectorQuery().in(this);
-					query.select(ele).boundingClientRect(data => {
-					  console.log(data)
-						this.itemHeight = data.height
-						console.log(this.itemHeight)
-						this.swiperHeight = this.dataList.length * this.itemHeight + 'px'
-						console.log(this.swiperHeight)
+					query.selectAll(ele).boundingClientRect(data => {
+						let height = 0
+						data.map(item => {
+							height += item.height
+						})
+						this.swiperHeight = height + 'px'
 					}).exec();
 				}, 200)
 				
@@ -172,6 +191,20 @@
 				let index = event.detail.current
 				this.currentIndex = index
 			},
+			// 播放
+			play(item) {
+				let id = item.id
+				let duration = item.duration
+				let title = item.track_title
+				// let play_status = item.play_status
+				// this.XMplayer.play(id)
+				// this.XMplayer.setPlaylist([id])
+				// this.XMplayer.play()
+				uni.navigateTo({
+					url: '/pagesFavourite/XMradio/player?id='+id+'&duration='+duration+'&title='+title
+				})
+				
+			}
 		},
 	}
 </script>
@@ -371,6 +404,7 @@
 	.list .context .item .icon image {
 		width: 36rpx;
 		height: 36rpx;
+		display: block;
 	}
 	.list .context .item .time {
 		display: flex;
@@ -391,4 +425,5 @@
 		height: 26rpx;
 		margin-right: 6rpx;
 	}
+	/* 简介/节目end */
 </style>

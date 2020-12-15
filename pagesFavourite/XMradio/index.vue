@@ -250,6 +250,7 @@
 				let cover_url_middle = content.cover_url_middle // 专辑封面
 				let play_count = content.play_count // 专辑播放次数
 				let album_intro = content.album_intro // 专辑简介
+				let album_title = content.album_title // 专辑名称
 				let tagList = []
 				if(tag && tag.length > 0) {
 					tag.map(item => {
@@ -261,7 +262,8 @@
 					tagList: tagList,
 					cover_url_middle: cover_url_middle,
 					play_count: play_count,
-					album_intro: album_intro
+					album_intro: album_intro,
+					album_title: album_title
 				}
 				uni.setStorageSync('album_detail', JSON.stringify(params))
 				uni.navigateTo({
