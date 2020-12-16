@@ -17,10 +17,10 @@
 		<view class="player-box">
 				<view class="play">
 					<image :src="$aliImage + 'xmly-back.png'" mode="widthFix" style="margin-right: 18rpx;" @tap="back"></image>
-					<view class="plan">
+					<view class="plan" @tap="forwardPercent">
 						<!-- 已经走的进度 -->
 						<view class="percent" :style="{'width': percent + 'rpx'}"></view>
-						
+						<image :src="$aliImage + 'xmly-icon-03.png'" :style="{'left' : scrollLeft + 'rpx'}" @touchstart.stop="dragStart" @touchend.stop="drapEnd" @touchmove.stop="dragMove"></image>
 					</view>
 					<image :src="$aliImage + 'xmly-forward.png'" mode="widthFix" style="margin-left: 18rpx;" @tap="forward"></image>
 					<view class="time">
@@ -33,13 +33,34 @@
 		<!-- 播放选项start -->
 		<view class="play-options">
 			<view class="options">
+				<view class="between">
+					<image :src="$aliImage + 'xmly-play-way-01.png'" mode=""></image>
+					<text>顺序播放</text>
+				</view>
 				<view class="center" @tap="play">
 					<image :src="$aliImage + 'xmly-play-btn.png'" mode="widthFix" v-if="isShow"></image>
 					<image :src="$aliImage + 'xmly-pause-btn.png'" mode="widthFix" v-else></image>
 				</view>
+				<view class="between">
+					<image :src="$aliImage + 'xmly-play-list.png'" mode="" @tap="open"></image>
+					<text>播放列表</text>
+				</view>
 			</view>
 		</view>
 		<!-- 播放选项end -->
+		<!-- 播放列表弹窗start -->
+		<popup v-model="showModel" position="bottom">
+			<scroll-view class="pop-box" :scroll-y="true" :style="{'max-height': sysHeight * 0.8 + 'px'}" @scrolltolower="loadMore">
+				<block v-for="(item, index) in videoList" :key="index">
+					<view class="item" @tap="changeVideo(item)">
+						<text :class="item.id == album_id ? 'active' : ''">{{ item.track_title }}</text>
+						<text>-{{ item.duration | formatTime }}</text>
+					</view>
+				</block>
+			</scroll-view>
+		</popup>
+		<!-- 播放列表弹窗end -->
+		
 		
 		<!-- <view class="player-main" :style="'height: ' + sysHeight + 'px;'">
 			<view class="player-animate-bg" :style="'background-image: url(' + $aliImage + bgAnimateImg + ')'"></view>
@@ -48,14 +69,17 @@
 </template>
 
 <script>
-	// const winHeight = uni.getSystemInfoSync().windowHeight
+	const winHeight = uni.getSystemInfoSync().windowHeight
 	import { initXMLY } from './XM.js'
+	import { XMalbums_browseURL } from './XM.js'
+	import Popup from '@/components/lvv-popup/lvv-popup.vue'
 	export default {
 		data() {
 			return {
 				$aliImage: this.$aliImage,
 				cover_url_middle: '', // 专辑封面
 				percent: 0, 
+				id: '', // 当前音频所在专辑id
 				album_id: '', // 播放音频id
 				duration: 0, //	播放音频总时长
 				currentDuration: 0, // 当前播放音频进度
@@ -63,31 +87,47 @@
 				album_title: '', // 当前音频所在专辑的名称
 				XMclient: '',
 				XMplayer: '', 
-				isShow: true
-				// sysHeight: winHeight,
+				isShow: true,
+				scrollLeft: -10,
+				planOffsetWidth: 0,
+				planOffsetLeft: 0,
+				touchStartX: 0,
+				touchMoveX: 0,
+				touchEndX: 0,
+				showModel: false, // 控制弹窗是否显示
+				sysHeight: winHeight,
+				page: 1, // 请求页码
+				videoList: [], // 音频列表
+				playIndex: 0,
+				totalPage: 0 , // 总页码
 				// bgAnimate: 'player/background',
 				// bgAnimateImg: '',
 				// bgAnimateImgArray: [],
 				// bgAnimateIndex: 1
 			}
 		},
-		onLoad(options) {
+		components: {
+			Popup
+		},
+		async onLoad(options) {
 			console.log(options)
 			this.album_id = options.id
 			this.duration = options.duration
 			this.title = options.title
+			this.playIndex = options.playIndex
 			let album_detail = JSON.parse(uni.getStorageSync('album_detail'))
 			this.cover_url_middle = album_detail.cover_url_middle
 			this.album_title = album_detail.album_title
-			this.init()
-			
-			
+			this.id = Number(album_detail.id)
+			await this.init()
+			this.getAlbumsDetail(this.id, this.page)
+			this.getEleRect('.plan')
 			// this.initBg()
 			// this.prePlayBg()
 		},
-		onHide() {
-			console.log('onHide')
-			this.XMplayer.off('timeupdate').off('end')
+		onUnload() {
+			console.log('onUnload')
+			this.XMplayer.pause()
 		},
 		filters: {
 			formatTime(time) {
@@ -110,14 +150,16 @@
 			play() {
 				let id = this.album_id
 				let status = this.XMplayer.getPlayState()
-				
+				console.log(this.duration)
+				console.log(parseInt(this.currentDuration))
 				console.log(status)
 				if(status === 'ready') {
 					this.XMplayer.play(id)
 					this.isShow = false
 				}else if(status === 'playing') {
-					if(this.duration - parseInt(this.currentDuration) < 1) {
+					if(this.duration - parseInt(this.currentDuration) < 5) {
 						this.XMplayer.play()
+						this.scrollLeft = 0
 						this.isShow = false
 						return
 					}
@@ -134,12 +176,32 @@
 			timeUpdate() {
 				this.XMplayer.on('timeupdate', (position, sound) => {
 					this.percent = sound / this.duration * 500
+					if(this.scrollLeft >= 490) {
+						this.scrollLeft = 490
+					}else {
+						this.scrollLeft = sound / this.duration * 500 - 10
+					}
+					
+					
+					
 					this.currentDuration = sound
-					console.log(sound)
-					console.log(this.percent)
+					// console.log(sound)
+					// console.log(this.percent)
 					this.listenEnd()
 					// this.XMplayer.on('change.sound', (sound) => {console.log('声音发生了改变')})
 				})
+			},
+			// 获取元素高度
+			getEleRect(ele) {
+				setTimeout(() => {
+					const query = uni.createSelectorQuery().in(this);
+					query.select(ele).boundingClientRect(data => {
+					  console.log(data)
+						this.planOffsetWidth = data.width
+						this.planOffsetLeft = data.left
+					}).exec();
+				}, 200)
+				
 			},
 			// 监听播放结束事件
 			listenEnd() {
@@ -148,17 +210,88 @@
 					console.log(this.XMplayer.getPlayState())
 				})
 			},
-			// 快进
+			// 快进 15s
 			forward() {
 				let second = this.currentDuration + 15
 				if(second >= this.duration) { return }
 				this.XMplayer.seek(second)
 			},
-			// 后退
+			// 后退 15s
 			back() {
 				let second = this.currentDuration - 15
 				if(second < 0) { return }
 				this.XMplayer.seek(second)
+			},
+			// 快进
+			forwardPercent(event) {
+				console.log(event)
+				let x = event.detail.x // 前进的距离
+				let percent = x - this.planOffsetLeft // 进度条
+				let second = parseInt(percent / this.planOffsetWidth * this.duration)
+				this.XMplayer.seek(second)
+			},
+			// 拖拽开始
+			dragStart(event) {
+				this.touchStartX = event.touches[0].clientX
+			},
+			// 拖拽过程
+			dragMove(event) {
+				this.touchMoveX = event.touches[0].clientX	
+			},
+			// 拖拽结束
+			drapEnd(event) {
+				let percent = parseInt((this.currentDuration / this.duration) * this.planOffsetWidth) // 原先走过的秒数
+				let x = Math.abs(this.touchMoveX - this.touchStartX) // 拖拽的距离
+				let distance = 0 // 实际距离
+					if(this.touchMoveX - this.touchStartX < 0) {
+						distance = percent - x
+					}else {
+						distance = percent + x
+					}
+					console.log(distance)
+					let second = parseInt(distance / this.planOffsetWidth * this.duration)
+					console.log(second)
+					this.XMplayer.seek(second)
+			},
+			// 获取当前专辑播放声音
+			getAlbumsDetail(album_id, page) {
+				// 获取专辑详情信息
+				let paramAlbumDetail = {
+					album_id: album_id,
+					page: page
+				}
+				this.XMclient.get(XMalbums_browseURL, paramAlbumDetail).then(res => {
+					if(res.code === 0) {
+						let result = res.data.tracks
+						this.totalPage = res.data.total_page
+						this.videoList = [...this.videoList, ...result]
+						
+					}
+				})	
+			},
+			// 加载更多
+			loadMore() {
+				if(this.page <= this.totalPage) {
+					this.page = this.page + 1
+					this.getAlbumsDetail(this.id, this.page)
+				}
+			},
+			
+			// 打开播放列表
+			open() {
+				console.log(this.playIndex)
+				console.log(this.page)
+				this.showModel = true
+			},
+			// 切换音屏
+			changeVideo(item) {
+				let id = item.id
+				this.album_id = id
+				this.duration = item.duration
+				this.title = item.track_title
+				this.showModel = false
+				this.isShow = false
+				this.XMplayer.play(id)
 			}
 			
 			
@@ -250,6 +383,14 @@
 		position: relative;
 		background: #e6e6e6;
 	}
+	.player-box .play .plan image {
+		position: absolute;
+		top: 50%;
+		transform: translateY(-50%);
+		width: 20rpx;
+		height: 20rpx;
+		z-index: 8;
+	}
 	.player-box .play .time {
 		position: absolute;
 		width: 500rpx;
@@ -286,7 +427,7 @@
 		box-sizing: border-box;
 		display: flex;
 		align-items: center;
-		justify-content: center;
+		justify-content: space-between;
 	}
 	.play-options .options .center {
 		box-sizing: border-box;
@@ -296,8 +437,41 @@
 		height: 120rpx;
 		display: block;
 	}
+	.play-options .options .between {
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		font-size: 18rpx;
+		color: #B3B3B3;
+	}
+	.play-options .options .between image {
+		width: 60rpx;
+		height: 60rpx;
+		display: block;
+		margin-bottom: 6rpx;
+	}
 	/* 播放选项end */
-	
+	/* 播放列表弹窗start */
+	.pop-box {
+		box-sizing: border-box;
+		width: 100%;
+		background: rgba(0,0,0,0.64);
+		color: #fff;
+		font-size: 28rpx;
+		position: absolute;
+		bottom: 0;
+		left: 0;
+		padding-left: 24rpx;
+	}
+	.pop-box .item {
+		box-sizing: border-box;
+		line-height: 70rpx;
+		border-bottom: 2rpx solid rgba(180,180,180,0.2);
+	}
+	.active {
+		color: #2AAEC4 !important;
+	}
+	/* 播放列表弹窗end */
 	
 	
 /* 	.player-main {

@@ -48,7 +48,7 @@
 						<swiper-item v-for="(item, index) in kindList" :key="index">
 							<view class="content-item" v-for="(content, contentIndex) in albumsList" :key="content" @tap="goAlbumDetail(content)">
 								<view class="cover">
-									<image :src="content.cover_url_middle" mode="aspectFit"></image>
+									<image :src="content.cover_url_middle" ></image>
 									<view class="play-count">
 										<image :src="$aliImage + 'xmly-icon-play.png'"></image>
 										<text>{{ content.play_count | formatPlayCount }}</text>
@@ -56,7 +56,7 @@
 								</view>
 								<view class="title">
 									<image :src="$aliImage + 'xmly-icon-01.png'"></image>
-									<view>{{content.album_title}}</view>
+									<view class="title-text">{{content.album_title}}</view>
 								</view>
 							</view>
 						</swiper-item>
@@ -390,6 +390,9 @@
 	}
 	.album .album-content swiper-item {
 		box-sizing: border-box;
+		display: flex;
+		flex-wrap: wrap;
+		width: 100%;
 	}
 	.album .album-content .content-item {
 		width: 180rpx;
@@ -434,7 +437,20 @@
 		font-size: 24rpx;
 		margin-top: 12rpx;
 		position: relative;
+		box-sizing: border-box;
 		text-indent: 40rpx;
+		overflow: hidden;
+		/* display: -webkit-box;
+		-webkit-line-clamp: 2;
+		-webkit-box-orient: vertical;
+		overflow: hidden; */
+	/* 	overflow : hidden;
+		text-overflow: ellipsis;
+		display: -webkit-box;
+		-webkit-line-clamp: 2;
+		-webkit-box-orient: vertical; */
+	}
+	.album .album-content swiper-item .title .title-text {
 		display: -webkit-box;
 		-webkit-line-clamp: 2;
 		-webkit-box-orient: vertical;

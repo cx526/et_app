@@ -53,7 +53,7 @@
 					</swiper-item>
 					<swiper-item>
 						<block v-for="(item, index) in dataList" :key="index">
-							<view class="item" @tap="play(item)">
+							<view class="item" @tap="play(item, index)">
 								<view class="detail">
 									<view class="sort">{{ index + 1 }}</view>
 									<view class="title">{{ item.track_title }}</view>
@@ -158,6 +158,7 @@
 				await this.XMclient.get(XMalbums_browseURL, paramAlbumDetail).then(res => {
 					if(res.code === 0) {
 						let result = res.data.tracks
+						console.log(result)
 						this.totalPage = res.data.total_page
 						result.map(item => {
 							item.play_status = 'play'
@@ -167,6 +168,7 @@
 						this.getSwiperHeight('.context .item')
 					}
 				})	
+				console.log('ok')
 			},
 			// 动态设置swiper高度
 			getSwiperHeight(ele) {
@@ -192,16 +194,17 @@
 				this.currentIndex = index
 			},
 			// 播放
-			play(item) {
+			play(item, index) {
 				let id = item.id
 				let duration = item.duration
 				let title = item.track_title
+				let playIndex = index
 				// let play_status = item.play_status
 				// this.XMplayer.play(id)
 				// this.XMplayer.setPlaylist([id])
 				// this.XMplayer.play()
 				uni.navigateTo({
-					url: '/pagesFavourite/XMradio/player?id='+id+'&duration='+duration+'&title='+title
+					url: '/pagesFavourite/XMradio/player?id='+id+'&duration='+duration+'&title='+title+'&playIndex='+index
 				})
 				
 			}
