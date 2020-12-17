@@ -219,7 +219,8 @@ export default {
 			this.isSearch = option.isSearch
 			// 获取用户个人账户信息
 			this.getUserInfo()
-			this.productList = JSON.parse(option.productList);
+			let product = uni.getStorageSync('searchGetDockerBook')
+			this.productList = JSON.parse(product);
 			this.loadStatus = 'noMore';
 			
 		} else {

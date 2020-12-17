@@ -152,8 +152,9 @@
 				// 网络请求
 				this.$api.offlineGetBooksList(param).then(res => {
 					this.productList = res.data.rows
+					uni.setStorageSync('searchGetDockerBook', JSON.stringify(this.productList))
 					uni.reLaunch({
-						url: '/pages/library?isSearch=true&productList='+JSON.stringify(this.productList)
+						url: '/pages/library?isSearch=true'
 					})
 				})		
 			},

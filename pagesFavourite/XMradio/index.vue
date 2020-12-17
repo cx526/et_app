@@ -29,6 +29,16 @@
 			</view>
 		</view> 
 		-->
+		<!-- 背景 -->
+		<view class="bg"></view>
+		<!-- 我喜爱的专辑start -->
+		<view class="like-album">
+			<view class="album">
+				<nav-title title="我喜爱的专辑"></nav-title>
+				<album-list></album-list>
+			</view>
+		</view>
+		<!-- 我喜爱的专辑end -->
 		<!-- 专辑列表区域start -->
 		<view class="album">
 			<view class="list">
@@ -81,7 +91,8 @@
 		XMdeveloper_categoriesURL,
 		XMalbums_browseURL,
 	} from './XM.js'
-
+	import navTitle from '../components/nav-title.vue'
+	import albumList from '../components/album-list.vue'
 	export default {
 		data() {
 			return {
@@ -100,10 +111,14 @@
 				currentIndex: 0, // 当前所在分类的索引
 				swiperCurrent: 0, // 当前swiper所在的滑块
 				itemHeight: 0,
-				swiperHeight: 0
+				swiperHeight: 0,
 				// swiperLength: 0,
 				// carouselList: []
 			}
+		},
+		components: {
+			navTitle,
+			albumList
 		},
 		onLoad() {
 			this.init()
@@ -340,10 +355,35 @@
 <style>
 	page {
 		background: #EBF8FF;
-		padding-top: 24rpx;
+		/* padding-top: 24rpx; */
 	}
 </style>
 <style scoped>
+	/* 背景 */
+	.bg {
+		width: 100%;
+		height: 320rpx;
+		background-image: linear-gradient(to bottom, #7BCFEC, #9BE6E7);
+		border-bottom-left-radius: 30rpx;
+		border-bottom-right-radius: 30rpx;
+	}
+	/* 我喜爱的专辑start */
+	.like-album {
+		box-sizing: border-box;
+		padding: 0 25rpx;
+		margin-bottom: 24rpx;
+		margin-top: -150rpx;
+		
+	}
+	.like-album .album {
+		box-sizing: border-box;
+		background: #fff;
+		padding: 0 30rpx;
+		border-radius: 30rpx;
+		box-shadow: 0px 0px 6rpx 0px rgba(0,0,0,0.16)
+	}
+	
+	/* 我喜爱的专辑end */
 	/* 专辑列表start */
 	.album {
 		box-sizing: border-box;

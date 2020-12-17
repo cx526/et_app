@@ -1,0 +1,97 @@
+<template>
+	<view class="album-content">
+		<view class="content-item" v-for="n in 3" :key="n">
+			<view class="cover">
+				<image :src="$aliImage + 'xmly-cover-demo.png'" ></image>
+				<view class="play-count">
+					<image :src="$aliImage + 'xmly-icon-play.png'"></image>
+					<text>10.01万</text>
+				</view>
+			</view>
+			<view class="title">
+				<image :src="$aliImage + 'xmly-icon-01.png'"></image>
+				<view class="title-text">英语启蒙儿歌集合</view>
+			</view>
+		</view>
+	</view>
+</template>
+
+<script>
+	export default {
+		data() {
+			return {
+				$aliImage: this.$aliImage,
+			}
+		}
+	}
+</script>
+
+<style scoped>
+	.album-content {
+		box-sizing: border-box;
+		display: flex;
+		justify-content: center;
+		padding: 24rpx 0;
+	}
+	.album-content .content-item {
+		width: 180rpx;
+		box-sizing: border-box;
+		margin-right: 38rpx;
+		margin-bottom: 26rpx;
+		display: inline-block;
+	} 
+	.album-content .content-item:nth-child(3n) {
+		margin-right: 0;
+	}
+	.album-content .content-item .cover {
+		position: relative;
+		box-sizing: border-box;
+		width: 180rpx;
+		height: 180rpx;
+	}
+	.album-content .content-item .cover image {
+		width: 180rpx;
+		height: 180rpx;
+		display: block;
+	}
+	.album-content .content-item .play-count {
+		position: absolute;
+		left: 0;
+		bottom: 0;
+		font-size: 18rpx;
+		color: #fff;
+		background: rgba(128,128,128,0.64);
+		display: flex;
+		align-items: center;
+		padding: 4rpx 12rpx;
+		border-bottom-left-radius: 16rpx;
+		border-top-right-radius: 16rpx;
+	}
+	.album-content .content-item .play-count image {
+		width: 16rpx;
+		height: 16rpx;
+		flex-shrink: 0;
+		margin-right: 8rpx;
+	}
+	.album-content .content-item .title {
+		font-size: 24rpx;
+		margin-top: 12rpx;
+		position: relative;
+		box-sizing: border-box;
+		text-indent: 40rpx;
+		overflow: hidden;
+	}
+	.album-content .content-item .title image {
+		width: 30rpx;
+		height: 30rpx;
+		position: absolute;
+		left: 0;
+		top: 0;
+	}
+	.album-content .content-item .title .title-text {
+		display: -webkit-box;
+		-webkit-line-clamp: 2;
+		-webkit-box-orient: vertical;
+		overflow: hidden;
+	}
+</style>
