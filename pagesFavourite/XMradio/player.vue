@@ -150,7 +150,6 @@
 			this.timeUpdate() // 监听播放进度事件
 			this.listenChangeSound() // 监听音频改变事件
 			this.listenEnd() // 监听音频结束事件
-			this.listenPlay()
 			this.XMplayer.setPlayMode('order') // 默认顺序播放
 			// this.initBg()
 			// this.prePlayBg()
@@ -158,6 +157,7 @@
 		onUnload() {
 			console.log('onUnload')
 			this.XMplayer.pause()
+			this.XMplayer.off('timeupdate').off('end').off('change.sound') // 移除监听事件
 		},
 		filters: {
 			formatTime(time) {
@@ -227,13 +227,6 @@
 					}).exec();
 				}, 200)
 				
-			},
-			// 监听播放事件
-			listenPlay() {
-				this.XMplayer.on('play', sound => {
-					console.log('play')
-				
-				})
 			},
 			// 监听播放结束事件
 			listenEnd() {

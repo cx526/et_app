@@ -32,13 +32,20 @@
 		<!-- 背景 -->
 		<view class="bg"></view>
 		<!-- 我喜爱的专辑start -->
-		<view class="like-album">
+		<view class="like-album" style="margin-top: -150rpx;">
 			<view class="album">
 				<nav-title title="我喜爱的专辑"></nav-title>
 				<album-list></album-list>
 			</view>
 		</view>
 		<!-- 我喜爱的专辑end -->
+		<!-- 我喜爱的音频start -->
+		<view class="like-album">
+			<view class="album">
+				<nav-title title="我喜爱的音频"></nav-title>
+			</view>
+		</view>
+		<!-- 我喜爱的音频end -->
 		<!-- 专辑列表区域start -->
 		<view class="album">
 			<view class="list">
@@ -372,7 +379,7 @@
 		box-sizing: border-box;
 		padding: 0 25rpx;
 		margin-bottom: 24rpx;
-		margin-top: -150rpx;
+		
 		
 	}
 	.like-album .album {
