@@ -17,25 +17,26 @@
 				</uni-notice-bar>
 			</view>
 			<view class="explain">
-				<text>{{ album_title }}</text>
+				<text class="subTitle">{{ album_title }}</text>
+				<text class="collect" @tap="collect" :class="isCollect ? ' active' : '' ">收藏</text>
 			</view>
 		</view>
 		<!-- 专辑详情end -->
 		<!-- 自定义播放器start -->
 		<view class="player-box">
-				<view class="play">
-					<image :src="$aliImage + 'xmly-back.png'" mode="widthFix" style="margin-right: 18rpx;" @tap="back"></image>
-					<view class="plan" @tap="forwardPercent">
-						<!-- 已经走的进度 -->
-						<view class="percent" :style="{'width': percent + 'rpx'}"></view>
-						<image :src="$aliImage + 'xmly-play-precent.png'" :style="{'left' : scrollLeft + 'rpx'}" @touchstart.stop="dragStart" @touchend.stop="drapEnd" @touchmove.stop="dragMove"></image>
-					</view>
-					<image :src="$aliImage + 'xmly-forward.png'" mode="widthFix" style="margin-left: 18rpx;" @tap="forward"></image>
-					<view class="time">
-						<text>{{ currentDuration | formatTime }}</text>
-						<text>{{ duration | formatTime }}</text>
-					</view>
+			<view class="play">
+				<image :src="$aliImage + 'xmly-back.png'" mode="widthFix" style="margin-right: 18rpx;" @tap="back"></image>
+				<view class="plan" @tap="forwardPercent">
+					<!-- 已经走的进度 -->
+					<view class="percent" :style="{'width': percent + 'rpx'}"></view>
+					<image :src="$aliImage + 'xmly-play-precent.png'" :style="{'left' : scrollLeft + 'rpx'}" @touchstart.stop="dragStart" @touchend.stop="drapEnd" @touchmove.stop="dragMove"></image>
 				</view>
+				<image :src="$aliImage + 'xmly-forward.png'" mode="widthFix" style="margin-left: 18rpx;" @tap="forward"></image>
+				<view class="time">
+					<text>{{ currentDuration | formatTime }}</text>
+					<text>{{ duration | formatTime }}</text>
+				</view>
+			</view>
 		</view>
 		<!-- 自定义播放器end -->
 		<!-- 播放选项start -->
@@ -94,6 +95,7 @@
 	export default {
 		data() {
 			return {
+				userInfo: uni.getStorageSync('userInfo'),
 				$aliImage: this.$aliImage,
 				cover_url_middle: '', // 专辑封面
 				percent: 0, 
@@ -121,6 +123,7 @@
 				playList: [], // 播放列表
 				currentPlayIndex: '', // 当前正在播放音屏的索引
 				playMode: 1, // 播放模式 1 顺序播放 2 单曲循环
+				isCollect: false, // 是否有收藏
 				// bgAnimate: 'player/background',
 				// bgAnimateImg: '',
 				// bgAnimateImgArray: [],
@@ -141,6 +144,7 @@
 			this.cover_url_middle = album_detail.cover_url_middle // 当前音频所在专辑封面
 			this.album_title = album_detail.album_title // 当前音频所在专辑的标题
 			this.id = Number(album_detail.id) // 当前音频所在专辑id
+			this.selXmlyCollect()
 			await this.init() // 初始化插件
 			// 当前音频所在接口的页码
 			this.page = Math.ceil(options.playIndex / 20) > 0 ? Math.ceil(options.playIndex / 20):1 
@@ -389,6 +393,59 @@
 					this.XMplayer.setPlayMode('loop')
 				}
 			},
+			// 收藏声音
+			collect() {
+				let params = {
+					type: 'browse',
+					target_id: String(this.album_id),
+					custom_id: String(this.userInfo.id)
+				}
+				this.$api.addOrDelXmlyCollect(params).then(res => {
+					if(res.data.status === 'ok') {
+						let title = ''
+						if(this.isCollect) {
+							title = '取消收藏成功'
+						}else {
+							title = '收藏成功'
+						}
+						uni.showToast({
+							title: title,
+							icon: 'none',
+							duration: 1500,
+							success: () =>{
+								// 更新收藏状态
+								this.selXmlyCollect()
+							}
+						})
+					}
+					
+				})
+			},
+			// 查看声音是否被收藏
+			selXmlyCollect() {
+				let params = {
+					filterItems: {
+						type: 'browse',
+						custom_id: String(this.userInfo.id)
+					}
+				}
+				this.$api.selXmlyCollect(params).then(res => {
+					let result = res.data.rows
+					let arr = []
+					if(result && result.length > 0) {
+						result.map(item => {
+							arr.push(Number(item.target_id))
+						})
+					}
+					if(arr.includes(Number(this.album_id))) {
+						this.isCollect = true
+					}else {
+						this.isCollect = false
+					}
+					console.log(arr)
+					console.log(this.isCollect)
+				})
+			},
 			
 			// initBg() {
 			// 	this.bgAnimateImgArray = []
@@ -448,6 +505,34 @@
 		font-size: 24rpx;
 		color: #B3B3B3;
 		text-align: center;
+		display: flex;
+		align-items: center;
+		overflow: hidden;
+	}
+	.album-detail .explain .subTitle {
+		flex: 1;
+		box-sizing: border-box;
+		overflow: hidden;
+		text-overflow: ellipsis;
+		white-space: nowrap;
+		justify-content: flex-start;
+	}
+	.album-detail .explain .collect {
+		flex-shrink: 0;
+		margin-left: 4rpx;
+		width: 80rpx;
+		height: 42rpx;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		font-size: 22rpx;
+		font-weight: 700;
+		color: #fff;
+		border-radius: 30rpx;
+		background: #DCDCDC;
+	}
+	.album-detail .explain .collect.active {
+		background: #84D5EA;
 	}
 	/* 专辑详情end */
 	/* 自定义播放器start */
@@ -590,7 +675,7 @@
 		text-overflow: ellipsis;
 	}
 	.active {
-		color: #2AAEC4 !important;
+		background: #2AAEC4 !important;
 	}
 	/* 播放列表弹窗end */
 	

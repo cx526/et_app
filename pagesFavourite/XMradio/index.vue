@@ -21,21 +21,14 @@
 		</view>
 		-->
 
-		<!-- list
-		<view>
-			<view v-for="(item, i) in albumsList" :key="i" style="height: 200upx; background: #00B7CC; color: #fff; margin-top: 30upx;" @tap="goAlbumDetail(item.id)">
-				<image :src="item.cover_url_middle" style="height: 180upx; width: 180upx;"/>
-				<text>{{item.album_title}}</text>
-			</view>
-		</view> 
-		-->
+
 		<!-- 背景 -->
 		<view class="bg"></view>
 		<!-- 我喜爱的专辑start -->
-		<view class="like-album" style="margin-top: -150rpx;">
+		<view class="like-album" style="margin-top: -150rpx;" v-if="collectAlbumList && collectAlbumList.length > 0">
 			<view class="album">
-				<nav-title title="我喜爱的专辑"></nav-title>
-				<album-list></album-list>
+				<nav-title title="我喜爱的专辑" :isShow="collectAlbumPage > 3 ? true : false" @checkMore="checkMore"></nav-title>
+				<album-list :collectAlbumList="collectAlbumList" @goAlbumDetail="goAlbumDetail"></album-list>
 			</view>
 		</view>
 		<!-- 我喜爱的专辑end -->
@@ -43,6 +36,7 @@
 		<view class="like-album">
 			<view class="album">
 				<nav-title title="我喜爱的音频"></nav-title>
+				<browse-list></browse-list>
 			</view>
 		</view>
 		<!-- 我喜爱的音频end -->
@@ -97,12 +91,15 @@
 		// XMdeveloper_bannersURL,
 		XMdeveloper_categoriesURL,
 		XMalbums_browseURL,
+		XMbatch_albumsURL,
 	} from './XM.js'
 	import navTitle from '../components/nav-title.vue'
 	import albumList from '../components/album-list.vue'
+	import browseList from '../components/browse-list.vue'
 	export default {
 		data() {
 			return {
+				userInfo: uni.getStorageSync('userInfo'),
 				$aliImage: this.$aliImage,
 				XMclient: null,
 				XMplayer: null,
@@ -119,13 +116,19 @@
 				swiperCurrent: 0, // 当前swiper所在的滑块
 				itemHeight: 0,
 				swiperHeight: 0,
+				collectAlbums: '', // 储存收藏专辑id
+				collectAlbumList: [], // 储存收藏专辑数据
+				collectAlbumPage: 0, // 收藏专辑数
+				collectBrowse: '', // 储存声音专辑id
+				collectBrowsePage: 0, // 收藏声音数
 				// swiperLength: 0,
 				// carouselList: []
 			}
 		},
 		components: {
 			navTitle,
-			albumList
+			albumList,
+			browseList
 		},
 		onLoad() {
 			this.init()
@@ -152,12 +155,14 @@
 				this.XMplayer = player
 				// 获取专辑分类
 				this.kindList = await this.getKinds()
-				console.log(this.kindList)
 				// 获取收藏专辑
 				this.albumsList = await this.getAlbumsList(this.albumsPage)
 				// 设置swiper高度
 				this.getSwiperHeight('.content-item')
-				console.log(this.albumsList)
+				// 批量获取收藏专辑信息
+				this.selXmlyCollect()
+				// 批量获取收藏声音信息
+				this.selXmlyCollectBrowse()
 				// 获取轮播图
 				// this.carouselList = await this.getBanners()
 				// this.swiperLength = this.carouselList.length;
@@ -292,9 +297,77 @@
 					url: '/pagesFavourite/XMradio/albumDetail'
 				})
 			},
-
-
-
+			// 查看我收藏的专辑
+			selXmlyCollect() {	
+				let params = {
+					pageSize:"3",
+					currentPage:"1",
+					filterItems: {
+						type: 'albums',
+						custom_id: String(this.userInfo.id)
+					}
+				}
+				this.$api.selXmlyCollect(params).then(res => {
+					let result = res.data.rows
+					this.collectAlbumPage = res.data.totalPage
+					let arr = []
+					if(result && result.length > 0) {
+						result.map(item => {
+							arr.push(item.target_id)
+						})
+					}
+					this.collectAlbums = arr.join(',')
+					if(arr && arr.length > 0) {
+						this.getXmlyCollect()
+					}
+					
+				})
+			},
+			// 批量获取收藏专辑信息
+			getXmlyCollect() {
+				let params = {
+					ids: this.collectAlbums
+				}
+				console.log(params)
+				this.XMclient.get(XMbatch_albumsURL, params).then(res => {
+					console.log(res)
+					if(res.code === 0) {
+						this.collectAlbumList = res.data
+					}
+				})
+			},
+			// 查看我收藏的声音
+			selXmlyCollectBrowse() {
+				let params = {
+					pageSize:"3",
+					currentPage:"1",
+					filterItems: {
+						type: 'browse',
+						custom_id: String(this.userInfo.id)
+					}
+				}
+				this.$api.selXmlyCollect(params).then(res => {
+					let result = res.data.rows
+					console.log(result)
+					this.collectBrowsePage = res.data.totalPage
+					let arr = []
+					if(result && result.length > 0) {
+						result.map(item => {
+							arr.push(item.target_id)
+						})
+					}
+					this.collectBrowse = arr.join(',')
+					console.log(this.collectBrowse)
+					
+				})
+			},
+			// 查看更多页面
+			checkMore() {
+				console.log('checkMore')
+				uni.navigateTo({
+					url: '/pagesFavourite/XMradio/album-more'
+				})
+			},
 
 
 

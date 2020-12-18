@@ -32,6 +32,9 @@ export const XMdeveloper_categoriesURL = XMoriginURL + '/operation/categories'
 
 // 获取专辑详情信息
  export const XMalbums_browseURL = XMoriginURL + '/albums/browse?count=20'
+ 
+ // 批量获取专辑信息/albums/get_batch
+ export const XMbatch_albumsURL = XMoriginURL + '/albums/get_batch'
 
 
 

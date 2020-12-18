@@ -1,6 +1,6 @@
 {
 	"pages": [
-		
+
 		{
 			"path": "pages/index/index",
 			"style": {
@@ -390,7 +390,7 @@
 			"path": "pages/library",
 			"style": {
 				"navigationBarTitleText": "智慧童书馆",
-				"enablePullDownRefresh":true
+				"enablePullDownRefresh": true
 			}
 		},
 		{
@@ -465,21 +465,18 @@
 			}
 		}
 
-        ,{
-            "path" : "pages/member/member-list",
-            "style" :                                                                                    
-            {
-                "navigationBarTitleText": "会员卡列表",
-                "enablePullDownRefresh": false
-            }
-            
-        }
-    ],
-	"subPackages": [
-		{
+		, {
+			"path": "pages/member/member-list",
+			"style": {
+				"navigationBarTitleText": "会员卡列表",
+				"enablePullDownRefresh": false
+			}
+
+		}
+	],
+	"subPackages": [{
 			"root": "pagesLibrary",
-			"pages": [
-				{
+			"pages": [{
 					"path": "library/take-books",
 					"style": {
 						"navigationBarTitleText": "快速取书",
@@ -501,7 +498,7 @@
 						"navigationBarTitleText": "五车贝充值"
 					}
 				},
-				
+
 				{
 					"path": "library/virtual",
 					"style": {
@@ -590,29 +587,27 @@
 						"navigationBarTitleText": "新建打卡"
 					}
 				}, {
-					"path" : "circle/read-data",
-					"style" :                                                                                    
-					{
+					"path": "circle/read-data",
+					"style": {
 						"navigationBarTitleText": "",
 						"enablePullDownRefresh": false
 					}
-					
+
 				}
 			]
 		},
 		{
-			"root":"pagesFavourite",
-			"pages":[
-				{
-					"path":"favourite/index",
-					"style":{
-						"navigationBarTitleText":"我的收藏"
+			"root": "pagesFavourite",
+			"pages": [{
+					"path": "favourite/index",
+					"style": {
+						"navigationBarTitleText": "我的收藏"
 					}
 				},
 				{
-					"path":"favourite/wish-book",
-					"style":{
-						"navigationBarTitleText":"添加心愿书单"
+					"path": "favourite/wish-book",
+					"style": {
+						"navigationBarTitleText": "添加心愿书单"
 					}
 				},
 				{
@@ -620,16 +615,16 @@
 					"style": {
 						"navigationBarTitleText": "小学堂",
 						"usingComponents": {
-						    // #ifdef  MP-WEIXIN
+							// #ifdef  MP-WEIXIN
 							// "xm-component": "plugin://xmly-plugin/demo-component"
-						    // #endif
+							// #endif
 						}
 					}
 				},
 				{
 					"path": "XMradio/albumDetail",
 					"style": {
-						"navigationBarTitleText":"专辑详情"
+						"navigationBarTitleText": "专辑详情"
 					}
 				},
 				{
@@ -637,23 +632,39 @@
 					"style": {
 						"navigationBarTitleText": "播放器"
 					}
+				}, {
+					"path": "XMradio/album-more",
+					"style": {
+						"navigationBarTitleText": "收藏专辑列表",
+						"enablePullDownRefresh": false
+					}
+
 				}
-			],
-			"plugins" : {
-			    // 喜马拉雅微信小程序插件
-			    "XiMaLaYaFM" : {
-			        "version" : "3.0.1",
-			        "provider" : "wxc6a13dda5815c529"
-			    }
+			    ,{
+                    "path" : "XMradio/browse-more",
+                    "style" :                                                                                    
+                {
+                    "navigationBarTitleText": "收藏声音列表",
+                    "enablePullDownRefresh": false
+                }
+                
+                }
+            ],
+			"plugins": {
+				// 喜马拉雅微信小程序插件
+				"XiMaLaYaFM": {
+					"version": "3.0.1",
+					"provider": "wxc6a13dda5815c529"
+				}
 			}
 		}
-		
+
 	],
 	"preloadRule": {
-	    "pages/index/index": {
-	        "network": "all",
-	        "packages": ["pagesCircle", "pagesLibrary", "pagesFavourite"]
-	    }
+		"pages/index/index": {
+			"network": "all",
+			"packages": ["pagesCircle", "pagesLibrary", "pagesFavourite"]
+		}
 	},
 	"globalStyle": {
 		"navigationBarTextStyle": "black",

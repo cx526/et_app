@@ -309,4 +309,10 @@ api.delGoodsWish = params => request.globalRequest('/api/goodsAssist/delGoodsWis
 // 喜马拉雅签名接口
 api.xmlySign = params => request.globalRequest('/api/xmly/signature', 'POST', params)
 
+// 增加或删除喜马拉雅收藏
+api.addOrDelXmlyCollect = params => request.globalRequest('/api/xmRadio/addOrDelXmlyCollect', 'POST',params)
+
+// 查看喜马拉雅收藏
+api.selXmlyCollect = params => request.globalRequest('/api/xmRadio/selXmlyCollect', 'POST', params)
+
 export default api

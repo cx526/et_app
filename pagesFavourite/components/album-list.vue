@@ -1,26 +1,49 @@
 <template>
 	<view class="album-content">
-		<view class="content-item" v-for="n in 3" :key="n">
-			<view class="cover">
-				<image :src="$aliImage + 'xmly-cover-demo.png'" ></image>
-				<view class="play-count">
-					<image :src="$aliImage + 'xmly-icon-play.png'"></image>
-					<text>10.01万</text>
+		<block v-for="(item, index) in collectAlbumList" :key="index">
+			<view class="content-item" @tap="goAlbumDetail(item)">
+				<view class="cover">
+					<image :src="item.cover_url_small" ></image>
+					<view class="play-count">
+						<image :src="$aliImage + 'xmly-icon-play.png'"></image>
+						<text>{{ item.play_count | formatPlayCount }}</text>
+					</view>
+				</view>
+				<view class="title">
+					<image :src="$aliImage + 'xmly-icon-01.png'"></image>
+					<view class="title-text">{{ item.album_title }}</view>
 				</view>
 			</view>
-			<view class="title">
-				<image :src="$aliImage + 'xmly-icon-01.png'"></image>
-				<view class="title-text">英语启蒙儿歌集合</view>
-			</view>
-		</view>
+		</block>
+		
 	</view>
 </template>
 
 <script>
 	export default {
+		props: {
+			collectAlbumList: Array,
+			
+		},
 		data() {
 			return {
 				$aliImage: this.$aliImage,
+			}
+		},
+		filters: {
+			formatPlayCount(play_count) {
+				let len = String(play_count).length
+				if(len >= 5 && len < 9) {
+					return play_count = (play_count / 10000).toFixed(2) + '万'
+				}
+				else if(len >= 9) {
+					return play_count = (play_count / 100000000).toFixed(2) + '亿'
+				}
+			}
+		},
+		methods: {
+			goAlbumDetail(item) {
+				this.$emit('goAlbumDetail', item)
 			}
 		}
 	}
@@ -30,8 +53,9 @@
 	.album-content {
 		box-sizing: border-box;
 		display: flex;
-		justify-content: center;
-		padding: 24rpx 0;
+		justify-content: flex-start;
+		padding: 24rpx 12rpx;
+		flex-wrap: wrap;
 	}
 	.album-content .content-item {
 		width: 180rpx;

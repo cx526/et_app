@@ -14,8 +14,18 @@
 					</view>
 				</block>
 				<view class="play">
-					<image :src="$aliImage + 'xmly-icon-01.png'" mode=""></image>
-					<text>{{ play_count | formatPlayCount }}</text>
+					<view class="item">
+						<image :src="$aliImage + 'xmly-icon-01.png'" mode=""></image>
+						<text>{{ play_count | formatPlayCount }}</text>
+					</view>
+					<view class="item" @tap="collect" v-if="!isCollect">
+						<image :src="$aliImage + 'xmly-collect-none.png'" mode=""></image>
+						<text>收藏</text>
+					</view>
+					<view class="item" v-else @tap="collect">
+						<image :src="$aliImage + 'xmly-collect.png'" mode=""></image>
+						<text>收藏</text>
+					</view>
 				</view>
 			</view>
 		</view>
@@ -88,6 +98,7 @@
 	export default {
 		data() {
 			return {
+				userInfo: uni.getStorageSync('userInfo'),
 				$aliImage: this.$aliImage,
 				album_id: '', // 专辑id
 				tagList: [], // 专辑标签
@@ -104,18 +115,21 @@
 				navList: [
 					{title: '简介'}, 
 					{title: '节目'},
-				]
+				],
+				isCollect: false, // 是否收藏
 			}
 		},
 		async onLoad(options) {
 			let album_detail = JSON.parse(uni.getStorageSync('album_detail'))
 			this.album_id = Number(album_detail.id)
+			console.log(this.album_id)
 			this.tagList = album_detail.tagList
 			this.cover_url_middle = album_detail.cover_url_middle
 			this.play_count = album_detail.play_count
 			this.album_intro = album_detail.album_intro
 			await this.init()
 			await this.getAlbumsDetail(this.album_id, this.page)
+			this.selXmlyCollect()
 		},
 		filters: {
 			formatPlayCount(play_count) {
@@ -199,15 +213,63 @@
 				let duration = item.duration
 				let title = item.track_title
 				let playIndex = index
-				// let play_status = item.play_status
-				// this.XMplayer.play(id)
-				// this.XMplayer.setPlaylist([id])
-				// this.XMplayer.play()
 				uni.navigateTo({
 					url: '/pagesFavourite/XMradio/player?id='+id+'&duration='+duration+'&title='+title+'&playIndex='+index
 				})
-				
-			}
+			},
+			// 收藏专辑
+			collect() {
+				let params = {
+					type: 'albums',
+					target_id: String(this.album_id),
+					custom_id: String(this.userInfo.id)
+				}
+				this.$api.addOrDelXmlyCollect(params).then(res => {
+					if(res.data.status === 'ok') {
+						let title = ''
+						if(this.isCollect) {
+							title = '取消收藏成功'
+						}else {
+							title = '收藏成功'
+						}
+						uni.showToast({
+							title: title,
+							icon: 'none',
+							duration: 1500,
+							success: () =>{
+								// 更新收藏状态
+								this.selXmlyCollect()
+							}
+						})
+					}
+					
+				})
+			},
+			// 查看专辑是否被收藏
+			selXmlyCollect() {
+				let params = {
+					filterItems: {
+						type: 'albums',
+						custom_id: String(this.userInfo.id)
+					}
+				}
+				this.$api.selXmlyCollect(params).then(res => {
+					let result = res.data.rows
+					let arr = []
+					if(result && result.length > 0) {
+						result.map(item => {
+							arr.push(Number(item.target_id))
+						})
+					}
+					if(arr.includes(this.album_id)) {
+						this.isCollect = true
+					}else {
+						this.isCollect = false
+					}
+					console.log(arr)
+					console.log(this.isCollect)
+				})
+			},
 		},
 	}
 </script>
@@ -290,6 +352,11 @@
 		align-items: center;
 		font-size: 22rpx;
 		color: #808080;
+		justify-content: space-between;
+	}
+	.description .right .play .item {
+		display: flex;
+		align-items: center;
 	}
 	.description .right .play image {
 		width: 30rpx;

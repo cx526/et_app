@@ -5,7 +5,7 @@
 			<text>{{ title }}</text>
 		</view>
 		
-		<view class="more">
+		<view class="more" v-if="isShow" @tap="checkMore">
 			<text>更多</text>
 			<image :src="$aliImage + 'xmly-icon-right.png'" mode=""></image>
 		</view>
@@ -20,7 +20,17 @@
 			}
 		},
 		props: {
-			title: String
+			title: String,
+			isShow: {
+				type: Boolean,
+				default: false
+			}
+		},
+		methods: {
+			// 点击更多
+			checkMore() {
+				this.$emit('checkMore')
+			}
 		}
 	}
 </script>
