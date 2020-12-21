@@ -71,7 +71,7 @@
 				<block v-for="(item, index) in videoList" :key="index">
 					<view class="item" @tap="changeVideo(item, index)">
 						<text class="sort">{{ index + 1 }}</text>
-						<text :class="item.id == album_id ? 'active' : ''" class="title">{{ item.track_title }}</text>
+						<text :class="item.id == album_id ? 'lineActive' : ''" class="title">{{ item.track_title }}</text>
 						<text class="duration">{{ item.duration | formatTime }}</text>
 					</view>
 				</block>
@@ -89,7 +89,7 @@
 <script>
 	const winHeight = uni.getSystemInfoSync().windowHeight
 	import { initXMLY } from './XM.js'
-	import { XMalbums_browseURL } from './XM.js'
+	import { XMalbums_browseURL, MXbatch_browseURL } from './XM.js'
 	import Popup from '@/components/lvv-popup/lvv-popup.vue'
 	import uniNoticeBar from '@/components/uni-notice-bar/uni-notice-bar.vue'
 	export default {
@@ -124,6 +124,8 @@
 				currentPlayIndex: '', // 当前正在播放音屏的索引
 				playMode: 1, // 播放模式 1 顺序播放 2 单曲循环
 				isCollect: false, // 是否有收藏
+				from: '', // 标识从哪里进入播放页
+				collectBrowse: '', // 储存收藏声音id
 				// bgAnimate: 'player/background',
 				// bgAnimateImg: '',
 				// bgAnimateImgArray: [],
@@ -135,28 +137,45 @@
 			uniNoticeBar
 		},
 		async onLoad(options) {
-			console.log(options)
-			this.album_id = options.id // 当前播放音频id
-			this.duration = options.duration // 当前播放音频总时长
-			this.title = options.title // 当前播放音频标题
-			this.playIndex = options.playIndex
-			let album_detail = JSON.parse(uni.getStorageSync('album_detail'))
-			this.cover_url_middle = album_detail.cover_url_middle // 当前音频所在专辑封面
-			this.album_title = album_detail.album_title // 当前音频所在专辑的标题
-			this.id = Number(album_detail.id) // 当前音频所在专辑id
+			this.from = options.from
 			this.selXmlyCollect()
 			await this.init() // 初始化插件
-			// 当前音频所在接口的页码
-			this.page = Math.ceil(options.playIndex / 20) > 0 ? Math.ceil(options.playIndex / 20):1 
-			this.currentPlayIndex = this.playIndex % 20 // 当前音频所在索引
-			await this.getAlbumsDetail(this.id, this.page)
 			this.getEleRect('.plan')
 			this.timeUpdate() // 监听播放进度事件
 			this.listenChangeSound() // 监听音频改变事件
 			this.listenEnd() // 监听音频结束事件
 			this.XMplayer.setPlayMode('order') // 默认顺序播放
-			// this.initBg()
-			// this.prePlayBg()
+			console.log(options)
+			// 从我喜爱声音进入
+			if(options.from === 'browse') {
+				console.log('entry')
+				let browse_detail = JSON.parse(uni.getStorageSync('browse_detail'))
+				this.album_id = browse_detail.album_id
+				this.duration = browse_detail.duration
+				this.title = browse_detail.title
+				this.cover_url_middle = browse_detail.cover_url_middle
+				this.album_title = browse_detail.album_title
+				this.id = Number(browse_detail.id)
+				this.page = Math.ceil(browse_detail.playIndex / 10) > 0 ? Math.ceil(browse_detail.playIndex / 10):1
+				this.currentPlayIndex = this.playIndex % 10 // 当前音频所在索引
+				this.selXmlyCollectBrowse()
+			}else {
+				this.album_id = options.id // 当前播放音频id
+				this.duration = options.duration // 当前播放音频总时长
+				this.title = options.title // 当前播放音频标题
+				this.playIndex = options.playIndex
+				let album_detail = JSON.parse(uni.getStorageSync('album_detail'))
+				this.cover_url_middle = album_detail.cover_browse_url_middle // 当前音频所在专辑封面
+				this.album_title = album_detail.album_title // 当前音频所在专辑的标题
+				this.id = Number(album_detail.id) // 当前音频所在专辑id
+				// 当前音频所在接口的页码
+				this.page = Math.ceil(options.playIndex / 20) > 0 ? Math.ceil(options.playIndex / 20):1 
+				this.currentPlayIndex = this.playIndex % 20 // 当前音频所在索引
+				// 获取播放列表
+				await this.getAlbumsDetail(this.id, this.page)
+			}
+			
+
 		},
 		onUnload() {
 			console.log('onUnload')
@@ -177,8 +196,6 @@
 				const { xmly, player } = await initXMLY()
 				this.XMclient = xmly
 				this.XMplayer = player
-				// 设置播放列表
-				// this.XMplayer.setPlaylist([360729033,361819437])
 			},
 			//  播放
 			play() {
@@ -261,7 +278,13 @@
 					this.album_id = this.playList[this.currentPlayIndex - 1]
 					this.title = this.videoList[this.currentPlayIndex - 1].track_title
 					this.duration = this.videoList[this.currentPlayIndex - 1].duration
+					this.cover_url_middle = this.videoList[this.currentPlayIndex - 1].cover_url_middle
+					if(this.from === 'browse') {
+						this.album_title = this.videoList[this.currentPlayIndex - 1].subordinated_album.album_title
+						
+					}
 					this.currentPlayIndex = this.currentPlayIndex - 1
+					
 					return
 				}
 				this.XMplayer.prev()
@@ -270,8 +293,13 @@
 				this.album_id = this.playList[index]
 				this.title = this.videoList[index].track_title
 				this.duration = this.videoList[index].duration
+				this.cover_url_middle = this.videoList[index].cover_url_middle
 				this.isShow = false
 				this.scrollLeft = 0
+				if(this.from === 'browse') {
+					this.album_title = this.videoList[index].subordinated_album.album_title
+					
+				}
 			},
 			// 切换下一首
 			playNext() {
@@ -281,6 +309,11 @@
 					this.album_id = this.playList[this.currentPlayIndex + 1]
 					this.title = this.videoList[this.currentPlayIndex + 1].track_title
 					this.duration = this.videoList[this.currentPlayIndex + 1].duration
+					this.cover_url_middle = this.videoList[this.currentPlayIndex + 1].cover_url_middle
+					if(this.from === 'browse') {
+						this.album_title = this.videoList[this.currentPlayIndex + 1].subordinated_album.album_title
+						
+					}
 					this.currentPlayIndex = this.currentPlayIndex + 1
 					return
 				}
@@ -289,8 +322,13 @@
 				this.album_id = this.playList[index]
 				this.title = this.videoList[index].track_title
 				this.duration = this.videoList[index].duration
+				this.cover_url_middle = this.videoList[index].cover_url_middle
 				this.isShow = false
 				this.scrollLeft = 0
+				if(this.from === 'browse') {
+					this.album_title = this.videoList[index].subordinated_album.album_title
+					
+				}
 			},
 			// 快进 15s
 			forward() {
@@ -355,16 +393,26 @@
 			},
 			// 加载更多
 			loadMore() {
-				if(this.page <= this.totalPage) {
-					this.page = this.page + 1
-					this.getAlbumsDetail(this.id, this.page)
+				if(this.from === 'browse') {
+					let realityCount = this.totalPage - (this.page - 1) * 10
+					if((this.videoList.length) < realityCount) {
+						this.page = this.page + 1
+						this.selXmlyCollectBrowse()
+					}
+				}else {
+					if(this.page <= this.totalPage) {
+						this.page = this.page + 1
+						this.getAlbumsDetail(this.id, this.page)
+					}
 				}
+				
 			},
 			// 设置播放列表id
 			setPlayList(arr) {
 				arr.map(item => {
 					this.playList.push(Number(item.id))
 				})
+				console.log(this.playList)
 				this.XMplayer.setPlaylist(this.playList) // 设置播放列表
 			},
 			// 打开播放列表
@@ -373,14 +421,18 @@
 			},
 			// 切换音屏
 			changeVideo(item, index) {
-				
 				let id = item.id
 				this.album_id = id
 				this.duration = item.duration
 				this.title = item.track_title
+				this.cover_url_middle = item.cover_url_middle
 				this.showModel = false
 				this.isShow = false
 				this.scrollLeft = 0
+				if(this.from === 'browse') {
+					this.album_title = item.subordinated_album.album_title
+					
+				}
 				// this.XMplayer.play(id)
 				this.XMplayer.playByIndex(index)
 			},
@@ -446,25 +498,47 @@
 					console.log(this.isCollect)
 				})
 			},
+			// 查看我收藏的声音
+			selXmlyCollectBrowse() {
+				let params = {
+					pageSize: '10',
+					currentPage: String(this.page),
+					filterItems: {
+						type: 'browse',
+						custom_id: String(this.userInfo.id)
+					}
+				}
+				this.$api.selXmlyCollect(params).then(res => {
+					this.totalPage = res.data.totalPage
+					let result = res.data.rows
+					this.collectBrowsePage = res.totalPage
+					this.collectBrowsePage = res.data.totalPage
+					let arr = []
+					if(result && result.length > 0) {
+						result.map(item => {
+							arr.push(item.target_id)
+						})
+					}
+					this.collectBrowse = arr.join(',')
+					console.log(this.collectBrowse)
+					this.getXmlyCollectBrowse()
+				})
+			},
+			// 批量获取收藏声音详情
+			getXmlyCollectBrowse() {
+				let params = {
+					ids: this.collectBrowse
+				}
+				this.XMclient.get(MXbatch_browseURL, params).then(res => {
+					if(res.code === 0) {
+						console.log(res)
+						let result = res.data.tracks
+						this.videoList = [...this.videoList, ...result]
+						this.setPlayList(result)
+					}
+				})
+			},
 			
-			// initBg() {
-			// 	this.bgAnimateImgArray = []
-			// 	for (let i = 1; i < 13; i++) {
-			// 		let img = this.bgAnimate + i.toString() + '.png'
-			// 		this.bgAnimateImgArray.push(img)
-			// 	}
-			// },
-			// prePlayBg() {
-			// 	if (this.bgAnimateIndex < this.bgAnimateImgArray.length) {
-			// 		this.playaBg()
-			// 	}
-			// },
-			// playaBg() {
-			// 	let animate = setInterval(() => {
-			// 		this.bgAnimateImg = this.bgAnimateImgArray[this.bgAnimateIndex]
-			// 		this.bgAnimateIndex = this.bgAnimateIndex + 1
-			// 	}, 200);
-			// }
 		}
 	}
 </script>
@@ -674,8 +748,8 @@
 		overflow: hidden;
 		text-overflow: ellipsis;
 	}
-	.active {
-		background: #2AAEC4 !important;
+	.lineActive {
+		color: #2AAEC4 !important;
 	}
 	/* 播放列表弹窗end */
 	

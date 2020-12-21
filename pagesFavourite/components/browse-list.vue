@@ -1,36 +1,65 @@
 <template>
 	<view class="list">
-		<block v-for="n in 3" :key="n">
-			<view class="item">
+		<block  v-if="collectBrowseList && collectBrowseList.length > 0">
+			<view class="item" @tap="goPlay(item, index)" v-for="(item, index) in  collectBrowseList" :key="index">
 				<view class="show">
-					<image :src="$aliImage + 'xmly-cover-demo.png'" mode=""></image>
+					<image :src="item.cover_url_small" mode=""></image>
 				</view>
 				<view class="main">
 					<view class="title">
-						<text>【唐诗市的唐猫猫】第3集_奇怪的风儿【宝宝巴士故事】</text>
+						<text>{{ item.track_title }}</text>
 						<image :src="$aliImage + 'xmly-play.png'" mode=""></image>
 					</view>
 					<view class="info">
 						<view>
 							<image :src="$aliImage + 'xmly-listen.png'" mode=""></image>
-							<text>7.77万</text>
+							<text>{{ item.play_count | formatPlayCount }}</text>
 						</view>
 						<view>
 							<image :src="$aliImage + 'xmly-clock.png'" mode=""></image>
-							<text>2020.12.18</text>
+							<text>{{ item.created_at | formatDate }}</text>
 						</view>
 					</view>
 				</view>
 			</view>
 		</block>
+		<view class="none" v-else>
+			<text>暂无数据</text>
+		</view>
 	</view>
 </template>
 
 <script>
 	export default {
+		props: {
+			collectBrowseList: Array
+		},
 		data() {
 			return {
 				$aliImage: this.$aliImage,
+			}
+		},
+		filters: {
+			formatPlayCount(play_count) {
+				let len = String(play_count).length
+				if(len >= 5 && len < 9) {
+					return play_count = (play_count / 10000).toFixed(2) + '万'
+				}
+				else if(len >= 9) {
+					return play_count = (play_count / 100000000).toFixed(2) + '亿'
+				}
+			},
+			formatDate(created_at) {
+				let date = new Date(created_at)
+				let year = date.getFullYear()
+				let month = date.getMonth() + 1 > 9 ? date.getMonth() + 1 : '0' + (date.getMonth() + 1)
+				let day = date.getDate() > 9 ? date.getDate() : '0' + (date.getDate())
+				return year + '-' + month + '-' + day
+			}
+		},
+		methods: {
+			goPlay(item, index) {
+				this.$emit('goPlay', {item: item, playIndex: index})
 			}
 		}
 	}
@@ -71,6 +100,7 @@
 		align-items: center;
 		font-size: 24rpx;
 		margin-bottom: 4rpx;
+		justify-content: space-between;
 	}
 	.list .item .main .title image {
 		flex-shrink: 0;
@@ -95,5 +125,12 @@
 		width: 26rpx;
 		height: 26rpx;
 		margin-right: 6rpx;
+	}
+	.none {
+		box-sizing: border-box;
+		text-align: center;
+		padding: 30rpx;
+		font-size: 30rpx;
+		color: #B3B3B3;
 	}
 </style>

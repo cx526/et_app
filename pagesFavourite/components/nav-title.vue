@@ -24,12 +24,13 @@
 			isShow: {
 				type: Boolean,
 				default: false
-			}
+			},
+			from: String
 		},
 		methods: {
 			// 点击更多
 			checkMore() {
-				this.$emit('checkMore')
+				this.$emit('checkMore', { from: this.from })
 			}
 		}
 	}

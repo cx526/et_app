@@ -315,4 +315,6 @@ api.addOrDelXmlyCollect = params => request.globalRequest('/api/xmRadio/addOrDel
 // 查看喜马拉雅收藏
 api.selXmlyCollect = params => request.globalRequest('/api/xmRadio/selXmlyCollect', 'POST', params)
 
+// 查看喜马拉雅推荐
+api.selXmlyRecomment = params => request.globalRequest('/api/xmRadio/selXmlyRecomment', 'POST', params)
 export default api

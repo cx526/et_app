@@ -1,7 +1,7 @@
 <template>
 	<view class="album-content">
-		<block v-for="(item, index) in collectAlbumList" :key="index">
-			<view class="content-item" @tap="goAlbumDetail(item)">
+		<block v-if="collectAlbumList && collectAlbumList.length > 0">
+			<view class="content-item" @tap="goAlbumDetail(item)" v-for="(item, index) in collectAlbumList" :key="index">
 				<view class="cover">
 					<image :src="item.cover_url_small" ></image>
 					<view class="play-count">
@@ -15,7 +15,9 @@
 				</view>
 			</view>
 		</block>
-		
+		<view class="none" v-else>
+			<text>暂无数据</text>
+		</view>
 	</view>
 </template>
 
@@ -117,5 +119,13 @@
 		-webkit-line-clamp: 2;
 		-webkit-box-orient: vertical;
 		overflow: hidden;
+	}
+	.none {
+		box-sizing: border-box;
+		text-align: center;
+		padding: 30rpx;
+		font-size: 30rpx;
+		color: #B3B3B3;
+		flex: 1;
 	}
 </style>

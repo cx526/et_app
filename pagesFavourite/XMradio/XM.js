@@ -36,6 +36,8 @@ export const XMdeveloper_categoriesURL = XMoriginURL + '/operation/categories'
  // 批量获取专辑信息/albums/get_batch
  export const XMbatch_albumsURL = XMoriginURL + '/albums/get_batch'
 
+// 批量获取声音信息
+export const MXbatch_browseURL = XMoriginURL + '/tracks/get_batch'
 
 
 // 获取开发者听单

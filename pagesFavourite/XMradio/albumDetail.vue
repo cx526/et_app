@@ -38,7 +38,7 @@
 					<view class="line" :class="index === currentIndex ? ' active' : ''"></view>
 				</view>
 			</view>
-			<view class="options">
+			<!-- <view class="options">
 				<view class="item">
 					<image :src="$aliImage + 'xmly-play.png'"></image>
 					<text>全部播放</text>
@@ -55,7 +55,7 @@
 				</view>
 				
 				
-			</view>
+			</view> -->
 			<view class="context">
 				<swiper :style="{ 'height': swiperHeight }" :current="currentIndex" @change="swiperChange">
 					<swiper-item>
@@ -213,6 +213,9 @@
 				let duration = item.duration
 				let title = item.track_title
 				let playIndex = index
+				let album_detail = JSON.parse(uni.getStorageSync('album_detail'))
+				album_detail.cover_browse_url_middle = item.cover_url_middle
+				uni.setStorageSync('album_detail', JSON.stringify(album_detail))
 				uni.navigateTo({
 					url: '/pagesFavourite/XMradio/player?id='+id+'&duration='+duration+'&title='+title+'&playIndex='+index
 				})
