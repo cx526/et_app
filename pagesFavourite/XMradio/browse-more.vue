@@ -22,22 +22,32 @@
 				userInfo: uni.getStorageSync('userInfo'),
 				XMclient: '',
 				XMplayer: '',
+				collectBrowse: '',
 				collectBrowseList: [],
-				collectBrowsePage: 0,
+				totalPage: 0,
+				recommendBrowse: '',
 				pageSize: '10',
-				currentPage: 1
+				currentPage: 1,
+				from: '', // 标记从哪里进入这个页面
 			}
 		},
 		components: {
 			browseList
 		},
-		onLoad() {
+		onLoad(options) {
+			this.from = options.from
+			console.log(this.from)
 			this.init()
 		},
 		onReachBottom() {
-			if(this.collectBrowsePage > this.collectBrowseList.length) {
+			if(this.totalPage > this.collectBrowseList.length) {
 				this.currentPage = this.currentPage + 1
-				this.selXmlyCollectBrowse()
+				if(this.from === 'collectBrowse') {
+					this.selXmlyCollectBrowse()
+				}else {
+					this.selXmlyRecomment()
+				}
+				
 			}
 		},
 		methods: {
@@ -48,8 +58,14 @@
 				} = await initXMLY()
 				this.XMclient = xmly
 				this.XMplayer = player
-				// 批量获取收藏声音信息
-				this.selXmlyCollectBrowse()
+				if(this.from === 'collectBrowse') {
+					// 批量获取收藏声音信息
+					this.selXmlyCollectBrowse()
+				}else {
+					// 获取推荐声音信息
+					this.selXmlyRecomment()
+				}
+				
 			},
 			// 查看我收藏的声音
 			selXmlyCollectBrowse() {
@@ -63,8 +79,7 @@
 				}
 				this.$api.selXmlyCollect(params).then(res => {
 					let result = res.data.rows
-					this.collectBrowsePage = res.totalPage
-					this.collectBrowsePage = res.data.totalPage
+					this.totalPage = res.data.totalPage
 					let arr = []
 					if(result && result.length > 0) {
 						result.map(item => {
@@ -76,10 +91,41 @@
 					this.getXmlyCollectBrowse()
 				})
 			},
+			// 推荐声音
+			selXmlyRecomment() {
+				let params = {
+					pageSize: this.pageSize,
+					currentPage: this.currentPage,
+					filterItems: {
+						type: 'browse'
+					}
+				}
+				this.$api.selXmlyRecomment(params).then(res => {
+					console.log(res)
+						this.totalPage = res.data.totalPage
+						let result = res.data.rows
+						let arr = []
+						if(result && result.length > 0) {
+							result.map(item => {
+								arr.push(String(item.target_id))
+							})
+						}
+						this.recommendBrowse = arr.join(',')
+						console.log(this.recommendAlbums)
+						if(arr && arr.length > 0) {
+							this.getXmlyCollectBrowse()
+						}
+				})
+			},
 			// 批量获取收藏声音详情
 			getXmlyCollectBrowse() {
 				let params = {
-					ids: this.collectBrowse
+					ids: ''
+				}
+				if(this.from === 'collectBrowse') {
+					params.ids = this.collectBrowse
+				}else {
+					params.ids = this.recommendBrowse
 				}
 				this.XMclient.get(MXbatch_browseURL, params).then(res => {
 					if(res.code === 0) {

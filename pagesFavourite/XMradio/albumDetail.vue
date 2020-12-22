@@ -122,7 +122,6 @@
 		async onLoad(options) {
 			let album_detail = JSON.parse(uni.getStorageSync('album_detail'))
 			this.album_id = Number(album_detail.id)
-			console.log(this.album_id)
 			this.tagList = album_detail.tagList
 			this.cover_url_middle = album_detail.cover_url_middle
 			this.play_count = album_detail.play_count
@@ -161,7 +160,6 @@
 				const { xmly, player } = await initXMLY()
 				this.XMclient = xmly
 				this.XMplayer = player
-				console.log(this.XMplayer)
 			},
 			async getAlbumsDetail(album_id, page) {
 				// 获取专辑详情信息
@@ -172,17 +170,14 @@
 				await this.XMclient.get(XMalbums_browseURL, paramAlbumDetail).then(res => {
 					if(res.code === 0) {
 						let result = res.data.tracks
-						console.log(result)
 						this.totalPage = res.data.total_page
 						result.map(item => {
 							item.play_status = 'play'
 						})
 						this.dataList = [...this.dataList, ...result]
-						console.log(this.dataList)
 						this.getSwiperHeight('.context .item')
 					}
 				})	
-				console.log('ok')
 			},
 			// 动态设置swiper高度
 			getSwiperHeight(ele) {
@@ -269,8 +264,6 @@
 					}else {
 						this.isCollect = false
 					}
-					console.log(arr)
-					console.log(this.isCollect)
 				})
 			},
 		},

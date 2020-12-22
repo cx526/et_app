@@ -24,22 +24,42 @@
 
 		<!-- 背景 -->
 		<view class="bg"></view>
-		<!-- 我喜爱的专辑start -->
-		<view class="like-album" style="margin-top: -150rpx;"  from="album">
-			<view class="album">
-				<nav-title title="我喜爱的专辑" :isShow="collectAlbumPage > 3 ? true : false" @checkMore="checkMore"></nav-title>
-				<album-list :collectAlbumList="collectAlbumList" @goAlbumDetail="goAlbumDetail" ></album-list>
+		<view style="margin-top: -150rpx;">
+			
+		
+			<!-- 推荐专辑start -->
+			<view class="like-album"  from="album">
+				<view class="album">
+					<nav-title title="推荐专辑" :isShow="recommendAlbumsPage > 3 ? true : false" @checkMore="checkMore" from="recommendAlbum"></nav-title>
+					<album-list :collectAlbumList="recommendAlbumsList" @goAlbumDetail="goAlbumDetail" ></album-list>
+				</view>
 			</view>
-		</view>
-		<!-- 我喜爱的专辑end -->
-		<!-- 我喜爱的音频start -->
-		<view class="like-album">
-			<view class="album">
-				<nav-title title="我喜爱的音频" :isShow="collectBrowsePage > 3 ? true : false" from="browse" @checkMore="checkMore"></nav-title>
-				<browse-list :collectBrowseList="collectBrowseList" @goPlay="goPlay"  ></browse-list>
+			<!-- 推荐专辑end -->
+			<!-- 推荐声音start -->
+			<view class="like-album">
+				<view class="album">
+					<nav-title title="推荐音频" :isShow="recommendBrowsePage > 3 ? true : false" from="recommendBrowse" @checkMore="checkMore"></nav-title>
+					<browse-list :collectBrowseList="recommendBrowseList" @goPlay="goPlay"></browse-list>
+				</view>
 			</view>
+			<!-- 推荐声音end -->
+			<!-- 我喜爱的专辑start -->
+			<view class="like-album" from="album">
+				<view class="album">
+					<nav-title title="我喜爱的专辑" :isShow="collectAlbumPage > 3 ? true : false" @checkMore="checkMore" from="collectAlbums"></nav-title>
+					<album-list :collectAlbumList="collectAlbumList" @goAlbumDetail="goAlbumDetail" ></album-list>
+				</view>
+			</view>
+			<!-- 我喜爱的专辑end -->
+			<!-- 我喜爱的音频start -->
+			<view class="like-album">
+				<view class="album">
+					<nav-title title="我喜爱的音频" :isShow="collectBrowsePage > 3 ? true : false" from="collectBrowse" @checkMore="checkMore"></nav-title>
+					<browse-list :collectBrowseList="collectBrowseList" @goPlay="goPlay"  ></browse-list>
+				</view>
+			</view>
+			<!-- 我喜爱的音频end -->
 		</view>
-		<!-- 我喜爱的音频end -->
 		<!-- 专辑列表区域start -->
 		<view class="album">
 			<view class="list">
@@ -126,8 +146,9 @@
 				recommendAlbums: '', // 储存推荐专辑id
 				recommendAlbumsList: [], // 储存推荐专辑数据
 				recommendAlbumsPage: 0, // 推荐专辑数
-				// swiperLength: 0,
-				// carouselList: []
+				recommendBrowse: '', // 储存推荐声音id
+				recommendBrowsePage: 0, // 储存推荐声音数
+				recommendBrowseList: [], // 储存推荐声音数据
 			}
 		},
 		components: {
@@ -164,8 +185,10 @@
 				this.albumsList = await this.getAlbumsList(this.albumsPage)
 				// 设置swiper高度
 				this.getSwiperHeight('.content-item')
-				// 获取推荐
+				// 获取推荐专辑
 				this.selXmlyRecomment('albums')
+				// 获取推荐声音
+				this.selXmlyRecomment('browse')
 				// 批量获取收藏专辑信息
 				this.selXmlyCollect()
 				// 批量获取收藏声音信息
@@ -216,7 +239,6 @@
 					})
 				return albumsResult
 			},
-			
 			// 获取用户设备信息
 			getSystemInfo() {
 				uni.getSystemInfo({
@@ -323,6 +345,19 @@
 						if(arr && arr.length > 0) {
 							this.getXmlyCollect('recommendAlbums')
 						}
+					}else {
+						this.recommendBrowsePage = res.data.totalPage
+						let result = res.data.rows
+						let arr = []
+						if(result && result.length > 0) {
+							result.map(item => {
+								arr.push(String(item.target_id))
+							})
+						}
+						this.recommendBrowse = arr.join(',')
+						if(arr && arr.length > 0) {
+							this.getXmlyCollectBrowse('recommendBrowse')
+						}
 					}
 				})
 			},
@@ -395,29 +430,37 @@
 					}
 					this.collectBrowse = arr.join(',')
 					console.log(this.collectBrowse)
-					this.getXmlyCollectBrowse()
+					this.getXmlyCollectBrowse('collectBrowse')
 					
 				})
 			},
 			// 批量获取收藏声音信息
-			getXmlyCollectBrowse() {
+			getXmlyCollectBrowse(type) {
 				let params = {
-					ids: this.collectBrowse
+					ids: ''
+				}
+				if(type === 'collectBrowse') {
+					params.ids = this.collectBrowse
+				}else {
+					params.ids = this.recommendBrowse
 				}
 				this.XMclient.get(MXbatch_browseURL, params).then(res => {
 					if(res.code === 0) {
-						this.collectBrowseList = res.data.tracks
-						console.log(this.collectBrowseList)
+						if(type === 'collectBrowse') {
+							this.collectBrowseList = res.data.tracks
+						}else {
+							this.recommendBrowseList = res.data.tracks
+						}
 					}
 				})
 			},
 			// 查看更多页面
 			checkMore(payload) {
 				let url = ''
-				if(payload.from === 'browse') {
-					url = '/pagesFavourite/XMradio/browse-more'
+				if(payload.from === 'collectBrowse' || payload.from === 'recommendBrowse') {
+					url = '/pagesFavourite/XMradio/browse-more?from='+payload.from
 				}else {
-					url = '/pagesFavourite/XMradio/album-more'
+					url = '/pagesFavourite/XMradio/album-more?from='+payload.from
 				}
 				uni.navigateTo({
 					url: url
@@ -496,7 +539,7 @@
 <style>
 	page {
 		background: #EBF8FF;
-		/* padding-top: 24rpx; */
+		padding-bottom: 24rpx;
 	}
 </style>
 <style scoped>

@@ -138,6 +138,7 @@
 		},
 		async onLoad(options) {
 			this.from = options.from
+			console.log(this.from)
 			this.selXmlyCollect()
 			await this.init() // 初始化插件
 			this.getEleRect('.plan')
@@ -145,10 +146,8 @@
 			this.listenChangeSound() // 监听音频改变事件
 			this.listenEnd() // 监听音频结束事件
 			this.XMplayer.setPlayMode('order') // 默认顺序播放
-			console.log(options)
 			// 从我喜爱声音进入
 			if(options.from === 'browse') {
-				console.log('entry')
 				let browse_detail = JSON.parse(uni.getStorageSync('browse_detail'))
 				this.album_id = browse_detail.album_id
 				this.duration = browse_detail.duration
@@ -178,7 +177,6 @@
 
 		},
 		onUnload() {
-			console.log('onUnload')
 			this.XMplayer.pause()
 			this.XMplayer.off('timeupdate').off('end').off('change.sound') // 移除监听事件
 		},
@@ -201,9 +199,6 @@
 			play() {
 				let id = this.album_id
 				let status = this.XMplayer.getPlayState()
-				console.log(this.duration)
-				console.log(parseInt(this.currentDuration))
-				console.log(status)
 				if(status === 'ready') {
 					this.XMplayer.play(id)
 					this.isShow = false
@@ -233,8 +228,6 @@
 						this.scrollLeft = sound / this.duration * 500 - 10
 					}	
 					this.currentDuration = sound
-					// console.log(sound)
-					// console.log(this.percent)
 				})
 			},
 			// 获取元素高度
@@ -242,7 +235,6 @@
 				setTimeout(() => {
 					const query = uni.createSelectorQuery().in(this);
 					query.select(ele).boundingClientRect(data => {
-					  console.log(data)
 						this.planOffsetWidth = data.width
 						this.planOffsetLeft = data.left
 					}).exec();
@@ -260,7 +252,6 @@
 			// 监听音频改变事件
 			listenChangeSound() {
 				this.XMplayer.on('change.sound', (sound) => {
-					console.log(this.XMplayer.getCurrentIndex())
 					let index = this.XMplayer.getCurrentIndex()
 					this.album_id = this.playList[index]
 					this.title = this.videoList[index].track_title
@@ -273,7 +264,6 @@
 			playPrev() {
 				let status = this.XMplayer.getPlayState()
 				if(status === 'ready') {
-					console.log('ready')
 					if(this.currentPlayIndex == 0) { return }
 					this.album_id = this.playList[this.currentPlayIndex - 1]
 					this.title = this.videoList[this.currentPlayIndex - 1].track_title
@@ -289,7 +279,6 @@
 				}
 				this.XMplayer.prev()
 				let index = this.XMplayer.getCurrentIndex()
-				console.log(index)
 				this.album_id = this.playList[index]
 				this.title = this.videoList[index].track_title
 				this.duration = this.videoList[index].duration
@@ -344,7 +333,6 @@
 			},
 			// 快进
 			forwardPercent(event) {
-				console.log(event)
 				let x = event.detail.x // 前进的距离
 				let percent = x - this.planOffsetLeft // 进度条
 				let second = parseInt(percent / this.planOffsetWidth * this.duration)
@@ -370,9 +358,7 @@
 					}else {
 						distance = percent + x
 					}
-					console.log(distance)
 					let second = parseInt(distance / this.planOffsetWidth * this.duration)
-					console.log(second)
 					this.XMplayer.seek(second)
 			},
 			// 获取当前专辑播放声音
@@ -412,7 +398,6 @@
 				arr.map(item => {
 					this.playList.push(Number(item.id))
 				})
-				console.log(this.playList)
 				this.XMplayer.setPlaylist(this.playList) // 设置播放列表
 			},
 			// 打开播放列表
@@ -494,8 +479,6 @@
 					}else {
 						this.isCollect = false
 					}
-					console.log(arr)
-					console.log(this.isCollect)
 				})
 			},
 			// 查看我收藏的声音
@@ -511,7 +494,6 @@
 				this.$api.selXmlyCollect(params).then(res => {
 					this.totalPage = res.data.totalPage
 					let result = res.data.rows
-					this.collectBrowsePage = res.totalPage
 					this.collectBrowsePage = res.data.totalPage
 					let arr = []
 					if(result && result.length > 0) {
@@ -520,7 +502,6 @@
 						})
 					}
 					this.collectBrowse = arr.join(',')
-					console.log(this.collectBrowse)
 					this.getXmlyCollectBrowse()
 				})
 			},
@@ -531,7 +512,6 @@
 				}
 				this.XMclient.get(MXbatch_browseURL, params).then(res => {
 					if(res.code === 0) {
-						console.log(res)
 						let result = res.data.tracks
 						this.videoList = [...this.videoList, ...result]
 						this.setPlayList(result)

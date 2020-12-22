@@ -24,21 +24,33 @@
 				XMclient: '',
 				XMplayer: '',
 				collectAlbums: '',
+				collectAlbumList: [],
+				recommendAlbums: '',
+				recommendAlbumList: [],
 				pageSize: '12',
 				currentPage: 1,
-				totalPage: 0
+				totalPage: 0,
+				from: '', // 标记从哪个页面进入
 			}
 		},
 		components: {
 			albumList
 		},
-		onLoad() {
+		onLoad(options) {
+			console.log(options)
+			this.from = options.from
 			this.init()
 		},
 		onReachBottom() {
 			if(this.totalPage > this.collectAlbumList.length) {
 				this.currentPage = this.currentPage + 1
-				this.selXmlyCollect()
+				if(this.from === 'collectAlbums') {
+					// 批量获取收藏专辑信息
+					this.selXmlyCollect()
+				}else {
+					// 获取推荐专辑
+					this.selXmlyRecomment()
+				}
 			}
 		},
 		methods: {
@@ -49,8 +61,14 @@
 				} = await initXMLY()
 				this.XMclient = xmly
 				this.XMplayer = player
-				// 批量获取收藏专辑信息
-				this.selXmlyCollect()
+				if(this.from === 'collectAlbums') {
+					// 批量获取收藏专辑信息
+					this.selXmlyCollect()
+				}else {
+					// 获取推荐专辑
+					this.selXmlyRecomment()
+				}
+				
 	
 			},
 			// 查看我收藏的专辑
@@ -76,11 +94,43 @@
 					this.getXmlyCollect()
 				})
 			},
+			// 获取推荐专辑
+			selXmlyRecomment() {
+				let params = {
+					pageSize: this.pageSize,
+					currentPage: String(this.currentPage),
+					filterItems: {
+						type: 'albums'
+					}
+				}
+				this.$api.selXmlyRecomment(params).then(res => {
+					console.log(res)
+						this.totalPage = res.data.totalPage
+						let result = res.data.rows
+						let arr = []
+						if(result && result.length > 0) {
+							result.map(item => {
+								arr.push(String(item.target_id))
+							})
+						}
+						this.recommendAlbums = arr.join(',')
+						console.log(this.recommendAlbums)
+						if(arr && arr.length > 0) {
+							this.getXmlyCollect()
+						}
+				})
+			},
 			// 批量获取收藏专辑信息
 			getXmlyCollect() {
 				let params = {
-					ids: this.collectAlbums
+					ids: ''
 				}
+				if(this.from === 'collectAlbums') {
+					params.ids = this.collectAlbums
+				}else {
+					params.ids = this.recommendAlbums
+				}
+				
 				this.XMclient.get(XMbatch_albumsURL, params).then(res => {
 					console.log(res)
 					if(res.code === 0) {
@@ -88,7 +138,7 @@
 					}
 				})
 			},
-			// 跳转专辑相亲
+			// 跳转专辑详情
 			goAlbumDetail(content) {
 				let id = content.id // 专辑id
 				let tag = content.dimension_tags // 专辑标签
