@@ -39,7 +39,7 @@
 			<view class="like-album">
 				<view class="album">
 					<nav-title title="推荐音频" :isShow="recommendBrowsePage > 3 ? true : false" from="recommendBrowse" @checkMore="checkMore"></nav-title>
-					<browse-list :collectBrowseList="recommendBrowseList" @goPlay="goPlay"></browse-list>
+					<browse-list :collectBrowseList="recommendBrowseList" @goPlay="goPlay" from="recommendBrowse"></browse-list>
 				</view>
 			</view>
 			<!-- 推荐声音end -->
@@ -54,8 +54,8 @@
 			<!-- 我喜爱的音频start -->
 			<view class="like-album">
 				<view class="album">
-					<nav-title title="我喜爱的音频" :isShow="collectBrowsePage > 3 ? true : false" from="collectBrowse" @checkMore="checkMore"></nav-title>
-					<browse-list :collectBrowseList="collectBrowseList" @goPlay="goPlay"  ></browse-list>
+					<nav-title title="我喜爱的音频" :isShow="collectBrowsePage > 3 ? true : false" from="browse" @checkMore="checkMore"></nav-title>
+					<browse-list :collectBrowseList="collectBrowseList" @goPlay="goPlay" from="browse"></browse-list>
 				</view>
 			</view>
 			<!-- 我喜爱的音频end -->
@@ -457,7 +457,7 @@
 			// 查看更多页面
 			checkMore(payload) {
 				let url = ''
-				if(payload.from === 'collectBrowse' || payload.from === 'recommendBrowse') {
+				if(payload.from === 'browse' || payload.from === 'recommendBrowse') {
 					url = '/pagesFavourite/XMradio/browse-more?from='+payload.from
 				}else {
 					url = '/pagesFavourite/XMradio/album-more?from='+payload.from
@@ -482,7 +482,7 @@
 				console.log(params)
 				uni.setStorageSync('browse_detail', JSON.stringify(params))
 				uni.navigateTo({
-					url: '/pagesFavourite/XMradio/player?from=browse'
+					url: '/pagesFavourite/XMradio/player?from='+payload.from
 				})
 			},
 

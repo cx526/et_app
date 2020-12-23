@@ -150,7 +150,7 @@
 				console.log(params)
 				uni.setStorageSync('browse_detail', JSON.stringify(params))
 				uni.navigateTo({
-					url: '/pagesFavourite/XMradio/player?from=browse'
+					url: '/pagesFavourite/XMradio/player?from='+this.from
 				})
 			},
 		}

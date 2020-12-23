@@ -32,7 +32,8 @@
 <script>
 	export default {
 		props: {
-			collectBrowseList: Array
+			collectBrowseList: Array,
+			from: String
 		},
 		data() {
 			return {
@@ -59,7 +60,7 @@
 		},
 		methods: {
 			goPlay(item, index) {
-				this.$emit('goPlay', {item: item, playIndex: index})
+				this.$emit('goPlay', {item: item, playIndex: index, from: this.from})
 			}
 		}
 	}
