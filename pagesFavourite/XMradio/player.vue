@@ -284,14 +284,16 @@
 				}
 				this.XMplayer.prev()
 				let index = this.XMplayer.getCurrentIndex()
-				this.album_id = this.playList[index]
-				this.title = this.videoList[index].track_title
-				this.duration = this.videoList[index].duration
-				this.cover_url_middle = this.videoList[index].cover_url_middle
+				// 当前播放的是第一首
+				if(index == 0) { index = this.videoList.length }
+				this.album_id = this.playList[index-1]
+				this.title = this.videoList[index-1].track_title
+				this.duration = this.videoList[index-1].duration
+				this.cover_url_middle = this.videoList[index-1].cover_url_middle
 				this.isShow = false
 				this.scrollLeft = 0
 				if(this.from === 'browse' || this.from === 'recommendBrowse') {
-					this.album_title = this.videoList[index].subordinated_album.album_title
+					this.album_title = this.videoList[index-1].subordinated_album.album_title
 					
 				}
 			},
@@ -313,14 +315,18 @@
 				}
 				this.XMplayer.next()
 				let index = this.XMplayer.getCurrentIndex()
-				this.album_id = this.playList[index]
-				this.title = this.videoList[index].track_title
-				this.duration = this.videoList[index].duration
-				this.cover_url_middle = this.videoList[index].cover_url_middle
+				// 当前播放的是最后一首
+				if(index + 1 == this.videoList.length) { index = -1 }
+				this.album_id = this.playList[index+1]
+				this.title = this.videoList[index+1].track_title
+				this.duration = this.videoList[index+1].duration
+				this.cover_url_middle = this.videoList[index+1].cover_url_middle
+				console.log(index+1)
+				console.log(this.cover_url_middle)
 				this.isShow = false
 				this.scrollLeft = 0
 				if(this.from === 'browse' || this.from === 'recommendBrowse') {
-					this.album_title = this.videoList[index].subordinated_album.album_title
+					this.album_title = this.videoList[index+1].subordinated_album.album_title
 					
 				}
 			},
