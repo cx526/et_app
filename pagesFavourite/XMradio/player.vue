@@ -258,6 +258,7 @@
 			listenChangeSound() {
 				this.XMplayer.on('change.sound', (sound) => {
 					let index = this.XMplayer.getCurrentIndex()
+					console.log(index)
 					this.album_id = this.playList[index]
 					this.title = this.videoList[index].track_title
 					this.duration = this.videoList[index].duration

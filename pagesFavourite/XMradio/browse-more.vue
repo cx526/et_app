@@ -58,7 +58,7 @@
 				} = await initXMLY()
 				this.XMclient = xmly
 				this.XMplayer = player
-				if(this.from === 'collectBrowse') {
+				if(this.from === 'browse') {
 					// 批量获取收藏声音信息
 					this.selXmlyCollectBrowse()
 				}else {
@@ -101,7 +101,6 @@
 					}
 				}
 				this.$api.selXmlyRecomment(params).then(res => {
-					console.log(res)
 						this.totalPage = res.data.totalPage
 						let result = res.data.rows
 						let arr = []
@@ -111,7 +110,6 @@
 							})
 						}
 						this.recommendBrowse = arr.join(',')
-						console.log(this.recommendAlbums)
 						if(arr && arr.length > 0) {
 							this.getXmlyCollectBrowse()
 						}
@@ -122,7 +120,7 @@
 				let params = {
 					ids: ''
 				}
-				if(this.from === 'collectBrowse') {
+				if(this.from === 'browse') {
 					params.ids = this.collectBrowse
 				}else {
 					params.ids = this.recommendBrowse
@@ -130,7 +128,6 @@
 				this.XMclient.get(MXbatch_browseURL, params).then(res => {
 					if(res.code === 0) {
 						this.collectBrowseList = [...res.data.tracks, ...this.collectBrowseList]
-						console.log(this.collectBrowseList)
 					}
 				})
 			},
