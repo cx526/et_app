@@ -40,7 +40,7 @@
 								</view>
 							</view>
 							<view class="grade-info">
-								<text style="margin-right: 8rpx;">{{ item.schoolInfo.name }}</text>
+								<!-- <text style="margin-right: 8rpx;">{{ item.schoolInfo.name }}</text> -->
 								<text v-if="JSON.stringify(item.gradeInfo) !== '{}'">{{item.gradeInfo.name + item.childInfo.class + '班'}}</text>
 							</view>
 						</view>
@@ -62,7 +62,7 @@
 					</view>
 					
 					<view class="photo" v-if="item.imgInfo && item.imgInfo.length > 0">
-						<image v-for="(list,listIndex) in item.imgInfo" :key="listIndex" :src="list.url" @tap.stop="preview(listIndex, item.imgInfo)" mode="aspectFit"></image>
+						<image v-for="(list,listIndex) in item.imgInfo" :key="listIndex" :src="list.url" @tap.stop="preview(listIndex, item.imgInfo)" mode="aspectFit" v-if="listIndex < 6"></image>
 					</view>
 					<view class="comment">
 						<text class="time">{{ item.create_time }}</text>

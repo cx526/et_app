@@ -306,6 +306,8 @@ api.selGoodsWish = params => request.globalRequest('/api/goodsAssist/selGoodsWis
 // 删除心愿书单
 api.delGoodsWish = params => request.globalRequest('/api/goodsAssist/delGoodsWish', 'POST', params)
 
+// 喜马拉雅进出口(是否可进入)
+api.xmlySwitch = params => request.globalRequest('/api/xmRadio/xmlySwitch', 'POST', params)
 // 喜马拉雅签名接口
 api.xmlySign = params => request.globalRequest('/api/xmly/signature', 'POST', params)
 

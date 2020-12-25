@@ -233,7 +233,8 @@ export default {
 			docker_mac: '',
 			oneBannerList: '',
 			twoBannerList: '',
-			currentPage: 1
+			currentPage: 1,
+			isOpen: ''
 		};
 	},
 	onLoad() {
@@ -243,6 +244,7 @@ export default {
 		this.getUserInfo();
 		this.showAD();
 		this.getBanner()
+		this.checkXmlySwitch()
 	},
 	onShow() {
 		this.record = uni.getStorageSync('record')
@@ -437,6 +439,7 @@ export default {
 		},
 		// 跳转子页面
 		toButtonUrl(toUrl) {
+			console.log(toUrl)
 			let userInfo = uni.getStorageSync("userInfo")
 			if(userInfo.name === 'guest' || !userInfo.name 
 			|| userInfo.mobiel == '' || !userInfo.name || !userInfo.mobile) {
@@ -458,14 +461,27 @@ export default {
 				})
 				return
 			}
-			// else if(toUrl === '/pagesFavourite/XMradio/index') {
-			// 	uni.showToast({
-			// 		title: '敬请期待',
-			// 		icon: 'none',
-			// 		duration: 2000
-			// 	})
-			// 	return
-			// }
+			else if(toUrl === './kind') {
+				uni.showToast({
+					title: '敬请期待',
+					icon: 'none',
+					duration: 2000
+				})
+				return
+			}
+			else if(toUrl === '/pagesFavourite/XMradio/index' && this.isOpen == 0) {
+				uni.showToast({
+					title: '敬请期待',
+					icon: 'none',
+					duration: 2000
+				})
+				return
+			}
+			else if(toUrl === '/pagesFavourite/XMradio/index' && this.isOpen == 1) {
+				uni.navigateTo({
+					url: '/pagesFavourite/XMradio/index'
+				})
+			}
 			else {
 				uni.navigateTo({ url: toUrl });
 			}
@@ -549,6 +565,13 @@ export default {
 				}
 			});
 		},
+		// 查看是否开启喜马拉雅入口
+		checkXmlySwitch() {
+			this.$api.xmlySwitch().then(res => {
+				console.log(res)
+				this.isOpen = res.data
+			})
+		},
 		toSign() {
 			uni.navigateTo({ url: './sign' });
 		},
@@ -576,10 +599,7 @@ export default {
 				// 	encodeURIComponent(JSON.stringify(bookList))
 			});
 		},
-		
-		
-		
-		
+
 		toKineList() {
 			let kindObject = {
 				secondValue: '主题分类'
@@ -592,7 +612,7 @@ export default {
 				// 来自页面内分享按钮
 			}
 			return {
-				title: '五车书，一个智能的童书借阅和阅读习惯养成的平台~',
+				title: '汇聚天下最好的书，只为陪伴一群爱读书的孩子！',
 				path: '/pages/index/index',
 				imageUrl: 'https://et-pic-server.oss-cn-shenzhen.aliyuncs.com/app_img/index_share.png'
 			};

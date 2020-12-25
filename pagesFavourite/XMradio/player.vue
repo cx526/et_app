@@ -1,7 +1,10 @@
 <template>
 	<view>
 		<!-- 背景图 -->
-		<image :src="$aliImage + 'player/background1.png'" mode="widthFix" class="bg"></image>
+		<!-- <image :src="$aliImage + 'player/background1.png'" mode="widthFix" class="bg"></image> -->
+		<view class="bg" style="width: 700rpx;">
+			<image :src="$aliImage+'player-bg.png'" mode="widthFix" :style="{'left': bgScrollLeft + 'rpx'}" @load="imgLoad"></image>
+		</view>
 		<!-- 专辑详情start -->
 		<view class="album-detail">
 			<image :src="cover_url_middle" class="cover"></image>
@@ -126,6 +129,8 @@
 				isCollect: false, // 是否有收藏
 				from: '', // 标识从哪里进入播放页
 				collectBrowse: '', // 储存收藏声音id
+				imgWidth: 0,
+				bgScrollLeft: 0
 				// bgAnimate: 'player/background',
 				// bgAnimateImg: '',
 				// bgAnimateImgArray: [],
@@ -139,6 +144,7 @@
 		async onLoad(options) {
 			this.from = options.from
 			console.log(this.from)
+			this.getWinRect()
 			this.selXmlyCollect()
 			await this.init() // 初始化插件
 			this.getEleRect('.plan')
@@ -194,6 +200,27 @@
 			}
 		},
 		methods: {
+			imgLoad(event) {
+				let maxWidth = event.detail.width
+				let distance = maxWidth / 12
+				let step = 1
+				setInterval(() => {
+					if(Math.abs(distance * step) < maxWidth) {
+						this.bgScrollLeft = -(distance * step)
+						step = step + 1
+					}else {
+						step = 1
+					}
+				}, 800)
+			},
+			// 获取屏幕宽度
+			getWinRect() {
+				uni.getSystemInfo({
+					success: res => {
+						this.imgWidth = res.windowWidth - 25
+					}
+				})
+			},
 			// 初始化插件
 			async init() {
 				const { xmly, player } = await initXMLY()
@@ -572,10 +599,22 @@
 	}
 </style>
 <style scoped>
+
 	/* 背景图 */
-	.bg {
+	/* .bg {
 		position: relative;
 		width: 100%;
+	} */
+	.bg {
+		position: absolute;
+		left: 25rpx;
+		top: 30rpx;
+		height: 1177rpx;
+		overflow: hidden;
+	}
+	.bg image {
+		width: 8400rpx;
+		position: relative;
 	}
 	/* 专辑详情start */
 	.album-detail {
